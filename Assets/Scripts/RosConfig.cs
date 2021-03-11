@@ -45,7 +45,7 @@ public class RosConfig
 
     public string[] GetTopicList() 
     {
-        return new string[] {"aassas", "slike"};
+        return new string[] {"aassas", "camera1"};
     }
 
 }
