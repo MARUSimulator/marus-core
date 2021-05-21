@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 222689b82cf492c4d839775d804da261
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - computeFilter: {fileID: 7200000, guid: 4e620f4d3996eef4b810b30140f16b27, type: 3}
+  - SphericalProjectionFilterImage: {fileID: 8400000, guid: ff3b40168b5e6f54d868977d097ff3d0,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

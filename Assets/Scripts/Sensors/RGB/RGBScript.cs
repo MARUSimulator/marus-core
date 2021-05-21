@@ -1,0 +1,145 @@
+﻿using UnityEngine;
+using System.Collections;
+using Labust.Sensors;
+using Labust.Sensors.Core.ZBuffer;
+
+using UnityEngine.Rendering;
+
+using Google.Protobuf;
+using Sensorstreaming;
+using Labust.Sensors.Core;
+using System;
+
+namespace Labust.Sensors
+{
+    [RequireComponent(typeof(Camera))]
+    public class RGBScript : SensorBase<CameraStreamingRequest>
+    {
+        public RenderTexture _cameraBuffer { get; set; }
+        public RenderTexture SampleCameraImage;
+        public ComputeShader cameraShader;
+        public string cameraId = "F";
+        public int ImageCrop = 4;
+        public bool SynchronousUpdate = false;
+
+        Camera camera;
+        UnifiedArray<byte> cameraData;
+        RenderTextureFormat renderTextureFormat = RenderTextureFormat.Default;
+        TextureFormat textureFormat = TextureFormat.RGB24;
+
+        [Space]
+        [Header("Camera Parameters")]
+        public int PixelWidth = 2448;
+        public int PixelHeight = 2048;
+        public float FarPlane = 10000f;
+        public float NearPlane = 0.08f;
+        public float focalLengthMilliMeters = 5.5f;
+        public float pixelSizeInMicroMeters = 3.45f;
+
+        void Start()
+        {
+            CameraSetup();
+
+            int kernelIndex = cameraShader.FindKernel("CSMain");
+            cameraData = new UnifiedArray<byte>(PixelHeight * PixelWidth, sizeof(float) * 3, "CameraData");
+            cameraData.SetBuffer(cameraShader, "CSMain");
+            cameraShader.SetTexture(kernelIndex, "RenderTexture", camera.targetTexture);
+            cameraShader.SetInt("Width", PixelWidth / ImageCrop);
+            cameraShader.SetInt("Height", PixelHeight / ImageCrop);
+        }
+
+        private void Awake()
+        {
+            streamHandle = streamingClient.StreamCameraSensor(cancellationToken:RosConnection.Instance.cancellationToken);
+            AddSensorCallback(SensorCallbackOrder.First, RGBUpdate);
+        }
+
+        int totalMsgs = 0;
+        object dataLock = new object();
+        public byte[] Data { get; private set; } = new byte[0];
+        public async override void SendMessage()
+        {
+            totalMsgs++;
+            var maxMsgs = 1000;
+            if (maxMsgs <= totalMsgs)
+            {
+                streamHandle.Dispose();
+            }
+            if (hasData && totalMsgs < maxMsgs)
+            {
+                try
+                {
+                    await streamWriter.WriteAsync(new CameraStreamingRequest 
+                    { 
+                        Data = ByteString.CopyFrom(Data), 
+                        TimeStamp = Time.time, 
+                        SensorId = cameraId, 
+                        Height = (uint)(PixelHeight/ImageCrop), 
+                        Width = (uint)(PixelWidth/ImageCrop) 
+                    });
+                    hasData = false;
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("Possible message overflow.");
+                    Debug.LogError(e);
+                }
+            }
+        }
+
+        void RGBUpdate()
+        {
+            if (SynchronousUpdate)
+            {
+                cameraData.SynchUpdate(cameraShader, "CSMain");
+                Data = cameraData.array;
+                hasData = true;
+            }
+            else
+            {
+                AsyncGPUReadback.Request(camera.activeTexture, 0, textureFormat, ReadbackCompleted);
+            }
+        }
+
+        void ReadbackCompleted(AsyncGPUReadbackRequest request)
+        {
+            Data = request.GetData<byte>().ToArray();
+            hasData = true;
+        }
+
+        byte[] RenderTextureToBinary(Camera cam)
+        {
+            // The Render Texture in RenderTexture.active is the one
+            // that will be read by ReadPixels.
+            var currentRT = RenderTexture.active;
+            RenderTexture.active = cam.targetTexture;
+
+            // Make a new texture and read the active Render Texture into it.
+            Texture2D image = new Texture2D(cam.targetTexture.width, cam.targetTexture.height, textureFormat, false, true);
+            image.ReadPixels(new Rect(0, 0, cam.targetTexture.width, cam.targetTexture.height), 0, 0);
+            image.Apply();
+
+            // Replace the original active Render Texture.
+            RenderTexture.active = currentRT;
+            return image.EncodeToPNG();
+        }
+
+        private void CameraSetup()
+        {
+            CameraFrustum frustums = new CameraFrustum(PixelWidth, PixelHeight, FarPlane, NearPlane, focalLengthMilliMeters, pixelSizeInMicroMeters);
+            _cameraBuffer = new RenderTexture(PixelWidth / ImageCrop, PixelHeight / ImageCrop, 24, renderTextureFormat, 0);
+
+            camera = gameObject.GetComponent<Camera>();
+            camera.usePhysicalProperties = false;
+            camera.targetTexture = _cameraBuffer;
+
+            camera.aspect = frustums._aspectRatio;//Mathf.Tan(Mathf.PI / numbers) / Mathf.Tan(frustums._verticalAngle / 2.0f);
+            Debug.Log("Aspect Ratio RGB: " + frustums._aspectRatio.ToString());
+            camera.fieldOfView = frustums._verticalAngle * Mathf.Rad2Deg;//Camera.HorizontalToVerticalFieldOfView(360.0f / numbers, cam.aspect);
+            camera.farClipPlane = frustums._farPlane;
+            camera.nearClipPlane = frustums._nearPlane;
+            //camera.enabled = false;
+        }
+
+    }
+}

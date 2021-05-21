@@ -32,8 +32,7 @@ $APIExtractionDir = Join-Path -Path $CurrentPath -ChildPath "\API\Protobuf\Plugi
 Write-Host "Downloading and setuping protobuf and gRPC... Path: $APIExtractionDir"
 
 # Download the zipped gRPC binaries that are needed. 
-Invoke-WebRequest -Uri "https://packages.grpc.io/archive/2019/12/a02d6b9be81cbadb60eed88b3b44498ba27bcba9-edd81ac6-e3d1-461a-a263-2b06ae913c3f/protoc/grpc-protoc_windows_x64-1.26.0-dev.zip" -OutFile ".\Temp\grpc.zip"
-
+Invoke-WebRequest -Uri "https://packages.grpc.io/archive/2021/04/ccbb2dd207635cd1c53d9255a4b82c96e6042b74-b1949379-fd83-4d31-abf8-822fae110b43/protoc/grpc-protoc_windows_x64-1.38.0-dev.zip" -OutFile ".\Temp\grpc.zip"
 
 # Check whether the Plugins direcotry already exists, if not create it before extracting the zip file.
 if (-not (Test-Path -LiteralPath $APIExtractionDir)) {
@@ -58,7 +57,7 @@ Write-Host "Downloading and setuping Unity plugins... Path: $UnityPluginsDir"
 # Download the zipped Unity-gRPC plugins that are needed. 
 
 Write-Host "Setup gRPC for Unity"
-Invoke-WebRequest -Uri "https://packages.grpc.io/archive/2019/12/a02d6b9be81cbadb60eed88b3b44498ba27bcba9-edd81ac6-e3d1-461a-a263-2b06ae913c3f/csharp/grpc_unity_package.2.26.0-dev.zip" -OutFile ".\Temp\unity_grpc.zip"
+Invoke-WebRequest -Uri "https://packages.grpc.io/archive/2021/04/ccbb2dd207635cd1c53d9255a4b82c96e6042b74-b1949379-fd83-4d31-abf8-822fae110b43/csharp/grpc_unity_package.2.38.0-dev202104010955.zip" -OutFile ".\Temp\unity_grpc.zip"
 
 # Check if the Unity Plugins directory does not exist.
 # If it already exists we do not want to extract the contents
@@ -72,17 +71,17 @@ else {
 
 
 ######################## DOWNLOAD CREST FOR UNITY #############
-Write-Host "Setup Crest"
-$Author = "wave-harmonic"
-$Name = "crest" 
-$Branch = "master"
-$ZipFile = "$DownloadPath\$Name.zip"
-$CrestPath = Join-Path -Path $UnityPluginsDir -ChildPath "\Crest"
-New-Item $ZipFile -ItemType File -Force
-$RepositoryZipUrl = "https://api.github.com/repos/$Author/$Name/zipball/$Branch" 
-# download the zip 
-Invoke-RestMethod -Uri $RepositoryZipUrl -OutFile $ZipFile
-Expand-Archive -Path $ZipFile -DestinationPath $CrestPath -Force
+#Write-Host "Setup Crest"
+#$Author = "wave-harmonic"
+#$Name = "crest" 
+#$Branch = "master"
+#$ZipFile = "$DownloadPath\$Name.zip"
+#$CrestPath = Join-Path -Path $UnityPluginsDir -ChildPath "\Crest"
+#New-Item $ZipFile -ItemType File -Force
+#$RepositoryZipUrl = "https://api.github.com/repos/$Author/$Name/zipball/$Branch" 
+## download the zip 
+#Invoke-RestMethod -Uri $RepositoryZipUrl -OutFile $ZipFile
+#Expand-Archive -Path $ZipFile -DestinationPath $CrestPath -Force
 
 #################################################### CLEANUP ########################################################
 
