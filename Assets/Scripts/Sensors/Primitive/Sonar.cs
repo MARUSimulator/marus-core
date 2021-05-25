@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System;
 
-namespace Simulator.Sensors
+namespace Labust.Sensors
 {
-    public class Sonar : MonoBehaviour, ISensor
+    public class Sonar : MonoBehaviour
     {
         public float range;
         public float maxRange = 120f;

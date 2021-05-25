@@ -1,38 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
-using Simulator.Sensors;
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
-public class Nanomodem : MonoBehaviour
+namespace Labust.Sensors
 {
-    public float maxRange = 500;
-    public int id = 0;
-    public AcousticMedium medium;
-    
-    private Transform sensor;
-    protected void Start()
+    public class Nanomodem : MonoBehaviour
     {
-        sensor = GetComponent<Transform>();
-    }
+        public float maxRange = 500;
+        public int id = 0;
+        public AcousticMedium medium;
 
-    public (bool, float) GetRangeAndValidityToId(int id)
-    {
-        if (!medium.modems.ContainsKey(id))
+        private Transform sensor;
+        protected void Start()
         {
-            Debug.LogError("ID:" + id + " unknown.");
-            return (false, -1.0f);
+            sensor = GetComponent<Transform>();
         }
-        
-        var range = Vector3.Distance(medium.modems[id].transform.position, sensor.position);
 
-        if (range > maxRange)
+        public (bool, float) GetRangeAndValidityToId(int id)
         {
-            Debug.Log("ID:" + id + " is too far.");
-            return (false, range);
+            if (!medium.modems.ContainsKey(id))
+            {
+                Debug.LogError("ID:" + id + " unknown.");
+                return (false, -1.0f);
+            }
+
+            var range = Vector3.Distance(medium.modems[id].transform.position, sensor.position);
+
+            if (range > maxRange)
+            {
+                Debug.Log("ID:" + id + " is too far.");
+                return (false, range);
+            }
+
+            return (true, range);
         }
-        
-        return (true, range);
     }
 }

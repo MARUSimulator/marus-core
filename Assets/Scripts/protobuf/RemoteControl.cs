@@ -25,18 +25,17 @@ namespace Remotecontrol {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChRyZW1vdGVfY29udHJvbC5wcm90bxINcmVtb3RlY29udHJvbBoMY29tbW9u",
-            "LnByb3RvIh0KDEZvcmNlUmVxdWVzdBINCgV2ZWhJZBgBIAEoCSJUCg1Gb3Jj",
-            "ZVJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSMgoQZ2VuZXJhbGl6ZWRGb3Jj",
-            "ZRgCIAEoCzIYLmNvbW1vbi5HZW5lcmFsaXplZEZvcmNlMlwKDVJlbW90ZUNv",
-            "bnRyb2wSSwoKQXBwbHlGb3JjZRIbLnJlbW90ZWNvbnRyb2wuRm9yY2VSZXF1",
-            "ZXN0GhwucmVtb3RlY29udHJvbC5Gb3JjZVJlc3BvbnNlIgAwAUI3Ch5pby5n",
-            "cnBjLmV4YW1wbGVzLnJlbW90ZWNvbnRyb2xCDVJlbW90ZUNvbnRyb2xQAaIC",
-            "A0hMV2IGcHJvdG8z"));
+            "LnByb3RvIh0KDEZvcmNlUmVxdWVzdBINCgV2ZWhJZBgBIAEoCSI6Cg1Gb3Jj",
+            "ZVJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSGAoDcHdtGAIgASgLMgsuY29t",
+            "bW9uLlB3bTJcCg1SZW1vdGVDb250cm9sEksKCkFwcGx5Rm9yY2USGy5yZW1v",
+            "dGVjb250cm9sLkZvcmNlUmVxdWVzdBocLnJlbW90ZWNvbnRyb2wuRm9yY2VS",
+            "ZXNwb25zZSIAMAFCNwoeaW8uZ3JwYy5leGFtcGxlcy5yZW1vdGVjb250cm9s",
+            "Qg1SZW1vdGVDb250cm9sUAGiAgNITFdiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Common.CommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Remotecontrol.ForceRequest), global::Remotecontrol.ForceRequest.Parser, new[]{ "VehId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Remotecontrol.ForceResponse), global::Remotecontrol.ForceResponse.Parser, new[]{ "Success", "GeneralizedForce" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Remotecontrol.ForceResponse), global::Remotecontrol.ForceResponse.Parser, new[]{ "Success", "Pwm" }, null, null, null, null)
           }));
     }
     #endregion
@@ -245,7 +244,7 @@ namespace Remotecontrol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public ForceResponse(ForceResponse other) : this() {
       success_ = other.success_;
-      generalizedForce_ = other.generalizedForce_ != null ? other.generalizedForce_.Clone() : null;
+      pwm_ = other.pwm_ != null ? other.pwm_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -265,14 +264,14 @@ namespace Remotecontrol {
       }
     }
 
-    /// <summary>Field number for the "generalizedForce" field.</summary>
-    public const int GeneralizedForceFieldNumber = 2;
-    private global::Common.GeneralizedForce generalizedForce_;
+    /// <summary>Field number for the "pwm" field.</summary>
+    public const int PwmFieldNumber = 2;
+    private global::Common.Pwm pwm_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Common.GeneralizedForce GeneralizedForce {
-      get { return generalizedForce_; }
+    public global::Common.Pwm Pwm {
+      get { return pwm_; }
       set {
-        generalizedForce_ = value;
+        pwm_ = value;
       }
     }
 
@@ -290,7 +289,7 @@ namespace Remotecontrol {
         return true;
       }
       if (Success != other.Success) return false;
-      if (!object.Equals(GeneralizedForce, other.GeneralizedForce)) return false;
+      if (!object.Equals(Pwm, other.Pwm)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -298,7 +297,7 @@ namespace Remotecontrol {
     public override int GetHashCode() {
       int hash = 1;
       if (Success != false) hash ^= Success.GetHashCode();
-      if (generalizedForce_ != null) hash ^= GeneralizedForce.GetHashCode();
+      if (pwm_ != null) hash ^= Pwm.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -319,9 +318,9 @@ namespace Remotecontrol {
         output.WriteRawTag(8);
         output.WriteBool(Success);
       }
-      if (generalizedForce_ != null) {
+      if (pwm_ != null) {
         output.WriteRawTag(18);
-        output.WriteMessage(GeneralizedForce);
+        output.WriteMessage(Pwm);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -336,9 +335,9 @@ namespace Remotecontrol {
         output.WriteRawTag(8);
         output.WriteBool(Success);
       }
-      if (generalizedForce_ != null) {
+      if (pwm_ != null) {
         output.WriteRawTag(18);
-        output.WriteMessage(GeneralizedForce);
+        output.WriteMessage(Pwm);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -352,8 +351,8 @@ namespace Remotecontrol {
       if (Success != false) {
         size += 1 + 1;
       }
-      if (generalizedForce_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(GeneralizedForce);
+      if (pwm_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Pwm);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -369,11 +368,11 @@ namespace Remotecontrol {
       if (other.Success != false) {
         Success = other.Success;
       }
-      if (other.generalizedForce_ != null) {
-        if (generalizedForce_ == null) {
-          GeneralizedForce = new global::Common.GeneralizedForce();
+      if (other.pwm_ != null) {
+        if (pwm_ == null) {
+          Pwm = new global::Common.Pwm();
         }
-        GeneralizedForce.MergeFrom(other.GeneralizedForce);
+        Pwm.MergeFrom(other.Pwm);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -394,10 +393,10 @@ namespace Remotecontrol {
             break;
           }
           case 18: {
-            if (generalizedForce_ == null) {
-              GeneralizedForce = new global::Common.GeneralizedForce();
+            if (pwm_ == null) {
+              Pwm = new global::Common.Pwm();
             }
-            input.ReadMessage(GeneralizedForce);
+            input.ReadMessage(Pwm);
             break;
           }
         }
@@ -419,10 +418,10 @@ namespace Remotecontrol {
             break;
           }
           case 18: {
-            if (generalizedForce_ == null) {
-              GeneralizedForce = new global::Common.GeneralizedForce();
+            if (pwm_ == null) {
+              Pwm = new global::Common.Pwm();
             }
-            input.ReadMessage(GeneralizedForce);
+            input.ReadMessage(Pwm);
             break;
           }
         }

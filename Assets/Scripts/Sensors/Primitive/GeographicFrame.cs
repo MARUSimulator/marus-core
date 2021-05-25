@@ -4,8 +4,9 @@ using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Simulator.Sensors
+namespace Labust.Sensors
 {
+    //TODO
     public class GeographicFrame : MonoBehaviour
     {
         [Header("Tangent plane origin")] 

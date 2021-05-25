@@ -1,13 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Labust.Networking;
 using Sensorstreaming;
 using UnityEngine;
 
 namespace Labust.Sensors
 {
+    /// <summary>
+    /// Imu sensor implementation
+    /// </summary>
     [RequireComponent(typeof(Rigidbody))]
     public class ImuSensor : SensorBase<ImuStreamingRequest>
     {
+        
         [Header("Accelerometer")]
         public Vector3 linearAcceleration;
         public bool withGravity = true;
@@ -30,7 +35,10 @@ namespace Labust.Sensors
             sensor = GetComponent<Rigidbody>();
             streamHandle = streamingClient.StreamImuSensor(cancellationToken:RosConnection.Instance.cancellationToken);
             AddSensorCallback(SensorCallbackOrder.First, CalculateAccelerationAsVelocityDerivative);
+            if (string.IsNullOrEmpty(sensorId))
+                sensorId = vehicle.name + "/imu";
         }
+
 
         void CalculateAccelerationAsVelocityDerivative()
         {
@@ -39,7 +47,7 @@ namespace Labust.Sensors
             lastVelocity = localVelocity;
 
             if (withGravity)
-                linearAcceleration -= sensor.transform.InverseTransformVector(Physics.gravity);
+                linearAcceleration -= sensor.transform.InverseTransformVector(UnityEngine.Physics.gravity);
             hasData = true;
         }
 
@@ -68,6 +76,7 @@ namespace Labust.Sensors
                 Acceleration = acc,
                 AngularVelocity = angVel,
                 Orientation = o,
+                SensorId = sensorId
             });
             hasData = false;
         }

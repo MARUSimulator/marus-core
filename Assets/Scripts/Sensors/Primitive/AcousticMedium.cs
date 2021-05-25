@@ -3,8 +3,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Simulator.Sensors
+namespace Labust.Sensors
 {
+    // TODO
     public class AcousticMedium : MonoBehaviour
     {
         public List<Nanomodem> nanomodems = new List<Nanomodem>();

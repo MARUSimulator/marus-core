@@ -18,6 +18,11 @@ Tested on windows
 
 Clone the repository
 
-Right click on the `setup.ps1` script and click on `Run with PowerShell`
+## On windows
 
+Right click on the `setup/setup.ps1` script and click on `Run with PowerShell`
+
+## On linux
+
+Run shell script `setup/setup.sh`
 Download HDRPSimpleWater from above link and put it in `/Assets/Environment` folder

@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Sets active agent that listens to the keyboard input
+/// Press C to switch active agent
+/// </summary>
 public class AgentManager : MonoBehaviour
 {
     [SerializeField]

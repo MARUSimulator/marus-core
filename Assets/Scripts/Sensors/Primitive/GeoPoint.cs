@@ -1,7 +1,8 @@
 using UnityEngine;
 
-namespace Simulator.Sensors
+namespace Labust.Sensors
 {
+    //TODO
     [System.Serializable]
     public class GeoPoint
     {

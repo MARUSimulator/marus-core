@@ -5,49 +5,50 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Simulator.Sensors
+namespace Labust.Sensors
 {
-public class DvlSensor : MonoBehaviour, ISensor
-{
-    [Header("Core measurements")] 
-    public Vector3 groundVelocity = new Vector3();
-    public float altitude;
-
-    [Header("Beams")]
-    public float[] beamRanges;
-    public RangeSensor[] beams;
-
-    private Transform sensor;
-    private Vector3 lastPosition;
-
-    void Start()
+    // TODO
+    public class DvlSensor : MonoBehaviour
     {
-        sensor = GetComponent<Transform>();
-        beams = GetComponentsInChildren<RangeSensor>();
-        beamRanges = new float[beams.Length];
-        lastPosition = sensor.position;
-    }
+        [Header("Core measurements")]
+        public Vector3 groundVelocity = new Vector3();
+        public float altitude;
 
-    void FixedUpdate()
-    {
-        var position = sensor.position;
-        groundVelocity = sensor.worldToLocalMatrix * ((position - lastPosition) / Time.fixedDeltaTime);
+        [Header("Beams")]
+        public float[] beamRanges;
+        public RangeSensor[] beams;
 
-        lastPosition = position;
-    }
+        private Transform sensor;
+        private Vector3 lastPosition;
 
-    public void SampleSensor()
-    {
-        altitude = Single.MaxValue;
-        for (int i = 0; i < beams.Length; ++i)
+        void Start()
         {
-            beams[i].SampleSensor();
-            
-            if (beams[i].range < altitude)
-                altitude = beams[i].range;
+            sensor = GetComponent<Transform>();
+            beams = GetComponentsInChildren<RangeSensor>();
+            beamRanges = new float[beams.Length];
+            lastPosition = sensor.position;
+        }
 
-            beamRanges[i] = beams[i].range;
+        void FixedUpdate()
+        {
+            var position = sensor.position;
+            groundVelocity = sensor.worldToLocalMatrix * ((position - lastPosition) / Time.fixedDeltaTime);
+
+            lastPosition = position;
+        }
+
+        public void SampleSensor()
+        {
+            altitude = Single.MaxValue;
+            for (int i = 0; i < beams.Length; ++i)
+            {
+                beams[i].SampleSensor();
+
+                if (beams[i].range < altitude)
+                    altitude = beams[i].range;
+
+                beamRanges[i] = beams[i].range;
+            }
         }
     }
-}
 }
