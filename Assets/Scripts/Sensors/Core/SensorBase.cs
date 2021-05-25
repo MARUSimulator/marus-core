@@ -6,16 +6,44 @@ using Grpc.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Labust.Networking;
 
 namespace Labust.Sensors
 {
+    /// <summary>
+    /// Base class that every sensor has to implement
+    /// Sensor streams readings to the server defined in RosConnection singleton instance
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class SensorBase<T> : MonoBehaviour where T : IMessage
     {
         [Space]
         [Header("Streaming Parameters")]
         public int SensorUpdateHz = 1;
-
+        public string sensorId;
         //public bool RunRecording = false;
+
+        protected Rigidbody body;
+        /// <summary>
+        /// Vehichle that sensor is attached to
+        /// Gets rigid body component of a first ancestor
+        /// </summary>
+        /// <value></value>
+        public Transform vehicle
+        {
+            get
+            {
+                if (body == null)
+                {
+                    var component = GetComponent<Rigidbody>();
+                    if (component != null)
+                        body = component;
+                    else
+                        body = Utils.Helpers.GetParentRigidBody(transform);
+                }
+                return body.transform;
+            }
+        }
 
         public enum SensorCallbackOrder
         {
@@ -23,6 +51,9 @@ namespace Labust.Sensors
             Last
         };
 
+        /// <summary>
+        /// Data class for sensor callback definition
+        /// </summary>
         private class SensorCallback
         {
             // callback for sensor update
@@ -32,7 +63,15 @@ namespace Labust.Sensors
             public SensorCallbackOrder executionOrder;
         };
 
+        /// <summary>
+        /// Set this when there is new data sampled
+        /// </summary>
         protected volatile bool hasData = false;
+
+        /// <summary>
+        /// A client instance used for streaming sensor readings
+        /// </summary>
+        /// <value></value>
         protected SensorStreaming.SensorStreamingClient streamingClient
         {
             get
@@ -42,7 +81,17 @@ namespace Labust.Sensors
                 return RosConnection.Instance.GetClient<SensorStreaming.SensorStreamingClient>();
             }
         }
+
+        /// <summary>
+        /// Set this in the Awake() method of the sensor script.
+        /// Instantiate appropriate client service
+        /// </summary>
         protected AsyncClientStreamingCall<T, StreamingResponse> streamHandle;
+
+        /// <summary>
+        /// Used to write sensor reading messages
+        /// </summary>
+        /// <value></value>
         protected IClientStreamWriter<T> streamWriter 
         {
             get

@@ -43,7 +43,7 @@ namespace Common {
             "ASgCEg8KB2hlYWRpbmcYAyABKAIiOAoLUG9zaXRpb25ORUQSDQoFbm9ydGgY",
             "ASABKAISDAoEZWFzdBgCIAEoAhIMCgRkb3duGAMgASgCIkEKCEdlb1BvaW50",
             "EhAKCGxhdGl0dWRlGAEgASgCEhEKCWxvbmdpdHVkZRgCIAEoAhIQCghhbHRp",
-            "dHVkZRgDIAEoAmIGcHJvdG8z"));
+            "dHVkZRgDIAEoAiISCgNQd20SCwoDb3V0GAEgAygCYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -60,7 +60,8 @@ namespace Common {
             new pbr::GeneratedClrTypeInfo(typeof(global::Common.PoseVec), global::Common.PoseVec.Parser, new[]{ "Position", "Orientation" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Common.PoseNED2D), global::Common.PoseNED2D.Parser, new[]{ "North", "East", "Heading" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Common.PositionNED), global::Common.PositionNED.Parser, new[]{ "North", "East", "Down" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Common.GeoPoint), global::Common.GeoPoint.Parser, new[]{ "Latitude", "Longitude", "Altitude" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Common.GeoPoint), global::Common.GeoPoint.Parser, new[]{ "Latitude", "Longitude", "Altitude" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Common.Pwm), global::Common.Pwm.Parser, new[]{ "Out" }, null, null, null, null)
           }));
     }
     #endregion
@@ -3582,6 +3583,169 @@ namespace Common {
           }
           case 29: {
             Altitude = input.ReadFloat();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  public sealed partial class Pwm : pb::IMessage<Pwm>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<Pwm> _parser = new pb::MessageParser<Pwm>(() => new Pwm());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Pwm> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Common.CommonReflection.Descriptor.MessageTypes[14]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Pwm() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Pwm(Pwm other) : this() {
+      out_ = other.out_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Pwm Clone() {
+      return new Pwm(this);
+    }
+
+    /// <summary>Field number for the "out" field.</summary>
+    public const int OutFieldNumber = 1;
+    private static readonly pb::FieldCodec<float> _repeated_out_codec
+        = pb::FieldCodec.ForFloat(10);
+    private readonly pbc::RepeatedField<float> out_ = new pbc::RepeatedField<float>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<float> Out {
+      get { return out_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Pwm);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Pwm other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if(!out_.Equals(other.out_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      hash ^= out_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      out_.WriteTo(output, _repeated_out_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      out_.WriteTo(ref output, _repeated_out_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      size += out_.CalculateSize(_repeated_out_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Pwm other) {
+      if (other == null) {
+        return;
+      }
+      out_.Add(other.out_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10:
+          case 13: {
+            out_.AddEntriesFrom(input, _repeated_out_codec);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10:
+          case 13: {
+            out_.AddEntriesFrom(ref input, _repeated_out_codec);
             break;
           }
         }

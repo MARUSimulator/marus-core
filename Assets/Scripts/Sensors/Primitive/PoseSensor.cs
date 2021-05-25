@@ -1,10 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Labust.Networking;
+using Sensorstreaming;
 using UnityEngine;
+using Utils;
 
-namespace Simulator.Sensors
+namespace Labust.Sensors
 {
-    public class PoseSensor : MonoBehaviour, ISensor
+    /// <summary>
+    /// Pose sensor implementation
+    /// </summary>
+    public class PoseSensor : SensorBase<PoseStreamingRequest>
     {
         [Header("Pose")] 
         public Vector3 position;
@@ -13,19 +19,42 @@ namespace Simulator.Sensors
         public Vector3 linearVelocity;
         public Vector3 angularVelocity;
 
-        public Rigidbody measuredObject;
+        Rigidbody measuredObject;
       
         void Start()
         {
-            measuredObject = GetComponentInParent<Rigidbody>();
+            measuredObject = Helpers.GetParentRigidBody(transform);
+            streamHandle = streamingClient.StreamPoseSensor(cancellationToken:RosConnection.Instance.cancellationToken);
+            AddSensorCallback(SensorCallbackOrder.Last, Refresh);
+            if (string.IsNullOrEmpty(sensorId))
+                sensorId = vehicle.name + "/pose";
         }
 
-        public void SampleSensor()
+        public void Refresh()
         {
             position = measuredObject.position;
             orientation = measuredObject.rotation;
             linearVelocity = measuredObject.transform.InverseTransformVector(measuredObject.velocity);
             angularVelocity = measuredObject.angularVelocity;
+            hasData = true;
+        }
+
+        public async override void SendMessage()
+        {
+            await streamWriter.WriteAsync(new PoseStreamingRequest
+            {
+                SensorId = sensorId,
+                Pose = new Common.Pose
+                {
+                    Position = new Common.Position
+                    {
+                        X = position.x,
+                        Y = position.y,
+                        Z = position.z
+                    }
+                }
+            });
+            hasData = false;
         }
     }
 }

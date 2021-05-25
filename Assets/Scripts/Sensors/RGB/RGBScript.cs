@@ -1,24 +1,23 @@
 ﻿using UnityEngine;
-using System.Collections;
-using Labust.Sensors;
 using Labust.Sensors.Core.ZBuffer;
-
 using UnityEngine.Rendering;
-
 using Google.Protobuf;
 using Sensorstreaming;
 using Labust.Sensors.Core;
 using System;
+using Labust.Networking;
 
 namespace Labust.Sensors
 {
     [RequireComponent(typeof(Camera))]
+    /// <summary>
+    /// Camera sensor implementation
+    /// </summary>
     public class RGBScript : SensorBase<CameraStreamingRequest>
     {
         public RenderTexture _cameraBuffer { get; set; }
         public RenderTexture SampleCameraImage;
         public ComputeShader cameraShader;
-        public string cameraId = "F";
         public int ImageCrop = 4;
         public bool SynchronousUpdate = false;
 
@@ -46,6 +45,8 @@ namespace Labust.Sensors
             cameraShader.SetTexture(kernelIndex, "RenderTexture", camera.targetTexture);
             cameraShader.SetInt("Width", PixelWidth / ImageCrop);
             cameraShader.SetInt("Height", PixelHeight / ImageCrop);
+            if (string.IsNullOrEmpty(sensorId))
+                sensorId = vehicle.name + "/camera";
         }
 
         private void Awake()
@@ -54,18 +55,10 @@ namespace Labust.Sensors
             AddSensorCallback(SensorCallbackOrder.First, RGBUpdate);
         }
 
-        int totalMsgs = 0;
-        object dataLock = new object();
         public byte[] Data { get; private set; } = new byte[0];
         public async override void SendMessage()
         {
-            totalMsgs++;
-            var maxMsgs = 1000;
-            if (maxMsgs <= totalMsgs)
-            {
-                streamHandle.Dispose();
-            }
-            if (hasData && totalMsgs < maxMsgs)
+            if (hasData)
             {
                 try
                 {
@@ -73,7 +66,7 @@ namespace Labust.Sensors
                     { 
                         Data = ByteString.CopyFrom(Data), 
                         TimeStamp = Time.time, 
-                        SensorId = cameraId, 
+                        SensorId = sensorId, 
                         Height = (uint)(PixelHeight/ImageCrop), 
                         Width = (uint)(PixelWidth/ImageCrop) 
                     });

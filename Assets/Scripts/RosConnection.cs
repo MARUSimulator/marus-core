@@ -8,87 +8,108 @@ using Remotecontrol;
 using UnityEngine;
 using System.Threading;
 
-public class RosConnection : MonoBehaviour
+
+namespace Labust.Networking
 {
-    public string serverIP = "172.19.126.65";
 
-    public int serverPort = 30052;
-    public int connectionTimeout = 5;
-    static RosConnection _instance = null;
-
-    Channel _streamingChannel;
-    Dictionary<Type, ClientBase> _grpcClients;
-    volatile bool _connected;
-
-    public bool IsConnected => _connected;
-    public CancellationToken cancellationToken => _streamingChannel.ShutdownToken;
-
-    // Game Instance Singleton
-    public static RosConnection Instance
+    /// <summary>
+    /// Singleton class for configuring and connecting to 
+    /// ROS server
+    /// </summary>
+    [DefaultExecutionOrder(-1)]
+    public class RosConnection : MonoBehaviour
     {
-        get
+        public string serverIP = "172.19.126.65";
+
+        public int serverPort = 30052;
+        public int connectionTimeout = 5;
+        static RosConnection _instance = null;
+
+        Channel _streamingChannel;
+        Dictionary<Type, ClientBase> _grpcClients;
+        volatile bool _connected;
+
+        public bool IsConnected => _connected;
+        public CancellationToken cancellationToken => _streamingChannel.ShutdownToken;
+
+        /// <summary>
+        /// RosConnection Instance Singleton
+        /// </summary>
+        /// <value></value>
+        public static RosConnection Instance
         {
-            return _instance;
+            get
+            {
+                return _instance;
+            }
         }
-    }
 
-    private void Awake()
-    {
-        // if the singleton hasn't been initialized yet
-        if (_instance != null && _instance != this)
+        private void Awake()
         {
-            Destroy(this.gameObject);
-        }
+            // if the singleton hasn't been initialized yet
+            if (_instance != null && _instance != this)
+            {
+                Destroy(this.gameObject);
+            }
 
-        _instance = this;
-        DontDestroyOnLoad(this.gameObject);
+            _instance = this;
+            DontDestroyOnLoad(this.gameObject);
 
-        // init channel and streaming clients
-        _streamingChannel = new Channel(serverIP, serverPort, ChannelCredentials.Insecure);
-        InitializeClients();
-        var t = new Thread(() =>
-        {
-            _connected = WaitForConnection();
+            // init channel and streaming clients
+            _streamingChannel = new Channel(serverIP, serverPort, ChannelCredentials.Insecure);
+            InitializeClients();
+            var t = new Thread(() =>
+            {
+                _connected = WaitForConnection();
             // maybe add what to do after failed connection
             // maybe ping server repeatedly 
         });
-        t.Start();
-    }
+            t.Start();
+        }
 
-    /// <summary>
-    /// Adds new client of type if it does not currently exists.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public T AddNewClient<T>() where T : ClientBase
-    {
-        var t = typeof(T);
-        if (_grpcClients.TryGetValue(t, out var clientBase))
-            return clientBase as T;
-
-        var client = Activator.CreateInstance(typeof(T), _streamingChannel) as T;
-        _grpcClients.Add(t, client);
-        return client as T;
-    }
-
-    public T GetClient<T>() where T : ClientBase
-    {
-        if (_grpcClients.TryGetValue(typeof(T), out var client))
-            return client as T;
-        throw new Exception($"Client of type {typeof(T).Name} does not exist.");
-    }
-
-
-    private void InitializeClients()
-    {
-        _grpcClients = new Dictionary<Type, ClientBase>()
+        /// <summary>
+        /// Adds new client of type if it does not currently exists.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T AddNewClient<T>() where T : ClientBase
         {
-            { 
-                typeof(SensorStreaming.SensorStreamingClient), 
+            var t = typeof(T);
+            if (_grpcClients.TryGetValue(t, out var clientBase))
+                return clientBase as T;
+
+            var client = Activator.CreateInstance(typeof(T), _streamingChannel) as T;
+            _grpcClients.Add(t, client);
+            return client as T;
+        }
+
+        /// <summary>
+        /// Get gRPC client of given type.
+        /// Clients are shared on the application instance
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T GetClient<T>() where T : ClientBase
+        {
+            if (_grpcClients.TryGetValue(typeof(T), out var client))
+                return client as T;
+            throw new Exception($"Client of type {typeof(T).Name} does not exist.");
+        }
+
+
+        /// <summary>
+        /// Initialize client registry
+        /// </summary>
+        private void InitializeClients()
+        {
+            _grpcClients = new Dictionary<Type, ClientBase>()
+        {
+            {
+                typeof(SensorStreaming.SensorStreamingClient),
                 new SensorStreaming.SensorStreamingClient(_streamingChannel)
             },
-            { 
-                typeof(RemoteControl.RemoteControlClient), 
+            {
+                typeof(RemoteControl.RemoteControlClient),
                 new RemoteControl.RemoteControlClient(_streamingChannel)
             },
             {
@@ -96,50 +117,56 @@ public class RosConnection : MonoBehaviour
                 new Ping.Ping.PingClient(_streamingChannel)
             }
         };
-    }
+        }
 
-    bool WaitForConnection()
-    {
-        // sleep until connected
-        Debug.Log("Awaiting connection with ROS Server...");
-        var pingClinent = GetClient<Ping.Ping.PingClient>();
-        try
+        /// <summary>
+        /// Ping gRPC service to see if connection if established.
+        /// </summary>
+        /// <returns></returns>
+        bool WaitForConnection()
         {
-            var response = pingClinent.Ping(new Ping.PingMsg(), deadline: DateTime.UtcNow.AddSeconds(connectionTimeout));
-            if (response.Value == 1)
+            // sleep until connected
+            Debug.Log("Awaiting connection with ROS Server...");
+            var pingClinent = GetClient<Ping.Ping.PingClient>();
+            try
             {
-                Debug.Log("Connected to the ROS Server");
-                return true;
+                var response = pingClinent.Ping(new Ping.PingMsg(), deadline: DateTime.UtcNow.AddSeconds(connectionTimeout));
+                if (response.Value == 1)
+                {
+                    Debug.Log("Connected to the ROS Server");
+                    return true;
+                }
+            }
+            catch (RpcException e)
+            {
+                Debug.Log($"Could not establish a connection to ROS Server. {e.Message}");
+            }
+            return false;
+        }
+
+        async void OnDisable()
+        {
+            Debug.Log("Shutting down grpc clients and channel. Await for sucessfull confirmation...");
+            _grpcClients.Clear();
+            var awaitable = _streamingChannel.ShutdownAsync();
+
+            int time = 0;
+            while (!awaitable.IsCompleted && time < 3)
+            {
+                Thread.Sleep(1000);
+                time++;
+            }
+            if (awaitable.IsCompleted)
+            {
+                Debug.Log("Shut down of grpc clients and channel successfull.");
+                await awaitable;
+            }
+            else
+            {
+                awaitable.Dispose();
+                Debug.Log("Shut down of grpc clients and channel failed. Some client does not have cancelation token set.");
             }
         }
-        catch (RpcException e)
-        {
-            Debug.Log($"Could not establish a connection to ROS Server. {e.Message}");
-        }
-        return false;
     }
 
-    async void OnDisable()
-    {
-        Debug.Log("Shutting down grpc clients and channel. Await for sucessfull confirmation...");
-        _grpcClients.Clear();
-        var awaitable = _streamingChannel.ShutdownAsync();
-        
-        int time = 0;
-        while (!awaitable.IsCompleted && time < 3)
-        {
-            Thread.Sleep(1000);
-            time++;
-        }
-        if (awaitable.IsCompleted)
-        {
-            Debug.Log("Shut down of grpc clients and channel successfull.");
-            await awaitable;
-        }
-        else
-        {
-            awaitable.Dispose();
-            Debug.Log("Shut down of grpc clients and channel failed. Some client does not have cancelation token set.");
-        }
-    }
 }

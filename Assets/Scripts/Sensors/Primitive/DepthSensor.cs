@@ -1,21 +1,39 @@
-﻿using UnityEngine;
+﻿using Labust.Networking;
+using Labust.Sensors;
+using Sensorstreaming;
+using UnityEngine;
 
-namespace Simulator.Sensors
+namespace Labust.Sensors
 {
-    public class DepthSensor : MonoBehaviour, ISensor
+    /// <summary>
+    /// Depth sensor implementation
+    /// </summary>
+    public class DepthSensor : SensorBase<DepthStreamingRequest>
     {
-        public float depth;
-        
-        private Transform sensor;
+        float depth;
 
-        void Start()
+        public void Awake()
         {
-            sensor = GetComponent<Transform>();
+            streamHandle =  streamingClient.StreamDepthSensor(cancellationToken:RosConnection.Instance.cancellationToken);
+            AddSensorCallback(SensorCallbackOrder.Last, Refresh);
+            if (string.IsNullOrEmpty(sensorId))
+                sensorId = vehicle.name + "/depth";
         }
 
-        public void SampleSensor()
+        public async override void SendMessage()
         {
-            depth = sensor.position.y;
+            await streamWriter.WriteAsync( new DepthStreamingRequest
+            {
+                SensorId = sensorId,
+                Depth = depth
+            });
+            hasData = false;
+        }
+
+        public void Refresh()
+        {
+            depth = -transform.position.y;
+            hasData = true;
         }
     }
 }
