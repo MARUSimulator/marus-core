@@ -2,6 +2,7 @@
 using System.Collections;
 using Unity.Collections;
 using UnityEngine.Rendering;
+using System.Runtime.InteropServices;
 
 namespace Labust.Sensors.Core { 
 
@@ -11,22 +12,42 @@ namespace Labust.Sensors.Core {
         public string bufferName;
         public T[] data;
 
-        public ComputeBufferDataExtractor(int numElements, int elementSizeBytes, string gpuBufferName)
+        private ComputeBufferDataExtractor(string gpuBufferName, int numElements=-1, int elementSizeBytes=-1, T[] data=null)
         {
-            ComputeBuffer dataBuffer = new ComputeBuffer(numElements, elementSizeBytes);
-            var VarType = typeof(T);
-            if (VarType == typeof(byte))
+            if (data == null)
             {
-                data = new T[numElements * elementSizeBytes];
+                var VarType = typeof(T);
+                if (VarType == typeof(byte))
+                {
+                    data = new T[numElements * elementSizeBytes];
+                }
+                else
+                {
+                    data = new T[numElements];
+                }
             }
             else
             {
-                data = new T[numElements];
+                numElements = data.Length;
+                var obj = default(T);
+                elementSizeBytes = Marshal.SizeOf(obj);
             }
+            
+            ComputeBuffer dataBuffer = new ComputeBuffer(numElements, elementSizeBytes);
             dataBuffer.SetData(data);
             bufferName = gpuBufferName;
             buffer = dataBuffer;
+            this.data = data;
         }
+
+        public ComputeBufferDataExtractor(T[] data, string gpuBufferName) : this(gpuBufferName, data:data)
+        {
+        }
+
+        public ComputeBufferDataExtractor(int numElements, int elementSizeBytes, string gpuBufferName) : this(gpuBufferName, numElements, elementSizeBytes)
+        {
+        }
+
         public void SetBuffer(ComputeShader shader, string kernelName)
         {
             int kernelHandle = shader.FindKernel(kernelName);

@@ -5,6 +5,9 @@ using Sensorstreaming;
 
 namespace Gemini.EMRS.Core
 {
+    /// <summary>
+    /// Will be removed when Radar and IR are done
+    /// </summary>
     public abstract class Sensor : MonoBehaviour
     {
         [Space]

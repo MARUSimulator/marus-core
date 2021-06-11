@@ -1388,6 +1388,7 @@ Transform:
   m_Children:
   - {fileID: 1975262745}
   - {fileID: 276971287}
+  - {fileID: 1326001572}
   m_Father: {fileID: 1930297429}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1497,7 +1498,7 @@ GameObject:
   - component: {fileID: 1326001572}
   - component: {fileID: 1326001571}
   m_Layer: 0
-  m_Name: Lidar
+  m_Name: RaycastLidar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1517,17 +1518,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SensorUpdateHz: 1
   address: 
-  body: {fileID: 0}
-  hasData: 0
-  cumulativeTime: 0
   ParticleMaterial: {fileID: 2100000, guid: 2896c8197dda1784cb9bf8d6deb6ea11, type: 2}
   WidthRes: 2048
   HeightRes: 32
   MaxDistance: 100
   MinDistance: 0.2
   FieldOfView: 50
-  _pointCloudManager: {fileID: 0}
-  _readbackInProgress: 0
 --- !u!4 &1326001572
 Transform:
   m_ObjectHideFlags: 0
@@ -1535,11 +1531,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326001569}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 1.17, z: 1.026}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0.060000427, y: 1.3460001, z: 4.3393664}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1930297429}
+  m_Father: {fileID: 1297007835}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1463999883
@@ -1697,8 +1693,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 653d32ac692404546bce378f86bac083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  computeParticle: {fileID: 7200000, guid: 4b78f66eefc639f4193208e4035b6b7e, type: 3}
-  _nrOfParticles: 0
 --- !u!114 &1469226917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1712,7 +1706,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   computeFilter: {fileID: 7200000, guid: ebdf626a7cc969f43a23018fb0e73195, type: 3}
-  SphericalProjectionFilterImage: {fileID: 0}
+  SphericalProjectionFilterMask: {fileID: 0}
 --- !u!4 &1469226918
 Transform:
   m_ObjectHideFlags: 0
@@ -1772,9 +1766,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   computeParticle: {fileID: 0}
   particleMaterial: {fileID: 0}
-  _cloudObject: {fileID: 0}
-  _particleMesh: {fileID: 0}
-  displaymentLayer: Lidar
   _nrOfParticles: 0
 --- !u!1 &1483899397
 GameObject:
@@ -2094,7 +2085,6 @@ Transform:
   m_Children:
   - {fileID: 1463999884}
   - {fileID: 1297007835}
-  - {fileID: 1326001572}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}

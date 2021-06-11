@@ -6,6 +6,10 @@ using System.IO;
 using System;
 
 namespace Gemini.EMRS.Core { 
+
+/// <summary>
+/// Will be removed when Radar and IR are done
+/// </summary>
 public class Helper
     {
 

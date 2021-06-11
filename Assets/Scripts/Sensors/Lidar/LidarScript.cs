@@ -7,11 +7,17 @@ using Google.Protobuf;
 using Gemini.EMRS.Core;
 using Sensorstreaming;
 using Labust.Sensors.Core;
+using System.Linq;
+using Labust.Visualization;
 
 namespace Labust.Sensors {
 
     [RequireComponent(typeof(SphericalProjectionFilter))]
     [RequireComponent(typeof(PointCloudManager))]
+
+    /// <summary>
+    /// STIL DOES NOT WORK ON UNITY 2020. Works on Unity 2019
+    /// </summary>
     public class LidarScript : Sensor
     {
         public ComputeShader lidarShader;
@@ -41,24 +47,29 @@ namespace Labust.Sensors {
         PointCloudManager pointCloud;
         SphericalProjectionFilter projectionFilter;
 
+        int _widthResPerCamera;
+        int _lidarHorisonralResPerCamera;
         int HeightRes = 32;
         int kernelHandle;
-        ComputeBufferDataExtractor<Vector3> particleUnifiedArray;
-        ComputeBufferDataExtractor<byte> lidarDataByte;
+        public ComputeBufferDataExtractor<Vector3> particeData;
+        public ComputeBufferDataExtractor<byte> lidarDataByte;
+        public ComputeBufferDataExtractor<uint> randomStateVector;
+        public ComputeBufferDataExtractor<Vector4> debug;
 
         void Start()
         {
 
             // Setting User information
 
-            WidthRes /= NumCameras;
+            _widthResPerCamera = WidthRes / NumCameras;
+            _lidarHorisonralResPerCamera = LidarHorisontalRes /  NumCameras;
 
             // vertical angle at the left or right side of camera frustum
             float lidarVerticalAngle = LidarVerticalAngle;
-            HeightRes = (int)(WidthRes * Mathf.Tan(lidarVerticalAngle * Mathf.Deg2Rad / 2) / Mathf.Sin(Mathf.PI / NumCameras));
+            HeightRes = (int)(_widthResPerCamera * Mathf.Tan(lidarVerticalAngle * Mathf.Deg2Rad / 2) / Mathf.Sin(Mathf.PI / NumCameras));
             LidarVerticalAngle = Mathf.Rad2Deg * 2 * Mathf.Atan(Mathf.Tan(lidarVerticalAngle * Mathf.Deg2Rad / 2) / Mathf.Cos(Mathf.PI / NumCameras));
 
-            NumberOfLidarPoints = (uint)NrOfLasers * (uint)LidarHorisontalRes * (uint)NumCameras;
+            NumberOfLidarPoints = (uint)NrOfLasers * (uint)_lidarHorisonralResPerCamera * (uint)NumCameras;
 
             // Settup Game objects
 
@@ -66,33 +77,36 @@ namespace Labust.Sensors {
             pointCloud.SetupPointCloud((int)NumberOfLidarPoints);
 
             CameraFrustum frustum;
-            (lidarCameras, frustum) = DepthCameras.SpawnDepthCameras(transform, NumCameras, WidthRes, MaxDistance, MinDistance, LidarVerticalAngle);
-            DepthCameras.SetCameraBuffers(lidarCameras, lidarShader, "CSMain");
+            (lidarCameras, frustum) = DepthCameras.SpawnDepthCameras(transform, NumCameras, _widthResPerCamera, MaxDistance, MinDistance, LidarVerticalAngle);
+            DepthCameras.SetCameraBuffers(lidarCameras, frustum, lidarShader, "CSMain");
 
             projectionFilter = GetComponent<SphericalProjectionFilter>();
-            projectionFilter.SetupSphericalProjectionFilter(LidarHorisontalRes, NrOfLasers, frustum);
+            projectionFilter.SetupSphericalProjectionFilter(_lidarHorisonralResPerCamera, NrOfLasers, frustum);
             pixelCoordinatesBuffer = projectionFilter.filterCoordinates.buffer;
 
             // Setting up Compute Buffers
             kernelHandle = lidarShader.FindKernel("CSMain");
 
             lidarShader.SetBuffer(kernelHandle, "sphericalPixelCoordinates", pixelCoordinatesBuffer);
-            lidarShader.SetInt("N_theta", LidarHorisontalRes);
+            lidarShader.SetInt("N_theta", _lidarHorisonralResPerCamera);
             lidarShader.SetInt("N_phi", NrOfLasers);
             lidarShader.SetFloat("rayDropProbability", rayDropProbability);
 
             // Used to generate random float 0-1 numbers on GPU
-            ComputeBufferDataExtractor<uint> RandomStateVector = new ComputeBufferDataExtractor<uint>(NumCameras * NrOfLasers * LidarHorisontalRes, sizeof(float), "_state_xorshift");
-            RandomStateVector.SetBuffer(lidarShader, "RNG_Initialize");
-            RandomStateVector.SynchUpdate(lidarShader, "RNG_Initialize");
+            randomStateVector = new ComputeBufferDataExtractor<uint>(NumCameras * NrOfLasers * _lidarHorisonralResPerCamera, sizeof(float), "_state_xorshift");
+            randomStateVector.SetBuffer(lidarShader, "RNG_Initialize");
+            randomStateVector.SynchUpdate(lidarShader, "RNG_Initialize");
 
-            RandomStateVector.SetBuffer(lidarShader, "CSMain");
+            randomStateVector.SetBuffer(lidarShader, "CSMain");
 
-            particleUnifiedArray = new ComputeBufferDataExtractor<Vector3>(NumCameras * NrOfLasers * LidarHorisontalRes, sizeof(float) * 3, "lines");
-            particleUnifiedArray.SetBuffer(lidarShader, "CSMain");
+            particeData = new ComputeBufferDataExtractor<Vector3>(NumCameras * NrOfLasers * _lidarHorisonralResPerCamera, sizeof(float) * 3, "lines");
+            particeData.SetBuffer(lidarShader, "CSMain");
 
-            lidarDataByte = new ComputeBufferDataExtractor<byte>(NumCameras * NrOfLasers * LidarHorisontalRes, sizeof(float) * 6, "LidarData");
+            lidarDataByte = new ComputeBufferDataExtractor<byte>(NumCameras * NrOfLasers * _lidarHorisonralResPerCamera, sizeof(float) * 6, "LidarData");
             lidarDataByte.SetBuffer(lidarShader, "CSMain");
+
+            debug = new ComputeBufferDataExtractor<Vector4>(NumCameras * NrOfLasers * _lidarHorisonralResPerCamera, 4*sizeof(float), "debugBuffer");
+            debug.SetBuffer(lidarShader, "CSMain");
 
         }
 
@@ -110,27 +124,31 @@ namespace Labust.Sensors {
         void LidarUpdate(ScriptableRenderContext context, Camera[] cameras)
         {
             lidarShader.SetFloat("rayDropProbability", rayDropProbability);
-            lidarShader.Dispatch(kernelHandle, (int)Mathf.Ceil((float)NumCameras * (float)NrOfLasers * (float)LidarHorisontalRes / 1024.0f), 1, 1);
+            debug.SynchUpdate(lidarShader, "CSMain");
+
+            var max = debug.data.Max(x => x.x);
+            var a = 5;
+            // lidarShader.Dispatch(kernelHandle, (int)Mathf.Ceil(NumberOfLidarPoints / 1024.0f), 1, 1);
         }
 
         void PointCloudRendering(ScriptableRenderContext context, Camera[] cameras)
         {
             if (SynchronousUpdate)
             {
-                particleUnifiedArray.SynchUpdate(lidarShader,"CSMain");
-                if (pointCloud != null) { pointCloud.UpdatePointCloud(particleUnifiedArray.data); }
+                particeData.SynchUpdate(lidarShader,"CSMain");
+                if (pointCloud != null) { pointCloud.UpdatePointCloud(particeData.data); }
                 gate = true;
             }
             else
             {
-                AsyncGPUReadback.Request(particleUnifiedArray.buffer, PointCloudCompleted);
+                AsyncGPUReadback.Request(particeData.buffer, PointCloudCompleted);
             }
         }
 
         void PointCloudCompleted(AsyncGPUReadbackRequest request)
         {
-            particleUnifiedArray.AsynchUpdate(request);
-            if (pointCloud != null) { pointCloud.UpdatePointCloud(particleUnifiedArray.data); }
+            particeData.AsynchUpdate(request);
+            if (pointCloud != null) { pointCloud.UpdatePointCloud(particeData.data); }
             gate = true;
         }
 
@@ -139,7 +157,7 @@ namespace Labust.Sensors {
             if (SynchronousUpdate)
             {
                 lidarDataByte.SynchUpdate(lidarShader, "CSMain");
-                message = new LidarMessage(LidarHorisontalRes * NrOfLasers * NumCameras, OSPtime, lidarDataByte.data);
+                message = new LidarMessage(_lidarHorisonralResPerCamera * NrOfLasers * NumCameras, OSPtime, lidarDataByte.data);
                 gate = true;
             }
             else
@@ -153,7 +171,7 @@ namespace Labust.Sensors {
         void PointCloudDataCompleted(AsyncGPUReadbackRequest request)
         {
             lidarDataByte.AsynchUpdate(request);
-            message = new LidarMessage(LidarHorisontalRes * NrOfLasers * NumCameras, OSPtime, lidarDataByte.data);
+            message = new LidarMessage(_lidarHorisonralResPerCamera * NrOfLasers * NumCameras, OSPtime, lidarDataByte.data);
             gate = true;
 
 
@@ -202,7 +220,14 @@ namespace Labust.Sensors {
             //     return true;
             return false;
         }
+        void OnDestroy()
+        {
+            particeData.Delete();
+            lidarDataByte.Delete();
+            randomStateVector.Delete();
+        }
 
     }
+
 
 }

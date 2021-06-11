@@ -3,8 +3,6 @@
 #pragma kernel projectionFilterImageKernel
 
 
-// Create a RenderTexture with enableRandomWrite flag and set it
-// with cs.SetTexture
 RWStructuredBuffer<uint2> projectionFilterBuffer;
 RWStructuredBuffer<float> projectionFilterDebug;
 
@@ -23,38 +21,37 @@ float HFOV_s;
 [numthreads(1024, 1, 1)]
 void projectionFilterKernel(uint id : SV_DispatchThreadID)
 {
-	N_phi = N_phi-1; // 0 indexing
+	// id : WidthRes * HeightRes in 1 dimension
+	// N_phi = N_phi-1; // 0 indexing
 
 	// Sphere
 
 	int n_theta = id % N_theta;
 	int n_phi = id / N_theta;
 
-	float theta = HFOV_s * (float(n_theta) / float(N_theta) - 1.0 / 2.0);
-	float phi = VFOV_s * (float(n_phi) / float(N_phi) - 1.0 / 2.0);
+	float theta = HFOV_s * (float(n_theta) / float(N_theta - 1) - 1.0 / 2.0);
+	float phi = VFOV_s * (float(n_phi) / float(N_phi - 1) - 1.0 / 2.0);
 	float4 Q_v = float4(-sin(theta)*cos(phi), sin(phi), -cos(theta)*cos(phi), 1.0);
 
 	// Projection
 
 	float4 bar_Q_i = mul(CameraMatrix, Q_v);
 	float3 Q_i = bar_Q_i.xyz / bar_Q_i.w;
-	float x_d = 0.5*(1 + Q_i.x)*float(N_W);
-	float y_d = 0.5*(1 + Q_i.y)*float(N_H);
+	float x_d = 0.5*(1 + Q_i.x)*float(N_W-1);
+	float y_d = 0.5*(1 + Q_i.y)*float(N_H-1);
 
 	// Output
 
 	//projectionFilterDebug[0] = VFOV_c * 180 / 3.14159265;
-	projectionFilterDebug[0] = CameraMatrix._m00;
-	projectionFilterDebug[1] = CameraMatrix._m11;
-	projectionFilterDebug[2] = CameraMatrix._m22;
-	projectionFilterDebug[3] = CameraMatrix._m23;
-	projectionFilterDebug[4] = CameraMatrix._m32;
+	// projectionFilterDebug[0] = CameraMatrix._m00;
+	// projectionFilterDebug[1] = CameraMatrix._m11;
+	// projectionFilterDebug[2] = CameraMatrix._m22;
+	// projectionFilterDebug[3] = CameraMatrix._m23;
+	// projectionFilterDebug[4] = CameraMatrix._m32;
 
 
-	if (id <= N_theta * (N_phi+1)) {
-		projectionFilterBuffer[id] = uint2(x_d, y_d);
-		projectionFilterDebug[5] = (float)projectionFilterBuffer[id].x;
-	}
+	projectionFilterBuffer[id] = uint2(x_d, y_d);
+	projectionFilterDebug[id] = (float)projectionFilterBuffer[id].x;
 }
 
 RWTexture2D<float4> projectionFilterImageBuffer;

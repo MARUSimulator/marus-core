@@ -126,11 +126,16 @@ namespace Labust.Sensors
             camera.targetTexture = _cameraBuffer;
 
             camera.aspect = frustums.aspectRatio;//Mathf.Tan(Mathf.PI / numbers) / Mathf.Tan(frustums._verticalAngle / 2.0f);
-            Debug.Log("Aspect Ratio RGB: " + frustums.aspectRatio.ToString());
             camera.fieldOfView = frustums.verticalAngle * Mathf.Rad2Deg;//Camera.HorizontalToVerticalFieldOfView(360.0f / numbers, cam.aspect);
             camera.farClipPlane = frustums.farPlane;
             camera.nearClipPlane = frustums.nearPlane;
             //camera.enabled = false;
+        }
+
+
+        void OnDestroy()
+        {
+            cameraData.Delete();
         }
 
     }

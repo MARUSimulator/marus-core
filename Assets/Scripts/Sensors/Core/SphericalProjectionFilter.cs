@@ -3,15 +3,17 @@ using System.Collections;
 
 using UnityEngine.Rendering;
 using System;
+using System.Linq;
 
 namespace Labust.Sensors.Core
 {
     public class SphericalProjectionFilter: MonoBehaviour
     {
         public ComputeShader computeFilter;
-        public ComputeBufferDataExtractor<Vector2> filterCoordinates;
-        public RenderTexture SphericalProjectionFilterImage;
-        RenderTexture SphericalProjectionFilterMask;
+        public ComputeBufferDataExtractor<Vector2Int> filterCoordinates;
+
+        [Header("Debug")]
+        public RenderTexture SphericalProjectionFilterMask;
         CameraFrustum frustum;
         int sphericalWidthRes;
         int sphericalHeightRes;
@@ -21,20 +23,25 @@ namespace Labust.Sensors.Core
             sphericalHeightRes = N_phi;
             frustum = cameraFrustum;
 
-            filterCoordinates = SphericalPixelCoordinates(N_theta, N_phi);
+            filterCoordinates = SphericalPixelCoordinates();
             SphericalProjectionFilterMask = SphericalPixelCoordinatesImage();
         }
 
-        private string projectionFilterKernel = "projectionFilterKernel";
+        // There are unknown problems with gpu read and write in multiple kernels to the same buffer
+        // Fix is to have separate buffers for read and write. Read - GPU reads from; Write - GPU writes to
+        private string projectionFilterBufferRead = "projectionFilterBufferRead";
         private string projectionFilterBuffer = "projectionFilterBuffer";
         private string projectionFilterDebug = "projectionFilterDebug";
-        private ComputeBufferDataExtractor<Vector2> SphericalPixelCoordinates(int N_theta, int N_phi)
+        private string projectionFilterKernel = "projectionFilterKernel";
+
+
+        private ComputeBufferDataExtractor<Vector2Int> SphericalPixelCoordinates()
         {
             var debugUnifiedArray = new ComputeBufferDataExtractor<float>(sphericalWidthRes * sphericalHeightRes, sizeof(float), projectionFilterDebug);
             debugUnifiedArray.SetBuffer(computeFilter, projectionFilterKernel);
 
-            var pixelCoordinates = new ComputeBufferDataExtractor<Vector2>(sphericalWidthRes * sphericalHeightRes, sizeof(uint) * 2, projectionFilterBuffer);
-            pixelCoordinates.SetBuffer(computeFilter, projectionFilterKernel);
+            filterCoordinates = new ComputeBufferDataExtractor<Vector2Int>(sphericalWidthRes * sphericalHeightRes, sizeof(int) * 2, projectionFilterBuffer);
+            filterCoordinates.SetBuffer(computeFilter, projectionFilterKernel);
 
             //Debug.Log(frustum._cameraMatrix);
 
@@ -50,57 +57,52 @@ namespace Labust.Sensors.Core
             computeFilter.SetFloat("HFOV_s", frustum.horisontalAngle);
 
             debugUnifiedArray.SynchUpdate(computeFilter, projectionFilterKernel);
-            pixelCoordinates.SynchUpdate(computeFilter, projectionFilterKernel);
-
+            filterCoordinates.SynchUpdate(computeFilter, projectionFilterKernel);
             debugUnifiedArray.Delete();
 
-            return pixelCoordinates;
+            return filterCoordinates;
         }
 
         private string projectionFilterImageKernel = "projectionFilterImageKernel";
         private string projectionFilterImageBuffer = "projectionFilterImageBuffer";
         public RenderTexture SphericalPixelCoordinatesImage()
         {
-            int dataSize = 24;
-
             int kernelHandle = computeFilter.FindKernel(projectionFilterImageKernel);
 
-            RenderTexture sphericalMaskImage = new RenderTexture(frustum.pixelWidth, frustum.pixelHeight, dataSize);
+            RenderTexture sphericalMaskImage = new RenderTexture(frustum.pixelWidth, frustum.pixelHeight, 24);
             sphericalMaskImage.enableRandomWrite = true;
             sphericalMaskImage.Create();
-
 
             filterCoordinates.SetBuffer(computeFilter, projectionFilterImageKernel);
             computeFilter.SetTexture(kernelHandle, projectionFilterImageBuffer, sphericalMaskImage);
 
             computeFilter.Dispatch(kernelHandle, (int)Mathf.Ceil((float)sphericalWidthRes * (float)sphericalHeightRes / 1024.0f), 1, 1);
-
             return sphericalMaskImage;
         }
 
         void OnEnable()
         {
-            RenderPipelineManager.endFrameRendering += EndCameraRendering;
             RenderPipelineManager.beginCameraRendering += BeginCameraRendering;
+        }
+
+        void OnDisable()
+        {
+            RenderPipelineManager.beginCameraRendering -= BeginCameraRendering;
+            // filterCoordinates.Delete();
+        }
+
+
+        void OnDestroy()
+        {
+            filterCoordinates.Delete();
         }
 
         private void BeginCameraRendering(ScriptableRenderContext arg1, Camera arg2)
         {
             int kernelHandle = computeFilter.FindKernel(projectionFilterImageKernel);
             computeFilter.Dispatch(kernelHandle, (int)Mathf.Ceil((float)sphericalWidthRes * (float)sphericalHeightRes / 1024.0f), 1, 1);
+            // float[] data = debug.data;
         }
 
-        void OnDisable()
-        {
-            RenderPipelineManager.endFrameRendering -= EndCameraRendering;
-        }
-
-        void EndCameraRendering(ScriptableRenderContext context, Camera[] cam)
-        {
-            if (SphericalProjectionFilterImage != null)
-            {
-                Graphics.Blit(SphericalProjectionFilterMask, SphericalProjectionFilterImage);
-            }
-        }
     }
 }
