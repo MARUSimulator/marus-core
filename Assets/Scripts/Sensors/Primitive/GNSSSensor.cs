@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Labust.Sensors
+namespace Labust.Sensors.Primitive
 {
     //TODO
     public class GNSSSensor : MonoBehaviour

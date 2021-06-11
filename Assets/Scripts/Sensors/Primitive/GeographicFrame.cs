@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Labust.Sensors
+namespace Labust.Sensors.Primitive
 {
     //TODO
     public class GeographicFrame : MonoBehaviour

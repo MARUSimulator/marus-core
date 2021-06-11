@@ -9,6 +9,7 @@ using System.Threading;
 using System;
 using System.Collections.Concurrent;
 using Labust.Networking;
+using System.Linq;
 
 namespace Labust.Actuators
 {
@@ -34,7 +35,7 @@ namespace Labust.Actuators
         {
             _targetTransform = transform;
             streamHandle = remoteControlClient.ApplyForce(
-                new ForceRequest { VehId = vehicle.name },
+                new ForceRequest { Address = vehicle.name + "/pwm_out" },
                 cancellationToken: RosConnection.Instance.cancellationToken);
 
             HandleResponse(UpdateMovement);
@@ -42,7 +43,7 @@ namespace Labust.Actuators
 
         void UpdateMovement(ForceResponse result)
         {
-
+            thrusterController.ApplyPwm(result.Pwm.Out.ToArray());
         }
     }
 

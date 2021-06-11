@@ -5,7 +5,7 @@ using Sensorstreaming;
 using UnityEngine;
 using Utils;
 
-namespace Labust.Sensors
+namespace Labust.Sensors.Primitive
 {
     /// <summary>
     /// Pose sensor implementation
@@ -26,8 +26,8 @@ namespace Labust.Sensors
             measuredObject = Helpers.GetParentRigidBody(transform);
             streamHandle = streamingClient.StreamPoseSensor(cancellationToken:RosConnection.Instance.cancellationToken);
             AddSensorCallback(SensorCallbackOrder.Last, Refresh);
-            if (string.IsNullOrEmpty(sensorId))
-                sensorId = vehicle.name + "/pose";
+            if (string.IsNullOrEmpty(address))
+                address = vehicle.name + "/pose";
         }
 
         public void Refresh()
@@ -43,15 +43,11 @@ namespace Labust.Sensors
         {
             await streamWriter.WriteAsync(new PoseStreamingRequest
             {
-                SensorId = sensorId,
+                Address = address,
                 Pose = new Common.Pose
                 {
-                    Position = new Common.Position
-                    {
-                        X = position.x,
-                        Y = position.y,
-                        Z = position.z
-                    }
+                    Position = position.AsMsg(),
+                    Orientation = orientation.eulerAngles.AsMsg()
                 }
             });
             hasData = false;

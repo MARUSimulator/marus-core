@@ -25,39 +25,36 @@ namespace Common {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "Cgxjb21tb24ucHJvdG8SBmNvbW1vbiIrCghQb3NpdGlvbhIJCgF4GAEgASgC",
-            "EgkKAXkYAiABKAISCQoBehgDIAEoAiI3CgtPcmllbnRhdGlvbhIMCgRyb2xs",
-            "GAEgASgCEg0KBXBpdGNoGAIgASgCEgsKA3lhdxgDIAEoAiIrCghWZWxvY2l0",
-            "eRIJCgF4GAEgASgCEgkKAXkYAiABKAISCQoBehgDIAEoAiIyCg9Bbmd1bGFy",
-            "VmVsb2NpdHkSCQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAIiLwoM",
-            "QWNjZWxlcmF0aW9uEgkKAXgYASABKAISCQoBeRgCIAEoAhIJCgF6GAMgASgC",
-            "IjYKE0FuZ3VsYXJBY2NlbGVyYXRpb24SCQoBeBgBIAEoAhIJCgF5GAIgASgC",
-            "EgkKAXoYAyABKAIiVAoEUG9zZRIiCghwb3NpdGlvbhgBIAEoCzIQLmNvbW1v",
-            "bi5Qb3NpdGlvbhIoCgtvcmllbnRhdGlvbhgCIAEoCzITLmNvbW1vbi5Pcmll",
-            "bnRhdGlvbiJUChBHZW5lcmFsaXplZEZvcmNlEgkKAXgYASABKAISCQoBeRgC",
-            "IAEoAhIJCgF6GAMgASgCEgkKAWsYBCABKAISCQoBbRgFIAEoAhIJCgFuGAYg",
-            "ASgCIicKBFZlYzMSCQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAIi",
-            "OAoKUXVhdGVybmlvbhIJCgF4GAEgASgCEgkKAXkYAiABKAISCQoBehgDIAEo",
-            "AhIJCgF3GAQgASgCIlIKB1Bvc2VWZWMSHgoIcG9zaXRpb24YASABKAsyDC5j",
-            "b21tb24uVmVjMxInCgtvcmllbnRhdGlvbhgCIAEoCzISLmNvbW1vbi5RdWF0",
-            "ZXJuaW9uIjkKCVBvc2VORUQyRBINCgVub3J0aBgBIAEoAhIMCgRlYXN0GAIg",
-            "ASgCEg8KB2hlYWRpbmcYAyABKAIiOAoLUG9zaXRpb25ORUQSDQoFbm9ydGgY",
-            "ASABKAISDAoEZWFzdBgCIAEoAhIMCgRkb3duGAMgASgCIkEKCEdlb1BvaW50",
-            "EhAKCGxhdGl0dWRlGAEgASgCEhEKCWxvbmdpdHVkZRgCIAEoAhIQCghhbHRp",
-            "dHVkZRgDIAEoAiISCgNQd20SCwoDb3V0GAEgAygCYgZwcm90bzM="));
+            "EgkKAXkYAiABKAISCQoBehgDIAEoAiIuCgtPcmllbnRhdGlvbhIJCgF4GAEg",
+            "ASgCEgkKAXkYAiABKAISCQoBehgDIAEoAiIrCghWZWxvY2l0eRIJCgF4GAEg",
+            "ASgCEgkKAXkYAiABKAISCQoBehgDIAEoAiIyCg9Bbmd1bGFyVmVsb2NpdHkS",
+            "CQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAIiLwoMQWNjZWxlcmF0",
+            "aW9uEgkKAXgYASABKAISCQoBeRgCIAEoAhIJCgF6GAMgASgCIjYKE0FuZ3Vs",
+            "YXJBY2NlbGVyYXRpb24SCQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyAB",
+            "KAIiTwoEUG9zZRIhCghwb3NpdGlvbhgBIAEoCzIPLmNvbW1vbi5WZWN0b3Iz",
+            "EiQKC29yaWVudGF0aW9uGAIgASgLMg8uY29tbW9uLlZlY3RvcjMiVAoQR2Vu",
+            "ZXJhbGl6ZWRGb3JjZRIJCgF4GAEgASgCEgkKAXkYAiABKAISCQoBehgDIAEo",
+            "AhIJCgFrGAQgASgCEgkKAW0YBSABKAISCQoBbhgGIAEoAiIqCgdWZWN0b3Iz",
+            "EgkKAXgYASABKAISCQoBeRgCIAEoAhIJCgF6GAMgASgCIjgKClF1YXRlcm5p",
+            "b24SCQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAISCQoBdxgEIAEo",
+            "AiI5CglQb3NlTkVEMkQSDQoFbm9ydGgYASABKAISDAoEZWFzdBgCIAEoAhIP",
+            "CgdoZWFkaW5nGAMgASgCIjgKC1Bvc2l0aW9uTkVEEg0KBW5vcnRoGAEgASgC",
+            "EgwKBGVhc3QYAiABKAISDAoEZG93bhgDIAEoAiJBCghHZW9Qb2ludBIQCghs",
+            "YXRpdHVkZRgBIAEoAhIRCglsb25naXR1ZGUYAiABKAISEAoIYWx0aXR1ZGUY",
+            "AyABKAIiEgoDUHdtEgsKA291dBgBIAMoAmIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Common.Position), global::Common.Position.Parser, new[]{ "X", "Y", "Z" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Common.Orientation), global::Common.Orientation.Parser, new[]{ "Roll", "Pitch", "Yaw" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Common.Orientation), global::Common.Orientation.Parser, new[]{ "X", "Y", "Z" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Common.Velocity), global::Common.Velocity.Parser, new[]{ "X", "Y", "Z" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Common.AngularVelocity), global::Common.AngularVelocity.Parser, new[]{ "X", "Y", "Z" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Common.Acceleration), global::Common.Acceleration.Parser, new[]{ "X", "Y", "Z" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Common.AngularAcceleration), global::Common.AngularAcceleration.Parser, new[]{ "X", "Y", "Z" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Common.Pose), global::Common.Pose.Parser, new[]{ "Position", "Orientation" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Common.GeneralizedForce), global::Common.GeneralizedForce.Parser, new[]{ "X", "Y", "Z", "K", "M", "N" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Common.Vec3), global::Common.Vec3.Parser, new[]{ "X", "Y", "Z" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Common.Vector3), global::Common.Vector3.Parser, new[]{ "X", "Y", "Z" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Common.Quaternion), global::Common.Quaternion.Parser, new[]{ "X", "Y", "Z", "W" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Common.PoseVec), global::Common.PoseVec.Parser, new[]{ "Position", "Orientation" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Common.PoseNED2D), global::Common.PoseNED2D.Parser, new[]{ "North", "East", "Heading" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Common.PositionNED), global::Common.PositionNED.Parser, new[]{ "North", "East", "Down" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Common.GeoPoint), global::Common.GeoPoint.Parser, new[]{ "Latitude", "Longitude", "Altitude" }, null, null, null, null),
@@ -341,9 +338,9 @@ namespace Common {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public Orientation(Orientation other) : this() {
-      roll_ = other.roll_;
-      pitch_ = other.pitch_;
-      yaw_ = other.yaw_;
+      x_ = other.x_;
+      y_ = other.y_;
+      z_ = other.z_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -352,36 +349,36 @@ namespace Common {
       return new Orientation(this);
     }
 
-    /// <summary>Field number for the "roll" field.</summary>
-    public const int RollFieldNumber = 1;
-    private float roll_;
+    /// <summary>Field number for the "x" field.</summary>
+    public const int XFieldNumber = 1;
+    private float x_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public float Roll {
-      get { return roll_; }
+    public float X {
+      get { return x_; }
       set {
-        roll_ = value;
+        x_ = value;
       }
     }
 
-    /// <summary>Field number for the "pitch" field.</summary>
-    public const int PitchFieldNumber = 2;
-    private float pitch_;
+    /// <summary>Field number for the "y" field.</summary>
+    public const int YFieldNumber = 2;
+    private float y_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public float Pitch {
-      get { return pitch_; }
+    public float Y {
+      get { return y_; }
       set {
-        pitch_ = value;
+        y_ = value;
       }
     }
 
-    /// <summary>Field number for the "yaw" field.</summary>
-    public const int YawFieldNumber = 3;
-    private float yaw_;
+    /// <summary>Field number for the "z" field.</summary>
+    public const int ZFieldNumber = 3;
+    private float z_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public float Yaw {
-      get { return yaw_; }
+    public float Z {
+      get { return z_; }
       set {
-        yaw_ = value;
+        z_ = value;
       }
     }
 
@@ -398,18 +395,18 @@ namespace Common {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Roll, other.Roll)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Pitch, other.Pitch)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Yaw, other.Yaw)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(X, other.X)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Y, other.Y)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Z, other.Z)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (Roll != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Roll);
-      if (Pitch != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Pitch);
-      if (Yaw != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Yaw);
+      if (X != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(X);
+      if (Y != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Y);
+      if (Z != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Z);
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -426,17 +423,17 @@ namespace Common {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (Roll != 0F) {
+      if (X != 0F) {
         output.WriteRawTag(13);
-        output.WriteFloat(Roll);
+        output.WriteFloat(X);
       }
-      if (Pitch != 0F) {
+      if (Y != 0F) {
         output.WriteRawTag(21);
-        output.WriteFloat(Pitch);
+        output.WriteFloat(Y);
       }
-      if (Yaw != 0F) {
+      if (Z != 0F) {
         output.WriteRawTag(29);
-        output.WriteFloat(Yaw);
+        output.WriteFloat(Z);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -447,17 +444,17 @@ namespace Common {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Roll != 0F) {
+      if (X != 0F) {
         output.WriteRawTag(13);
-        output.WriteFloat(Roll);
+        output.WriteFloat(X);
       }
-      if (Pitch != 0F) {
+      if (Y != 0F) {
         output.WriteRawTag(21);
-        output.WriteFloat(Pitch);
+        output.WriteFloat(Y);
       }
-      if (Yaw != 0F) {
+      if (Z != 0F) {
         output.WriteRawTag(29);
-        output.WriteFloat(Yaw);
+        output.WriteFloat(Z);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -468,13 +465,13 @@ namespace Common {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (Roll != 0F) {
+      if (X != 0F) {
         size += 1 + 4;
       }
-      if (Pitch != 0F) {
+      if (Y != 0F) {
         size += 1 + 4;
       }
-      if (Yaw != 0F) {
+      if (Z != 0F) {
         size += 1 + 4;
       }
       if (_unknownFields != null) {
@@ -488,14 +485,14 @@ namespace Common {
       if (other == null) {
         return;
       }
-      if (other.Roll != 0F) {
-        Roll = other.Roll;
+      if (other.X != 0F) {
+        X = other.X;
       }
-      if (other.Pitch != 0F) {
-        Pitch = other.Pitch;
+      if (other.Y != 0F) {
+        Y = other.Y;
       }
-      if (other.Yaw != 0F) {
-        Yaw = other.Yaw;
+      if (other.Z != 0F) {
+        Z = other.Z;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -512,15 +509,15 @@ namespace Common {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 13: {
-            Roll = input.ReadFloat();
+            X = input.ReadFloat();
             break;
           }
           case 21: {
-            Pitch = input.ReadFloat();
+            Y = input.ReadFloat();
             break;
           }
           case 29: {
-            Yaw = input.ReadFloat();
+            Z = input.ReadFloat();
             break;
           }
         }
@@ -538,15 +535,15 @@ namespace Common {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 13: {
-            Roll = input.ReadFloat();
+            X = input.ReadFloat();
             break;
           }
           case 21: {
-            Pitch = input.ReadFloat();
+            Y = input.ReadFloat();
             break;
           }
           case 29: {
-            Yaw = input.ReadFloat();
+            Z = input.ReadFloat();
             break;
           }
         }
@@ -1573,9 +1570,9 @@ namespace Common {
 
     /// <summary>Field number for the "position" field.</summary>
     public const int PositionFieldNumber = 1;
-    private global::Common.Position position_;
+    private global::Common.Vector3 position_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Common.Position Position {
+    public global::Common.Vector3 Position {
       get { return position_; }
       set {
         position_ = value;
@@ -1584,9 +1581,9 @@ namespace Common {
 
     /// <summary>Field number for the "orientation" field.</summary>
     public const int OrientationFieldNumber = 2;
-    private global::Common.Orientation orientation_;
+    private global::Common.Vector3 orientation_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Common.Orientation Orientation {
+    public global::Common.Vector3 Orientation {
       get { return orientation_; }
       set {
         orientation_ = value;
@@ -1685,13 +1682,13 @@ namespace Common {
       }
       if (other.position_ != null) {
         if (position_ == null) {
-          Position = new global::Common.Position();
+          Position = new global::Common.Vector3();
         }
         Position.MergeFrom(other.Position);
       }
       if (other.orientation_ != null) {
         if (orientation_ == null) {
-          Orientation = new global::Common.Orientation();
+          Orientation = new global::Common.Vector3();
         }
         Orientation.MergeFrom(other.Orientation);
       }
@@ -1711,14 +1708,14 @@ namespace Common {
             break;
           case 10: {
             if (position_ == null) {
-              Position = new global::Common.Position();
+              Position = new global::Common.Vector3();
             }
             input.ReadMessage(Position);
             break;
           }
           case 18: {
             if (orientation_ == null) {
-              Orientation = new global::Common.Orientation();
+              Orientation = new global::Common.Vector3();
             }
             input.ReadMessage(Orientation);
             break;
@@ -1739,14 +1736,14 @@ namespace Common {
             break;
           case 10: {
             if (position_ == null) {
-              Position = new global::Common.Position();
+              Position = new global::Common.Vector3();
             }
             input.ReadMessage(Position);
             break;
           }
           case 18: {
             if (orientation_ == null) {
-              Orientation = new global::Common.Orientation();
+              Orientation = new global::Common.Vector3();
             }
             input.ReadMessage(Orientation);
             break;
@@ -2110,15 +2107,15 @@ namespace Common {
 
   }
 
-  public sealed partial class Vec3 : pb::IMessage<Vec3>
+  public sealed partial class Vector3 : pb::IMessage<Vector3>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<Vec3> _parser = new pb::MessageParser<Vec3>(() => new Vec3());
+    private static readonly pb::MessageParser<Vector3> _parser = new pb::MessageParser<Vector3>(() => new Vector3());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<Vec3> Parser { get { return _parser; } }
+    public static pb::MessageParser<Vector3> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
@@ -2131,14 +2128,14 @@ namespace Common {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Vec3() {
+    public Vector3() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Vec3(Vec3 other) : this() {
+    public Vector3(Vector3 other) : this() {
       x_ = other.x_;
       y_ = other.y_;
       z_ = other.z_;
@@ -2146,8 +2143,8 @@ namespace Common {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Vec3 Clone() {
-      return new Vec3(this);
+    public Vector3 Clone() {
+      return new Vector3(this);
     }
 
     /// <summary>Field number for the "x" field.</summary>
@@ -2185,11 +2182,11 @@ namespace Common {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as Vec3);
+      return Equals(other as Vector3);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(Vec3 other) {
+    public bool Equals(Vector3 other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -2282,7 +2279,7 @@ namespace Common {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(Vec3 other) {
+    public void MergeFrom(Vector3 other) {
       if (other == null) {
         return;
       }
@@ -2634,232 +2631,6 @@ namespace Common {
 
   }
 
-  public sealed partial class PoseVec : pb::IMessage<PoseVec>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<PoseVec> _parser = new pb::MessageParser<PoseVec>(() => new PoseVec());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<PoseVec> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Common.CommonReflection.Descriptor.MessageTypes[10]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public PoseVec() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public PoseVec(PoseVec other) : this() {
-      position_ = other.position_ != null ? other.position_.Clone() : null;
-      orientation_ = other.orientation_ != null ? other.orientation_.Clone() : null;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public PoseVec Clone() {
-      return new PoseVec(this);
-    }
-
-    /// <summary>Field number for the "position" field.</summary>
-    public const int PositionFieldNumber = 1;
-    private global::Common.Vec3 position_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Common.Vec3 Position {
-      get { return position_; }
-      set {
-        position_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "orientation" field.</summary>
-    public const int OrientationFieldNumber = 2;
-    private global::Common.Quaternion orientation_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Common.Quaternion Orientation {
-      get { return orientation_; }
-      set {
-        orientation_ = value;
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override bool Equals(object other) {
-      return Equals(other as PoseVec);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(PoseVec other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (!object.Equals(Position, other.Position)) return false;
-      if (!object.Equals(Orientation, other.Orientation)) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (position_ != null) hash ^= Position.GetHashCode();
-      if (orientation_ != null) hash ^= Orientation.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (position_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(Position);
-      }
-      if (orientation_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(Orientation);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (position_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(Position);
-      }
-      if (orientation_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(Orientation);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int CalculateSize() {
-      int size = 0;
-      if (position_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Position);
-      }
-      if (orientation_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Orientation);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(PoseVec other) {
-      if (other == null) {
-        return;
-      }
-      if (other.position_ != null) {
-        if (position_ == null) {
-          Position = new global::Common.Vec3();
-        }
-        Position.MergeFrom(other.Position);
-      }
-      if (other.orientation_ != null) {
-        if (orientation_ == null) {
-          Orientation = new global::Common.Quaternion();
-        }
-        Orientation.MergeFrom(other.Orientation);
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            if (position_ == null) {
-              Position = new global::Common.Vec3();
-            }
-            input.ReadMessage(Position);
-            break;
-          }
-          case 18: {
-            if (orientation_ == null) {
-              Orientation = new global::Common.Quaternion();
-            }
-            input.ReadMessage(Orientation);
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            if (position_ == null) {
-              Position = new global::Common.Vec3();
-            }
-            input.ReadMessage(Position);
-            break;
-          }
-          case 18: {
-            if (orientation_ == null) {
-              Orientation = new global::Common.Quaternion();
-            }
-            input.ReadMessage(Orientation);
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
   public sealed partial class PoseNED2D : pb::IMessage<PoseNED2D>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -2872,7 +2643,7 @@ namespace Common {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Common.CommonReflection.Descriptor.MessageTypes[11]; }
+      get { return global::Common.CommonReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3116,7 +2887,7 @@ namespace Common {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Common.CommonReflection.Descriptor.MessageTypes[12]; }
+      get { return global::Common.CommonReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3360,7 +3131,7 @@ namespace Common {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Common.CommonReflection.Descriptor.MessageTypes[13]; }
+      get { return global::Common.CommonReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3604,7 +3375,7 @@ namespace Common {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Common.CommonReflection.Descriptor.MessageTypes[14]; }
+      get { return global::Common.CommonReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

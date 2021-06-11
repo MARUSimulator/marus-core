@@ -4,7 +4,7 @@ using Labust.Networking;
 using Sensorstreaming;
 using UnityEngine;
 
-namespace Labust.Sensors
+namespace Labust.Sensors.Primitive
 {
     /// <summary>
     /// Imu sensor implementation
@@ -35,8 +35,8 @@ namespace Labust.Sensors
             sensor = GetComponent<Rigidbody>();
             streamHandle = streamingClient.StreamImuSensor(cancellationToken:RosConnection.Instance.cancellationToken);
             AddSensorCallback(SensorCallbackOrder.First, CalculateAccelerationAsVelocityDerivative);
-            if (string.IsNullOrEmpty(sensorId))
-                sensorId = vehicle.name + "/imu";
+            if (string.IsNullOrEmpty(address))
+                address = vehicle.name + "/imu";
         }
 
 
@@ -53,30 +53,12 @@ namespace Labust.Sensors
 
         public async override void SendMessage()
         {
-            var acc = new Common.Acceleration 
-            { 
-                X = linearAcceleration.x, 
-                Y = linearAcceleration.y, 
-                Z = linearAcceleration.z 
-            };
-            var angVel = new Common.AngularVelocity
-            {
-                X = angularVelocity.x,
-                Y = angularVelocity.y,
-                Z = angularVelocity.z
-            };
-            var o = new Common.Orientation
-            {
-                Roll = eulerAngles.x,
-                Pitch = eulerAngles.y,
-                Yaw = eulerAngles.z
-            };
             await streamWriter.WriteAsync(new ImuStreamingRequest
             {
-                Acceleration = acc,
-                AngularVelocity = angVel,
-                Orientation = o,
-                SensorId = sensorId
+                Acceleration = linearAcceleration.AsMsg(),
+                AngularVelocity = angularVelocity.AsMsg(),
+                Orientation = eulerAngles.AsMsg(),
+                Address = address
             });
             hasData = false;
         }

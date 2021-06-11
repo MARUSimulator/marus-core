@@ -3,7 +3,7 @@ using System.Collections;
 
 
 
-namespace Labust.Sensors.Core.ZBuffer
+namespace Labust.Sensors.Core
 {
     public class DepthCameras2
     {
@@ -50,7 +50,8 @@ namespace Labust.Sensors.Core.ZBuffer
 
                 if (cam.targetTexture == null)
                 {
-                    var depthBuffer = new RenderTexture(frustums._pixelWidth, frustums._pixelHeight, 16, format);//,// format);
+                    var depthBuffer = new RenderTexture(frustums.pixelWidth, frustums.pixelHeight, 16, format);//,// format);
+                    depthBuffer.enableRandomWrite = true;
                     if (DepthBufferPrecision == BufferPrecision.bit16)
                     {
                         depthBuffer.depth = 16;
@@ -70,11 +71,11 @@ namespace Labust.Sensors.Core.ZBuffer
                 cam.usePhysicalProperties = false;
 
                 // Projection Matrix Setup
-                cam.aspect = frustums._aspectRatio;//Mathf.Tan(Mathf.PI / numbers) / Mathf.Tan(frustums._verticalAngle / 2.0f);
-                cam.fieldOfView = frustums._verticalAngle*Mathf.Rad2Deg;//Camera.HorizontalToVerticalFieldOfView(360.0f / numbers, cam.aspect);
-                cam.farClipPlane = frustums._farPlane;
+                cam.aspect = frustums.aspectRatio;//Mathf.Tan(Mathf.PI / numbers) / Mathf.Tan(frustums._verticalAngle / 2.0f);
+                cam.fieldOfView = frustums.verticalAngle*Mathf.Rad2Deg;//Camera.HorizontalToVerticalFieldOfView(360.0f / numbers, cam.aspect);
+                cam.farClipPlane = frustums.farPlane;
                 cam.enabled = false;
-                cam.nearClipPlane = frustums._nearPlane;
+                cam.nearClipPlane = frustums.nearPlane;
                 Cameras[i] = cam;
                 //Debug.Log(cam.projectionMatrix);
             }
@@ -86,10 +87,10 @@ namespace Labust.Sensors.Core.ZBuffer
             int kernelHandle = shader.FindKernel(kernelName);
             shader.SetMatrix("inv_CameraMatrix", cameras[0].projectionMatrix.inverse);
             shader.SetMatrix("CameraMatrix", cameras[0].projectionMatrix);
-            shader.SetInt("ImageWidthRes", frustums._pixelWidth);
-            shader.SetInt("ImageHeightRes", frustums._pixelHeight);
-            shader.SetFloat("VFOV_camera", frustums._verticalAngle);
-            shader.SetFloat("HFOV_camera", frustums._horisontalAngle);
+            shader.SetInt("ImageWidthRes", frustums.pixelWidth);
+            shader.SetInt("ImageHeightRes", frustums.pixelHeight);
+            shader.SetFloat("VFOV_camera", frustums.verticalAngle);
+            shader.SetFloat("HFOV_camera", frustums.horisontalAngle);
             shader.SetInt("NrOfImages", cameras.Length);
 
             for (int i = 0; i < cameras.Length; i++)

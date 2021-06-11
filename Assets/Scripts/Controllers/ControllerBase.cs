@@ -105,14 +105,14 @@ namespace Labust.Actuators
                 else if (mode == MessageHandleMode.DropAndTakeLast)
                 {
                     var last = _responseBuffer.LastOrDefault();
-                    if (last == null)
+                    if (last != null)
                     {
                         _onResponseMsg(last);
-                    }
-                    // clear queue, leave last element
-                    while (_responseBuffer.Count > 1 && _responseBuffer.TryDequeue(out var item))
-                    {
-                        // do nothing
+                        // clear queue, leave last element
+                        while (_responseBuffer.Count > 1 && _responseBuffer.TryDequeue(out var item))
+                        {
+                            // do nothing
+                        }
                     }
                 }
             }

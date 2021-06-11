@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Labust.Sensors.Core.ZBuffer;
 using UnityEngine.Rendering;
 using Google.Protobuf;
 using Sensorstreaming;
@@ -22,7 +21,7 @@ namespace Labust.Sensors
         public bool SynchronousUpdate = false;
 
         Camera camera;
-        UnifiedArray<byte> cameraData;
+        ComputeBufferDataExtractor<byte> cameraData;
         RenderTextureFormat renderTextureFormat = RenderTextureFormat.Default;
         TextureFormat textureFormat = TextureFormat.RGB24;
 
@@ -40,13 +39,13 @@ namespace Labust.Sensors
             CameraSetup();
 
             int kernelIndex = cameraShader.FindKernel("CSMain");
-            cameraData = new UnifiedArray<byte>(PixelHeight * PixelWidth, sizeof(float) * 3, "CameraData");
+            cameraData = new ComputeBufferDataExtractor<byte>(PixelHeight * PixelWidth, sizeof(float) * 3, "CameraData");
             cameraData.SetBuffer(cameraShader, "CSMain");
             cameraShader.SetTexture(kernelIndex, "RenderTexture", camera.targetTexture);
             cameraShader.SetInt("Width", PixelWidth / ImageCrop);
             cameraShader.SetInt("Height", PixelHeight / ImageCrop);
-            if (string.IsNullOrEmpty(sensorId))
-                sensorId = vehicle.name + "/camera";
+            if (string.IsNullOrEmpty(address))
+                address = vehicle.name + "/camera";
         }
 
         private void Awake()
@@ -66,7 +65,7 @@ namespace Labust.Sensors
                     { 
                         Data = ByteString.CopyFrom(Data), 
                         TimeStamp = Time.time, 
-                        SensorId = sensorId, 
+                        Address = address, 
                         Height = (uint)(PixelHeight/ImageCrop), 
                         Width = (uint)(PixelWidth/ImageCrop) 
                     });
@@ -85,7 +84,7 @@ namespace Labust.Sensors
             if (SynchronousUpdate)
             {
                 cameraData.SynchUpdate(cameraShader, "CSMain");
-                Data = cameraData.array;
+                Data = cameraData.data;
                 hasData = true;
             }
             else
@@ -126,11 +125,11 @@ namespace Labust.Sensors
             camera.usePhysicalProperties = false;
             camera.targetTexture = _cameraBuffer;
 
-            camera.aspect = frustums._aspectRatio;//Mathf.Tan(Mathf.PI / numbers) / Mathf.Tan(frustums._verticalAngle / 2.0f);
-            Debug.Log("Aspect Ratio RGB: " + frustums._aspectRatio.ToString());
-            camera.fieldOfView = frustums._verticalAngle * Mathf.Rad2Deg;//Camera.HorizontalToVerticalFieldOfView(360.0f / numbers, cam.aspect);
-            camera.farClipPlane = frustums._farPlane;
-            camera.nearClipPlane = frustums._nearPlane;
+            camera.aspect = frustums.aspectRatio;//Mathf.Tan(Mathf.PI / numbers) / Mathf.Tan(frustums._verticalAngle / 2.0f);
+            Debug.Log("Aspect Ratio RGB: " + frustums.aspectRatio.ToString());
+            camera.fieldOfView = frustums.verticalAngle * Mathf.Rad2Deg;//Camera.HorizontalToVerticalFieldOfView(360.0f / numbers, cam.aspect);
+            camera.farClipPlane = frustums.farPlane;
+            camera.nearClipPlane = frustums.nearPlane;
             //camera.enabled = false;
         }
 

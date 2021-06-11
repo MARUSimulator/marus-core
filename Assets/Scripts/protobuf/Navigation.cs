@@ -25,15 +25,15 @@ namespace Navigation {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChBuYXZpZ2F0aW9uLnByb3RvEgpuYXZpZ2F0aW9uGgxjb21tb24ucHJvdG8i",
-            "vAEKEU5hdmlnYXRpb25SZXF1ZXN0EhEKCXRpbWVTdGFtcBgBIAEoARIeCghw",
-            "b3NpdGlvbhgCIAEoCzIMLmNvbW1vbi5WZWMzEicKC29yaWVudGF0aW9uGAMg",
-            "ASgLMhIuY29tbW9uLlF1YXRlcm5pb24SJAoObGluZWFyVmVsb2NpdHkYBCAB",
-            "KAsyDC5jb21tb24uVmVjMxIlCg9hbmd1bGFyVmVsb2NpdHkYBSABKAsyDC5j",
-            "b21tb24uVmVjMyIlChJOYXZpZ2F0aW9uUmVzcG9uc2USDwoHc3VjY2VzcxgB",
-            "IAEoCDJmCgpOYXZpZ2F0aW9uElgKFVNlbmROYXZpZ2F0aW9uTWVzc2FnZRId",
-            "Lm5hdmlnYXRpb24uTmF2aWdhdGlvblJlcXVlc3QaHi5uYXZpZ2F0aW9uLk5h",
-            "dmlnYXRpb25SZXNwb25zZSIAQjEKG2lvLmdycGMuZXhhbXBsZXMubmF2aWdh",
-            "dGlvbkIKTmF2aWdhdGlvblABogIDSExXUABiBnByb3RvMw=="));
+            "wgEKEU5hdmlnYXRpb25SZXF1ZXN0EhEKCXRpbWVTdGFtcBgBIAEoARIhCghw",
+            "b3NpdGlvbhgCIAEoCzIPLmNvbW1vbi5WZWN0b3IzEiQKC29yaWVudGF0aW9u",
+            "GAMgASgLMg8uY29tbW9uLlZlY3RvcjMSJwoObGluZWFyVmVsb2NpdHkYBCAB",
+            "KAsyDy5jb21tb24uVmVjdG9yMxIoCg9hbmd1bGFyVmVsb2NpdHkYBSABKAsy",
+            "Dy5jb21tb24uVmVjdG9yMyIlChJOYXZpZ2F0aW9uUmVzcG9uc2USDwoHc3Vj",
+            "Y2VzcxgBIAEoCDJmCgpOYXZpZ2F0aW9uElgKFVNlbmROYXZpZ2F0aW9uTWVz",
+            "c2FnZRIdLm5hdmlnYXRpb24uTmF2aWdhdGlvblJlcXVlc3QaHi5uYXZpZ2F0",
+            "aW9uLk5hdmlnYXRpb25SZXNwb25zZSIAQjEKG2lvLmdycGMuZXhhbXBsZXMu",
+            "bmF2aWdhdGlvbkIKTmF2aWdhdGlvblABogIDSExXUABiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Common.CommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -100,9 +100,9 @@ namespace Navigation {
 
     /// <summary>Field number for the "position" field.</summary>
     public const int PositionFieldNumber = 2;
-    private global::Common.Vec3 position_;
+    private global::Common.Vector3 position_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Common.Vec3 Position {
+    public global::Common.Vector3 Position {
       get { return position_; }
       set {
         position_ = value;
@@ -111,9 +111,9 @@ namespace Navigation {
 
     /// <summary>Field number for the "orientation" field.</summary>
     public const int OrientationFieldNumber = 3;
-    private global::Common.Quaternion orientation_;
+    private global::Common.Vector3 orientation_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Common.Quaternion Orientation {
+    public global::Common.Vector3 Orientation {
       get { return orientation_; }
       set {
         orientation_ = value;
@@ -122,9 +122,9 @@ namespace Navigation {
 
     /// <summary>Field number for the "linearVelocity" field.</summary>
     public const int LinearVelocityFieldNumber = 4;
-    private global::Common.Vec3 linearVelocity_;
+    private global::Common.Vector3 linearVelocity_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Common.Vec3 LinearVelocity {
+    public global::Common.Vector3 LinearVelocity {
       get { return linearVelocity_; }
       set {
         linearVelocity_ = value;
@@ -133,9 +133,9 @@ namespace Navigation {
 
     /// <summary>Field number for the "angularVelocity" field.</summary>
     public const int AngularVelocityFieldNumber = 5;
-    private global::Common.Vec3 angularVelocity_;
+    private global::Common.Vector3 angularVelocity_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Common.Vec3 AngularVelocity {
+    public global::Common.Vector3 AngularVelocity {
       get { return angularVelocity_; }
       set {
         angularVelocity_ = value;
@@ -276,25 +276,25 @@ namespace Navigation {
       }
       if (other.position_ != null) {
         if (position_ == null) {
-          Position = new global::Common.Vec3();
+          Position = new global::Common.Vector3();
         }
         Position.MergeFrom(other.Position);
       }
       if (other.orientation_ != null) {
         if (orientation_ == null) {
-          Orientation = new global::Common.Quaternion();
+          Orientation = new global::Common.Vector3();
         }
         Orientation.MergeFrom(other.Orientation);
       }
       if (other.linearVelocity_ != null) {
         if (linearVelocity_ == null) {
-          LinearVelocity = new global::Common.Vec3();
+          LinearVelocity = new global::Common.Vector3();
         }
         LinearVelocity.MergeFrom(other.LinearVelocity);
       }
       if (other.angularVelocity_ != null) {
         if (angularVelocity_ == null) {
-          AngularVelocity = new global::Common.Vec3();
+          AngularVelocity = new global::Common.Vector3();
         }
         AngularVelocity.MergeFrom(other.AngularVelocity);
       }
@@ -318,28 +318,28 @@ namespace Navigation {
           }
           case 18: {
             if (position_ == null) {
-              Position = new global::Common.Vec3();
+              Position = new global::Common.Vector3();
             }
             input.ReadMessage(Position);
             break;
           }
           case 26: {
             if (orientation_ == null) {
-              Orientation = new global::Common.Quaternion();
+              Orientation = new global::Common.Vector3();
             }
             input.ReadMessage(Orientation);
             break;
           }
           case 34: {
             if (linearVelocity_ == null) {
-              LinearVelocity = new global::Common.Vec3();
+              LinearVelocity = new global::Common.Vector3();
             }
             input.ReadMessage(LinearVelocity);
             break;
           }
           case 42: {
             if (angularVelocity_ == null) {
-              AngularVelocity = new global::Common.Vec3();
+              AngularVelocity = new global::Common.Vector3();
             }
             input.ReadMessage(AngularVelocity);
             break;
@@ -364,28 +364,28 @@ namespace Navigation {
           }
           case 18: {
             if (position_ == null) {
-              Position = new global::Common.Vec3();
+              Position = new global::Common.Vector3();
             }
             input.ReadMessage(Position);
             break;
           }
           case 26: {
             if (orientation_ == null) {
-              Orientation = new global::Common.Quaternion();
+              Orientation = new global::Common.Vector3();
             }
             input.ReadMessage(Orientation);
             break;
           }
           case 34: {
             if (linearVelocity_ == null) {
-              LinearVelocity = new global::Common.Vec3();
+              LinearVelocity = new global::Common.Vector3();
             }
             input.ReadMessage(LinearVelocity);
             break;
           }
           case 42: {
             if (angularVelocity_ == null) {
-              AngularVelocity = new global::Common.Vec3();
+              AngularVelocity = new global::Common.Vector3();
             }
             input.ReadMessage(AngularVelocity);
             break;

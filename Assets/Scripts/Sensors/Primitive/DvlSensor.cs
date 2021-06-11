@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Labust.Networking;
+using Sensorstreaming;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Labust.Sensors
+namespace Labust.Sensors.Primitive
 {
-    // TODO
-    public class DvlSensor : MonoBehaviour
+    public class DvlSensor : SensorBase<DvlStreamingRequest>
     {
         [Header("Core measurements")]
         public Vector3 groundVelocity = new Vector3();
         public float altitude;
 
-        [Header("Beams")]
+        [Header("Debug Beams")]
         public float[] beamRanges;
-        public RangeSensor[] beams;
+        RangeSensor[] beams;
 
         private Transform sensor;
         private Vector3 lastPosition;
@@ -27,6 +28,7 @@ namespace Labust.Sensors
             beams = GetComponentsInChildren<RangeSensor>();
             beamRanges = new float[beams.Length];
             lastPosition = sensor.position;
+            streamHandle = streamingClient.StreamDvlSensor(cancellationToken:RosConnection.Instance.cancellationToken);
         }
 
         void FixedUpdate()
@@ -35,10 +37,7 @@ namespace Labust.Sensors
             groundVelocity = sensor.worldToLocalMatrix * ((position - lastPosition) / Time.fixedDeltaTime);
 
             lastPosition = position;
-        }
 
-        public void SampleSensor()
-        {
             altitude = Single.MaxValue;
             for (int i = 0; i < beams.Length; ++i)
             {
@@ -49,6 +48,21 @@ namespace Labust.Sensors
 
                 beamRanges[i] = beams[i].range;
             }
+            hasData = true;
+        }
+
+        public async override void SendMessage()
+        {
+            var request = new DvlStreamingRequest
+            {
+                Address = address,
+                Altitude = altitude,
+                GroundVelocity = groundVelocity.AsMsg(),
+            };
+            request.BeamRanges.AddRange(beamRanges);
+
+            await streamWriter.WriteAsync(request);
+            hasData = false;
         }
     }
 }

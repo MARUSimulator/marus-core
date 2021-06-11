@@ -74,13 +74,13 @@ namespace Labust.Actuators
         /// <returns></returns>
         public bool ApplyPwm(double pwmIn)
         {
-            int step = (int)(pwmIn / sheetStep);
+            int step = (int)((pwmIn+1) / sheetStep); // push it to the range 0-2
 
             // from kgf to N       
             float value = sheetData[step] * 9.80665f;
 
-            Vector3 force = transform.forward * value;
-            _body.AddForceAtPosition(force, transform.position, ForceMode.Force);
+            Vector3 force = -transform.forward * value;
+            body.AddForceAtPosition(force, transform.position, ForceMode.Force);
             return true;
         }
 

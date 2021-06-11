@@ -1,33 +1,35 @@
 ﻿using UnityEngine;
 using System;
+using Sensorstreaming;
+using Labust.Networking;
 
-namespace Labust.Sensors
+namespace Labust.Sensors.Primitive
 {
-    public class Sonar : MonoBehaviour
+    public class Sonar : SensorBase<SonarStreamingRequest>
     {
-        public float range;
         public float maxRange = 120f;
-        public float bearing;
         public float minBearing = -60f; // 60 degrees to the left
         public float maxBearing = 60f; // 60 degrees to the right
         public Transform trackedObject;
-        private Transform sonar;
-    
+
+        float range;
+        float bearing;
 
         // Start is called before the first frame update
         void Start()
         {
-            sonar = GetComponent<Transform>();
+            streamHandle = streamingClient.StreamSonarSensor(cancellationToken:RosConnection.Instance.cancellationToken);
         }
 
         // Update is called once per frame
-        public void SampleSensor()
+        public void FixedUpdate()
         {
+            var sonar = transform;
             if (Vector3.Distance(sonar.position, trackedObject.position) > 0 &&
                 Vector3.Distance(sonar.position, trackedObject.position) < maxRange)
             {
                 range = Vector3.Distance(sonar.position, trackedObject.position);
-                Debug.DrawRay(sonar.transform.position, transform.TransformDirection(Vector3.up) * range,
+                Debug.DrawRay(sonar.position, transform.TransformDirection(Vector3.up) * range,
                     Color.yellow);
             }
             else
@@ -63,9 +65,17 @@ namespace Labust.Sensors
                 range = 0;
             }
 
-
+            hasData = true;
         }
 
-
+        public override void SendMessage()
+        {
+            streamWriter.WriteAsync(new SonarStreamingRequest
+            {
+                Range = range,
+                Bearing = bearing
+            });
+            hasData = false;
+        }
     }
 }

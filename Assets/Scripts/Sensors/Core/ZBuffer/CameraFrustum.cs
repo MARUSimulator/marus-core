@@ -9,83 +9,63 @@ using Unity.Collections;
 using UnityEngine.Rendering;
 
 
-namespace Labust.Sensors.Core.ZBuffer{
+namespace Labust.Sensors.Core
+{
     public class CameraFrustum
     {
-        public int _pixelWidth { get; }
-        public int _pixelHeight { get; }
-        public float _farPlane { get; }
-        public float _nearPlane { get; }
-        public float _verticalAngle { get; }
-        public float _horisontalAngle { get; }
-        public float _aspectRatio { get; }
-        public float _verticalSideAngles { get; }
-        public Matrix4x4 _cameraMatrix { get; }
+        public int pixelWidth { get; }
+        public int pixelHeight { get; }
+        public float farPlane { get; }
+        public float nearPlane { get; }
+        public float verticalAngle { get; }
+        public float horisontalAngle { get; }
+        public float aspectRatio { get; }
+        public float verticalSideAngles { get; }
+        public Matrix4x4 cameraMatrix { get; }
+
         public CameraFrustum(int pixelWidth, int pixelHeight, float farPlane, float nearPlane, float verticalAngle)
         {
-            _pixelWidth = pixelWidth;
-            _pixelHeight = pixelHeight;
-            _farPlane = farPlane;
-            _nearPlane = nearPlane;
-            _verticalAngle = verticalAngle;
+            this.pixelWidth = pixelWidth;
+            this.pixelHeight = pixelHeight;
+            this.farPlane = farPlane;
+            this.nearPlane = nearPlane;
+            this.verticalAngle = verticalAngle;
 
-            _aspectRatio = (float)_pixelWidth / (float)_pixelHeight;
-            _horisontalAngle = 2 * Mathf.Atan(_aspectRatio * Mathf.Tan(_verticalAngle / 2));
-            _verticalSideAngles = 2 * Mathf.Atan(Mathf.Cos(_horisontalAngle / 2) * Mathf.Tan(_verticalAngle / 2));
-            _cameraMatrix = new Matrix4x4();
-            _cameraMatrix = MakeCameraMatrix(_aspectRatio, _verticalAngle, farPlane, nearPlane);
+            aspectRatio = (float)this.pixelWidth / (float)this.pixelHeight;
+            horisontalAngle = 2 * Mathf.Atan(aspectRatio * Mathf.Tan(this.verticalAngle / 2));
+            verticalSideAngles = 2 * Mathf.Atan(Mathf.Cos(horisontalAngle / 2) * Mathf.Tan(this.verticalAngle / 2));
+            cameraMatrix = MakeCameraMatrix(aspectRatio, this.verticalAngle, farPlane, nearPlane);
         }
 
         public CameraFrustum(int pixelWidth, int pixelHeight, float farPlane, float nearPlane, float focalLengthMilliMeters, float pixelSizeInMicroMeters)
         {
-            _pixelWidth = pixelWidth;
-            _pixelHeight = pixelHeight;
-            _farPlane = farPlane;
-            _nearPlane = nearPlane;
-            _verticalAngle = 2 * Mathf.Atan((float)pixelHeight*pixelSizeInMicroMeters*Mathf.Pow(10,-3)/(2 * focalLengthMilliMeters));
-            Debug.Log("_VerticalAngle" + _verticalAngle.ToString() + " power " + ((float)pixelHeight).ToString());
+            this.pixelWidth = pixelWidth;
+            this.pixelHeight = pixelHeight;
+            this.farPlane = farPlane;
+            this.nearPlane = nearPlane;
+            verticalAngle = 2 * Mathf.Atan((float)pixelHeight*pixelSizeInMicroMeters*Mathf.Pow(10,-3)/(2 * focalLengthMilliMeters));
 
-            _aspectRatio = (float)_pixelWidth / (float)_pixelHeight;
-            _horisontalAngle = 2 * Mathf.Atan(_aspectRatio * Mathf.Tan(_verticalAngle / 2));
-            _verticalSideAngles = 2 * Mathf.Atan(Mathf.Cos(_horisontalAngle / 2) * Mathf.Tan(_verticalAngle / 2));
-            _cameraMatrix = new Matrix4x4();
-            _cameraMatrix = MakeCameraMatrix(_aspectRatio, _verticalAngle, farPlane, nearPlane);
+            aspectRatio = (float)this.pixelWidth / (float)this.pixelHeight;
+            horisontalAngle = 2 * Mathf.Atan(aspectRatio * Mathf.Tan(verticalAngle / 2));
+            verticalSideAngles = 2 * Mathf.Atan(Mathf.Cos(horisontalAngle / 2) * Mathf.Tan(verticalAngle / 2));
+            cameraMatrix = MakeCameraMatrix(aspectRatio, verticalAngle, farPlane, nearPlane);
         }
 
         // Verified
-        public CameraFrustum(int pixelWidth, float farPlane, float nearPlane, float horisontalAngle, float verticalSideAngles)
+        public CameraFrustum(int pixelWidth, float farPlane, float nearPlane, float horisontalAngle, float verticalAngle)
         {
-            _horisontalAngle = horisontalAngle;
-            _verticalSideAngles = verticalSideAngles;
-            _farPlane = farPlane;
-            _nearPlane = nearPlane;
-            _pixelWidth = pixelWidth;
+            this.horisontalAngle = horisontalAngle;
+            this.verticalAngle = verticalAngle;
+            this.farPlane = farPlane;
+            this.nearPlane = nearPlane;
+            this.pixelWidth = pixelWidth;
 
-            _verticalAngle = 2 * Mathf.Atan(Mathf.Tan(_verticalSideAngles / 2) / Mathf.Cos(_horisontalAngle / 2));
-            _aspectRatio = Mathf.Tan(_horisontalAngle / 2) / Mathf.Tan(_verticalAngle / 2);
-            _pixelHeight = (int)((float)pixelWidth / _aspectRatio);
-            _cameraMatrix = new Matrix4x4();
-            _cameraMatrix = MakeCameraMatrix(_aspectRatio, _verticalAngle, farPlane, nearPlane);
+            verticalSideAngles = 2 * Mathf.Atan(Mathf.Cos(horisontalAngle / 2) * Mathf.Tan(this.verticalAngle / 2));
+            aspectRatio = Mathf.Tan(this.horisontalAngle / 2) / Mathf.Tan(verticalAngle / 2);
+            pixelHeight = (int)((float)pixelWidth / aspectRatio);
+            cameraMatrix = MakeCameraMatrix(aspectRatio, verticalAngle, farPlane, nearPlane);
         }
-        public CameraFrustum(float imageMemorySize, DepthCameras.BufferPrecision depthPrecision, float farPlane, float nearPlane, float horisontalAngle, float verticalSideAngles)
-        {
-            _horisontalAngle = horisontalAngle;
-            _verticalSideAngles = verticalSideAngles;
-            _farPlane = farPlane;
-            _nearPlane = nearPlane;
 
-            _verticalAngle = 2 * Mathf.Atan(Mathf.Tan(_verticalSideAngles / 2) / Mathf.Cos(_horisontalAngle / 2));
-            _aspectRatio = Mathf.Tan(_horisontalAngle / 2) / Mathf.Tan(_verticalAngle / 2);
-
-            int precision = 0;
-            if (depthPrecision == DepthCameras.BufferPrecision.bit16) { precision = 16; }
-            if (depthPrecision == DepthCameras.BufferPrecision.bit24) { precision = 24; }
-            if (depthPrecision == DepthCameras.BufferPrecision.bit32) { precision = 32; }
-            _pixelHeight = (int)Mathf.Sqrt(8 * imageMemorySize / (_aspectRatio * precision));
-            _pixelWidth = (int)(_pixelHeight * _aspectRatio);
-            _cameraMatrix = new Matrix4x4();
-            _cameraMatrix = MakeCameraMatrix(_aspectRatio, _verticalAngle, farPlane, nearPlane);
-        }
         // Verified
         private Matrix4x4 MakeCameraMatrix(float a, float VFOV, float f, float n)
         {

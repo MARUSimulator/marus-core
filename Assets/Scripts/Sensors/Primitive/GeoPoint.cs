@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Labust.Sensors
+namespace Labust.Sensors.Primitive
 {
     //TODO
     [System.Serializable]

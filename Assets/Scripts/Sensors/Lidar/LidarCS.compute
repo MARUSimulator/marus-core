@@ -1,0 +1,59 @@
+﻿#include "UnityCG.cginc"
+#include "UnityShaderVariables.cginc"
+#include "../Core/ZBuffer/DepthCameras_CS.compute"
+#include "../Core/RNG_CS.compute"
+
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+#pragma kernel RNG_Initialize
+
+struct lidarFields
+{
+	float3 position;
+	float intensity;
+	uint ring;
+	float time;
+};
+
+RWStructuredBuffer<float3> lines;
+RWStructuredBuffer<lidarFields> LidarData;
+RWStructuredBuffer<uint2> sphericalPixelCoordinates;
+//RWStructuredBuffer<float> Debug_vector_main;
+int N_theta;
+int N_phi;
+float rayDropProbability;
+
+[numthreads(1024, 1, 1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+	int cameraID = id.x / (N_theta*N_phi);
+	uint2 coord = sphericalPixelCoordinates[id.x % (N_theta*N_phi)];
+	coord.x += ImageWidthRes * cameraID;
+
+	float3 pixelCoordinates = ImagesToCartesian(coord);
+
+	/*
+	// Remove points at ocean surface
+	if (pixelCoordinates.y < -3.00) {
+		pixelCoordinates = float3(0,0,0);
+	}
+	*/
+
+	// Remove points at ocean surface
+	// if (pixelCoordinates.y > 3.00) {
+	// 	pixelCoordinates = float3(0, 0, 0);
+	// }
+
+	// Raydrop
+	// if (RandomFloat(id.x) < rayDropProbability) {
+	// 	pixelCoordinates = float3(0, 0, 0);
+	// }
+
+	if (id.x <= N_phi * N_theta*NrOfImages) {
+		lines[id.x] = pixelCoordinates;
+		LidarData[id.x].position = float3(pixelCoordinates.x, pixelCoordinates.z, pixelCoordinates.y);
+		LidarData[id.x].intensity = 6;
+		LidarData[id.x].ring = int(N_phi*(float(coord.y)/float(ImageHeightRes))) ;
+		LidarData[id.x].time = 1.0;
+	}
+}

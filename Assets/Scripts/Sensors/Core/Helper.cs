@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.IO;
 using System;
 
-namespace Labust.Sensors.Core { 
+namespace Gemini.EMRS.Core { 
 public class Helper
     {
 

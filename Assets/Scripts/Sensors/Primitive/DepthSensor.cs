@@ -3,7 +3,7 @@ using Labust.Sensors;
 using Sensorstreaming;
 using UnityEngine;
 
-namespace Labust.Sensors
+namespace Labust.Sensors.Primitive
 {
     /// <summary>
     /// Depth sensor implementation
@@ -16,15 +16,15 @@ namespace Labust.Sensors
         {
             streamHandle =  streamingClient.StreamDepthSensor(cancellationToken:RosConnection.Instance.cancellationToken);
             AddSensorCallback(SensorCallbackOrder.Last, Refresh);
-            if (string.IsNullOrEmpty(sensorId))
-                sensorId = vehicle.name + "/depth";
+            if (string.IsNullOrEmpty(address))
+                address = vehicle.name + "/depth";
         }
 
         public async override void SendMessage()
         {
             await streamWriter.WriteAsync( new DepthStreamingRequest
             {
-                SensorId = sensorId,
+                Address = address,
                 Depth = depth
             });
             hasData = false;

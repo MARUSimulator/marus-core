@@ -3,46 +3,33 @@ using System.Collections;
 
 
 
-namespace Labust.Sensors.Core.ZBuffer
+namespace Labust.Sensors.Core
 {
-    public class DepthCameras
+    public static class DepthCameras
     {
         public enum BufferPrecision // your custom enumeration
         {
-            bit16,
-            bit24,
-            bit32
+            bit16=16,
+            bit24=24,
+            bit32=32
         };
 
-        private string CameraTag = "DepthCam";
-        private CameraFrustum frustums;
-        public Camera[] cameras;
+        static string CameraTag = "DepthCam";
 
+        private static BufferPrecision DepthBufferPrecision = BufferPrecision.bit24;
 
-        public DepthCameras(int cameraNumbers, CameraFrustum cameraFrustums, Transform transform)
+        public static (Camera[], CameraFrustum) SpawnDepthCameras(Transform transform, int numCameras, int WidthRes, float farPlane, 
+                float nearPlane, float verticalAngle)
         {
-            frustums = cameraFrustums;
-            cameras = SpawnDepthCameras(cameraNumbers, transform);
-        }
-        public DepthCameras(int cameraNumbers, CameraFrustum cameraFrustums, Transform transform, ComputeShader shader, string kernelName)
-        {
-            frustums = cameraFrustums;
-            cameras = SpawnDepthCameras(cameraNumbers, transform);
-            SetCameraBuffers(shader, kernelName);
-        }
-
-        private BufferPrecision DepthBufferPrecision = BufferPrecision.bit24;
-
-        private Camera[] SpawnDepthCameras(int numbers, Transform transform)
-        {
+            var frustumTemplate = new CameraFrustum(WidthRes, farPlane, nearPlane, 2 * Mathf.PI / numCameras, verticalAngle * Mathf.Deg2Rad);
             RenderTextureFormat format = RenderTextureFormat.Depth;
-            Camera[] Cameras = new Camera[numbers];
-            for (int i = 0; i < numbers; i++)
+            Camera[] Cameras = new Camera[numCameras];
+            for (int i = 0; i < numCameras; i++)
             {
                 GameObject CameraObject = new GameObject();
                 CameraObject.name = CameraTag + i;
                 CameraObject.transform.SetParent(transform);
-                CameraObject.transform.localRotation = Quaternion.Euler(0, i * 360.0f / numbers, 0);
+                CameraObject.transform.localRotation = Quaternion.Euler(0, i * 360.0f / numCameras, 0);
                 CameraObject.transform.localPosition = new Vector3(0, 0, 0);
                 //CameraObject.layer = LayerMask.NameToLayer(LidarLayer);
                 CameraObject.AddComponent<Camera>();
@@ -50,46 +37,34 @@ namespace Labust.Sensors.Core.ZBuffer
 
                 if (cam.targetTexture == null)
                 {
-                    var depthBuffer = new RenderTexture(frustums._pixelWidth, frustums._pixelHeight, 16, format);//,// format);
-                    if (DepthBufferPrecision == BufferPrecision.bit16)
-                    {
-                        depthBuffer.depth = 16;
-                    }
-                    else if (DepthBufferPrecision == BufferPrecision.bit24)
-                    {
-                        depthBuffer.depth = 24;
-
-                    }
-                    else if (DepthBufferPrecision == BufferPrecision.bit32)
-                    {
-                        depthBuffer.depth = 32;
-                    }
+                    var depthBuffer = new RenderTexture(frustumTemplate.pixelWidth, frustumTemplate.pixelHeight, 16, format);
+                    depthBuffer.depth = (int)DepthBufferPrecision;
                     cam.targetTexture = depthBuffer;
                 }
 
                 cam.usePhysicalProperties = false;
 
                 // Projection Matrix Setup
-                cam.aspect = frustums._aspectRatio;//Mathf.Tan(Mathf.PI / numbers) / Mathf.Tan(frustums._verticalAngle / 2.0f);
-                cam.fieldOfView = frustums._verticalAngle*Mathf.Rad2Deg;//Camera.HorizontalToVerticalFieldOfView(360.0f / numbers, cam.aspect);
-                cam.farClipPlane = frustums._farPlane;
+                cam.aspect = frustumTemplate.aspectRatio;//Mathf.Tan(Mathf.PI / numbers) / Mathf.Tan(frustums._verticalAngle / 2.0f);
+                cam.fieldOfView = frustumTemplate.verticalAngle*Mathf.Rad2Deg;//Camera.HorizontalToVerticalFieldOfView(360.0f / numbers, cam.aspect);
+                cam.farClipPlane = frustumTemplate.farPlane;
                 cam.enabled = false;
-                cam.nearClipPlane = frustums._nearPlane;
+                cam.nearClipPlane = frustumTemplate.nearPlane;
                 Cameras[i] = cam;
                 //Debug.Log(cam.projectionMatrix);
             }
-            return Cameras;
+            return (Cameras, frustumTemplate);
         }
 
-        public void SetCameraBuffers(ComputeShader shader, string kernelName)
+        public static void SetCameraBuffers(Camera[] cameras, ComputeShader shader, string kernelName)
         {
             int kernelHandle = shader.FindKernel(kernelName);
             shader.SetMatrix("inv_CameraMatrix", cameras[0].projectionMatrix.inverse);
             shader.SetMatrix("CameraMatrix", cameras[0].projectionMatrix);
-            shader.SetInt("ImageWidthRes", frustums._pixelWidth);
-            shader.SetInt("ImageHeightRes", frustums._pixelHeight);
-            shader.SetFloat("VFOV_camera", frustums._verticalAngle);
-            shader.SetFloat("HFOV_camera", frustums._horisontalAngle);
+            shader.SetInt("ImageWidthRes", cameras[0].pixelWidth);
+            shader.SetInt("ImageHeightRes", cameras[0].pixelHeight);
+            shader.SetFloat("VFOV_camera", cameras[0].fieldOfView);
+            shader.SetFloat("HFOV_camera", cameras[0].fieldOfView * cameras[0].aspect);
             shader.SetInt("NrOfImages", cameras.Length);
 
             for (int i = 0; i < cameras.Length; i++)
@@ -103,6 +78,5 @@ namespace Labust.Sensors.Core.ZBuffer
                 shader.SetMatrix("CameraRotationMatrix" + i.ToString(), m);
             }
         }
-
     }
 }

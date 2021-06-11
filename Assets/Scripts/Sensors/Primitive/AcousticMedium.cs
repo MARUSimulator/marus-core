@@ -3,21 +3,47 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Labust.Sensors
+namespace Labust.Sensors.Primitive
 {
     // TODO
-    public class AcousticMedium : MonoBehaviour
+    public class AcousticMedium
     {
-        public List<Nanomodem> nanomodems = new List<Nanomodem>();
-        public Dictionary<int, Nanomodem> modems = new Dictionary<int, Nanomodem>();
 
-        protected void Awake()
+        int currentId = 0;
+        Dictionary<int, Nanomodem> nanomodems;
+
+        static AcousticMedium _instance;
+        public static AcousticMedium Instance
         {
-            foreach (var nanomodem in nanomodems) 
+            get
             {
-                Debug.Log("Adding nanomodem id:" + nanomodem.id + " to dictionary");
-                modems.Add(nanomodem.id, nanomodem);
+                if (_instance == null)
+                    _instance = new AcousticMedium();
+                return _instance;
             }
+        }
+
+        private AcousticMedium()
+        {
+            nanomodems = new Dictionary<int, Nanomodem>();
+        }
+
+        public void RegisterNanomodem(Nanomodem modem)
+        {
+            nanomodems.Add(currentId++, modem);
+        }
+
+        public (bool, float) GetRangeAndValidityToId(Nanomodem fromModem, Nanomodem toModem)
+        {
+            var range = Vector3.Distance(fromModem.transform.position, toModem.transform.position);
+
+            if (range > fromModem.maxRange)
+            {
+                Debug.Log($"ID: {fromModem.name} is too far.");
+                return (false, range);
+            }
+
+            return (true, range);
         }
     }
 }

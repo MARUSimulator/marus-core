@@ -25,16 +25,16 @@ namespace Remotecontrol {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChRyZW1vdGVfY29udHJvbC5wcm90bxINcmVtb3RlY29udHJvbBoMY29tbW9u",
-            "LnByb3RvIh0KDEZvcmNlUmVxdWVzdBINCgV2ZWhJZBgBIAEoCSI6Cg1Gb3Jj",
-            "ZVJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSGAoDcHdtGAIgASgLMgsuY29t",
-            "bW9uLlB3bTJcCg1SZW1vdGVDb250cm9sEksKCkFwcGx5Rm9yY2USGy5yZW1v",
-            "dGVjb250cm9sLkZvcmNlUmVxdWVzdBocLnJlbW90ZWNvbnRyb2wuRm9yY2VS",
-            "ZXNwb25zZSIAMAFCNwoeaW8uZ3JwYy5leGFtcGxlcy5yZW1vdGVjb250cm9s",
-            "Qg1SZW1vdGVDb250cm9sUAGiAgNITFdiBnByb3RvMw=="));
+            "LnByb3RvIh8KDEZvcmNlUmVxdWVzdBIPCgdhZGRyZXNzGAEgASgJIjoKDUZv",
+            "cmNlUmVzcG9uc2USDwoHc3VjY2VzcxgBIAEoCBIYCgNwd20YAiABKAsyCy5j",
+            "b21tb24uUHdtMlwKDVJlbW90ZUNvbnRyb2wSSwoKQXBwbHlGb3JjZRIbLnJl",
+            "bW90ZWNvbnRyb2wuRm9yY2VSZXF1ZXN0GhwucmVtb3RlY29udHJvbC5Gb3Jj",
+            "ZVJlc3BvbnNlIgAwAUI3Ch5pby5ncnBjLmV4YW1wbGVzLnJlbW90ZWNvbnRy",
+            "b2xCDVJlbW90ZUNvbnRyb2xQAaICA0hMV2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Common.CommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Remotecontrol.ForceRequest), global::Remotecontrol.ForceRequest.Parser, new[]{ "VehId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Remotecontrol.ForceRequest), global::Remotecontrol.ForceRequest.Parser, new[]{ "Address" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Remotecontrol.ForceResponse), global::Remotecontrol.ForceResponse.Parser, new[]{ "Success", "Pwm" }, null, null, null, null)
           }));
     }
@@ -71,7 +71,7 @@ namespace Remotecontrol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public ForceRequest(ForceRequest other) : this() {
-      vehId_ = other.vehId_;
+      address_ = other.address_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -80,14 +80,14 @@ namespace Remotecontrol {
       return new ForceRequest(this);
     }
 
-    /// <summary>Field number for the "vehId" field.</summary>
-    public const int VehIdFieldNumber = 1;
-    private string vehId_ = "";
+    /// <summary>Field number for the "address" field.</summary>
+    public const int AddressFieldNumber = 1;
+    private string address_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string VehId {
-      get { return vehId_; }
+    public string Address {
+      get { return address_; }
       set {
-        vehId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        address_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -104,14 +104,14 @@ namespace Remotecontrol {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (VehId != other.VehId) return false;
+      if (Address != other.Address) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (VehId.Length != 0) hash ^= VehId.GetHashCode();
+      if (Address.Length != 0) hash ^= Address.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -128,9 +128,9 @@ namespace Remotecontrol {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (VehId.Length != 0) {
+      if (Address.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(VehId);
+        output.WriteString(Address);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -141,9 +141,9 @@ namespace Remotecontrol {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (VehId.Length != 0) {
+      if (Address.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(VehId);
+        output.WriteString(Address);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -154,8 +154,8 @@ namespace Remotecontrol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (VehId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(VehId);
+      if (Address.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Address);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -168,8 +168,8 @@ namespace Remotecontrol {
       if (other == null) {
         return;
       }
-      if (other.VehId.Length != 0) {
-        VehId = other.VehId;
+      if (other.Address.Length != 0) {
+        Address = other.Address;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -186,7 +186,7 @@ namespace Remotecontrol {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            VehId = input.ReadString();
+            Address = input.ReadString();
             break;
           }
         }
@@ -204,7 +204,7 @@ namespace Remotecontrol {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            VehId = input.ReadString();
+            Address = input.ReadString();
             break;
           }
         }
