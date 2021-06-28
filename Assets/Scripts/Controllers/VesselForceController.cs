@@ -8,32 +8,29 @@ namespace Labust.Controllers
 	/// <summary>
 	/// Vessel controller that applies force to move and rotate towards the Target position
 	/// </summary>
-	public class VesselScriptForce : MonoBehaviour
+	public class VesselForceController : MonoBehaviour
 	{
 		public Transform Motor;
 		public float SteerPower = 500f;
 		public float Power = 5f;
 		public float MaxSpeed = 10f;
-		public float Drag = 0.1f;
-
-		protected Rigidbody Vessel;
+		protected Rigidbody vessel;
 		public Transform Target;
-		private Vector3 Direction;
 		private Boolean stop;
 
 		public void Awake()
 		{
-			Vessel = GetComponent<Rigidbody>();
+			vessel = GetComponent<Rigidbody>();
 			stop = false;
 		}
 
 		public void FixedUpdate()
 		{
-			moveTowards();
-			rotateTowards();
+			MoveTowards();
+			RotateTowards();
 		}
 
-		public void moveTowards()
+		public void MoveTowards()
 		{
 			float dist = Vector3.Distance(new Vector3(Target.position.x, 0, Target.position.z), new Vector3(transform.position.x, 0, transform.position.z));
 			
@@ -47,14 +44,14 @@ namespace Labust.Controllers
 
 			var forward = Vector3.Scale(new Vector3(1,0,1), transform.forward);
 			if (!stop)
-				ApplyForceToReachVelocity(Vessel, forward * MaxSpeed, Power * Mathf.Sqrt(dist) * Time.fixedDeltaTime);
+				ApplyForceToReachVelocity(vessel, forward * MaxSpeed, Power * Mathf.Sqrt(dist) * Time.fixedDeltaTime);
 		}
 
-		public void rotateTowards() {
+		public void RotateTowards() {
 			Vector3 relativePos = Target.position - transform.position;
 			float angle = Vector3.SignedAngle(relativePos, transform.forward, Vector3.up);
 			if (!stop && Mathf.Abs(angle) > 5f)
-				Vessel.AddForceAtPosition(Mathf.Sign(angle) * transform.right * SteerPower, Motor.position);
+				vessel.AddForceAtPosition(Mathf.Sign(angle) * transform.right * SteerPower, Motor.position);
 		}
 
 		public static void ApplyForceToReachVelocity(Rigidbody rigidbody, Vector3 velocity, float force = 1, ForceMode mode = ForceMode.Force)
@@ -62,7 +59,7 @@ namespace Labust.Controllers
 			if (force == 0 || velocity.magnitude == 0)
 				return;
 
-			velocity = velocity + velocity.normalized * 0.2f * rigidbody.drag;
+			velocity = velocity + velocity.normalized * rigidbody.drag;
 
 			//force = 1 => need 1 s to reach velocity (if mass is 1) => force can be max 1 / Time.fixedDeltaTime
 			force = Mathf.Clamp(force, -rigidbody.mass / Time.fixedDeltaTime, rigidbody.mass / Time.fixedDeltaTime);
