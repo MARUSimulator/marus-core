@@ -17,6 +17,9 @@ namespace Labust.Controllers
 		protected Rigidbody vessel;
 		public Transform Target;
 		private Boolean stop;
+		public float StoppingDistance = 1f;
+		public float MaxAngleDelta = 5f;
+		public float RestartDistance = 5f;
 
 		public void Awake()
 		{
@@ -35,23 +38,31 @@ namespace Labust.Controllers
 			float dist = Vector3.Distance(new Vector3(Target.position.x, 0, Target.position.z), new Vector3(transform.position.x, 0, transform.position.z));
 			
 			//Stop the vessel when close enough to target
-			if (dist < 1)
+			if (dist < StoppingDistance)
+			{
 				stop = true;
-			
+			}
+				
 			//start the vessel when target changed
-			if (stop && dist > 5)
+			if (stop && dist > RestartDistance)
+			{
 				stop = false;
+			}
 
 			var forward = Vector3.Scale(new Vector3(1,0,1), transform.forward);
 			if (!stop)
+			{
 				ApplyForceToReachVelocity(vessel, forward * MaxSpeed, Power * Mathf.Sqrt(dist) * Time.fixedDeltaTime);
+			}
 		}
 
 		public void RotateTowards() {
 			Vector3 relativePos = Target.position - transform.position;
 			float angle = Vector3.SignedAngle(relativePos, transform.forward, Vector3.up);
-			if (!stop && Mathf.Abs(angle) > 5f)
+			if (!stop && Mathf.Abs(angle) > MaxAngleDelta)
+			{
 				vessel.AddForceAtPosition(Mathf.Sign(angle) * transform.right * SteerPower, Motor.position);
+			}
 		}
 
 		public static void ApplyForceToReachVelocity(Rigidbody rigidbody, Vector3 velocity, float force = 1, ForceMode mode = ForceMode.Force)
