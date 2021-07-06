@@ -37,7 +37,9 @@ namespace Labust.Sensors.Primitive.GenericMedium
         }
 
         /// <summary>
-        /// Transmit message to single other object
+        /// Transmit message to single other object.
+        /// Message will only be sent ig other object is in range of the sender device. 
+        /// Method assumes distance and range are of the same unit and magnitude. Default is meters (m).
         /// </summary>
         /// <param name="msg">Message object to be sent.</param>
         /// <param name="receiver">Object which message is sent to.</param>
