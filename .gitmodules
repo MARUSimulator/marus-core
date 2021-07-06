@@ -1,0 +1,3 @@
+[submodule "Assets/Environment/UnityHDRPSimpleWater"]
+	path = Assets/Environment/UnityHDRPSimpleWater
+	url = https://github.com/flamacore/UnityHDRPSimpleWater
