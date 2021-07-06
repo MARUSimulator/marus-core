@@ -35,9 +35,8 @@ namespace Labust.Sensors.AIS
 
 		private float period = 0;
 		private float delta = 0;
-		private AISMessage posMsg;
+		private AISMessage message;
 		private Vector3 lastPosition;
-		private GameObject managerObj;
 		private Medium<AISMessage> AISMedium;
 		private Rigidbody rb;
 		
@@ -55,7 +54,6 @@ namespace Labust.Sensors.AIS
 		public void OnEnable()
 		{
 			// Register object to AIS manager
-			managerObj =  GameObject.Find("AISMedium");
 			AISMedium = AISManager.Instance;
 			AISMedium.Register(this);
 			setNewRange();
@@ -70,8 +68,8 @@ namespace Labust.Sensors.AIS
 				period = TimeIntervals.getInterval(ClassType, getSOG());
 				if (delta > period)
 				{
-					posMsg = positionReport();
-					MediumMessage<AISMessage> radioMessage = new MediumMessage<AISMessage>(this, posMsg);
+					message = positionReport();
+					MediumMessage<AISMessage> radioMessage = new MediumMessage<AISMessage>(this, message);
 					AISMedium.Broadcast(radioMessage);
 					delta = 0;
 				}
@@ -86,14 +84,14 @@ namespace Labust.Sensors.AIS
 			Debug.Log(msg);
 		}
 		
-		private PositionReportClassA positionReport() 
+		private PositionReportClassA positionReport()
 		{
 			//TODO lat-long
 			PositionReportClassA msg = new PositionReportClassA(int.Parse(this.MMSI));
 			msg.TrueHeading = getTrueHeading();
 			msg.COG = getCOG();
 			msg.SOG = getSOG();
-			msg.TimeStamp = (uint) ((DateTimeOffset) DateTime.Now).ToUnixTimeSeconds();
+			msg.TimeStamp = (uint) System.DateTime.UtcNow.Second;
 			return msg;
 		}
 
@@ -139,12 +137,12 @@ namespace Labust.Sensors.AIS
 			if (ClassType == AISClassType.ClassA)
 			{	
 				// 75km range for 12.5W transponder
-				this.Range = 75f;
+				this.Range = 75f * 1000;
 			}
 			else
 			{
 				// 15km range for 2W transponder
-				this.Range = 15f;
+				this.Range = 15f * 1000;
 			}
 		}
 	}
