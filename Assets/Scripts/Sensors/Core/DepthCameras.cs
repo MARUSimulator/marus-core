@@ -31,6 +31,7 @@ namespace Labust.Sensors.Core
                 CameraObject.transform.SetParent(transform);
                 CameraObject.transform.localRotation = Quaternion.Euler(0, i * 360.0f / numCameras, 0);
                 CameraObject.transform.localPosition = new Vector3(0, 0, 0);
+                CameraObject.SetActive(false);
                 //CameraObject.layer = LayerMask.NameToLayer(LidarLayer);
                 CameraObject.AddComponent<Camera>();
                 CameraObject.AddComponent<HDAdditionalCameraData>();
@@ -50,10 +51,10 @@ namespace Labust.Sensors.Core
                 cam.enabled = true;
                 cam.nearClipPlane = frustumTemplate.nearPlane;
                 cam.depthTextureMode = DepthTextureMode.Depth;
-                // cam.clearFlags = CameraClearFlags.Depth;
+                cam.clearFlags = CameraClearFlags.Depth;
                 Cameras[i] = cam;
                 var hdCam = CameraObject.GetComponent<HDAdditionalCameraData>();
-                hdCam.customRender += CustomRender;
+                // hdCam.customRender += CustomRender;
             }
             return (Cameras, frustumTemplate);
         }
@@ -83,33 +84,33 @@ namespace Labust.Sensors.Core
         
         public static void CustomRender(ScriptableRenderContext context, HDCamera camera)
         {
-            ScriptableRenderContext.EmitWorldGeometryForSceneView(camera.camera);
-            context.SetupCameraProperties(camera.camera);
-            var cameraBuffer = new CommandBuffer { name="Render Camera" + camera.camera.name};
-            cameraBuffer.SetRenderTarget(camera.camera.targetTexture);
-            cameraBuffer.ClearRenderTarget(true, false, Color.black);
+            // CustomPassUtils.RenderDepthFromCamera(context, camera.camera, LayerMask.GetMask("Default"));
+            // context.SetupCameraProperties(camera.camera);
+            // var cameraBuffer = new CommandBuffer { name="Render Camera" + camera.camera.name};
+            // cameraBuffer.SetRenderTarget(camera.camera.targetTexture);
+            // cameraBuffer.ClearRenderTarget(true, false, Color.black);
         
-            cameraBuffer.BeginSample("Render camera" + camera.camera.name);
-            context.ExecuteCommandBuffer(cameraBuffer);
-            cameraBuffer.Clear();
+            // cameraBuffer.BeginSample("Render camera" + camera.camera.name);
+            // context.ExecuteCommandBuffer(cameraBuffer);
+            // cameraBuffer.Clear();
 
-            camera.camera.TryGetCullingParameters(out var cullingParameters);
-            var cullingResults = context.Cull(ref cullingParameters);
+            // camera.camera.TryGetCullingParameters(out var cullingParameters);
+            // var cullingResults = context.Cull(ref cullingParameters);
 
-            cameraBuffer.SetRenderTarget(camera.camera.targetTexture);
-            context.ExecuteCommandBuffer(cameraBuffer);
-            cameraBuffer.Clear();
+            // cameraBuffer.SetRenderTarget(camera.camera.targetTexture);
+            // context.ExecuteCommandBuffer(cameraBuffer);
+            // cameraBuffer.Clear();
 
-            var drawingSettings = new DrawingSettings();
-            drawingSettings.SetShaderPassName(0, new ShaderTagId("DepthOnly"));
-            drawingSettings.SetShaderPassName(1, new ShaderTagId("DepthForwardOnly"));
-            var filteringSettings = new FilteringSettings(RenderQueueRange.all);
-            context.SetupCameraProperties(camera.camera);
-            context.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);
-            cameraBuffer.EndSample("Render camera" + camera.camera.name);
-            context.ExecuteCommandBuffer(cameraBuffer);
-            cameraBuffer.Clear();
-            context.Submit();
+            // var drawingSettings = new DrawingSettings();
+            // drawingSettings.SetShaderPassName(0, new ShaderTagId("DepthOnly"));
+            // drawingSettings.SetShaderPassName(1, new ShaderTagId("DepthForwardOnly"));
+            // var filteringSettings = new FilteringSettings(RenderQueueRange.all);
+            // context.SetupCameraProperties(camera.camera);
+            // context.DrawRenderers(cullingResults, ref drawingSettings, ref filteringSettings);
+            // cameraBuffer.EndSample("Render camera" + camera.camera.name);
+            // context.ExecuteCommandBuffer(cameraBuffer);
+            // cameraBuffer.Clear();
+            // context.Submit();
         }
     }
 }

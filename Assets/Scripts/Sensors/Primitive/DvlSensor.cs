@@ -28,10 +28,11 @@ namespace Labust.Sensors.Primitive
             beams = GetComponentsInChildren<RangeSensor>();
             beamRanges = new float[beams.Length];
             lastPosition = sensor.position;
+            AddSensorCallback(SensorCallbackOrder.Last, Refresh);
             streamHandle = streamingClient.StreamDvlSensor(cancellationToken:RosConnection.Instance.cancellationToken);
         }
 
-        void FixedUpdate()
+        void Refresh()
         {
             var position = sensor.position;
             groundVelocity = sensor.worldToLocalMatrix * ((position - lastPosition) / Time.fixedDeltaTime);

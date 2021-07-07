@@ -39,10 +39,6 @@ public class Buoyancy : MonoBehaviour
     {
         forces = new List<Vector3[]>(); // For drawing force gizmos
                                         // Store original rotation and position
-        var originalRotation = transform.rotation;
-        var originalPosition = transform.position;
-        transform.rotation = Quaternion.identity;
-        transform.position = Vector3.zero;
 
         collider = GetComponent<Collider>();
         rigidbody = GetComponent<Rigidbody>();
@@ -63,13 +59,8 @@ public class Buoyancy : MonoBehaviour
         }
         voxelHalfHeight /= 2 * slicesPerAxis;
 
-        rigidbody.centerOfMass = new Vector3(0, -bounds.extents.y * 0f, 0) + transform.InverseTransformPoint(bounds.center);
-
+        rigidbody.centerOfMass = transform.InverseTransformPoint(bounds.center);
         voxels = SliceIntoVoxels(isConcave);
-
-        // Restore original rotation and position
-        transform.rotation = originalRotation;
-        transform.position = originalPosition;
 
         float volume = rigidbody.mass / density;
 

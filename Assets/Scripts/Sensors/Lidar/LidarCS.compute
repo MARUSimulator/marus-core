@@ -1,6 +1,6 @@
 ﻿#include "UnityCG.cginc"
 #include "UnityShaderVariables.cginc"
-#include "../Core/ZBuffer/DepthCameras_CS.compute"
+#include "../Core/DepthCameras_CS.compute"
 #include "../Core/RNG_CS.compute"
 
 // Each #kernel tells which function to compile; you can have many kernels

@@ -113,9 +113,9 @@ namespace Labust.Sensors {
         private void Awake()
         {
             SetupSensorCallbacks(
-            new SensorCallback(LidarUpdate, SensorCallbackOrder.First),
-            new SensorCallback(PointCloudRendering, SensorCallbackOrder.Last),
-            new SensorCallback(RecieveLidarData, SensorCallbackOrder.Last)
+                new SensorCallback(LidarUpdate, SensorCallbackOrder.First),
+                new SensorCallback(PointCloudRendering, SensorCallbackOrder.Last),
+                new SensorCallback(RecieveLidarData, SensorCallbackOrder.Last)
             );
         }
 

@@ -198,9 +198,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d0e6062362dad408bb84d9d309a317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverIP: 172.28.3.151
+  serverIP: 172.22.38.67
   serverPort: 30052
   connectionTimeout: 5
+  OriginFrameName: map
+  OriginFrameLatitude: /d2/LocalOriginLat
+  OriginFrameLongitude: /d2/LocalOriginLon
+  DefaultLatitude: 45
+  DefaultLongitude: 15
 --- !u!4 &154513371
 Transform:
   m_ObjectHideFlags: 0
@@ -1517,13 +1522,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SensorUpdateHz: 1
-  address: 
+  address: /boat1/point_cloud
   ParticleMaterial: {fileID: 2100000, guid: 2896c8197dda1784cb9bf8d6deb6ea11, type: 2}
   WidthRes: 2048
   HeightRes: 32
   MaxDistance: 100
   MinDistance: 0.2
   FieldOfView: 50
+  pointCloudShader: {fileID: 7200000, guid: 4b78f66eefc639f4193208e4035b6b7e, type: 3}
 --- !u!4 &1326001572
 Transform:
   m_ObjectHideFlags: 0
@@ -1531,8 +1537,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326001569}
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.060000427, y: 1.3460001, z: 4.3393664}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.148, z: 1.03}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1297007835}
@@ -1645,7 +1651,6 @@ GameObject:
   - component: {fileID: 1469226918}
   - component: {fileID: 1469226919}
   - component: {fileID: 1469226917}
-  - component: {fileID: 1469226916}
   - component: {fileID: 1469226915}
   - component: {fileID: 1469226920}
   m_Layer: 0
@@ -1681,18 +1686,6 @@ MonoBehaviour:
   NumberOfLidarPoints: 0
   lidarCameras: []
   SynchronousUpdate: 0
---- !u!114 &1469226916
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1469226914}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 653d32ac692404546bce378f86bac083, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1469226917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1764,8 +1757,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2614e8a13dc46e94f9a60fb7f0e01a6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  computeParticle: {fileID: 0}
-  particleMaterial: {fileID: 0}
+  computeParticle: {fileID: 7200000, guid: 4b78f66eefc639f4193208e4035b6b7e, type: 3}
+  particleMaterial: {fileID: 2100000, guid: 2896c8197dda1784cb9bf8d6deb6ea11, type: 2}
   _nrOfParticles: 0
 --- !u!1 &1483899397
 GameObject:
@@ -2859,25 +2852,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 180540285495545174, guid: d1fb219db12ec7f4a9f6c71cedd108a0,
-        type: 3}
-      propertyPath: m_Mass
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5644686454492165334, guid: d1fb219db12ec7f4a9f6c71cedd108a0,
-        type: 3}
-      propertyPath: drag
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5644686454492165334, guid: d1fb219db12ec7f4a9f6c71cedd108a0,
         type: 3}
       propertyPath: density
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 5644686454492165334, guid: d1fb219db12ec7f4a9f6c71cedd108a0,
-        type: 3}
-      propertyPath: slicesPerAxis
-      value: 5
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 7441703285642097104, guid: d1fb219db12ec7f4a9f6c71cedd108a0,
         type: 3}

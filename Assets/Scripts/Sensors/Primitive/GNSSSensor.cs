@@ -1,31 +1,53 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Labust.Core;
+using Labust.Networking;
+using Sensorstreaming;
 using UnityEngine;
 
 namespace Labust.Sensors.Primitive
 {
-    //TODO
-    public class GNSSSensor : MonoBehaviour
+    public class GNSSSensor : SensorBase<GnssStreamingRequest>
     {
         [Header("Position")]
         public GeographicFrame origin;
-        public GeoPoint fix;
+        public GeoPoint point;
 
         [Header("Precision")]
         public double[] covariance;
         public bool isRTK = true;
 
-        private Transform sensor;
 
         void Start()
         {
-            sensor = GetComponent<Transform>();
             covariance = new double[] { 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1 };
+            AddSensorCallback(SensorCallbackOrder.Last, Refresh);
+            streamHandle = streamingClient.StreamGnssSensor(cancellationToken: RosConnection.Instance.cancellationToken);
+            if (string.IsNullOrEmpty(address))
+                address = vehicle.name + "/gps";
         }
 
-        public void SampleSensor()
+        void Refresh()
         {
-            fix = origin.Unity2Geo(sensor.position);
+            var world = RosConnection.Instance.WorldFrame;
+            point = world.Unity2Geo(transform.position);
+            hasData = true;
+        }
+
+        public async override void SendMessage()
+        {
+            var msg = new GnssStreamingRequest
+            {
+                Address = address,
+                Point = new Common.GeoPoint
+                {
+                    Latitude = point.latitude,
+                    Longitude = point.longitude,
+                    Altitude = point.altitude
+                }
+            };
+            await streamWriter.WriteAsync(msg);
+            hasData = false;
         }
     }
 }

@@ -2,6 +2,7 @@
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
+using System.Reflection;
 
 namespace Labust.Sensors.Core
 {
@@ -11,27 +12,32 @@ namespace Labust.Sensors.Core
     class LidarCP : CustomPass
     {
         public GameObject lidar;
-        private Camera[] cameras;
-        private ShaderTagId[] shaderTags;
-        private RenderTexture[] handles;
+        Camera[] cameras;
+        ShaderTagId[] shaderTags;
+        FieldInfo cullingResultField;
+        RTHandle[] rtHandles;
 
         protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
         {
+            cullingResultField = typeof(CustomPassContext).GetField(nameof(CustomPassContext.cullingResults));
             shaderTags = new ShaderTagId[2]{
                 new ShaderTagId("DepthOnly"),
                 new ShaderTagId("DepthForwardOnly"),
             };
             var lidarObj = lidar.GetComponent<LidarScript>();
             cameras = lidarObj.lidarCameras;
-            handles = new RenderTexture[cameras.Length];
+            rtHandles = new RTHandle[cameras.Length];
             if (cameras != null && cameras.Length > 0)
             {
+                using var handleSystem = new RTHandleSystem();
                 for (int i = 0; i < cameras.Length; i++)
                 {
+                    var handle = handleSystem.Alloc(cameras[i].targetTexture);
+                    rtHandles[i] = handle;
+                    cameras[i].targetTexture = handle;
+                    // cameras[i].targetTexture = handle;
                     var quad = GameObject.Find("Quad" + (i+1).ToString());
                     var c = quad.GetComponent<MeshRenderer>();
-                    // handles[i] = RTHandles.Alloc(cameras[i].targetTexture);
-                    handles[i] = new RenderTexture(cameras[i].targetTexture);
                     c.material.mainTexture = cameras[i].targetTexture;
                 }
             }
@@ -39,8 +45,24 @@ namespace Labust.Sensors.Core
 
         protected override void Execute(CustomPassContext context)
         {
-            // for (int i = 0; i < cameras.Length; i++)
-            // {
+            for (int i = 0; i < cameras.Length; i++)
+            {
+                cameras[i].TryGetCullingParameters(out var cullingParams);
+                cullingParams.cullingOptions = CullingOptions.ShadowCasters;
+
+                // Assign the custom culling result to the context
+                // so it'll be used for the following operations
+                cullingResultField.SetValueDirect(__makeref(context), context.renderContext.Cull(ref cullingParams));
+                var overrideDepthTest = new RenderStateBlock(RenderStateMask.Depth) { depthState = new DepthState(true, CompareFunction.LessEqual) };
+
+                CoreUtils.SetRenderTarget(context.cmd, rtHandles[i], ClearFlag.Depth);
+                CustomPassUtils.RenderDepthFromCamera(context, cameras[i], cameras[i].cullingMask, overrideRenderState: overrideDepthTest);
+
+        // Sync baking camera aspect ratio with RT (see https://github.com/alelievr/HDRP-Custom-Passes/issues/24)
+                // cameras[i].aspect = context.hdCamera.camera.aspect;
+                // bakingCamera.pixelRect = ctx.hdCamera.camera.pixelRect;
+                // cameras[i].targetTexturertHandles[i];
+
             //     Camera bakingCamera = cameras[i];
             //     RenderTexture targetTexture = bakingCamera.targetTexture;
             //     bakingCamera.TryGetCullingParameters(out var cullingParams);
@@ -83,7 +105,7 @@ namespace Labust.Sensors.Core
 
             //     CoreUtils.SetRenderTarget(cmd, targetTexture.colorBuffer, ClearFlag.Depth);
             //     CoreUtils.DrawRendererList(context.renderContext, cmd, RendererList.Create(result));
-            // }
+            }
         }
     }
 }

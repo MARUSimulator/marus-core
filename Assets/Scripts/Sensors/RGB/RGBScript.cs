@@ -38,6 +38,9 @@ namespace Labust.Sensors
         {
             CameraSetup();
 
+            streamHandle = streamingClient.StreamCameraSensor(cancellationToken:RosConnection.Instance.cancellationToken);
+            AddSensorCallback(SensorCallbackOrder.First, RGBUpdate);
+
             int kernelIndex = cameraShader.FindKernel("CSMain");
             cameraData = new ComputeBufferDataExtractor<byte>(PixelHeight * PixelWidth, sizeof(float) * 3, "CameraData");
             cameraData.SetBuffer(cameraShader, "CSMain");
@@ -48,34 +51,25 @@ namespace Labust.Sensors
                 address = vehicle.name + "/camera";
         }
 
-        private void Awake()
-        {
-            streamHandle = streamingClient.StreamCameraSensor(cancellationToken:RosConnection.Instance.cancellationToken);
-            AddSensorCallback(SensorCallbackOrder.First, RGBUpdate);
-        }
-
         public byte[] Data { get; private set; } = new byte[0];
         public async override void SendMessage()
         {
-            if (hasData)
+            try
             {
-                try
+                await streamWriter.WriteAsync(new CameraStreamingRequest
                 {
-                    await streamWriter.WriteAsync(new CameraStreamingRequest 
-                    { 
-                        Data = ByteString.CopyFrom(Data), 
-                        TimeStamp = Time.time, 
-                        Address = address, 
-                        Height = (uint)(PixelHeight/ImageCrop), 
-                        Width = (uint)(PixelWidth/ImageCrop) 
-                    });
-                    hasData = false;
-                }
-                catch (Exception e)
-                {
-                    Debug.Log("Possible message overflow.");
-                    Debug.LogError(e);
-                }
+                    Data = ByteString.CopyFrom(Data),
+                    TimeStamp = Time.time,
+                    Address = address,
+                    Height = (uint)(PixelHeight / ImageCrop),
+                    Width = (uint)(PixelWidth / ImageCrop)
+                });
+                hasData = false;
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Possible message overflow.");
+                Debug.LogError(e);
             }
         }
 

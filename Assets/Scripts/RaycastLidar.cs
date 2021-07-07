@@ -38,6 +38,8 @@ public class RaycastLidar : SensorBase<LidarStreamingRequest>
     public float MinDistance = 0.2f;
     public float FieldOfView = 30;
 
+    public ComputeShader pointCloudShader;
+
     const float PIOVERTWO = Mathf.PI / 2;
     const float TWOPI = Mathf.PI * 2;
 
@@ -118,7 +120,7 @@ public class RaycastLidar : SensorBase<LidarStreamingRequest>
         pointCloud.transform.rotation = Quaternion.identity;
         _pointCloudManager = pointCloud.AddComponent<PointCloudManager>();
         _pointCloudManager.particleMaterial = ParticleMaterial;
-        _pointCloudManager.computeParticle = FindComputeShader("PointCloudCS");
+        _pointCloudManager.computeParticle = pointCloudShader ?? FindComputeShader("PointCloudCS");
         _pointCloudManager.SetupPointCloud(WidthRes * HeightRes);
     }
 
@@ -186,10 +188,10 @@ public class RaycastLidar : SensorBase<LidarStreamingRequest>
     public override void SendMessage()
     {
         // TBD
-        streamWriter.WriteAsync(new LidarStreamingRequest
-        {
+        // streamWriter.WriteAsync(new LidarStreamingRequest
+        // {
             
-        });
+        // });
         hasData = false;
     }
 
