@@ -1,6 +1,6 @@
 using UnityEngine;
 using System;
-namespace Labust.Other
+namespace Labust.Utils
 {
 
 	/// <summary>

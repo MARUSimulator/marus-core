@@ -7,7 +7,7 @@ namespace Labust.Sensors.AIS
 	/// <summary>
 	/// Get reporting time intervals based on AIS Class, speed and course status.
 	/// </summary>
-	public class TimeIntervals
+	public static class TimeIntervals
 	{
 		public static float getInterval(AISClassType type, float speed, Boolean changingCourse = false)
 		{

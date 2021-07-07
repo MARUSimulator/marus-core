@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Labust.Networking;
 using Sensorstreaming;
 using UnityEngine;
-using Utils;
+using Labust.Utils;
 
 namespace Labust.Sensors.Primitive
 {

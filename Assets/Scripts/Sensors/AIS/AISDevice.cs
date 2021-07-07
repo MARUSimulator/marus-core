@@ -8,7 +8,7 @@ namespace Labust.Sensors.AIS
 	/// <summary>
 	///  This class implements AIS capabilities.
 	/// </summary>
-	public class AISScript : MediumDevice<AISMessage>
+	public class AISDevice : MediumDevice<AISMessage>
 	{	
 		/// <summary>
 		/// AIS class type: A or B
@@ -37,7 +37,7 @@ namespace Labust.Sensors.AIS
 		private float delta = 0;
 		private AISMessage message;
 		private Vector3 lastPosition;
-		private Medium<AISMessage> AISMedium;
+		private MediumBase<AISMessage> AISMedium;
 		private Rigidbody rb;
 		
 
@@ -45,18 +45,12 @@ namespace Labust.Sensors.AIS
 		{
 			if (string.IsNullOrEmpty(MMSI))
 			{
-				MMSIGenerator generator = new MMSIGenerator();
-				MMSI = generator.generateMMSI();
+				MMSI = MMSIGenerator.GenerateMMSI();
 			}
 			rb = GetComponent<Rigidbody>();
-		}
-
-		public void OnEnable()
-		{
 			// Register object to AIS manager
 			AISMedium = AISManager.Instance;
 			AISMedium.Register(this);
-			setNewRange();
 		}
 
 		
@@ -65,10 +59,12 @@ namespace Labust.Sensors.AIS
 		{   
 			if (ActiveTransmission)
 			{
-				period = TimeIntervals.getInterval(ClassType, getSOG());
+
+				period = TimeIntervals.getInterval(ClassType, GetSOG());
 				if (delta > period)
-				{
-					message = positionReport();
+				{	
+					SetRange();
+					message = PositionReport();
 					MediumMessage<AISMessage> radioMessage = new MediumMessage<AISMessage>(this, message);
 					AISMedium.Broadcast(radioMessage);
 					delta = 0;
@@ -84,18 +80,18 @@ namespace Labust.Sensors.AIS
 			Debug.Log(msg);
 		}
 		
-		private PositionReportClassA positionReport()
+		private PositionReportClassA PositionReport()
 		{
-			//TODO lat-long
+			// TODO lat-long
 			PositionReportClassA msg = new PositionReportClassA(int.Parse(this.MMSI));
-			msg.TrueHeading = getTrueHeading();
-			msg.COG = getCOG();
-			msg.SOG = getSOG();
+			msg.TrueHeading = GetTrueHeading();
+			msg.COG = GetCOG();
+			msg.SOG = GetSOG();
 			msg.TimeStamp = (uint) System.DateTime.UtcNow.Second;
 			return msg;
 		}
 
-		private uint getTrueHeading()
+		private uint GetTrueHeading()
 		{
 			float myHeading = transform.eulerAngles.y;
 			float northHeading = Input.compass.magneticHeading;
@@ -105,7 +101,7 @@ namespace Labust.Sensors.AIS
 			return (uint) Mathf.Round(dif);
 		}
 
-		private uint getCOG()
+		private uint GetCOG()
 		{
 			Vector3 d = transform.position - lastPosition;
 			Vector3 direction = new Vector3(d.x, 0, d.z);
@@ -118,7 +114,7 @@ namespace Labust.Sensors.AIS
 			return (uint) Mathf.Round(r*10);
 		}
 
-		private float getSOG()
+		private float GetSOG()
 		{
 			// TODO see if we can remove rigidbody dependency 
 			float conversion = 1.94384f; // mps to kn conversion constant
@@ -126,13 +122,13 @@ namespace Labust.Sensors.AIS
 			return Mathf.Round(velocity * 10);
 		}
 
-		private (float, float) getLatLong()
+		private (float, float) GetLatLong()
 		{	
 			// TODO when GNSS sensor is ready;
 			return (0f, 0f);
 		}
 
-		private void setNewRange()
+		private void SetRange()
 		{
 			if (ClassType == AISClassType.ClassA)
 			{	
