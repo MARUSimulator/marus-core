@@ -2,21 +2,21 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Labust.Sensors.AIS;
-using Labust.Other;
+using Labust.Utils;
 
 namespace Labust.Sensors.Primitive.GenericMedium
 {
 	/// <summary>
 	/// This class serves as base for a medium for sending/receiving messages.
 	/// </summary>
-	public abstract class Medium<T> : GenericSingleton<Medium<T>>
+	public abstract class MediumBase<T> : GenericSingleton<MediumBase<T>>
 	{
 		public List<MediumDevice<T>> RegisteredDevices = new List<MediumDevice<T>>();
 
 		/// <summary>
 		/// Registers devices so messages can be broadcast to them.
 		/// </summary>
-		public void Register(MediumDevice<T> device)
+		public virtual void Register(MediumDevice<T> device)
 		{
 			RegisteredDevices.Add(device);
 		}
@@ -25,9 +25,9 @@ namespace Labust.Sensors.Primitive.GenericMedium
 		/// Broadcasts message to all registered objects
 		/// </summary>
 		/// <param name="msg">Message object to be sent.</param>
-		public void Broadcast(MediumMessage<T> msg)
+		public virtual void Broadcast(MediumMessage<T> msg)
 		{
-			foreach (MediumDevice<T> device in RegisteredDevices)
+			foreach (var device in RegisteredDevices)
 			{
 				if (msg.sender != device)
 				{
@@ -38,19 +38,22 @@ namespace Labust.Sensors.Primitive.GenericMedium
 
 		/// <summary>
 		/// Transmit message to single other object.
-		/// Message will only be sent ig other object is in range of the sender device. 
+		/// Message will only be sent if other object is in range of the sender device. 
 		/// Method assumes distance and range are of the same unit and magnitude. Default is meters (m).
 		/// </summary>
 		/// <param name="msg">Message object to be sent.</param>
 		/// <param name="receiver">Object which message is sent to.</param>
-		public void Transmit(MediumMessage<T> msg, MediumDevice<T> receiver)
+		/// <returns>True if transmission succeeded, false if not (not in range).</returns>
+		public virtual Boolean Transmit(MediumMessage<T> msg, MediumDevice<T> receiver)
 		{   
 			MediumDevice<T> sender = msg.sender;
 			float distance = Vector3.Distance(receiver.gameObject.transform.position, sender.gameObject.transform.position);
 			if (receiver.Range >= distance)
 			{
 				receiver.Receive(msg);
+				return true;
 			}
+			return false;
 		}
 	}
 }

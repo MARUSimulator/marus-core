@@ -8,7 +8,7 @@ namespace Labust.Sensors.AIS
 	/// This class serves as a radio medium for AIS purposes.
 	/// Script should be attached to a GameObject so no singleton is needed.
 	/// </summary>
-	public class AISManager: Medium<AISMessage>
+	public class AISManager: MediumBase<AISMessage>
 	{
 
 		protected AISManager() { }
