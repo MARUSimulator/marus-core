@@ -63,6 +63,7 @@ public class RaycastLidar : SensorBase<LidarStreamingRequest>
 
     void Start()
     {
+        var a = Visualizer.Instance;
         streamHandle = streamingClient.StreamLidarSensor(cancellationToken:RosConnection.Instance.cancellationToken);
         // allocate job buffers
         _commands = new NativeArray<RaycastCommand>(WidthRes * HeightRes, Allocator.Persistent);
