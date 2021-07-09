@@ -12,7 +12,8 @@ using static Ping.Ping;
 using static Parameterserver.ParameterServer;
 using Parameterserver;
 using System.Collections;
-using Labust.Visualization;
+using static Simulatoncontrol.SimulationControl;
+using Simulatoncontrol;
 
 namespace Labust.Networking
 {
@@ -24,17 +25,26 @@ namespace Labust.Networking
     [DefaultExecutionOrder(-1)]
     public class RosConnection : MonoBehaviour
     {
+        [Header("Server info")]
         public string serverIP = "localhost";
-
         public int serverPort = 30052;
+        [HideInRuntimeInspector()]
         public int connectionTimeout = 5;
+
+        [Header("Simulation")]
+        [HideInRuntimeInspector()]
+        public bool RealtimeSimulation = true;
+
+        [ConditionalHideInInspector("RealtimeSimulation", true)]
+        public float SimulationSpeed = 1;
+
+        [Header("Earth origin frame")]
         public string OriginFrameName = "map";
         public string OriginFrameLatitude = "/d2/LocalOriginLat";
         public string OriginFrameLongitude = "/d2/LocalOriginLon";
 
         public float DefaultLatitude = 45f;
         public float DefaultLongitude = 15f;
-        static RosConnection _instance = null;
 
         Channel _streamingChannel;
         Dictionary<Type, ClientBase> _grpcClients;
@@ -44,7 +54,16 @@ namespace Labust.Networking
         public CancellationToken cancellationToken => _streamingChannel.ShutdownToken;
 
         private ParameterServerClient _parameterServerClient;
+        private SimulationControlClient _simulationController;
 
+        const uint SEC2NSEC = 1000000000; 
+        const uint SEC2TICKS = 10000000; 
+
+        [Header("Debug")]
+        public uint CurrentTime;
+
+
+        static RosConnection _instance = null;
         /// <summary>
         /// RosConnection Instance Singleton
         /// </summary>
@@ -79,9 +98,9 @@ namespace Labust.Networking
             var t = new Thread(() =>
             {
                 _connected = WaitForConnection();
-            // maybe add what to do after failed connection
-            // maybe ping server repeatedly 
-        });
+                // maybe add what to do after failed connection
+                // maybe ping server repeatedly 
+            });
             t.Start();
 
             StartCoroutine(AfterConnection());
@@ -118,10 +137,89 @@ namespace Labust.Networking
             _mapFrame = mapFrame.transform;
         }
 
+
+        void FixedUpdate()
+        {
+            UpdateTime();
+            if (!RealtimeSimulation)
+            {
+                AdaptSimulationSpeed();
+                if (IsConnected)
+                {
+                    StartCoroutine(RosStep());
+                }
+            }
+        }
+
+        private void UpdateTime()
+        {
+            var deltaTimeSecs = (uint)Time.fixedDeltaTime; // truncate after decimal
+            var deltaTimeNsecs = Convert.ToUInt32((Time.deltaTime - deltaTimeSecs) * SEC2NSEC);
+
+            var nSecOverflow = (deltaTimeNsecs + totalTimeNsecs) / SEC2NSEC;
+            totalTimeSecs += deltaTimeSecs + nSecOverflow;
+            totalTimeNsecs = deltaTimeNsecs + totalTimeNsecs - SEC2NSEC * nSecOverflow;
+            CurrentTime = totalTimeSecs;
+        }
+
+        IEnumerator RosStep()
+        {
+            yield return new WaitForEndOfFrame();
+
+            if (_simulationController != null)
+            {
+                _simulationController.Step(
+                    new StepRequest
+                    {
+                        TotalTimeSecs = totalTimeSecs,
+                        TotalTimeNsecs = totalTimeNsecs
+                    }
+                );
+            }
+        }
+
+        // TODO: Based on FPS, limit maximal simulation speed
+        // idk if it is needed. is the physics simulated well? Needs testing 
+        void AdaptSimulationSpeed()
+        {
+            // var a = Time.smoothDeltaTime;
+            Time.timeScale = SimulationSpeed;
+        }
+
         void OnRosConnected()
         {
             GetParameterServer();
+            SetSimulationTime();
+            GetSimulationController();
             GetRosFrames();
+        }
+
+        private void SetSimulationTime()
+        {
+            var currentDateTime = DateTime.Now.ToUniversalTime();
+            var unixStandardDateTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var ticksSinceUnix = currentDateTime.Ticks - unixStandardDateTime.Ticks;
+            startTimeSecs = (uint)(ticksSinceUnix / (SEC2TICKS));
+
+            startTimeNsecs = (uint)((ticksSinceUnix - startTimeSecs * SEC2TICKS) * (SEC2NSEC / SEC2TICKS));
+            totalTimeSecs = startTimeSecs;
+            totalTimeNsecs = startTimeNsecs;
+        }
+
+        uint startTimeSecs;
+        uint startTimeNsecs;
+        uint totalTimeSecs;
+        uint totalTimeNsecs;
+        private void GetSimulationController()
+        {
+            _simulationController = new SimulationControlClient(_streamingChannel);
+            _simulationController.SetStartTime(
+                new SetStartTimeRequest
+                {
+                    TimeSecs = startTimeSecs,
+                    TimeNsecs = startTimeNsecs
+                }
+            );
         }
 
         private void GetParameterServer()
@@ -157,8 +255,12 @@ namespace Labust.Networking
 
         public bool TrySetParameter<T>(string name, object value)
         {
-            var request = new SetParamRequest();
-            request.Name = name;
+            var request = new SetParamRequest
+            {
+                Name = name,
+                Value = new ParamValue()
+            };
+
             switch (value)
             {
                 case bool t1:
@@ -309,7 +411,6 @@ namespace Labust.Networking
         async void OnDisable()
         {
             Debug.Log("Shutting down grpc clients and channel. Await for sucessfull confirmation...");
-            _grpcClients.Clear();
             var awaitable = _streamingChannel.ShutdownAsync();
 
             int time = 0;

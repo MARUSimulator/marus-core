@@ -44,6 +44,7 @@ namespace Tf {
 
     static readonly grpc::Marshaller<global::Common.Empty> __Marshaller_common_Empty = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Common.Empty.Parser));
     static readonly grpc::Marshaller<global::Tf.TfFrameList> __Marshaller_tf_TfFrameList = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Tf.TfFrameList.Parser));
+    static readonly grpc::Marshaller<global::Tf.TfFrameRequest> __Marshaller_tf_TfFrameRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Tf.TfFrameRequest.Parser));
     static readonly grpc::Marshaller<global::Tf.TfFrame> __Marshaller_tf_TfFrame = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Tf.TfFrame.Parser));
 
     static readonly grpc::Method<global::Common.Empty, global::Tf.TfFrameList> __Method_GetAllFrames = new grpc::Method<global::Common.Empty, global::Tf.TfFrameList>(
@@ -53,11 +54,25 @@ namespace Tf {
         __Marshaller_common_Empty,
         __Marshaller_tf_TfFrameList);
 
-    static readonly grpc::Method<global::Common.Empty, global::Tf.TfFrame> __Method_StreamAllFrames = new grpc::Method<global::Common.Empty, global::Tf.TfFrame>(
+    static readonly grpc::Method<global::Tf.TfFrameRequest, global::Tf.TfFrame> __Method_GetFrame = new grpc::Method<global::Tf.TfFrameRequest, global::Tf.TfFrame>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "GetFrame",
+        __Marshaller_tf_TfFrameRequest,
+        __Marshaller_tf_TfFrame);
+
+    static readonly grpc::Method<global::Common.Empty, global::Tf.TfFrameList> __Method_StreamAllFrames = new grpc::Method<global::Common.Empty, global::Tf.TfFrameList>(
         grpc::MethodType.ServerStreaming,
         __ServiceName,
         "StreamAllFrames",
         __Marshaller_common_Empty,
+        __Marshaller_tf_TfFrameList);
+
+    static readonly grpc::Method<global::Tf.TfFrameRequest, global::Tf.TfFrame> __Method_StreamFrame = new grpc::Method<global::Tf.TfFrameRequest, global::Tf.TfFrame>(
+        grpc::MethodType.ServerStreaming,
+        __ServiceName,
+        "StreamFrame",
+        __Marshaller_tf_TfFrameRequest,
         __Marshaller_tf_TfFrame);
 
     /// <summary>Service descriptor</summary>
@@ -75,7 +90,17 @@ namespace Tf {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task StreamAllFrames(global::Common.Empty request, grpc::IServerStreamWriter<global::Tf.TfFrame> responseStream, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Tf.TfFrame> GetFrame(global::Tf.TfFrameRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task StreamAllFrames(global::Common.Empty request, grpc::IServerStreamWriter<global::Tf.TfFrameList> responseStream, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task StreamFrame(global::Tf.TfFrameRequest request, grpc::IServerStreamWriter<global::Tf.TfFrame> responseStream, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -121,13 +146,37 @@ namespace Tf {
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetAllFrames, null, options, request);
       }
-      public virtual grpc::AsyncServerStreamingCall<global::Tf.TfFrame> StreamAllFrames(global::Common.Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::Tf.TfFrame GetFrame(global::Tf.TfFrameRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return GetFrame(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual global::Tf.TfFrame GetFrame(global::Tf.TfFrameRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_GetFrame, null, options, request);
+      }
+      public virtual grpc::AsyncUnaryCall<global::Tf.TfFrame> GetFrameAsync(global::Tf.TfFrameRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return GetFrameAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual grpc::AsyncUnaryCall<global::Tf.TfFrame> GetFrameAsync(global::Tf.TfFrameRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_GetFrame, null, options, request);
+      }
+      public virtual grpc::AsyncServerStreamingCall<global::Tf.TfFrameList> StreamAllFrames(global::Common.Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return StreamAllFrames(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual grpc::AsyncServerStreamingCall<global::Tf.TfFrame> StreamAllFrames(global::Common.Empty request, grpc::CallOptions options)
+      public virtual grpc::AsyncServerStreamingCall<global::Tf.TfFrameList> StreamAllFrames(global::Common.Empty request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncServerStreamingCall(__Method_StreamAllFrames, null, options, request);
+      }
+      public virtual grpc::AsyncServerStreamingCall<global::Tf.TfFrame> StreamFrame(global::Tf.TfFrameRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return StreamFrame(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual grpc::AsyncServerStreamingCall<global::Tf.TfFrame> StreamFrame(global::Tf.TfFrameRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncServerStreamingCall(__Method_StreamFrame, null, options, request);
       }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
       protected override TfClient NewInstance(ClientBaseConfiguration configuration)
@@ -142,7 +191,9 @@ namespace Tf {
     {
       return grpc::ServerServiceDefinition.CreateBuilder()
           .AddMethod(__Method_GetAllFrames, serviceImpl.GetAllFrames)
-          .AddMethod(__Method_StreamAllFrames, serviceImpl.StreamAllFrames).Build();
+          .AddMethod(__Method_GetFrame, serviceImpl.GetFrame)
+          .AddMethod(__Method_StreamAllFrames, serviceImpl.StreamAllFrames)
+          .AddMethod(__Method_StreamFrame, serviceImpl.StreamFrame).Build();
     }
 
     /// <summary>Register service method with a service binder with or without implementation. Useful when customizing the  service binding logic.
@@ -152,7 +203,9 @@ namespace Tf {
     public static void BindService(grpc::ServiceBinderBase serviceBinder, TfBase serviceImpl)
     {
       serviceBinder.AddMethod(__Method_GetAllFrames, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Common.Empty, global::Tf.TfFrameList>(serviceImpl.GetAllFrames));
-      serviceBinder.AddMethod(__Method_StreamAllFrames, serviceImpl == null ? null : new grpc::ServerStreamingServerMethod<global::Common.Empty, global::Tf.TfFrame>(serviceImpl.StreamAllFrames));
+      serviceBinder.AddMethod(__Method_GetFrame, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Tf.TfFrameRequest, global::Tf.TfFrame>(serviceImpl.GetFrame));
+      serviceBinder.AddMethod(__Method_StreamAllFrames, serviceImpl == null ? null : new grpc::ServerStreamingServerMethod<global::Common.Empty, global::Tf.TfFrameList>(serviceImpl.StreamAllFrames));
+      serviceBinder.AddMethod(__Method_StreamFrame, serviceImpl == null ? null : new grpc::ServerStreamingServerMethod<global::Tf.TfFrameRequest, global::Tf.TfFrame>(serviceImpl.StreamFrame));
     }
 
   }

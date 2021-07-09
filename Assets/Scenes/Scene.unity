@@ -201,11 +201,14 @@ MonoBehaviour:
   serverIP: 172.22.38.67
   serverPort: 30052
   connectionTimeout: 5
+  RealtimeSimulation: 0
+  SimulationSpeed: 1
   OriginFrameName: map
   OriginFrameLatitude: /d2/LocalOriginLat
   OriginFrameLongitude: /d2/LocalOriginLon
   DefaultLatitude: 45
   DefaultLongitude: 15
+  CurrentTime: 0
 --- !u!4 &154513371
 Transform:
   m_ObjectHideFlags: 0

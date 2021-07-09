@@ -24,16 +24,21 @@ namespace Tf {
     static TfReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cgh0Zi5wcm90bxICdGYaDGNvbW1vbi5wcm90byJ8CgdUZkZyYW1lEg8KB2Zy",
-            "YW1lSWQYASABKAkSFAoMY2hpbGRGcmFtZUlkGAIgASgJEiQKC3RyYW5zbGF0",
-            "aW9uGAMgASgLMg8uY29tbW9uLlZlY3RvcjMSJAoIcm90YXRpb24YBCABKAsy",
-            "Ei5jb21tb24uUXVhdGVybmlvbiIqCgtUZkZyYW1lTGlzdBIbCgZmcmFtZXMY",
-            "ASADKAsyCy50Zi5UZkZyYW1lMmkKAlRmEjAKDEdldEFsbEZyYW1lcxINLmNv",
-            "bW1vbi5FbXB0eRoPLnRmLlRmRnJhbWVMaXN0IgASMQoPU3RyZWFtQWxsRnJh",
-            "bWVzEg0uY29tbW9uLkVtcHR5GgsudGYuVGZGcmFtZSIAMAFiBnByb3RvMw=="));
+            "Cgh0Zi5wcm90bxICdGYaDGNvbW1vbi5wcm90byI3Cg5UZkZyYW1lUmVxdWVz",
+            "dBIPCgdmcmFtZUlkGAEgASgJEhQKDGNoaWxkRnJhbWVJZBgCIAEoCSJ8CgdU",
+            "ZkZyYW1lEg8KB2ZyYW1lSWQYASABKAkSFAoMY2hpbGRGcmFtZUlkGAIgASgJ",
+            "EiQKC3RyYW5zbGF0aW9uGAMgASgLMg8uY29tbW9uLlZlY3RvcjMSJAoIcm90",
+            "YXRpb24YBCABKAsyEi5jb21tb24uUXVhdGVybmlvbiIqCgtUZkZyYW1lTGlz",
+            "dBIbCgZmcmFtZXMYASADKAsyCy50Zi5UZkZyYW1lMtABCgJUZhIwCgxHZXRB",
+            "bGxGcmFtZXMSDS5jb21tb24uRW1wdHkaDy50Zi5UZkZyYW1lTGlzdCIAEi0K",
+            "CEdldEZyYW1lEhIudGYuVGZGcmFtZVJlcXVlc3QaCy50Zi5UZkZyYW1lIgAS",
+            "NQoPU3RyZWFtQWxsRnJhbWVzEg0uY29tbW9uLkVtcHR5Gg8udGYuVGZGcmFt",
+            "ZUxpc3QiADABEjIKC1N0cmVhbUZyYW1lEhIudGYuVGZGcmFtZVJlcXVlc3Qa",
+            "Cy50Zi5UZkZyYW1lIgAwAWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Common.CommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::Tf.TfFrameRequest), global::Tf.TfFrameRequest.Parser, new[]{ "FrameId", "ChildFrameId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Tf.TfFrame), global::Tf.TfFrame.Parser, new[]{ "FrameId", "ChildFrameId", "Translation", "Rotation" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Tf.TfFrameList), global::Tf.TfFrameList.Parser, new[]{ "Frames" }, null, null, null, null)
           }));
@@ -42,6 +47,214 @@ namespace Tf {
 
   }
   #region Messages
+  public sealed partial class TfFrameRequest : pb::IMessage<TfFrameRequest>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<TfFrameRequest> _parser = new pb::MessageParser<TfFrameRequest>(() => new TfFrameRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<TfFrameRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Tf.TfReflection.Descriptor.MessageTypes[0]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public TfFrameRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public TfFrameRequest(TfFrameRequest other) : this() {
+      frameId_ = other.frameId_;
+      childFrameId_ = other.childFrameId_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public TfFrameRequest Clone() {
+      return new TfFrameRequest(this);
+    }
+
+    /// <summary>Field number for the "frameId" field.</summary>
+    public const int FrameIdFieldNumber = 1;
+    private string frameId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string FrameId {
+      get { return frameId_; }
+      set {
+        frameId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "childFrameId" field.</summary>
+    public const int ChildFrameIdFieldNumber = 2;
+    private string childFrameId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ChildFrameId {
+      get { return childFrameId_; }
+      set {
+        childFrameId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as TfFrameRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(TfFrameRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (FrameId != other.FrameId) return false;
+      if (ChildFrameId != other.ChildFrameId) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (FrameId.Length != 0) hash ^= FrameId.GetHashCode();
+      if (ChildFrameId.Length != 0) hash ^= ChildFrameId.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (FrameId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(FrameId);
+      }
+      if (ChildFrameId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(ChildFrameId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (FrameId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(FrameId);
+      }
+      if (ChildFrameId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(ChildFrameId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (FrameId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(FrameId);
+      }
+      if (ChildFrameId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ChildFrameId);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(TfFrameRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.FrameId.Length != 0) {
+        FrameId = other.FrameId;
+      }
+      if (other.ChildFrameId.Length != 0) {
+        ChildFrameId = other.ChildFrameId;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            FrameId = input.ReadString();
+            break;
+          }
+          case 18: {
+            ChildFrameId = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            FrameId = input.ReadString();
+            break;
+          }
+          case 18: {
+            ChildFrameId = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
   public sealed partial class TfFrame : pb::IMessage<TfFrame>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -54,7 +267,7 @@ namespace Tf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Tf.TfReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Tf.TfReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -352,7 +565,7 @@ namespace Tf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Tf.TfReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Tf.TfReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
