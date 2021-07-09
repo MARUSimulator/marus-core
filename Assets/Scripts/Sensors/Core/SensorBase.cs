@@ -19,7 +19,7 @@ namespace Labust.Sensors
     {
         [Space]
         [Header("Streaming Parameters")]
-        public int SensorUpdateHz = 1;
+        public float SensorUpdateHz = 1;
         public string address;
         //public bool RunRecording = false;
 

@@ -52,6 +52,7 @@ namespace Sensorstreaming {
     static readonly grpc::Marshaller<global::Sensorstreaming.ImuStreamingRequest> __Marshaller_sensorstreaming_ImuStreamingRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Sensorstreaming.ImuStreamingRequest.Parser));
     static readonly grpc::Marshaller<global::Sensorstreaming.PoseStreamingRequest> __Marshaller_sensorstreaming_PoseStreamingRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Sensorstreaming.PoseStreamingRequest.Parser));
     static readonly grpc::Marshaller<global::Sensorstreaming.SonarStreamingRequest> __Marshaller_sensorstreaming_SonarStreamingRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Sensorstreaming.SonarStreamingRequest.Parser));
+    static readonly grpc::Marshaller<global::Sensorstreaming.AISStreamingRequest> __Marshaller_sensorstreaming_AISStreamingRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Sensorstreaming.AISStreamingRequest.Parser));
 
     static readonly grpc::Method<global::Sensorstreaming.CameraStreamingRequest, global::Sensorstreaming.StreamingResponse> __Method_StreamCameraSensor = new grpc::Method<global::Sensorstreaming.CameraStreamingRequest, global::Sensorstreaming.StreamingResponse>(
         grpc::MethodType.ClientStreaming,
@@ -116,6 +117,13 @@ namespace Sensorstreaming {
         __Marshaller_sensorstreaming_SonarStreamingRequest,
         __Marshaller_sensorstreaming_StreamingResponse);
 
+    static readonly grpc::Method<global::Sensorstreaming.AISStreamingRequest, global::Sensorstreaming.StreamingResponse> __Method_StreamAisSensor = new grpc::Method<global::Sensorstreaming.AISStreamingRequest, global::Sensorstreaming.StreamingResponse>(
+        grpc::MethodType.ClientStreaming,
+        __ServiceName,
+        "StreamAisSensor",
+        __Marshaller_sensorstreaming_AISStreamingRequest,
+        __Marshaller_sensorstreaming_StreamingResponse);
+
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
     {
@@ -167,6 +175,11 @@ namespace Sensorstreaming {
       }
 
       public virtual global::System.Threading.Tasks.Task<global::Sensorstreaming.StreamingResponse> StreamSonarSensor(grpc::IAsyncStreamReader<global::Sensorstreaming.SonarStreamingRequest> requestStream, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task<global::Sensorstreaming.StreamingResponse> StreamAisSensor(grpc::IAsyncStreamReader<global::Sensorstreaming.AISStreamingRequest> requestStream, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -268,6 +281,14 @@ namespace Sensorstreaming {
       {
         return CallInvoker.AsyncClientStreamingCall(__Method_StreamSonarSensor, null, options);
       }
+      public virtual grpc::AsyncClientStreamingCall<global::Sensorstreaming.AISStreamingRequest, global::Sensorstreaming.StreamingResponse> StreamAisSensor(grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      {
+        return StreamAisSensor(new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual grpc::AsyncClientStreamingCall<global::Sensorstreaming.AISStreamingRequest, global::Sensorstreaming.StreamingResponse> StreamAisSensor(grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncClientStreamingCall(__Method_StreamAisSensor, null, options);
+      }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
       protected override SensorStreamingClient NewInstance(ClientBaseConfiguration configuration)
       {
@@ -288,7 +309,8 @@ namespace Sensorstreaming {
           .AddMethod(__Method_StreamGnssSensor, serviceImpl.StreamGnssSensor)
           .AddMethod(__Method_StreamImuSensor, serviceImpl.StreamImuSensor)
           .AddMethod(__Method_StreamPoseSensor, serviceImpl.StreamPoseSensor)
-          .AddMethod(__Method_StreamSonarSensor, serviceImpl.StreamSonarSensor).Build();
+          .AddMethod(__Method_StreamSonarSensor, serviceImpl.StreamSonarSensor)
+          .AddMethod(__Method_StreamAisSensor, serviceImpl.StreamAisSensor).Build();
     }
 
     /// <summary>Register service method with a service binder with or without implementation. Useful when customizing the  service binding logic.
@@ -306,6 +328,7 @@ namespace Sensorstreaming {
       serviceBinder.AddMethod(__Method_StreamImuSensor, serviceImpl == null ? null : new grpc::ClientStreamingServerMethod<global::Sensorstreaming.ImuStreamingRequest, global::Sensorstreaming.StreamingResponse>(serviceImpl.StreamImuSensor));
       serviceBinder.AddMethod(__Method_StreamPoseSensor, serviceImpl == null ? null : new grpc::ClientStreamingServerMethod<global::Sensorstreaming.PoseStreamingRequest, global::Sensorstreaming.StreamingResponse>(serviceImpl.StreamPoseSensor));
       serviceBinder.AddMethod(__Method_StreamSonarSensor, serviceImpl == null ? null : new grpc::ClientStreamingServerMethod<global::Sensorstreaming.SonarStreamingRequest, global::Sensorstreaming.StreamingResponse>(serviceImpl.StreamSonarSensor));
+      serviceBinder.AddMethod(__Method_StreamAisSensor, serviceImpl == null ? null : new grpc::ClientStreamingServerMethod<global::Sensorstreaming.AISStreamingRequest, global::Sensorstreaming.StreamingResponse>(serviceImpl.StreamAisSensor));
     }
 
   }

@@ -1,14 +1,17 @@
 using UnityEngine;
 using Unity;
 using System;
+using Labust.Sensors.Primitive;
 using Labust.Sensors.Primitive.GenericMedium;
+using Labust.Networking;
+using Sensorstreaming;
 
 namespace Labust.Sensors.AIS 
 {
 	/// <summary>
 	///  This class implements AIS capabilities.
 	/// </summary>
-	public class AISDevice : MediumDevice<AISMessage>
+	public class AISDevice : MediumDeviceBase<AISMessage>
 	{	
 		/// <summary>
 		/// AIS class type: A or B
@@ -35,37 +38,48 @@ namespace Labust.Sensors.AIS
 
 		private float period = 0;
 		private float delta = 0;
-		private AISMessage message;
+		private PositionReportClassA message;
 		private Vector3 lastPosition;
 		private MediumBase<AISMessage> AISMedium;
 		private Rigidbody rb;
+		private GNSSSensor geoSensor;
+		private AISSensor aisSensor;
 		
 
 		public void Awake()
 		{
+			
 			if (string.IsNullOrEmpty(MMSI))
 			{
 				MMSI = MMSIGenerator.GenerateMMSI();
 			}
 			rb = GetComponent<Rigidbody>();
-			// Register object to AIS manager
+			SetRange();
 			AISMedium = AISManager.Instance;
 			AISMedium.Register(this);
-		}
+			aisSensor = GetComponent<AISSensor>();
+			
 
-		
+			geoSensor = GetComponent<GNSSSensor>();
+		}
 
 		public void FixedUpdate()
 		{   
+			
 			if (ActiveTransmission)
 			{
-
-				period = TimeIntervals.getInterval(ClassType, GetSOG());
+				period = TimeIntervals.getInterval(ClassType, aisSensor.SOG);
 				if (delta > period)
 				{	
-					SetRange();
-					message = PositionReport();
-					MediumMessage<AISMessage> radioMessage = new MediumMessage<AISMessage>(this, message);
+					aisSensor.PositionReport();
+					message = new PositionReportClassA();
+					message.SOG = aisSensor.SOG;
+					message.COG = aisSensor.COG;
+					message.TrueHeading = aisSensor.TrueHeading;
+					message.Longitude = geoSensor.point.longitude;
+					message.Latitude = geoSensor.point.latitude;
+					message.TimeStamp = (uint) System.DateTime.UtcNow.Second;
+					MediumMessageBase<AISMessage> radioMessage = new MediumMessageBase<AISMessage>(this, message);
 					AISMedium.Broadcast(radioMessage);
 					delta = 0;
 				}
@@ -75,59 +89,12 @@ namespace Labust.Sensors.AIS
 			
 		}
 
-		public override void Receive<AISMessage>(MediumMessage<AISMessage> msg)
+	
+		public override void Receive<AISMessage>(MediumMessageBase<AISMessage> msg)
 		{
 			Debug.Log(msg);
 		}
 		
-		private PositionReportClassA PositionReport()
-		{
-			// TODO lat-long
-			PositionReportClassA msg = new PositionReportClassA(int.Parse(this.MMSI));
-			msg.TrueHeading = GetTrueHeading();
-			msg.COG = GetCOG();
-			msg.SOG = GetSOG();
-			msg.TimeStamp = (uint) System.DateTime.UtcNow.Second;
-			return msg;
-		}
-
-		private uint GetTrueHeading()
-		{
-			float myHeading = transform.eulerAngles.y;
-			float northHeading = Input.compass.magneticHeading;
-
-			float dif = myHeading - northHeading;
-			if (dif < 0) dif += 360f;
-			return (uint) Mathf.Round(dif);
-		}
-
-		private uint GetCOG()
-		{
-			Vector3 d = transform.position - lastPosition;
-			Vector3 direction = new Vector3(d.x, 0, d.z);
-			Quaternion rotation = Quaternion.LookRotation(direction, Vector3.up);
-			float r = rotation.eulerAngles.y;
-			if (r < 0)
-			{
-				r += 360f;
-			}
-			return (uint) Mathf.Round(r*10);
-		}
-
-		private float GetSOG()
-		{
-			// TODO see if we can remove rigidbody dependency 
-			float conversion = 1.94384f; // mps to kn conversion constant
-			float velocity = rb.velocity.magnitude * conversion;
-			return Mathf.Round(velocity * 10);
-		}
-
-		private (float, float) GetLatLong()
-		{	
-			// TODO when GNSS sensor is ready;
-			return (0f, 0f);
-		}
-
 		private void SetRange()
 		{
 			if (ClassType == AISClassType.ClassA)

@@ -1,19 +1,19 @@
 
 namespace Labust.Sensors.Primitive.GenericMedium
 {
-	public class MediumMessage<T>
+	public class MediumMessageBase<T>
 	{
 		/// <summary>
 		/// Object which sent the message
 		/// </summary>
-		public MediumDevice<T> sender;
+		public MediumDeviceBase<T> sender;
 
 		/// <summary>
 		/// Message payload object of generic type.
 		/// </summary>
 		public T message;
 
-		public MediumMessage(MediumDevice<T> sender, T message)
+		public MediumMessageBase(MediumDeviceBase<T> sender, T message)
 		{
 			this.sender = sender;
 			this.message = message;
