@@ -1,4 +1,5 @@
 using UnityEngine;
+using Labust.Sensors.Primitive.GenericMedium;
 
 namespace Labust.Sensors.AIS
 {
@@ -6,12 +7,14 @@ namespace Labust.Sensors.AIS
 	/// This class serves as a base for AIS message types.
 	/// For more reference see <see cref="!:https://www.navcen.uscg.gov/?pageName=AISMessages">here.</see>
 	/// </summary>
-	public abstract class AISMessage
+	public abstract class AISMessage : MediumMessage<AISMessage>
 	{
 		/// <summary>
 		/// Message type. Is always 1, 2 or 3.
 		/// </summary>
 		public AISMessageType MessageType { get; set; }
+
+		public MediumDeviceBase<AISMessage> sender { get; set; }
 
 		/// <summary>
 		/// Maritime Mobile Service Identity

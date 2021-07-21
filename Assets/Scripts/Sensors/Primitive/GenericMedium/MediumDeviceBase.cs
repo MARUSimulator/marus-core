@@ -1,13 +1,12 @@
 using UnityEngine;
 using Labust.Networking;
-using Sensorstreaming;
 
 namespace Labust.Sensors.Primitive.GenericMedium
 {
 	/// <summary>
 	/// Abstract class to define behaviour and properties of device in a medium. E.g. nanomodem, ais transponder etc.
 	/// </summary>
-	public abstract class MediumDeviceBase<T> : MonoBehaviour
+	public abstract class MediumDeviceBase<T> : MonoBehaviour where T: MediumMessage<T> 
 	{
 
 		/// <summary>
@@ -16,8 +15,10 @@ namespace Labust.Sensors.Primitive.GenericMedium
 		public float Range;
 
 		/// <summary>
-		/// Method that receives messages.
+		/// Processing received messages.
 		/// </summary>
-		public abstract void Receive<T>(MediumMessageBase<T> message);
+		public virtual void Receive(T message)
+		{
+		}
 	}
 }

@@ -9,7 +9,7 @@ namespace Labust.Sensors.Primitive.GenericMedium
 	/// <summary>
 	/// This class serves as base for a medium for sending/receiving messages.
 	/// </summary>
-	public abstract class MediumBase<T> : GenericSingleton<MediumBase<T>>
+	public abstract class MediumBase<T> : GenericSingleton<MediumBase<T>> where T: MediumMessage<T> 
 	{
 		public List<MediumDeviceBase<T>> RegisteredDevices = new List<MediumDeviceBase<T>>();
 
@@ -25,7 +25,7 @@ namespace Labust.Sensors.Primitive.GenericMedium
 		/// Broadcasts message to all registered objects
 		/// </summary>
 		/// <param name="msg">Message object to be sent.</param>
-		public virtual void Broadcast(MediumMessageBase<T> msg)
+		public virtual void Broadcast(T msg)
 		{
 			foreach (var device in RegisteredDevices)
 			{
@@ -44,16 +44,21 @@ namespace Labust.Sensors.Primitive.GenericMedium
 		/// <param name="msg">Message object to be sent.</param>
 		/// <param name="receiver">Object which message is sent to.</param>
 		/// <returns>True if transmission succeeded, false if not (not in range).</returns>
-		public virtual Boolean Transmit(MediumMessageBase<T> msg, MediumDeviceBase<T> receiver)
+		public virtual Boolean Transmit(T msg, MediumDeviceBase<T> receiver)
 		{   
 			MediumDeviceBase<T> sender = msg.sender;
-			float distance = Vector3.Distance(receiver.gameObject.transform.position, sender.gameObject.transform.position);
-			if (receiver.Range >= distance)
+			float distance = DistanceFromTo(sender, receiver);
+			if (sender.Range >= distance)
 			{
 				receiver.Receive(msg);
 				return true;
 			}
 			return false;
+		}
+
+		public float DistanceFromTo(MediumDeviceBase<T> deviceA, MediumDeviceBase<T> deviceB)
+		{
+			return Vector3.Distance(deviceA.gameObject.transform.position, deviceB.gameObject.transform.position);
 		}
 	}
 }

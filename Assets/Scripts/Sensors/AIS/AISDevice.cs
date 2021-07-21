@@ -57,9 +57,7 @@ namespace Labust.Sensors.AIS
 			SetRange();
 			AISMedium = AISManager.Instance;
 			AISMedium.Register(this);
-			aisSensor = GetComponent<AISSensor>();
-			
-
+			aisSensor = gameObject.AddComponent(typeof(AISSensor)) as AISSensor;
 			geoSensor = GetComponent<GNSSSensor>();
 		}
 
@@ -79,8 +77,8 @@ namespace Labust.Sensors.AIS
 					message.Longitude = geoSensor.point.longitude;
 					message.Latitude = geoSensor.point.latitude;
 					message.TimeStamp = (uint) System.DateTime.UtcNow.Second;
-					MediumMessageBase<AISMessage> radioMessage = new MediumMessageBase<AISMessage>(this, message);
-					AISMedium.Broadcast(radioMessage);
+					message.sender = this;
+					AISMedium.Broadcast(message);
 					delta = 0;
 				}
 				delta += Time.deltaTime;
@@ -90,7 +88,7 @@ namespace Labust.Sensors.AIS
 		}
 
 	
-		public override void Receive<AISMessage>(MediumMessageBase<AISMessage> msg)
+		public override void Receive(AISMessage msg)
 		{
 			Debug.Log(msg);
 		}
