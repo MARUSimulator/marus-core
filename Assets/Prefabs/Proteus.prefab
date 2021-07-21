@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7441703284150750514}
   - component: {fileID: 7441703284150750515}
+  - component: {fileID: 8080694774818790584}
   m_Layer: 0
   m_Name: PoseSensor
   m_TagString: Untagged
@@ -43,12 +44,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 291295e03a2189a46808e1ca0ce8c70b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SensorUpdateHz: 10
-  address: proteus/position
+  frameId: 
   position: {x: 0, y: 0, z: 0}
   orientation: {x: 0, y: 0, z: 0, w: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
+--- !u!114 &8080694774818790584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7441703284150750525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3df58032a8e0be545ae5b06d079ef8f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UpdateFrequency: 1
+  address: 
+  hasData: 0
 --- !u!1 &7441703284785212931
 GameObject:
   m_ObjectHideFlags: 0
@@ -155,6 +170,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7441703284975873721}
   - component: {fileID: 7441703284975873726}
+  - component: {fileID: 823347953984593902}
   m_Layer: 0
   m_Name: Depth
   m_TagString: Untagged
@@ -188,8 +204,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a53b676326b142ac84660b9ef7114ed0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SensorUpdateHz: 10
-  address: proteus/depth
+  frameId: 
+  covariance: 0
+--- !u!114 &823347953984593902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7441703284975873720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65f07a6a26228bb4aafe5365917ac147, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UpdateFrequency: 1
+  address: 
+  hasData: 0
+  covariance: 0
 --- !u!1 &7441703285209909725
 GameObject:
   m_ObjectHideFlags: 0
@@ -200,6 +232,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7441703285209909714}
   - component: {fileID: 7441703285209909715}
+  - component: {fileID: 6581746066676650137}
   m_Layer: 0
   m_Name: DvlSensor
   m_TagString: Untagged
@@ -233,11 +266,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 009f24e7e53e4268b2b8fc914a4dca68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SensorUpdateHz: 1
-  address: /proteus/dvl
+  frameId: 
   groundVelocity: {x: 0, y: 0, z: 0}
+  velocityCovariance:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
   altitude: 0
+  altitudeCovariance: 0
   beamRanges: []
+--- !u!114 &6581746066676650137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7441703285209909725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04a2d92a29880534cb6af8370356ad67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UpdateFrequency: 1
+  address: 
+  hasData: 0
 --- !u!1 &7441703285265702604
 GameObject:
   m_ObjectHideFlags: 0
@@ -450,6 +508,7 @@ MonoBehaviour:
   density: 500
   slicesPerAxis: 5
   isConcave: 0
+  deltaCBG: 0
   drag: 0.05
   fluidDensity: 1000
 --- !u!1 &7441703285683785811
@@ -499,8 +558,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7441703285745058071}
   - component: {fileID: 7441703285745058090}
-  - component: {fileID: 7441703285745058069}
   - component: {fileID: 7441703285745058068}
+  - component: {fileID: 6067823167209582325}
+  - component: {fileID: 3408071121437284087}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -565,30 +625,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &7441703285745058069
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7441703285745058070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b3ee3432d3465346806ffcfc0955e60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SensorUpdateHz: 2
-  address: proteus/camera
-  SampleCameraImage: {fileID: 0}
-  cameraShader: {fileID: 7200000, guid: 9ab2f2960ead89444accf9351485eb81, type: 3}
-  ImageCrop: 4
-  SynchronousUpdate: 0
-  PixelWidth: 2448
-  PixelHeight: 2048
-  FarPlane: 10000
-  NearPlane: 0.08
-  focalLengthMilliMeters: 5.5
-  pixelSizeInMicroMeters: 3.45
 --- !u!114 &7441703285745058068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -703,6 +739,44 @@ MonoBehaviour:
       data1: 0
       data2: 0
   defaultFrameSettings: 0
+--- !u!114 &6067823167209582325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7441703285745058070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04ccafdaa0a39364eb79c7a5bdd61e01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frameId: 
+  SampleCameraImage: {fileID: 0}
+  cameraShader: {fileID: 7200000, guid: 9ab2f2960ead89444accf9351485eb81, type: 3}
+  ImageCrop: 4
+  SynchronousUpdate: 0
+  PixelWidth: 2448
+  PixelHeight: 2048
+  FarPlane: 10000
+  NearPlane: 0.08
+  focalLengthMilliMeters: 5.5
+  pixelSizeInMicroMeters: 3.45
+--- !u!114 &3408071121437284087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7441703285745058070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 413b611de7f4aeb42b3590a1df6be26f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UpdateFrequency: 1
+  address: 
+  hasData: 0
 --- !u!1 &7441703285820148465
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,6 +787,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7441703285820148470}
   - component: {fileID: 7441703285820148471}
+  - component: {fileID: 8543892123422636898}
   m_Layer: 0
   m_Name: Nanomodem
   m_TagString: Untagged
@@ -746,7 +821,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 281c03a2711746d39732e441ca98eadd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxRange: 500
+  Range: 0
+  Id: 0
+  SupplyVoltage: 0
+  RangingIncrement: 4.7
+  RangingVariance: 6
+--- !u!114 &8543892123422636898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7441703285820148465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 101f98cdde09f2b478add64ecac0430c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  payloadAddress: 
+  rangeAddress: 
+  requestAddress: 
 --- !u!1 &7441703285869240090
 GameObject:
   m_ObjectHideFlags: 0
@@ -758,6 +852,7 @@ GameObject:
   - component: {fileID: 7441703285869240091}
   - component: {fileID: 7441703285869240089}
   - component: {fileID: 7441703285869240088}
+  - component: {fileID: 3434422112283236784}
   m_Layer: 0
   m_Name: Imu
   m_TagString: Untagged
@@ -791,13 +886,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8384ff7084c85cb5bbcba39c46326db4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SensorUpdateHz: 10
-  address: proteus/imu
+  frameId: 
   linearAcceleration: {x: 0, y: 0, z: 0}
   withGravity: 1
+  linearAccelerationCovariance:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
   angularVelocity: {x: 0, y: 0, z: 0}
+  angularVelocityCovariance:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
   eulerAngles: {x: 0, y: 0, z: 0}
-  quaternion: {x: 0, y: 0, z: 0, w: 0}
+  orientation: {x: 0, y: 0, z: 0, w: 0}
+  orientationCovariance:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
   localVelocity: {x: 0, y: 0, z: 0}
 --- !u!54 &7441703285869240088
 Rigidbody:
@@ -815,6 +939,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &3434422112283236784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7441703285869240090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 580d39d35a6572c4ba4d0704d789d444, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UpdateFrequency: 1
+  address: 
+  hasData: 0
 --- !u!1 &7441703286007034189
 GameObject:
   m_ObjectHideFlags: 0
@@ -824,7 +963,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7441703286007034178}
-  - component: {fileID: 7441703286007034179}
+  - component: {fileID: 8365323063401516226}
+  - component: {fileID: 7652119581921661909}
   m_Layer: 0
   m_Name: Sonar
   m_TagString: Untagged
@@ -846,7 +986,7 @@ Transform:
   m_Father: {fileID: 7441703285683785808}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7441703286007034179
+--- !u!114 &8365323063401516226
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -855,15 +995,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 7441703286007034189}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f7e6865c547f95e9b8d203ddb2a3a8d, type: 3}
+  m_Script: {fileID: 11500000, guid: a52e8b53bf0abd149b7f956ed798a039, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SensorUpdateHz: 1
-  address: /proteus/sonar
+  frameId: 
   maxRange: 120
   minBearing: -60
   maxBearing: 60
   trackedObject: {fileID: 0}
+--- !u!114 &7652119581921661909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7441703286007034189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 456bf21ab3d3de04c8c3f6e9de2efa57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UpdateFrequency: 1
+  address: 
+  hasData: 0
 --- !u!1001 &5257331822409526255
 PrefabInstance:
   m_ObjectHideFlags: 0

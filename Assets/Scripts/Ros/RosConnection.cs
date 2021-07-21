@@ -11,10 +11,12 @@ using static Remotecontrol.RemoteControl;
 using static Ping.Ping;
 using static Parameterserver.ParameterServer;
 using static Simulationcontrol.SimulationControl;
+using static Acoustictransmission.AcousticTransmission;
 
 using Parameterserver;
 using System.Collections;
 using Simulationcontrol;
+using Acoustictransmission;
 using Labust.Utils;
 
 namespace Labust.Networking
@@ -56,6 +58,7 @@ namespace Labust.Networking
         Channel _streamingChannel;
         Dictionary<Type, ClientBase> _grpcClients;
         volatile bool _connected;
+        volatile bool _initialized;
         volatile bool _onConnectedCalled;
 
         public bool IsConnected => _connected;
@@ -143,9 +146,13 @@ namespace Labust.Networking
         void Update()
         {
             // call event if connected
-            if (_connected && !_onConnectedCalled)
+            if (_connected 
+                && !_initialized
+                && !_onConnectedCalled
+                )
             {
                 OnRosConnected();
+                _initialized = true;
             }
 
             if (!RealtimeSimulation && IsConnected)
@@ -174,14 +181,17 @@ namespace Labust.Networking
 
         private void GetSimulationController()
         {
-            _simulationController = new SimulationControlClient(_streamingChannel);
-            _simulationController.SetStartTime(
-                new SetStartTimeRequest
-                {
-                    TimeSecs = TimeHandler.Instance.StartTimeSecs,
-                    TimeNsecs = TimeHandler.Instance.StartTimeNsecs
-                }
-            );
+            if (!RealtimeSimulation)
+            {
+                _simulationController = new SimulationControlClient(_streamingChannel);
+                _simulationController.SetStartTime(
+                    new SetStartTimeRequest
+                    {
+                        TimeSecs = TimeHandler.Instance.StartTimeSecs,
+                        TimeNsecs = TimeHandler.Instance.StartTimeNsecs
+                    }
+                );
+            }
         }
 
         /// <summary>
@@ -206,6 +216,10 @@ namespace Labust.Networking
                 {
                     typeof(TfClient),
                     new TfClient(_streamingChannel)
+                },
+                {
+                    typeof(AcousticTransmissionClient),
+                    new AcousticTransmissionClient(_streamingChannel)
                 }
             };
         }

@@ -14,7 +14,11 @@ namespace Labust.Logger
         private static string _savesPath = Path.Combine(Application.dataPath, "Saves");
         private static JsonSerializerSettings _jsonConfig = new JsonSerializerSettings
         {
-            Converters  = new List<JsonConverter>(){ new UnityVectorJsonConverter(), new UnityQuaternionJsonConverter()},
+            Converters  = new List<JsonConverter>()
+            { 
+                new UnityVectorJsonConverter(), 
+                new UnityQuaternionJsonConverter()
+            },
             Formatting = Formatting.Indented
         };
 

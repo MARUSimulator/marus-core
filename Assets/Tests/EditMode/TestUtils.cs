@@ -38,6 +38,40 @@ namespace UnitTests
             return false;
         }
 
+        public static bool SetNonpublicField<T>(T script, string fieldName, object fieldValue=null) 
+        {
+            var typ = typeof(T);
+            var field = typ.GetField(fieldName);
+            if (field == null)
+            {
+                field = typ.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+            }
+
+            if (field != null)
+            {
+                field.SetValue(script, fieldValue);
+                return true;
+            }
+            return false;
+        }
+
+        public static object GetNonpublicField<T>(T script, string fieldName) 
+        {
+            var typ = typeof(T);
+            var field = typ.GetField(fieldName);
+            if (field == null)
+            {
+                field = typ.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+            }
+
+            if (field != null)
+            {
+                field.GetValue(script);
+                return true;
+            }
+            return false;
+        }
+
         public static T CreateAndInitializeObject<T>(string name, PrimitiveType? primitive=null) where T : MonoBehaviour
         {
             GameObject gameObject;

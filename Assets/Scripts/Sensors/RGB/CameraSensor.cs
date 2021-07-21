@@ -12,7 +12,7 @@ namespace Labust.Sensors
     /// <summary>
     /// Camera sensor implementation
     /// </summary>
-    public class RGBScript : SensorBase<CameraStreamingRequest>
+    public class CameraSensor : SensorBase
     {
         public RenderTexture _cameraBuffer { get; set; }
         public RenderTexture SampleCameraImage;
@@ -38,39 +38,15 @@ namespace Labust.Sensors
         {
             CameraSetup();
 
-            streamHandle = streamingClient?.StreamCameraSensor(cancellationToken:RosConnection.Instance.cancellationToken);
-
             int kernelIndex = cameraShader.FindKernel("CSMain");
             cameraData = new ComputeBufferDataExtractor<byte>(PixelHeight * PixelWidth, sizeof(float) * 3, "CameraData");
             cameraData.SetBuffer(cameraShader, "CSMain");
             cameraShader.SetTexture(kernelIndex, "RenderTexture", camera.targetTexture);
             cameraShader.SetInt("Width", PixelWidth / ImageCrop);
             cameraShader.SetInt("Height", PixelHeight / ImageCrop);
-            if (string.IsNullOrEmpty(address))
-                address = vehicle.name + "/camera";
         }
 
         public byte[] Data { get; private set; } = new byte[0];
-        protected async override void SendMessage()
-        {
-            try
-            {
-                await _streamWriter.WriteAsync(new CameraStreamingRequest
-                {
-                    Data = ByteString.CopyFrom(Data),
-                    TimeStamp = Time.time,
-                    Address = address,
-                    Height = (uint)(PixelHeight / ImageCrop),
-                    Width = (uint)(PixelWidth / ImageCrop)
-                });
-                hasData = false;
-            }
-            catch (Exception e)
-            {
-                Debug.Log("Possible message overflow.");
-                Debug.LogError(e);
-            }
-        }
 
         protected override void SampleSensor()
         {

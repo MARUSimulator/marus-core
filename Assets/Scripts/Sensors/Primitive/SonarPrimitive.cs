@@ -5,7 +5,7 @@ using Labust.Networking;
 
 namespace Labust.Sensors.Primitive
 {
-    public class Sonar : SensorBase<SonarStreamingRequest>
+    public class SonarPrimitive : SensorBase
     {
         public float maxRange = 120f;
         public float minBearing = -60f; // 60 degrees to the left
@@ -15,16 +15,20 @@ namespace Labust.Sensors.Primitive
         float range;
         float bearing;
 
-        // Start is called before the first frame update
-        void Start()
+        new void Awake()
         {
-            //streamHandle = streamingClient?.StreamSonarSensor(cancellationToken:RosConnection.Instance.cancellationToken);
-            if (string.IsNullOrEmpty(address))
-                address = vehicle.name + "/sonar";
+            if (trackedObject == null)
+            {
+                Debug.Log($"trackedObject not set in SonarPrimitive script {name}");
+            }
+            base.Awake();
         }
+
 
         protected override void SampleSensor()
         {
+            if (trackedObject == null) return;
+
             var sonar = transform;
             if (Vector3.Distance(sonar.position, trackedObject.position) > 0 &&
                 Vector3.Distance(sonar.position, trackedObject.position) < maxRange)
@@ -68,17 +72,6 @@ namespace Labust.Sensors.Primitive
             }
 
             hasData = true;
-        }
-
-        protected async override void SendMessage()
-        {
-        //     await _streamWriter.WriteAsync(new SonarStreamingRequest
-        //     {
-        //         Address = address,
-        //         Range = range,
-        //         Bearing = bearing
-        //     });
-        //     hasData = false;
         }
     }
 }

@@ -33,6 +33,12 @@ namespace Labust.Networking
 
         Thread _handleStreamThread;
 
+
+        public ServerStreamer(MessageHandleMode mode = MessageHandleMode.DropAndTakeLast)
+        {
+            this.mode = mode;
+        }
+
         /// <summary>
         /// Start streaming given stream
         /// 
@@ -95,15 +101,14 @@ namespace Labust.Networking
                 }
                 else if (mode == MessageHandleMode.DropAndTakeLast)
                 {
-                    var last = _responseBuffer.LastOrDefault();
-                    if (last != null)
+                    while (_responseBuffer.Count > 1 && _responseBuffer.TryDequeue(out var item))
+                    {
+                        // do nothing
+                    }
+                    if (_responseBuffer.TryDequeue(out var last))
                     {
                         onResponseMsg(last);
                         // clear queue, leave last element
-                        while (_responseBuffer.Count > 1 && _responseBuffer.TryDequeue(out var item))
-                        {
-                            // do nothing
-                        }
                     }
                 }
             }

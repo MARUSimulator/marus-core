@@ -11,6 +11,15 @@ namespace Labust.Utils
     /// </summary> 
     public class Singleton<T> : MonoBehaviour where T : Component
     {
+
+        void Awake()
+        {
+            if (instance == null) 
+            {
+                Instance = this.GetComponent<T>();
+            }
+        }
+
         private static T instance;
         public static T Instance
         {
@@ -24,17 +33,29 @@ namespace Labust.Utils
                         GameObject obj = new GameObject();
                         obj.name = typeof(T).Name;
                         instance = obj.AddComponent<T>();
-						if (Application.isPlaying) // DontDestroyOnLoad does not work outside PlayMode
-						{
-							DontDestroyOnLoad(instance.gameObject);
-						}
-						// call initialize
-						var init = typeof(T).GetMethod("Initialize", BindingFlags.NonPublic | BindingFlags.Instance);
-						init.Invoke(instance, null);
+                        DontDestroyAndInit();
                     }
                 }
                 return instance;
             }
+
+            private set
+            {
+                instance = value;
+                DontDestroyAndInit();
+            }
+        }
+
+        private static void DontDestroyAndInit()
+        {
+            if (Application.isPlaying) // DontDestroyOnLoad does not work outside PlayMode
+            {
+                DontDestroyOnLoad(instance.gameObject);
+            }
+
+            // call initialize
+            var init = typeof(T).GetMethod("Initialize", BindingFlags.NonPublic | BindingFlags.Instance);
+            init.Invoke(instance, null);
         }
 
         protected virtual void Initialize()

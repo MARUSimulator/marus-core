@@ -44,9 +44,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serverIP: localhost
-  serverPort: 30052
+  serverPort: 30053
   connectionTimeout: 5
-  RealtimeSimulation: 0
+  RealtimeSimulation: 1
   SimulationSpeed: 1
   OriginFrameName: map
   OriginFrameLatitude: /d2/LocalOriginLat
