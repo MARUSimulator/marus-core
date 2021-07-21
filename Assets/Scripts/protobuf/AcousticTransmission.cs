@@ -47,8 +47,7 @@ namespace AcousticTransmission {
             "c2lvbi5BY291c3RpY1Jlc3BvbnNlIgAwARJsChVSZXR1cm5BY291c3RpY1Bh",
             "eWxvYWQSJi5hY291c3RpY190cmFuc21pc3Npb24uQWNvdXN0aWNQYXlsb2Fk",
             "GicuYWNvdXN0aWNfdHJhbnNtaXNzaW9uLkFjb3VzdGljUmVzcG9uc2UiADAB",
-            "QjEKG2lvLmdycGMuZXhhbXBsZXMubmF2aWdhdGlvbkIKTmF2aWdhdGlvblAB",
-            "ogIDSExXYgZwcm90bzM="));
+            "YgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
