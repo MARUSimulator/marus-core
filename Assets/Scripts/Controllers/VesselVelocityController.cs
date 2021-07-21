@@ -39,7 +39,6 @@ namespace Labust.Controllers
 				stop = true;
 			}
 				
-			
 			//start the vessel when target changed
 			if (stop && dist > RestartDistance)
 			{
@@ -55,7 +54,6 @@ namespace Labust.Controllers
 
 		public void RotateTowards() 
 		{
-			
 			Vector3 relativePos = Target.position - transform.position;
 			Quaternion targetRotation = Quaternion.LookRotation(relativePos, Vector3.up);
 			Vector3 targetAngles = targetRotation.eulerAngles;

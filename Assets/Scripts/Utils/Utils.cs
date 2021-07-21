@@ -1,10 +1,7 @@
 
-
-
-
 using UnityEngine;
 
-namespace Utils
+namespace Labust.Utils
 {
     public static class Helpers
     {

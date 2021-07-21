@@ -462,6 +462,8 @@ GameObject:
   - component: {fileID: 371424425}
   - component: {fileID: 371424424}
   - component: {fileID: 371424428}
+  - component: {fileID: 371424423}
+  - component: {fileID: 371424427}
   m_Layer: 0
   m_Name: Target
   m_TagString: Untagged
@@ -469,6 +471,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &371424423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 371424422}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acd04c5bc61fd1e8ab57d30e00d553da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Range: 0
+  ClassType: 0
+  MMSI: 
+  Name: '@@@@@@@@@@@@@@@@@@@@'
+  ActiveTransmission: 0
 --- !u!23 &371424424
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -532,6 +551,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &371424427
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 371424422}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!114 &371424428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -560,6 +595,7 @@ GameObject:
   - component: {fileID: 586646378}
   - component: {fileID: 586646377}
   - component: {fileID: 586646376}
+  - component: {fileID: 586646382}
   m_Layer: 0
   m_Name: Target2
   m_TagString: Untagged
@@ -673,6 +709,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &586646382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 586646375}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acd04c5bc61fd1e8ab57d30e00d553da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Range: 0
+  ClassType: 0
+  MMSI: 
+  Name: '@@@@@@@@@@@@@@@@@@@@'
+  ActiveTransmission: 0
 --- !u!1 &690360258
 GameObject:
   m_ObjectHideFlags: 0
@@ -1370,6 +1423,9 @@ GameObject:
   - component: {fileID: 1648538908}
   - component: {fileID: 1648538907}
   - component: {fileID: 1648538905}
+  - component: {fileID: 1648538912}
+  - component: {fileID: 1648538910}
+  - component: {fileID: 1648538913}
   m_Layer: 0
   m_Name: Vessel
   m_TagString: Untagged
@@ -1384,16 +1440,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1648538904}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9d6ef3adf9042acdba082d05cdbe2d6, type: 3}
+  m_Script: {fileID: 11500000, guid: acd04c5bc61fd1e8ab57d30e00d553da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Motor: {fileID: 0}
-  SteerPower: 500
-  Power: 5
-  MaxSpeed: 10
-  Target: {fileID: 0}
+  Range: 0
+  ClassType: 0
+  MMSI: 
+  Name: '@@@@@@@@@@@@@@@@@@@@'
+  ActiveTransmission: 1
 --- !u!54 &1648538906
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1452,7 +1508,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1648538904}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.05, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 690360259}
@@ -1465,6 +1521,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1648538910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648538904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb72fa274e174df68a2580fd8c4fd7b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SensorUpdateHz: 1
+  address: 
+  point:
+    latitude: 0
+    longitude: 0
+    altitude: 0
+  covariance: []
+  isRTK: 1
 --- !u!136 &1648538911
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1479,6 +1555,136 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1648538912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648538904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2903c887bac2f0d2a84b52c1824ef87d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SensorUpdateHz: 1
+  address: 
+--- !u!114 &1648538913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648538904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8384ff7084c85cb5bbcba39c46326db4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SensorUpdateHz: 1
+  address: 
+  linearAcceleration: {x: 0, y: 0, z: 0}
+  withGravity: 1
+  angularVelocity: {x: 0, y: 0, z: 0}
+  eulerAngles: {x: 0, y: 0, z: 0}
+  quaternion: {x: 0, y: 0, z: 0, w: 0}
+  localVelocity: {x: 0, y: 0, z: 0}
+--- !u!1 &1884722619
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1884722621}
+  - component: {fileID: 1884722620}
+  m_Layer: 0
+  m_Name: RosConnection
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1884722620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1884722619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25d0e6062362dad408bb84d9d309a317, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serverIP: localhost
+  serverPort: 30052
+  connectionTimeout: 5
+  OriginFrameName: map
+  OriginFrameLatitude: /d2/LocalOriginLat
+  OriginFrameLongitude: /d2/LocalOriginLon
+  DefaultLatitude: 45
+  DefaultLongitude: 15
+--- !u!4 &1884722621
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1884722619}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.84296346, y: -2.0395288, z: 4.981226}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1930141309
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1930141310}
+  - component: {fileID: 1930141311}
+  m_Layer: 0
+  m_Name: AISMedium
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1930141310
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1930141309}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.49377203, y: -3.7439022, z: 2.751543}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1930141311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1930141309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a6cf026354d6fc88a2307d94aa71589, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RegisteredDevices: []
+  Name: Radio Medium for AIS
 --- !u!1 &1968635520
 GameObject:
   m_ObjectHideFlags: 0

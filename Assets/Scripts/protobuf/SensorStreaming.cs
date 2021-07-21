@@ -54,54 +54,55 @@ namespace Sensorstreaming {
             "bW9uLlZlY3RvcjMSDwoHYWRkcmVzcxgEIAEoCSJDChRQb3NlU3RyZWFtaW5n",
             "UmVxdWVzdBIaCgRwb3NlGAEgASgLMgwuY29tbW9uLlBvc2USDwoHYWRkcmVz",
             "cxgCIAEoCSJIChVTb25hclN0cmVhbWluZ1JlcXVlc3QSDQoFcmFuZ2UYASAB",
-            "KAISDwoHYmVhcmluZxgCIAEoAhIPCgdhZGRyZXNzGAMgASgJMpQHCg9TZW5z",
-            "b3JTdHJlYW1pbmcSZQoSU3RyZWFtQ2FtZXJhU2Vuc29yEicuc2Vuc29yc3Ry",
-            "ZWFtaW5nLkNhbWVyYVN0cmVhbWluZ1JlcXVlc3QaIi5zZW5zb3JzdHJlYW1p",
-            "bmcuU3RyZWFtaW5nUmVzcG9uc2UiACgBEmMKEVN0cmVhbUxpZGFyU2Vuc29y",
-            "EiYuc2Vuc29yc3RyZWFtaW5nLkxpZGFyU3RyZWFtaW5nUmVxdWVzdBoiLnNl",
-            "bnNvcnN0cmVhbWluZy5TdHJlYW1pbmdSZXNwb25zZSIAKAESYwoRU3RyZWFt",
-            "UmFkYXJTZW5zb3ISJi5zZW5zb3JzdHJlYW1pbmcuUmFkYXJTdHJlYW1pbmdS",
-            "ZXF1ZXN0GiIuc2Vuc29yc3RyZWFtaW5nLlN0cmVhbWluZ1Jlc3BvbnNlIgAo",
-            "ARJjChFTdHJlYW1EZXB0aFNlbnNvchImLnNlbnNvcnN0cmVhbWluZy5EZXB0",
-            "aFN0cmVhbWluZ1JlcXVlc3QaIi5zZW5zb3JzdHJlYW1pbmcuU3RyZWFtaW5n",
-            "UmVzcG9uc2UiACgBEl8KD1N0cmVhbUR2bFNlbnNvchIkLnNlbnNvcnN0cmVh",
-            "bWluZy5EdmxTdHJlYW1pbmdSZXF1ZXN0GiIuc2Vuc29yc3RyZWFtaW5nLlN0",
-            "cmVhbWluZ1Jlc3BvbnNlIgAoARJhChBTdHJlYW1HbnNzU2Vuc29yEiUuc2Vu",
-            "c29yc3RyZWFtaW5nLkduc3NTdHJlYW1pbmdSZXF1ZXN0GiIuc2Vuc29yc3Ry",
-            "ZWFtaW5nLlN0cmVhbWluZ1Jlc3BvbnNlIgAoARJfCg9TdHJlYW1JbXVTZW5z",
-            "b3ISJC5zZW5zb3JzdHJlYW1pbmcuSW11U3RyZWFtaW5nUmVxdWVzdBoiLnNl",
-            "bnNvcnN0cmVhbWluZy5TdHJlYW1pbmdSZXNwb25zZSIAKAESYQoQU3RyZWFt",
-            "UG9zZVNlbnNvchIlLnNlbnNvcnN0cmVhbWluZy5Qb3NlU3RyZWFtaW5nUmVx",
-            "dWVzdBoiLnNlbnNvcnN0cmVhbWluZy5TdHJlYW1pbmdSZXNwb25zZSIAKAES",
-            "YwoRU3RyZWFtU29uYXJTZW5zb3ISJi5zZW5zb3JzdHJlYW1pbmcuU29uYXJT",
-            "dHJlYW1pbmdSZXF1ZXN0GiIuc2Vuc29yc3RyZWFtaW5nLlN0cmVhbWluZ1Jl",
-            "c3BvbnNlIgAoAUI7CiBpby5ncnBjLmV4YW1wbGVzLnNlbnNvcnN0cmVhbWlu",
-            "Z0IPU2Vuc29yU3RyZWFtaW5nUAGiAgNITFdiBnByb3RvMw=="));
+            "KAISDwoHYmVhcmluZxgCIAEoAhIPCgdhZGRyZXNzGAMgASgJIlwKE0FJU1N0",
+            "cmVhbWluZ1JlcXVlc3QSNAoRYWlzUG9zaXRpb25SZXBvcnQYASABKAsyGS5j",
+            "b21tb24uQUlTUG9zaXRpb25SZXBvcnQSDwoHYWRkcmVzcxgCIAEoCTL1BwoP",
+            "U2Vuc29yU3RyZWFtaW5nEmUKElN0cmVhbUNhbWVyYVNlbnNvchInLnNlbnNv",
+            "cnN0cmVhbWluZy5DYW1lcmFTdHJlYW1pbmdSZXF1ZXN0GiIuc2Vuc29yc3Ry",
+            "ZWFtaW5nLlN0cmVhbWluZ1Jlc3BvbnNlIgAoARJjChFTdHJlYW1MaWRhclNl",
+            "bnNvchImLnNlbnNvcnN0cmVhbWluZy5MaWRhclN0cmVhbWluZ1JlcXVlc3Qa",
+            "Ii5zZW5zb3JzdHJlYW1pbmcuU3RyZWFtaW5nUmVzcG9uc2UiACgBEmMKEVN0",
+            "cmVhbVJhZGFyU2Vuc29yEiYuc2Vuc29yc3RyZWFtaW5nLlJhZGFyU3RyZWFt",
+            "aW5nUmVxdWVzdBoiLnNlbnNvcnN0cmVhbWluZy5TdHJlYW1pbmdSZXNwb25z",
+            "ZSIAKAESYwoRU3RyZWFtRGVwdGhTZW5zb3ISJi5zZW5zb3JzdHJlYW1pbmcu",
+            "RGVwdGhTdHJlYW1pbmdSZXF1ZXN0GiIuc2Vuc29yc3RyZWFtaW5nLlN0cmVh",
+            "bWluZ1Jlc3BvbnNlIgAoARJfCg9TdHJlYW1EdmxTZW5zb3ISJC5zZW5zb3Jz",
+            "dHJlYW1pbmcuRHZsU3RyZWFtaW5nUmVxdWVzdBoiLnNlbnNvcnN0cmVhbWlu",
+            "Zy5TdHJlYW1pbmdSZXNwb25zZSIAKAESYQoQU3RyZWFtR25zc1NlbnNvchIl",
+            "LnNlbnNvcnN0cmVhbWluZy5HbnNzU3RyZWFtaW5nUmVxdWVzdBoiLnNlbnNv",
+            "cnN0cmVhbWluZy5TdHJlYW1pbmdSZXNwb25zZSIAKAESXwoPU3RyZWFtSW11",
+            "U2Vuc29yEiQuc2Vuc29yc3RyZWFtaW5nLkltdVN0cmVhbWluZ1JlcXVlc3Qa",
+            "Ii5zZW5zb3JzdHJlYW1pbmcuU3RyZWFtaW5nUmVzcG9uc2UiACgBEmEKEFN0",
+            "cmVhbVBvc2VTZW5zb3ISJS5zZW5zb3JzdHJlYW1pbmcuUG9zZVN0cmVhbWlu",
+            "Z1JlcXVlc3QaIi5zZW5zb3JzdHJlYW1pbmcuU3RyZWFtaW5nUmVzcG9uc2Ui",
+            "ACgBEmMKEVN0cmVhbVNvbmFyU2Vuc29yEiYuc2Vuc29yc3RyZWFtaW5nLlNv",
+            "bmFyU3RyZWFtaW5nUmVxdWVzdBoiLnNlbnNvcnN0cmVhbWluZy5TdHJlYW1p",
+            "bmdSZXNwb25zZSIAKAESXwoPU3RyZWFtQWlzU2Vuc29yEiQuc2Vuc29yc3Ry",
+            "ZWFtaW5nLkFJU1N0cmVhbWluZ1JlcXVlc3QaIi5zZW5zb3JzdHJlYW1pbmcu",
+            "U3RyZWFtaW5nUmVzcG9uc2UiACgBQjsKIGlvLmdycGMuZXhhbXBsZXMuc2Vu",
+            "c29yc3RyZWFtaW5nQg9TZW5zb3JTdHJlYW1pbmdQAaICA0hMV2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Common.CommonReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.CameraStreamingRequest), global::Sensorstreaming.CameraStreamingRequest.Parser, new[]{ "Data", "TimeStamp", "Width", "Height", "Address" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.StreamingResponse), global::Sensorstreaming.StreamingResponse.Parser, new[]{ "Success" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.PointField), global::Sensorstreaming.PointField.Parser, new[]{ "INT8", "UINT8", "INT16", "UINT16", "INT32", "UINT32", "FLOAT32", "FLOAT64", "Name", "Offset", "Datatype", "Count" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.LidarStreamingRequest), global::Sensorstreaming.LidarStreamingRequest.Parser, new[]{ "TimeInSeconds", "Height", "Width", "Fields", "IsBigEndian", "PointStep", "RowStep", "Data", "IsDense" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.RadarStreamingRequest), global::Sensorstreaming.RadarStreamingRequest.Parser, new[]{ "RangeIncrement", "RangeStart", "NumSamples", "NumSpokes", "MinIntensity", "MaxIntensity", "TimeInSeconds", "Azimuth", "RadarSpokes" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.DepthStreamingRequest), global::Sensorstreaming.DepthStreamingRequest.Parser, new[]{ "Depth", "Address" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.DvlStreamingRequest), global::Sensorstreaming.DvlStreamingRequest.Parser, new[]{ "Altitude", "GroundVelocity", "BeamRanges", "Address" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.GnssStreamingRequest), global::Sensorstreaming.GnssStreamingRequest.Parser, new[]{ "Point", "Address" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.ImuStreamingRequest), global::Sensorstreaming.ImuStreamingRequest.Parser, new[]{ "Acceleration", "AngularVelocity", "Orientation", "Address" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.PoseStreamingRequest), global::Sensorstreaming.PoseStreamingRequest.Parser, new[]{ "Pose", "Address" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.SonarStreamingRequest), global::Sensorstreaming.SonarStreamingRequest.Parser, new[]{ "Range", "Bearing", "Address" }, null, null, null, null)
+          new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.CameraStreamingRequest), global::Sensorstreaming.CameraStreamingRequest.Parser, new[]{ "Data", "TimeStamp", "Width", "Height", "Address" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.StreamingResponse), global::Sensorstreaming.StreamingResponse.Parser, new[]{ "Success" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.PointField), global::Sensorstreaming.PointField.Parser, new[]{ "INT8", "UINT8", "INT16", "UINT16", "INT32", "UINT32", "FLOAT32", "FLOAT64", "Name", "Offset", "Datatype", "Count" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.LidarStreamingRequest), global::Sensorstreaming.LidarStreamingRequest.Parser, new[]{ "TimeInSeconds", "Height", "Width", "Fields", "IsBigEndian", "PointStep", "RowStep", "Data", "IsDense" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.RadarStreamingRequest), global::Sensorstreaming.RadarStreamingRequest.Parser, new[]{ "RangeIncrement", "RangeStart", "NumSamples", "NumSpokes", "MinIntensity", "MaxIntensity", "TimeInSeconds", "Azimuth", "RadarSpokes" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.DepthStreamingRequest), global::Sensorstreaming.DepthStreamingRequest.Parser, new[]{ "Depth", "Address" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.DvlStreamingRequest), global::Sensorstreaming.DvlStreamingRequest.Parser, new[]{ "Altitude", "GroundVelocity", "BeamRanges", "Address" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.GnssStreamingRequest), global::Sensorstreaming.GnssStreamingRequest.Parser, new[]{ "Point", "Address" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.ImuStreamingRequest), global::Sensorstreaming.ImuStreamingRequest.Parser, new[]{ "Acceleration", "AngularVelocity", "Orientation", "Address" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.PoseStreamingRequest), global::Sensorstreaming.PoseStreamingRequest.Parser, new[]{ "Pose", "Address" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.SonarStreamingRequest), global::Sensorstreaming.SonarStreamingRequest.Parser, new[]{ "Range", "Bearing", "Address" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Sensorstreaming.AISStreamingRequest), global::Sensorstreaming.AISStreamingRequest.Parser, new[]{ "AisPositionReport", "Address" }, null, null, null)
           }));
     }
     #endregion
 
   }
   #region Messages
-  public sealed partial class CameraStreamingRequest : pb::IMessage<CameraStreamingRequest>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
+  public sealed partial class CameraStreamingRequest : pb::IMessage<CameraStreamingRequest> {
     private static readonly pb::MessageParser<CameraStreamingRequest> _parser = new pb::MessageParser<CameraStreamingRequest>(() => new CameraStreamingRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -236,9 +237,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
       if (Data.Length != 0) {
         output.WriteRawTag(10);
         output.WriteBytes(Data);
@@ -262,37 +260,7 @@ namespace Sensorstreaming {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Data.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteBytes(Data);
-      }
-      if (TimeStamp != 0D) {
-        output.WriteRawTag(17);
-        output.WriteDouble(TimeStamp);
-      }
-      if (Width != 0) {
-        output.WriteRawTag(24);
-        output.WriteUInt32(Width);
-      }
-      if (Height != 0) {
-        output.WriteRawTag(32);
-        output.WriteUInt32(Height);
-      }
-      if (Address.Length != 0) {
-        output.WriteRawTag(42);
-        output.WriteString(Address);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -343,9 +311,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -374,50 +339,11 @@ namespace Sensorstreaming {
           }
         }
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            Data = input.ReadBytes();
-            break;
-          }
-          case 17: {
-            TimeStamp = input.ReadDouble();
-            break;
-          }
-          case 24: {
-            Width = input.ReadUInt32();
-            break;
-          }
-          case 32: {
-            Height = input.ReadUInt32();
-            break;
-          }
-          case 42: {
-            Address = input.ReadString();
-            break;
-          }
-        }
-      }
-    }
-    #endif
 
   }
 
-  public sealed partial class StreamingResponse : pb::IMessage<StreamingResponse>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
+  public sealed partial class StreamingResponse : pb::IMessage<StreamingResponse> {
     private static readonly pb::MessageParser<StreamingResponse> _parser = new pb::MessageParser<StreamingResponse>(() => new StreamingResponse());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -496,9 +422,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
       if (Success != false) {
         output.WriteRawTag(8);
         output.WriteBool(Success);
@@ -506,21 +429,7 @@ namespace Sensorstreaming {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Success != false) {
-        output.WriteRawTag(8);
-        output.WriteBool(Success);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -547,9 +456,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -562,34 +468,11 @@ namespace Sensorstreaming {
           }
         }
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 8: {
-            Success = input.ReadBool();
-            break;
-          }
-        }
-      }
-    }
-    #endif
 
   }
 
-  public sealed partial class PointField : pb::IMessage<PointField>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
+  public sealed partial class PointField : pb::IMessage<PointField> {
     private static readonly pb::MessageParser<PointField> _parser = new pb::MessageParser<PointField>(() => new PointField());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -822,9 +705,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
       if (INT8 != 0) {
         output.WriteRawTag(8);
         output.WriteUInt32(INT8);
@@ -876,65 +756,7 @@ namespace Sensorstreaming {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (INT8 != 0) {
-        output.WriteRawTag(8);
-        output.WriteUInt32(INT8);
-      }
-      if (UINT8 != 0) {
-        output.WriteRawTag(16);
-        output.WriteUInt32(UINT8);
-      }
-      if (INT16 != 0) {
-        output.WriteRawTag(24);
-        output.WriteUInt32(INT16);
-      }
-      if (UINT16 != 0) {
-        output.WriteRawTag(32);
-        output.WriteUInt32(UINT16);
-      }
-      if (INT32 != 0) {
-        output.WriteRawTag(40);
-        output.WriteUInt32(INT32);
-      }
-      if (UINT32 != 0) {
-        output.WriteRawTag(48);
-        output.WriteUInt32(UINT32);
-      }
-      if (FLOAT32 != 0) {
-        output.WriteRawTag(56);
-        output.WriteUInt32(FLOAT32);
-      }
-      if (FLOAT64 != 0) {
-        output.WriteRawTag(64);
-        output.WriteUInt32(FLOAT64);
-      }
-      if (Name.Length != 0) {
-        output.WriteRawTag(74);
-        output.WriteString(Name);
-      }
-      if (Offset != 0) {
-        output.WriteRawTag(80);
-        output.WriteUInt32(Offset);
-      }
-      if (Datatype != 0) {
-        output.WriteRawTag(88);
-        output.WriteUInt32(Datatype);
-      }
-      if (Count != 0) {
-        output.WriteRawTag(96);
-        output.WriteUInt32(Count);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -1027,9 +849,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -1086,78 +905,11 @@ namespace Sensorstreaming {
           }
         }
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 8: {
-            INT8 = input.ReadUInt32();
-            break;
-          }
-          case 16: {
-            UINT8 = input.ReadUInt32();
-            break;
-          }
-          case 24: {
-            INT16 = input.ReadUInt32();
-            break;
-          }
-          case 32: {
-            UINT16 = input.ReadUInt32();
-            break;
-          }
-          case 40: {
-            INT32 = input.ReadUInt32();
-            break;
-          }
-          case 48: {
-            UINT32 = input.ReadUInt32();
-            break;
-          }
-          case 56: {
-            FLOAT32 = input.ReadUInt32();
-            break;
-          }
-          case 64: {
-            FLOAT64 = input.ReadUInt32();
-            break;
-          }
-          case 74: {
-            Name = input.ReadString();
-            break;
-          }
-          case 80: {
-            Offset = input.ReadUInt32();
-            break;
-          }
-          case 88: {
-            Datatype = input.ReadUInt32();
-            break;
-          }
-          case 96: {
-            Count = input.ReadUInt32();
-            break;
-          }
-        }
-      }
-    }
-    #endif
 
   }
 
-  public sealed partial class LidarStreamingRequest : pb::IMessage<LidarStreamingRequest>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
+  public sealed partial class LidarStreamingRequest : pb::IMessage<LidarStreamingRequest> {
     private static readonly pb::MessageParser<LidarStreamingRequest> _parser = new pb::MessageParser<LidarStreamingRequest>(() => new LidarStreamingRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1347,9 +1099,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
       if (TimeInSeconds != 0D) {
         output.WriteRawTag(9);
         output.WriteDouble(TimeInSeconds);
@@ -1386,50 +1135,7 @@ namespace Sensorstreaming {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (TimeInSeconds != 0D) {
-        output.WriteRawTag(9);
-        output.WriteDouble(TimeInSeconds);
-      }
-      if (Height != 0) {
-        output.WriteRawTag(16);
-        output.WriteUInt32(Height);
-      }
-      if (Width != 0) {
-        output.WriteRawTag(24);
-        output.WriteUInt32(Width);
-      }
-      fields_.WriteTo(ref output, _repeated_fields_codec);
-      if (IsBigEndian != false) {
-        output.WriteRawTag(40);
-        output.WriteBool(IsBigEndian);
-      }
-      if (PointStep != 0) {
-        output.WriteRawTag(48);
-        output.WriteUInt32(PointStep);
-      }
-      if (RowStep != 0) {
-        output.WriteRawTag(56);
-        output.WriteUInt32(RowStep);
-      }
-      if (Data.Length != 0) {
-        output.WriteRawTag(66);
-        output.WriteBytes(Data);
-      }
-      if (IsDense != false) {
-        output.WriteRawTag(72);
-        output.WriteBool(IsDense);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -1500,9 +1206,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -1547,66 +1250,11 @@ namespace Sensorstreaming {
           }
         }
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 9: {
-            TimeInSeconds = input.ReadDouble();
-            break;
-          }
-          case 16: {
-            Height = input.ReadUInt32();
-            break;
-          }
-          case 24: {
-            Width = input.ReadUInt32();
-            break;
-          }
-          case 34: {
-            fields_.AddEntriesFrom(ref input, _repeated_fields_codec);
-            break;
-          }
-          case 40: {
-            IsBigEndian = input.ReadBool();
-            break;
-          }
-          case 48: {
-            PointStep = input.ReadUInt32();
-            break;
-          }
-          case 56: {
-            RowStep = input.ReadUInt32();
-            break;
-          }
-          case 66: {
-            Data = input.ReadBytes();
-            break;
-          }
-          case 72: {
-            IsDense = input.ReadBool();
-            break;
-          }
-        }
-      }
-    }
-    #endif
 
   }
 
-  public sealed partial class RadarStreamingRequest : pb::IMessage<RadarStreamingRequest>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
+  public sealed partial class RadarStreamingRequest : pb::IMessage<RadarStreamingRequest> {
     private static readonly pb::MessageParser<RadarStreamingRequest> _parser = new pb::MessageParser<RadarStreamingRequest>(() => new RadarStreamingRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1795,9 +1443,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
       if (RangeIncrement != 0F) {
         output.WriteRawTag(13);
         output.WriteFloat(RangeIncrement);
@@ -1831,47 +1476,7 @@ namespace Sensorstreaming {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (RangeIncrement != 0F) {
-        output.WriteRawTag(13);
-        output.WriteFloat(RangeIncrement);
-      }
-      if (RangeStart != 0F) {
-        output.WriteRawTag(21);
-        output.WriteFloat(RangeStart);
-      }
-      if (NumSamples != 0) {
-        output.WriteRawTag(24);
-        output.WriteUInt32(NumSamples);
-      }
-      if (NumSpokes != 0) {
-        output.WriteRawTag(32);
-        output.WriteUInt32(NumSpokes);
-      }
-      if (MinIntensity != 0) {
-        output.WriteRawTag(40);
-        output.WriteUInt32(MinIntensity);
-      }
-      if (MaxIntensity != 0) {
-        output.WriteRawTag(48);
-        output.WriteUInt32(MaxIntensity);
-      }
-      timeInSeconds_.WriteTo(ref output, _repeated_timeInSeconds_codec);
-      azimuth_.WriteTo(ref output, _repeated_azimuth_codec);
-      if (RadarSpokes.Length != 0) {
-        output.WriteRawTag(74);
-        output.WriteBytes(RadarSpokes);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -1938,9 +1543,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -1987,68 +1589,11 @@ namespace Sensorstreaming {
           }
         }
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 13: {
-            RangeIncrement = input.ReadFloat();
-            break;
-          }
-          case 21: {
-            RangeStart = input.ReadFloat();
-            break;
-          }
-          case 24: {
-            NumSamples = input.ReadUInt32();
-            break;
-          }
-          case 32: {
-            NumSpokes = input.ReadUInt32();
-            break;
-          }
-          case 40: {
-            MinIntensity = input.ReadUInt32();
-            break;
-          }
-          case 48: {
-            MaxIntensity = input.ReadUInt32();
-            break;
-          }
-          case 58:
-          case 57: {
-            timeInSeconds_.AddEntriesFrom(ref input, _repeated_timeInSeconds_codec);
-            break;
-          }
-          case 66:
-          case 69: {
-            azimuth_.AddEntriesFrom(ref input, _repeated_azimuth_codec);
-            break;
-          }
-          case 74: {
-            RadarSpokes = input.ReadBytes();
-            break;
-          }
-        }
-      }
-    }
-    #endif
 
   }
 
-  public sealed partial class DepthStreamingRequest : pb::IMessage<DepthStreamingRequest>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
+  public sealed partial class DepthStreamingRequest : pb::IMessage<DepthStreamingRequest> {
     private static readonly pb::MessageParser<DepthStreamingRequest> _parser = new pb::MessageParser<DepthStreamingRequest>(() => new DepthStreamingRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2141,9 +1686,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
       if (Depth != 0F) {
         output.WriteRawTag(13);
         output.WriteFloat(Depth);
@@ -2155,25 +1697,7 @@ namespace Sensorstreaming {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Depth != 0F) {
-        output.WriteRawTag(13);
-        output.WriteFloat(Depth);
-      }
-      if (Address.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(Address);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -2206,9 +1730,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -2225,38 +1746,11 @@ namespace Sensorstreaming {
           }
         }
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 13: {
-            Depth = input.ReadFloat();
-            break;
-          }
-          case 18: {
-            Address = input.ReadString();
-            break;
-          }
-        }
-      }
-    }
-    #endif
 
   }
 
-  public sealed partial class DvlStreamingRequest : pb::IMessage<DvlStreamingRequest>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
+  public sealed partial class DvlStreamingRequest : pb::IMessage<DvlStreamingRequest> {
     private static readonly pb::MessageParser<DvlStreamingRequest> _parser = new pb::MessageParser<DvlStreamingRequest>(() => new DvlStreamingRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2376,9 +1870,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
       if (Altitude != 0F) {
         output.WriteRawTag(13);
         output.WriteFloat(Altitude);
@@ -2395,30 +1886,7 @@ namespace Sensorstreaming {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Altitude != 0F) {
-        output.WriteRawTag(13);
-        output.WriteFloat(Altitude);
-      }
-      if (groundVelocity_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(GroundVelocity);
-      }
-      beamRanges_.WriteTo(ref output, _repeated_beamRanges_codec);
-      if (Address.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(Address);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -2449,7 +1917,7 @@ namespace Sensorstreaming {
       }
       if (other.groundVelocity_ != null) {
         if (groundVelocity_ == null) {
-          GroundVelocity = new global::Common.Vector3();
+          groundVelocity_ = new global::Common.Vector3();
         }
         GroundVelocity.MergeFrom(other.GroundVelocity);
       }
@@ -2462,9 +1930,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -2477,9 +1942,9 @@ namespace Sensorstreaming {
           }
           case 18: {
             if (groundVelocity_ == null) {
-              GroundVelocity = new global::Common.Vector3();
+              groundVelocity_ = new global::Common.Vector3();
             }
-            input.ReadMessage(GroundVelocity);
+            input.ReadMessage(groundVelocity_);
             break;
           }
           case 26:
@@ -2493,50 +1958,11 @@ namespace Sensorstreaming {
           }
         }
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 13: {
-            Altitude = input.ReadFloat();
-            break;
-          }
-          case 18: {
-            if (groundVelocity_ == null) {
-              GroundVelocity = new global::Common.Vector3();
-            }
-            input.ReadMessage(GroundVelocity);
-            break;
-          }
-          case 26:
-          case 29: {
-            beamRanges_.AddEntriesFrom(ref input, _repeated_beamRanges_codec);
-            break;
-          }
-          case 34: {
-            Address = input.ReadString();
-            break;
-          }
-        }
-      }
-    }
-    #endif
 
   }
 
-  public sealed partial class GnssStreamingRequest : pb::IMessage<GnssStreamingRequest>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
+  public sealed partial class GnssStreamingRequest : pb::IMessage<GnssStreamingRequest> {
     private static readonly pb::MessageParser<GnssStreamingRequest> _parser = new pb::MessageParser<GnssStreamingRequest>(() => new GnssStreamingRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2629,9 +2055,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
       if (point_ != null) {
         output.WriteRawTag(10);
         output.WriteMessage(Point);
@@ -2643,25 +2066,7 @@ namespace Sensorstreaming {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (point_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(Point);
-      }
-      if (Address.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(Address);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -2685,7 +2090,7 @@ namespace Sensorstreaming {
       }
       if (other.point_ != null) {
         if (point_ == null) {
-          Point = new global::Common.GeoPoint();
+          point_ = new global::Common.GeoPoint();
         }
         Point.MergeFrom(other.Point);
       }
@@ -2697,9 +2102,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -2708,34 +2110,9 @@ namespace Sensorstreaming {
             break;
           case 10: {
             if (point_ == null) {
-              Point = new global::Common.GeoPoint();
+              point_ = new global::Common.GeoPoint();
             }
-            input.ReadMessage(Point);
-            break;
-          }
-          case 18: {
-            Address = input.ReadString();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            if (point_ == null) {
-              Point = new global::Common.GeoPoint();
-            }
-            input.ReadMessage(Point);
+            input.ReadMessage(point_);
             break;
           }
           case 18: {
@@ -2745,15 +2122,10 @@ namespace Sensorstreaming {
         }
       }
     }
-    #endif
 
   }
 
-  public sealed partial class ImuStreamingRequest : pb::IMessage<ImuStreamingRequest>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
+  public sealed partial class ImuStreamingRequest : pb::IMessage<ImuStreamingRequest> {
     private static readonly pb::MessageParser<ImuStreamingRequest> _parser = new pb::MessageParser<ImuStreamingRequest>(() => new ImuStreamingRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2874,9 +2246,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
       if (acceleration_ != null) {
         output.WriteRawTag(10);
         output.WriteMessage(Acceleration);
@@ -2896,33 +2265,7 @@ namespace Sensorstreaming {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (acceleration_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(Acceleration);
-      }
-      if (angularVelocity_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(AngularVelocity);
-      }
-      if (orientation_ != null) {
-        output.WriteRawTag(26);
-        output.WriteMessage(Orientation);
-      }
-      if (Address.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(Address);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -2952,19 +2295,19 @@ namespace Sensorstreaming {
       }
       if (other.acceleration_ != null) {
         if (acceleration_ == null) {
-          Acceleration = new global::Common.Vector3();
+          acceleration_ = new global::Common.Vector3();
         }
         Acceleration.MergeFrom(other.Acceleration);
       }
       if (other.angularVelocity_ != null) {
         if (angularVelocity_ == null) {
-          AngularVelocity = new global::Common.Vector3();
+          angularVelocity_ = new global::Common.Vector3();
         }
         AngularVelocity.MergeFrom(other.AngularVelocity);
       }
       if (other.orientation_ != null) {
         if (orientation_ == null) {
-          Orientation = new global::Common.Vector3();
+          orientation_ = new global::Common.Vector3();
         }
         Orientation.MergeFrom(other.Orientation);
       }
@@ -2976,9 +2319,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -2987,62 +2327,23 @@ namespace Sensorstreaming {
             break;
           case 10: {
             if (acceleration_ == null) {
-              Acceleration = new global::Common.Vector3();
+              acceleration_ = new global::Common.Vector3();
             }
-            input.ReadMessage(Acceleration);
+            input.ReadMessage(acceleration_);
             break;
           }
           case 18: {
             if (angularVelocity_ == null) {
-              AngularVelocity = new global::Common.Vector3();
+              angularVelocity_ = new global::Common.Vector3();
             }
-            input.ReadMessage(AngularVelocity);
+            input.ReadMessage(angularVelocity_);
             break;
           }
           case 26: {
             if (orientation_ == null) {
-              Orientation = new global::Common.Vector3();
+              orientation_ = new global::Common.Vector3();
             }
-            input.ReadMessage(Orientation);
-            break;
-          }
-          case 34: {
-            Address = input.ReadString();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            if (acceleration_ == null) {
-              Acceleration = new global::Common.Vector3();
-            }
-            input.ReadMessage(Acceleration);
-            break;
-          }
-          case 18: {
-            if (angularVelocity_ == null) {
-              AngularVelocity = new global::Common.Vector3();
-            }
-            input.ReadMessage(AngularVelocity);
-            break;
-          }
-          case 26: {
-            if (orientation_ == null) {
-              Orientation = new global::Common.Vector3();
-            }
-            input.ReadMessage(Orientation);
+            input.ReadMessage(orientation_);
             break;
           }
           case 34: {
@@ -3052,15 +2353,10 @@ namespace Sensorstreaming {
         }
       }
     }
-    #endif
 
   }
 
-  public sealed partial class PoseStreamingRequest : pb::IMessage<PoseStreamingRequest>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
+  public sealed partial class PoseStreamingRequest : pb::IMessage<PoseStreamingRequest> {
     private static readonly pb::MessageParser<PoseStreamingRequest> _parser = new pb::MessageParser<PoseStreamingRequest>(() => new PoseStreamingRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3153,9 +2449,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
       if (pose_ != null) {
         output.WriteRawTag(10);
         output.WriteMessage(Pose);
@@ -3167,25 +2460,7 @@ namespace Sensorstreaming {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (pose_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(Pose);
-      }
-      if (Address.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(Address);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -3209,7 +2484,7 @@ namespace Sensorstreaming {
       }
       if (other.pose_ != null) {
         if (pose_ == null) {
-          Pose = new global::Common.Pose();
+          pose_ = new global::Common.Pose();
         }
         Pose.MergeFrom(other.Pose);
       }
@@ -3221,9 +2496,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -3232,34 +2504,9 @@ namespace Sensorstreaming {
             break;
           case 10: {
             if (pose_ == null) {
-              Pose = new global::Common.Pose();
+              pose_ = new global::Common.Pose();
             }
-            input.ReadMessage(Pose);
-            break;
-          }
-          case 18: {
-            Address = input.ReadString();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            if (pose_ == null) {
-              Pose = new global::Common.Pose();
-            }
-            input.ReadMessage(Pose);
+            input.ReadMessage(pose_);
             break;
           }
           case 18: {
@@ -3269,15 +2516,10 @@ namespace Sensorstreaming {
         }
       }
     }
-    #endif
 
   }
 
-  public sealed partial class SonarStreamingRequest : pb::IMessage<SonarStreamingRequest>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
+  public sealed partial class SonarStreamingRequest : pb::IMessage<SonarStreamingRequest> {
     private static readonly pb::MessageParser<SonarStreamingRequest> _parser = new pb::MessageParser<SonarStreamingRequest>(() => new SonarStreamingRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3384,9 +2626,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
       if (Range != 0F) {
         output.WriteRawTag(13);
         output.WriteFloat(Range);
@@ -3402,29 +2641,7 @@ namespace Sensorstreaming {
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
-    #endif
     }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Range != 0F) {
-        output.WriteRawTag(13);
-        output.WriteFloat(Range);
-      }
-      if (Bearing != 0F) {
-        output.WriteRawTag(21);
-        output.WriteFloat(Bearing);
-      }
-      if (Address.Length != 0) {
-        output.WriteRawTag(26);
-        output.WriteString(Address);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
@@ -3463,9 +2680,6 @@ namespace Sensorstreaming {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
@@ -3486,34 +2700,170 @@ namespace Sensorstreaming {
           }
         }
       }
-    #endif
     }
 
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+  }
+
+  public sealed partial class AISStreamingRequest : pb::IMessage<AISStreamingRequest> {
+    private static readonly pb::MessageParser<AISStreamingRequest> _parser = new pb::MessageParser<AISStreamingRequest>(() => new AISStreamingRequest());
+    private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+    public static pb::MessageParser<AISStreamingRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Sensorstreaming.SensorStreamingReflection.Descriptor.MessageTypes[11]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public AISStreamingRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public AISStreamingRequest(AISStreamingRequest other) : this() {
+      aisPositionReport_ = other.aisPositionReport_ != null ? other.aisPositionReport_.Clone() : null;
+      address_ = other.address_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public AISStreamingRequest Clone() {
+      return new AISStreamingRequest(this);
+    }
+
+    /// <summary>Field number for the "aisPositionReport" field.</summary>
+    public const int AisPositionReportFieldNumber = 1;
+    private global::Common.AISPositionReport aisPositionReport_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Common.AISPositionReport AisPositionReport {
+      get { return aisPositionReport_; }
+      set {
+        aisPositionReport_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "address" field.</summary>
+    public const int AddressFieldNumber = 2;
+    private string address_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Address {
+      get { return address_; }
+      set {
+        address_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as AISStreamingRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(AISStreamingRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(AisPositionReport, other.AisPositionReport)) return false;
+      if (Address != other.Address) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (aisPositionReport_ != null) hash ^= AisPositionReport.GetHashCode();
+      if (Address.Length != 0) hash ^= Address.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (aisPositionReport_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(AisPositionReport);
+      }
+      if (Address.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Address);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (aisPositionReport_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(AisPositionReport);
+      }
+      if (Address.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Address);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(AISStreamingRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.aisPositionReport_ != null) {
+        if (aisPositionReport_ == null) {
+          aisPositionReport_ = new global::Common.AISPositionReport();
+        }
+        AisPositionReport.MergeFrom(other.AisPositionReport);
+      }
+      if (other.Address.Length != 0) {
+        Address = other.Address;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
         switch(tag) {
           default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 13: {
-            Range = input.ReadFloat();
+          case 10: {
+            if (aisPositionReport_ == null) {
+              aisPositionReport_ = new global::Common.AISPositionReport();
+            }
+            input.ReadMessage(aisPositionReport_);
             break;
           }
-          case 21: {
-            Bearing = input.ReadFloat();
-            break;
-          }
-          case 26: {
+          case 18: {
             Address = input.ReadString();
             break;
           }
         }
       }
     }
-    #endif
 
   }
 
