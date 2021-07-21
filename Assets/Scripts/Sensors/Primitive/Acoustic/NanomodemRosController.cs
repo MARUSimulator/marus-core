@@ -50,16 +50,17 @@ namespace Labust.Sensors.Primitive.Acoustic
 		public List<AcousticPayload> ParseAndExecuteCommand(NanomodemRequest req)
 		{
 			List<AcousticPayload> payloadList = new List<AcousticPayload>();
+			NanomodemPayload payload = new NanomodemPayload();
+			AcousticPayload acousticPayload = new AcousticPayload();
 			string message = req.Msg;
-			NanomodemPayload payload;
-			AcousticPayload acousticPayload;
-			
+			int targetId = (int) req.Id;
+			float range = nanomodem.Range(targetId);
+			int rangeTransformed = nanomodem.GetRangeTransformed(targetId);
+
 			// Ping (range)
 			if (req.ReqType == NanomodemRequest.Types.Type.Pingid)
 			{
-				int targetId = (int) req.Id;
-				float range = nanomodem.Range(targetId);
-				int rangeTransformed = nanomodem.GetRangeTransformed(targetId);
+				
 
 				AcousticMessage msg = new AcousticMessage();
 				msg.Message = message;
@@ -80,24 +81,20 @@ namespace Labust.Sensors.Primitive.Acoustic
 					payloadList.Add(rangePayload);
 
 					// send classic #RxxxTyyyyy msg
-					payload = new NanomodemPayload();
 					payload.MsgType = NanomodemPayload.Types.Type.Unicst;
 					payload.Msg = String.Format("#R{0:3D}T{1:5D}", targetId, rangeTransformed);
 					payload.SenderId = (uint) nanomodem.Id;
 
-					acousticPayload = new AcousticPayload();
 					acousticPayload.Address = "nanomodem/" + nanomodem.Id;
 					acousticPayload.Payload = payload;
 					payloadList.Add(acousticPayload);
 				}
 
 				// send timeout msg if out of range
-				payload = new NanomodemPayload();
 				payload.MsgType = NanomodemPayload.Types.Type.Unicst;
 				payload.Msg = "#TO";
 				payload.SenderId = (uint) nanomodem.Id;
 
-				acousticPayload = new AcousticPayload();
 				acousticPayload.Address = "nanomodem/" + nanomodem.Id;
 				acousticPayload.Payload = payload;
 				payloadList.Add(acousticPayload);
@@ -108,12 +105,11 @@ namespace Labust.Sensors.Primitive.Acoustic
 			{
 				int newId = (int) req.Id;
 				nanomodem.Id = newId;
-				payload = new NanomodemPayload();
+				
 				payload.MsgType = NanomodemPayload.Types.Type.Unicst;
 				payload.Msg = "#A" + message.Substring(2, 3);
 				payload.SenderId = (uint) newId;
 
-				acousticPayload = new AcousticPayload();
 				acousticPayload.Address = "nanomodem/" + nanomodem.Id;
 				acousticPayload.Payload = payload;
 				payloadList.Add(acousticPayload);
@@ -130,12 +126,10 @@ namespace Labust.Sensors.Primitive.Acoustic
 				msg.sender = nanomodem;
 				nanomodem.medium.Broadcast(msg);
 
-				payload = new NanomodemPayload();
 				payload.MsgType = NanomodemPayload.Types.Type.Brdcst;
 				payload.Msg = message.Substring(0, 4); // $Bnn
 				payload.SenderId = (uint) nanomodem.Id;
 				
-				acousticPayload = new AcousticPayload();
 				acousticPayload.Address = "nanomodem/" + nanomodem.Id;
 				acousticPayload.Payload = payload;
 				payloadList.Add(acousticPayload);
@@ -150,12 +144,10 @@ namespace Labust.Sensors.Primitive.Acoustic
 				Nanomodem targetModem = nanomodem.medium.GetNanomodemById(req.Id);
 				nanomodem.medium.Transmit(msg, targetModem);
 
-				payload = new NanomodemPayload();
 				payload.MsgType = NanomodemPayload.Types.Type.Unicst;
 				payload.Msg = message.Substring(0, 7); // $Uxxxnn
 				payload.SenderId = (uint) nanomodem.Id;
 				
-				acousticPayload = new AcousticPayload();
 				acousticPayload.Address = "nanomodem/" + nanomodem.Id;
 				acousticPayload.Payload = payload;
 				payloadList.Add(acousticPayload);
@@ -169,12 +161,10 @@ namespace Labust.Sensors.Primitive.Acoustic
 				msg.sender = nanomodem;
 				nanomodem.medium.Broadcast(msg);
 
-				payload = new NanomodemPayload();
 				payload.MsgType = NanomodemPayload.Types.Type.Unicst;
 				payload.Msg = message;
 				payload.SenderId = (uint) nanomodem.Id;
 				
-				acousticPayload = new AcousticPayload();
 				acousticPayload.Address = "nanomodem/" + nanomodem.Id;
 				acousticPayload.Payload = payload;
 				payloadList.Add(acousticPayload);
@@ -183,13 +173,11 @@ namespace Labust.Sensors.Primitive.Acoustic
 			// Query status
 			else if(req.ReqType == NanomodemRequest.Types.Type.Status)
 			{
-				payload = new NanomodemPayload();
 				payload.MsgType = NanomodemPayload.Types.Type.Unicst;
 				payload.Msg = String.Format("#A{0:D3}V{1:D5}", nanomodem.Id, nanomodem.GetConvertedVoltage());
 				
 				payload.SenderId = (uint) nanomodem.Id;
 				
-				acousticPayload = new AcousticPayload();
 				acousticPayload.Address = "nanomodem/" + nanomodem.Id;
 				acousticPayload.Payload = payload;
 				payloadList.Add(acousticPayload);
@@ -204,13 +192,11 @@ namespace Labust.Sensors.Primitive.Acoustic
 				Nanomodem targetModem = nanomodem.medium.GetNanomodemById(req.Id);
 				nanomodem.medium.Transmit(msg, targetModem);
 
-				payload = new NanomodemPayload();
 				payload.MsgType = NanomodemPayload.Types.Type.Unicst;
 				payload.Msg = req.Msg;
 				
 				payload.SenderId = (uint) nanomodem.Id;
 				
-				acousticPayload = new AcousticPayload();
 				acousticPayload.Address = "nanomodem/" + nanomodem.Id;
 				acousticPayload.Payload = payload;
 				payloadList.Add(acousticPayload);
@@ -236,12 +222,10 @@ namespace Labust.Sensors.Primitive.Acoustic
 				msg.sender = nanomodem;
 				nanomodem.medium.Transmit(msg, nanomodem.medium.GetNanomodemById(req.Id));
 
-				payload = new NanomodemPayload();
 				payload.MsgType = NanomodemPayload.Types.Type.Unicst;
 				payload.Msg = message.Substring(0, 7); // $Exxxnn
 				payload.SenderId = (uint) nanomodem.Id;
 				
-				acousticPayload = new AcousticPayload();
 				acousticPayload.Address = "nanomodem/" + nanomodem.Id;
 				acousticPayload.Payload = payload;
 				payloadList.Add(acousticPayload);
@@ -250,12 +234,10 @@ namespace Labust.Sensors.Primitive.Acoustic
 			// quality check
 			else if(req.ReqType == NanomodemRequest.Types.Type.Quality)
 			{
-				payload = new NanomodemPayload();
 				payload.MsgType = NanomodemPayload.Types.Type.Unicst;
 				payload.Msg = "$C0";
 				payload.SenderId = (uint) nanomodem.Id;
 				
-				acousticPayload = new AcousticPayload();
 				acousticPayload.Address = "nanomodem/" + nanomodem.Id;
 				acousticPayload.Payload = payload;
 				payloadList.Add(acousticPayload);
@@ -264,16 +246,13 @@ namespace Labust.Sensors.Primitive.Acoustic
 			// unicast and acknowledge
 			else if(req.ReqType == NanomodemRequest.Types.Type.Unistack)
 			{
-				payload = new NanomodemPayload();
 				payload.MsgType = NanomodemPayload.Types.Type.Unicst;
 				payload.Msg = message.Substring(0, 7); // $Mxxxnn
 				payload.SenderId = (uint) nanomodem.Id;
 				
-				acousticPayload = new AcousticPayload();
 				acousticPayload.Address = "nanomodem/" + nanomodem.Id;
 				acousticPayload.Payload = payload;
 				payloadList.Add(acousticPayload);
-
 
 				AcousticMessage msg = new AcousticMessage();
 				msg.Message = message;
@@ -283,14 +262,11 @@ namespace Labust.Sensors.Primitive.Acoustic
 				if (sent)
 				{
 					// send #RxxxTyyyyy msg
-					int targetId = (int) req.Id;
-					int rangeTransformed = nanomodem.GetRangeTransformed(targetId);
 					NanomodemPayload responsePayload = new NanomodemPayload();
 					responsePayload.MsgType = NanomodemPayload.Types.Type.Unicst;
 					responsePayload.Msg = String.Format("#R{0:3D}T{1:5D}", targetId, rangeTransformed);
 					responsePayload.SenderId = (uint) nanomodem.Id;
 
-					acousticPayload = new AcousticPayload();
 					acousticPayload.Address = "nanomodem/" + nanomodem.Id;
 					acousticPayload.Payload = responsePayload;
 					payloadList.Add(acousticPayload);
@@ -308,8 +284,6 @@ namespace Labust.Sensors.Primitive.Acoustic
 			string message = request.Message;
 			NanomodemPayload payload = new NanomodemPayload();
 			payload.MsgType = NanomodemPayload.Types.Type.Unicst;
-			
-
 			AcousticPayload acousticPayload = new AcousticPayload();
 			
 			// Handle broadcast message
