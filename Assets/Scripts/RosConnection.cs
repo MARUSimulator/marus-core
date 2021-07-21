@@ -8,6 +8,7 @@ using Labust.Core;
 using static Tf.Tf;
 using static Sensorstreaming.SensorStreaming;
 using static Remotecontrol.RemoteControl;
+using static AcousticTransmission.Acoustics;
 using static Ping.Ping;
 using static Parameterserver.ParameterServer;
 using Parameterserver;
@@ -379,6 +380,10 @@ namespace Labust.Networking
                 {
                     typeof(TfClient),
                     new TfClient(_streamingChannel)
+                },
+                {
+                    typeof(AcousticsClient),
+                    new AcousticsClient(_streamingChannel)
                 }
             };
         }

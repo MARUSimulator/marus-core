@@ -123,6 +123,52 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &60717487
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 60717489}
+  - component: {fileID: 60717488}
+  m_Layer: 0
+  m_Name: AcousticMedium
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &60717488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 60717487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eafc71d8b3034b0fad75e42dc2113ad8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RegisteredDevices: []
+  Name: Acoustic medium
+  C: 1500
+--- !u!4 &60717489
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 60717487}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.1194386, y: 2.6495833, z: 4.3681135}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &109183297
 GameObject:
   m_ObjectHideFlags: 0
@@ -464,6 +510,9 @@ GameObject:
   - component: {fileID: 371424428}
   - component: {fileID: 371424423}
   - component: {fileID: 371424427}
+  - component: {fileID: 371424429}
+  - component: {fileID: 371424430}
+  - component: {fileID: 371424431}
   m_Layer: 0
   m_Name: Target
   m_TagString: Untagged
@@ -478,7 +527,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 371424422}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: acd04c5bc61fd1e8ab57d30e00d553da, type: 3}
   m_Name: 
@@ -545,7 +594,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 371424422}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -33.42, y: 0, z: 30}
+  m_LocalPosition: {x: -35, y: 0, z: 30}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -581,6 +630,59 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linSpeed: 2
   rotSpeed: 700
+--- !u!114 &371424429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 371424422}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 281c03a2711746d39732e441ca98eadd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Range: 2000
+  Id: 1
+  SupplyVoltage: 0
+  medium: {fileID: 0}
+--- !u!114 &371424430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 371424422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2903c887bac2f0d2a84b52c1824ef87d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SensorUpdateHz: 1
+  address: 
+  TrueHeading: 0
+  SOG: 0
+  COG: 0
+--- !u!114 &371424431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 371424422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb72fa274e174df68a2580fd8c4fd7b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SensorUpdateHz: 1
+  address: 
+  point:
+    latitude: 0
+    longitude: 0
+    altitude: 0
+  covariance: []
+  isRTK: 1
 --- !u!1 &586646375
 GameObject:
   m_ObjectHideFlags: 0
@@ -596,6 +698,7 @@ GameObject:
   - component: {fileID: 586646377}
   - component: {fileID: 586646376}
   - component: {fileID: 586646382}
+  - component: {fileID: 586646383}
   m_Layer: 0
   m_Name: Target2
   m_TagString: Untagged
@@ -726,6 +829,26 @@ MonoBehaviour:
   MMSI: 
   Name: '@@@@@@@@@@@@@@@@@@@@'
   ActiveTransmission: 0
+--- !u!114 &586646383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 586646375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb72fa274e174df68a2580fd8c4fd7b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SensorUpdateHz: 1
+  address: 
+  point:
+    latitude: 0
+    longitude: 0
+    altitude: 0
+  covariance: []
+  isRTK: 1
 --- !u!1 &690360258
 GameObject:
   m_ObjectHideFlags: 0
@@ -1423,9 +1546,9 @@ GameObject:
   - component: {fileID: 1648538908}
   - component: {fileID: 1648538907}
   - component: {fileID: 1648538905}
-  - component: {fileID: 1648538912}
   - component: {fileID: 1648538910}
   - component: {fileID: 1648538913}
+  - component: {fileID: 1648538914}
   m_Layer: 0
   m_Name: Vessel
   m_TagString: Untagged
@@ -1555,20 +1678,6 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1648538912
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1648538904}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2903c887bac2f0d2a84b52c1824ef87d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SensorUpdateHz: 1
-  address: 
 --- !u!114 &1648538913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1589,6 +1698,22 @@ MonoBehaviour:
   eulerAngles: {x: 0, y: 0, z: 0}
   quaternion: {x: 0, y: 0, z: 0, w: 0}
   localVelocity: {x: 0, y: 0, z: 0}
+--- !u!114 &1648538914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648538904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 281c03a2711746d39732e441ca98eadd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Range: 2000
+  Id: 0
+  SupplyVoltage: 0
+  medium: {fileID: 60717488}
 --- !u!1 &1884722619
 GameObject:
   m_ObjectHideFlags: 0
