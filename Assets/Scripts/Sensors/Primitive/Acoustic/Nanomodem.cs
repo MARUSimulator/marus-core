@@ -10,11 +10,22 @@ namespace Labust.Sensors.Primitive.Acoustic
 {
 	public class Nanomodem : MediumDeviceBase<AcousticMessage>
 	{
+		/// <summary>
+		/// Unique identifier of nanomodem
+		/// 0-255
+		/// </summary>
 		public int Id;
+
+		/// <summary>
+		/// Nanomodem's supply voltage in Volts (V) 3-6.5V
+		/// </summary>
 		public double SupplyVoltage;
+		
+		/// <summary>
+		/// Medium object used for communication between nanomodems
+		/// </summary>
 		public AcousticMedium medium;
 
-		private bool sent = false;
 		private NanomodemRosController rosController;
 
 		public void Awake()

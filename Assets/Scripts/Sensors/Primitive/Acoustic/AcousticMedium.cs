@@ -17,6 +17,10 @@ namespace Labust.Sensors.Primitive.Acoustic
 		/// </summary>
 		public float C = 1500f;
 
+
+		/// <summary>
+		/// Sends message to every registered nanomodem device.
+		/// </summary>
 		public override void Broadcast(AcousticMessage msg)
 		{	
 			foreach (var device in RegisteredDevices)
@@ -28,6 +32,9 @@ namespace Labust.Sensors.Primitive.Acoustic
 			}
 		}
 
+		/// <summary>
+		/// Emulates time needed for message to arrive and sends it to other nanomodem.
+		/// </summary>
 		public override bool Transmit(AcousticMessage message, MediumDeviceBase<AcousticMessage> receiver)
 		{
 			if (DistanceFromTo(message.sender, receiver) <= message.sender.Range){

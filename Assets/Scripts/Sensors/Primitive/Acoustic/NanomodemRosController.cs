@@ -28,6 +28,9 @@ namespace Labust.Sensors.Primitive.Acoustic
             HandleResponse(TransmitCommand);
 		}
 
+		/// <summary>
+		/// This method is called on every NanomodemRequest from ROS side
+		/// </summary>
 		void TransmitCommand(AcousticResponse request)
 		{
 			NanomodemRequest req = request.Request;			
@@ -40,6 +43,10 @@ namespace Labust.Sensors.Primitive.Acoustic
 			}
 		}
 
+		/// <summary>
+		/// Parses reest from ROS side, communicates with other nanomodems if needed
+		/// and sends back response/s to ros side if needed.
+		/// </summary>
 		public List<AcousticPayload> ParseAndExecuteCommand(NanomodemRequest req)
 		{
 			List<AcousticPayload> payloadList = new List<AcousticPayload>();
@@ -292,6 +299,10 @@ namespace Labust.Sensors.Primitive.Acoustic
 			return payloadList;
 		}
 	
+
+		/// <summary>
+		/// Handles messages from other nanomodems
+		/// </summary>
 		public void ExecuteNanomodemResponse(AcousticMessage request)
 		{
 			string message = request.Message;
@@ -301,8 +312,9 @@ namespace Labust.Sensors.Primitive.Acoustic
 
 			AcousticPayload acousticPayload = new AcousticPayload();
 			
+			// Handle broadcast message
 			if (message.StartsWith("$B")) {
-				// #Bxxxnnddd
+				// return #Bxxxnnddd to acknowledge received message
 				payload.Msg = String.Format("#B{0:D3}{1}", ((Nanomodem) request.sender).Id, request.Message.Substring(2));
 				payload.SenderId = (uint) nanomodem.Id;
 
@@ -310,17 +322,9 @@ namespace Labust.Sensors.Primitive.Acoustic
 				acousticPayload.Payload = payload;
 			}
 
-			else if (message.StartsWith("$U")) {
-				// #Unnddd
-				payload.Msg = String.Format("#U{0}", request.Message.Substring(5));
-				payload.SenderId = (uint) nanomodem.Id;
-
-				acousticPayload.Address = "nanomodem/" + nanomodem.Id;
-				acousticPayload.Payload = payload;
-			}
-
-			else if (message.StartsWith("$M")) {
-				// #Unnddd
+			// handle unicast message
+			else if (message.StartsWith("$U") || message.StartsWith("$M")) {
+				// return #Unnddd to acknowledge received message
 				payload.Msg = String.Format("#U{0}", request.Message.Substring(5));
 				payload.SenderId = (uint) nanomodem.Id;
 
