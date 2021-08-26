@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Labust.Visualization.Primitives;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Labust.Visualization
 {
@@ -14,6 +15,17 @@ namespace Labust.Visualization
         public float pointSize = 0.1f;
         private static Visualizer _instance;
         private List<DrawGizmo> _gizmos;
+
+
+        void Awake()
+        {
+            SceneManager.activeSceneChanged += OnSceneChange;
+        }
+
+        private void OnSceneChange(Scene oldScene, Scene newScene)
+        {
+            _gizmos.Clear();
+        }
 
         void Start()
         {

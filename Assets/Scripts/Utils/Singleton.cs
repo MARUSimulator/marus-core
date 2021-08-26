@@ -7,7 +7,7 @@ namespace Labust.Utils
 	/// This is generic singleton implementation.
 	/// This is the best way to implement singleton in Unity, see <see cref="!:http://www.unitygeek.com/unity_c_singleton/">here.</see> 
 	/// </summary> 
-	public class GenericSingleton<T> : MonoBehaviour where T : Component
+	public class Singleton<T> : MonoBehaviour where T : Component
 	{
 		private static T instance;
 		public static T Instance {
@@ -24,7 +24,7 @@ namespace Labust.Utils
 			}
 		}
 	
-		public virtual void Awake ()
+		public void Awake()
 		{
 			if (instance == null) {
 				instance = this as T;
@@ -32,6 +32,13 @@ namespace Labust.Utils
 			} else {
 				Destroy (gameObject);
 			}
+			Initialize();
+		}
+
+
+		public virtual void Initialize()
+		{
+
 		}
 	}
 }

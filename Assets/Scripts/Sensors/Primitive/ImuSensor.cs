@@ -48,12 +48,13 @@ namespace Labust.Sensors.Primitive
 
             if (withGravity)
                 linearAcceleration -= sensor.transform.InverseTransformVector(UnityEngine.Physics.gravity);
+            Log(new { linearAcceleration, angularVelocity, eulerAngles });
             hasData = true;
         }
 
         public async override void SendMessage()
         {
-            await streamWriter.WriteAsync(new ImuStreamingRequest
+            await _streamWriter.WriteAsync(new ImuStreamingRequest
             {
                 Acceleration = linearAcceleration.AsMsg(),
                 AngularVelocity = angularVelocity.AsMsg(),

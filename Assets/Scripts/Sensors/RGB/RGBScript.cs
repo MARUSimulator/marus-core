@@ -56,7 +56,7 @@ namespace Labust.Sensors
         {
             try
             {
-                await streamWriter.WriteAsync(new CameraStreamingRequest
+                await _streamWriter.WriteAsync(new CameraStreamingRequest
                 {
                     Data = ByteString.CopyFrom(Data),
                     TimeStamp = Time.time,

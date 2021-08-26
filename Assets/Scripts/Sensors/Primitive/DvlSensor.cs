@@ -61,8 +61,8 @@ namespace Labust.Sensors.Primitive
                 GroundVelocity = groundVelocity.AsMsg(),
             };
             request.BeamRanges.AddRange(beamRanges);
-
-            await streamWriter.WriteAsync(request);
+            Log(new { altitude, groundVelocity });
+            await _streamWriter.WriteAsync(request);
             hasData = false;
         }
     }

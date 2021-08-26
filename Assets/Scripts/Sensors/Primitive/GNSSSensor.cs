@@ -31,6 +31,7 @@ namespace Labust.Sensors.Primitive
         {
             var world = RosConnection.Instance.WorldFrame;
             point = world.Unity2Geo(transform.position);
+            Log(new { point.latitude, point.longitude, point.altitude });
             hasData = true;
         }
 
@@ -46,7 +47,7 @@ namespace Labust.Sensors.Primitive
                     Altitude = point.altitude
                 }
             };
-            await streamWriter.WriteAsync(msg);
+            await _streamWriter.WriteAsync(msg);
             hasData = false;
         }
     }

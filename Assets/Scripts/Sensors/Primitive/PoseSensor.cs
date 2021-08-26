@@ -36,12 +36,13 @@ namespace Labust.Sensors.Primitive
             orientation = measuredObject.rotation;
             linearVelocity = measuredObject.transform.InverseTransformVector(measuredObject.velocity);
             angularVelocity = measuredObject.angularVelocity;
+            Log(new { position, orientation });
             hasData = true;
         }
 
         public async override void SendMessage()
         {
-            await streamWriter.WriteAsync(new PoseStreamingRequest
+            await _streamWriter.WriteAsync(new PoseStreamingRequest
             {
                 Address = address,
                 Pose = new Common.Pose

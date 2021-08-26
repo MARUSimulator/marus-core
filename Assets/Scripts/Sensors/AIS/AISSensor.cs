@@ -62,7 +62,7 @@ namespace Labust.Sensors.AIS
 					CourseOverGround = COG
 				}
             };
-            await streamWriter.WriteAsync(msg);
+            await _streamWriter.WriteAsync(msg);
             hasData = false;
 			
         }

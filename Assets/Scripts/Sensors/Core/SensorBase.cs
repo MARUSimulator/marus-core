@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Labust.Networking;
+using Labust.Logger;
 
 namespace Labust.Sensors
 {
@@ -68,6 +69,7 @@ namespace Labust.Sensors
         /// </summary>
         protected volatile bool hasData = false;
 
+
         /// <summary>
         /// A client instance used for streaming sensor readings
         /// </summary>
@@ -88,11 +90,14 @@ namespace Labust.Sensors
         /// </summary>
         protected AsyncClientStreamingCall<T, StreamingResponse> streamHandle;
 
+        // TODO: we have to see what to log
+        private GameObjectLogger Logger;
+
         /// <summary>
         /// Used to write sensor reading messages
         /// </summary>
         /// <value></value>
-        protected IClientStreamWriter<T> streamWriter 
+        protected IClientStreamWriter<T> _streamWriter 
         {
             get
             {
@@ -100,6 +105,18 @@ namespace Labust.Sensors
                     return streamHandle.RequestStream;
                 throw new System.Exception("Stream handle not set. Call streamingClient.Stream<rpc-name>() method first!");
             }
+        }
+
+        // public abstract T LastSampledValue { get; }
+
+
+        protected void Log<W>(W data)
+        {
+            if (Logger == null)
+            {
+                Logger = DataLogger.Instance.GetLogger<W>(address);
+            }
+            (Logger as GameObjectLogger<W>).Log(data);
         }
 
         List<SensorCallback> _sensorCallbackList = new List<SensorCallback>();
@@ -123,7 +140,11 @@ namespace Labust.Sensors
         public void AddSensorCallback(SensorCallbackOrder order, Action callback)
         {
             // wrap callback to prototype wanted by the beginFrameRenering event
-            Action<ScriptableRenderContext, Camera[]> wrapper = (p1, p2) => callback();
+            Action<ScriptableRenderContext, Camera[]> wrapper = (p1, p2) => 
+            {
+                callback();
+            };
+            
             var sensorCallback = new SensorCallback 
             {
                 callback = callback,

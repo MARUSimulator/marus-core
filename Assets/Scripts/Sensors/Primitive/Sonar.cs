@@ -38,6 +38,7 @@ namespace Labust.Sensors.Primitive
             {
                 range = 0;
             }
+            Log(new { range, bearing });
 
             // float xDiff = trackedObject.position.x - sonar.position.x;
             // float zDiff = trackedObject.position.z - sonar.position.z;
@@ -72,7 +73,7 @@ namespace Labust.Sensors.Primitive
 
         public async override void SendMessage()
         {
-            await streamWriter.WriteAsync(new SonarStreamingRequest
+            await _streamWriter.WriteAsync(new SonarStreamingRequest
             {
                 Address = address,
                 Range = range,

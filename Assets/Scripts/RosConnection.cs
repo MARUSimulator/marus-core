@@ -10,10 +10,12 @@ using static Sensorstreaming.SensorStreaming;
 using static Remotecontrol.RemoteControl;
 using static Ping.Ping;
 using static Parameterserver.ParameterServer;
+using static Simulatoncontrol.SimulationControl;
+
 using Parameterserver;
 using System.Collections;
-using static Simulatoncontrol.SimulationControl;
 using Simulatoncontrol;
+using Labust.Utils;
 
 namespace Labust.Networking
 {
@@ -23,7 +25,7 @@ namespace Labust.Networking
     /// ROS server
     /// </summary>
     [DefaultExecutionOrder(-1)]
-    public class RosConnection : MonoBehaviour
+    public class RosConnection : Singleton<RosConnection>
     {
         [Header("Server info")]
         public string serverIP = "localhost";
@@ -62,36 +64,12 @@ namespace Labust.Networking
         [Header("Debug")]
         public uint CurrentTime;
 
-
-        static RosConnection _instance = null;
-        /// <summary>
-        /// RosConnection Instance Singleton
-        /// </summary>
-        /// <value></value>
-        public static RosConnection Instance
-        {
-            get
-            {
-                return _instance;
-            }
-        }
-
-
         private Transform _mapFrame;
         private GeographicFrame _worldFrame;
         public GeographicFrame WorldFrame => _worldFrame;
 
-        private void Awake()
+        public override void Initialize()
         {
-            // if the singleton hasn't been initialized yet
-            if (_instance != null && _instance != this)
-            {
-                Destroy(this.gameObject);
-            }
-
-            _instance = this;
-            DontDestroyOnLoad(this.gameObject);
-
             // init channel and streaming clients
             _streamingChannel = new Channel(serverIP, serverPort, ChannelCredentials.Insecure);
             InitializeClients();
@@ -410,8 +388,14 @@ namespace Labust.Networking
 
         async void OnDisable()
         {
+            if (_streamingChannel == null)
+            {
+                return;
+            }
+
             Debug.Log("Shutting down grpc clients and channel. Await for sucessfull confirmation...");
-            var awaitable = _streamingChannel.ShutdownAsync();
+            var awaitable = _streamingChannel?.ShutdownAsync();
+
 
             int time = 0;
             while (!awaitable.IsCompleted && time < 3)

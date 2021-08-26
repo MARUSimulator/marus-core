@@ -9,7 +9,7 @@ namespace Labust.Sensors.Primitive.GenericMedium
 	/// <summary>
 	/// This class serves as base for a medium for sending/receiving messages.
 	/// </summary>
-	public abstract class MediumBase<T> : GenericSingleton<MediumBase<T>>
+	public abstract class MediumBase<T> : Singleton<MediumBase<T>>
 	{
 		public List<MediumDeviceBase<T>> RegisteredDevices = new List<MediumDeviceBase<T>>();
 

@@ -22,7 +22,7 @@ namespace Labust.Sensors.Primitive
 
         public async override void SendMessage()
         {
-            await streamWriter.WriteAsync( new DepthStreamingRequest
+            await _streamWriter.WriteAsync( new DepthStreamingRequest
             {
                 Address = address,
                 Depth = depth
@@ -32,7 +32,9 @@ namespace Labust.Sensors.Primitive
 
         public void Refresh()
         {
+            var o = new { V1 = depth, V3 = "gfdsg"};
             depth = -transform.position.y;
+            Log(new { depth });
             hasData = true;
         }
     }
