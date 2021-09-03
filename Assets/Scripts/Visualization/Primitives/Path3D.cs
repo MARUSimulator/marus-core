@@ -7,25 +7,22 @@ using UnityEngine;
 namespace Labust.Visualization.Primitives
 {
     /// <summary>
-    /// Draw path as by-part linear using builtin LineRenderer to draw lines.
+    /// Draw path as by-part linear with points connected with a cylinder 3D primitive object.
     /// </summary>
-    public class Path : VisualElement
+    public class Path3D : VisualElement
     {
         /// <summary>
         /// Line thickness
         /// </summary>
         public float LineThickness = 0.05f;
-
         /// <summary>
         /// Line color
         /// </summary>
         public Color LineColor = Color.yellow;
-
         /// <summary>
         /// Point size
         /// </summary>
         public float PointSize = 0.1f;
-
         /// <summary>
         /// Point color
         /// </summary>
@@ -37,57 +34,58 @@ namespace Labust.Visualization.Primitives
         private List<Point> _points;
 
         /// <summary>
-        /// Empty GameObject used to add LineRenderer component to it
+        /// Helper dictionary which references Line3D object by it's starting point
         /// </summary>
-        private GameObject line;
+        private Dictionary<Point, Line3D> _startPointLineDict;
 
         /// <summary>
-        /// LineRenderer component which draws lines
+        /// Empty constructor which initializes empty _points list and empty 
+        /// _startPointLineDict dictionary
         /// </summary>
-        private LineRenderer lr;
-
-        /// <summary>
-        /// Empty constructor which initializes empty _points list and LineRenderer
-        /// </summary>
-        public Path()
+        public Path3D()
         {
             _points = new List<Point>();
-            InitLineRenderer();
+            _startPointLineDict = new Dictionary<Point, Line3D>();
         }
 
         /// <summary>
-        /// Constructor which initializes empty _points list and LineRenderer
-        /// and sets line color
+        /// Constructor which initializes empty _points list and empty
+        /// _startPointLineDict dictionary and sets line color and line thickness.
         /// </summary>
-        public Path(float lineThickness, Color lc)
+        public Path3D(float LineThickness, Color lc)
         {
-            LineThickness = lineThickness;
+            this.LineThickness = LineThickness;
             _points = new List<Point>();
+            _startPointLineDict = new Dictionary<Point, Line3D>();
             LineColor = lc;
-            InitLineRenderer();
         }
 
         /// <summary>
-        /// Constructor which initializes _points list from given list parameter
-        /// and LineRenderer
+        /// Constructor which initializes path from list of points.
         /// </summary>
-        public Path(List<Vector3> pointsInWorld)
+        /// <param name="pointsInWorld">List of points to create a path from.</param>
+        public Path3D(List<Vector3> pointsInWorld)
         {
             _points = new List<Point>();
+            _startPointLineDict = new Dictionary<Point, Line3D>();
             foreach (Vector3 pointInWorld in pointsInWorld)
             {
                 _points.Add(new Point(pointInWorld));
             }
-            InitLineRenderer();
         }
 
         /// <summary>
-        /// Constructor which initializes _points list from given list parameter
-        /// and sets point size, point color, line thickness and line color
+        /// Constructor which initializes path from given points and sets all the path properties.
         /// </summary>
-        public Path(List<Vector3> pointsInWorld, float _PointSize, Color _PointColor, float _LineThickness, Color _LineColor)
+        /// <param name="pointsInWorld">List of points</param>
+        /// <param name="_PointSize">Point size</param>
+        /// <param name="_PointColor">Point color</param>
+        /// <param name="_LineThickness">Line thickness</param>
+        /// <param name="_LineColor">Line color</param>
+        public Path3D(List<Vector3> pointsInWorld, float _PointSize, Color _PointColor, float _LineThickness, Color _LineColor)
         {
             _points = new List<Point>();
+            _startPointLineDict = new Dictionary<Point, Line3D>();
             PointSize = _PointSize;
             PointColor = _PointColor;
             LineThickness = _LineThickness;
@@ -96,48 +94,23 @@ namespace Labust.Visualization.Primitives
             {
                 _points.Add(new Point(pointInWorld, _PointSize, _PointColor));
             }
-            InitLineRenderer();
         }
 
         /// <summary>
-        /// Initializes LineRenderer object and sets it's material, color and thickness properties.
+        /// Adds a single point to existing path.
         /// </summary>
-        private void InitLineRenderer()
-        {
-            line = new GameObject();
-            line.hideFlags = HideFlags.HideInHierarchy;
-            line.AddComponent<LineRenderer>();
-            lr = line.GetComponent<LineRenderer>();
-            lr.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
-
-            float alpha = 1.0f;
-            Gradient gradient = new Gradient();
-            gradient.SetKeys(
-                new GradientColorKey[] { new GradientColorKey(LineColor, 0.0f), new GradientColorKey(LineColor, 1.0f) },
-                new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }
-            );
-            lr.colorGradient = gradient;
-
-            // set width of the renderer
-            lr.startWidth = LineThickness;
-            lr.endWidth = LineThickness;
-            // set layer to visualisation initially
-            line.layer = 6;
-        }
-
-        /// <summary>
-        /// Adds Vector3 representation of point in space to path.
-        /// </summary>
-        /// <param name="point"></param>
+        /// <param name="point">Point to add</param>
         public void AddPointToPath(Vector3 point)
         {
             _points.Add(new Point(point));
         }
 
         /// <summary>
-        /// Adds Vector3 representation of point in space to path and sets it's size and color.
+        /// Adds a single point to existing path with given size and color.
         /// </summary>
-        /// <param name="point"></param>
+        /// <param name="point">Point to add</param>
+        /// <param name="PointSize">Point size</param>
+        /// <param name="PointColor">Point color</param>
         public void AddPointToPath(Vector3 point, float PointSize, Color PointColor)
         {
             _points.Add(new Point(point, PointSize, PointColor));
@@ -149,13 +122,22 @@ namespace Labust.Visualization.Primitives
         /// <param name="limit">Point age limit in seconds</param>
         public void RefreshAndFade(float limit)
         {
+
             for (int i = 0; i < _points.Count; i++)
             {
                 if (DateTime.UtcNow.Subtract(_points[i].Timestamp).TotalSeconds > limit)
                 {
-                    _points[i].Destroy();
-                    _points.Remove(_points[i]);
-                    i--;
+                    try
+                    {
+                        _startPointLineDict[_points[i]].Destroy();
+                        _startPointLineDict.Remove(_points[i]);
+                        _points[i].Destroy();
+                        _points.Remove(_points[i]);
+                        i--;
+                    }
+                    catch
+                    {
+                    }
                 }
             }
         }
@@ -165,12 +147,22 @@ namespace Labust.Visualization.Primitives
         /// </summary>
         public void Draw()
         {
-            for (var i = 0; i < _points.Count; i++)
+            for (var i = 0; i < _points.Count-1; i++)
             {
-                lr.positionCount = i + 1;
                 _points[i].Draw();
+                if (_points.Count > 2 && !_startPointLineDict.ContainsKey(_points[i]))
+                {
+                    _startPointLineDict.Add(_points[i], new Line3D(_points[i].Position, _points[i+1].Position, LineThickness, LineColor));
+                }
+            }
+            if (_points.Count > 0)
+            {
+                _points[_points.Count - 1].Draw();
+            }
 
-                lr.SetPosition(i, _points[i].Position);
+            foreach (Line3D line in _startPointLineDict.Values)
+            {
+                line.Draw();
             }
         }
 
@@ -185,10 +177,11 @@ namespace Labust.Visualization.Primitives
             }
             _points.Clear();
 
-            if (lr != null)
+            foreach (Line3D line in _startPointLineDict.Values)
             {
-                UnityEngine.Object.Destroy(lr.gameObject);
+                line.Destroy();
             }
+            _startPointLineDict.Clear();
         }
 
         public void SetPointSize(float size)
@@ -209,19 +202,18 @@ namespace Labust.Visualization.Primitives
 
         public void SetLineColor(Color color)
         {
-            float alpha = 1.0f;
-            Gradient gradient = new Gradient();
-            gradient.SetKeys(
-                new GradientColorKey[] { new GradientColorKey(LineColor, 0.0f), new GradientColorKey(LineColor, 1.0f) },
-                new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }
-            );
-            lr.colorGradient = gradient;
+            foreach (Line3D line in _startPointLineDict.Values)
+            {
+                line.SetColor(color);
+            }
         }
 
         public void SetLineThickness(float LineThickness)
         {
-            lr.startWidth = LineThickness;
-            lr.endWidth = LineThickness;
+            foreach (Line3D line in _startPointLineDict.Values)
+            {
+                line.SetThickness(LineThickness);
+            }
         }
     }
 }

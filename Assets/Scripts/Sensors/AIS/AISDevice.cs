@@ -17,7 +17,7 @@ namespace Labust.Sensors.AIS
 		/// AIS class type: A or B
 		/// More info <see cref="!:https://www.navcen.uscg.gov/?pageName=typesAIS">here.</see>
 		/// </summary>
-		public AISClassType ClassType;
+		public AISClassType ClassType = AISClassType.ClassA;
 
 		/// <summary>
 		/// Maritime Mobile Service Identity
