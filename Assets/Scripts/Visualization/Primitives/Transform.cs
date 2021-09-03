@@ -7,11 +7,25 @@ namespace Labust.Visualization.Primitives
     public class Transform : DrawGizmo
     {
         UnityEngine.Transform _transform;
-        Visualizer _visualizer;
+        private Line _xLine;
+        private Line _yLine;
+        private Line _zLine;
         public Transform(UnityEngine.Transform transform)
         {
             _transform = transform;
-            _visualizer = GameObject.FindObjectOfType<Visualizer>();
+            var origin = _transform.TransformPoint(Vector3.zero);
+            var x = _transform.TransformPoint(Vector3.right);
+            var y = _transform.TransformPoint(Vector3.up);
+            var z = _transform.TransformPoint(Vector3.forward);
+
+            _xLine = new Line(origin, x);
+            _xLine.LineColor = Color.red;
+
+            _yLine = new Line(origin, y);
+            _yLine.LineColor = Color.green;
+
+            _zLine = new Line(origin, z);
+            _zLine.LineColor = Color.blue;
         }
 
         public void Draw()
@@ -20,14 +34,26 @@ namespace Labust.Visualization.Primitives
             var x = _transform.TransformPoint(Vector3.right);
             var y = _transform.TransformPoint(Vector3.up);
             var z = _transform.TransformPoint(Vector3.forward);
-            Gizmos.DrawSphere(origin, _visualizer.pointSize);
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(origin, x);
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(origin, y);
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(origin, z);
+            
+            _xLine.StartPoint = origin;
+            _xLine.EndPoint = x;
+
+            _yLine.StartPoint = origin;
+            _yLine.EndPoint = y;
+
+            _zLine.StartPoint = origin;
+            _zLine.EndPoint = z;
+
+            _xLine.Draw();
+            _yLine.Draw();
+            _zLine.Draw();
+        }
+
+        public void Destroy()
+        {
+            _xLine.Destroy();
+            _yLine.Destroy();
+            _zLine.Destroy();
         }
     }
-
 }
