@@ -1,83 +1,121 @@
 using System.Collections.Generic;
 using Labust.Visualization.Primitives;
+using Labust.Utils;
 using UnityEngine;
+using System.IO;
 
 namespace Labust.Visualization
 {
-    public class Visualizer : MonoBehaviour
-    {
-        
-        public Color pointColor = Color.blue;
-        public float lineThickness = 5f;
+	/// <summary>
+	/// This is a singleton class used for drawing points and paths for visualizatoin purposes.
+	/// You can add points and paths with a string key tag for easy selective destroying of visualization objects.
+	/// </summary>
+	public class Visualizer : GenericSingleton<Visualizer>
+	{
+		
+		public Color pointColor = Color.yellow;
 
-        [Range(0, 1)]
-        public float pointSize = 0.1f;
-        private static Visualizer _instance;
-        private List<DrawGizmo> _gizmos;
+		[Range(0, 1)]
+		public float pointSize = 0.1f;
+		
+		[Range(0, 1)]
+		public float lineThickness = 0.05f;
+		public Color lineColor = Color.red;
+		private Dictionary<string, List<DrawGizmo>> _gizmos = new Dictionary<string, List<DrawGizmo>>();
+		
+		void Start()
+		{
+			/*   
+			var boat = GameObject.Find("Target");
+			AddTransform(boat.transform, "test transform");
 
-        void Start()
-        {
-            // TEST DRAW FUNCTIONALITY
-            AddPath(new Vector3[] {new Vector3(0, 0, 0), new Vector3(1, 1, 1), new Vector3(2, 0, 0) });
+			AddPoint(new Vector3(0, 2, 10), "test point", 0.5f);
 
-            var boat = GameObject.Find("Boat1");
-            AddTransform(boat.transform);
+			List<Vector3> path = new List<Vector3> {new Vector3(0, 1, 0), new Vector3(14, 1, 0), new Vector3(25, 1, 0)};
+			AddPath(path, "test point");
+			*/
+		}
 
-            AddPoint(new Vector3(2, 2, 2));
-            AddPoint(new Vector3(2, 2, 3));
-            AddPath(new Vector3[] {new Vector3(0, 0, 0), new Vector3(1, 1, 1), new Vector3(2, 0, 0) });
-        }
-        
-        public static Visualizer Instance 
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    var obj = GameObject.FindObjectOfType<Visualizer>();
-                    if (obj != null)
-                    {
-                        _instance = obj;
-                        return _instance;
-                    }
-                    GameObject newInstance = new GameObject();
-                    newInstance.name = nameof(Visualizer);
-                    DontDestroyOnLoad(newInstance);
-                    _instance = newInstance.AddComponent<Visualizer>();
-                    return _instance;
-                }
-                return _instance;
-            }
-        }
+		public void AddPoint(Vector3 pointInWorld, string key)
+		{
+			if (!_gizmos.ContainsKey(key))
+			{
+				_gizmos[key] = new List<DrawGizmo>();
+			}
+			_gizmos[key].Add((DrawGizmo) new Point(pointInWorld));
+		}
 
-        private Visualizer() : base()
-        {
-            _gizmos = new List<DrawGizmo>();
-        }
+		public void AddPoint(Vector3 pointInWorld, string key, float pointSize)
+		{
+			if (!_gizmos.ContainsKey(key))
+			{
+				_gizmos[key] = new List<DrawGizmo>();
+			}
+			_gizmos[key].Add((DrawGizmo) new Point(pointInWorld, pointSize));
+		}
 
+		public void AddPoint(Vector3 pointInWorld, string key, float pointSize, Color pointColor)
+		{
+			if (!_gizmos.ContainsKey(key))
+			{
+				_gizmos[key] = new List<DrawGizmo>();
+			}
+			_gizmos[key].Add((DrawGizmo) new Point(pointInWorld, pointSize, pointColor));
+		}
 
-        public void AddPoint(Vector3 pointInWorld)
-        {
-            _gizmos.Add(new Point(pointInWorld));
-        }
+		public void AddPath(List<Vector3> pointsInWorld, string key)
+		{
+			if (!_gizmos.ContainsKey(key))
+			{
+				_gizmos[key] = new List<DrawGizmo>();
+			}
+			_gizmos[key].Add((DrawGizmo) new LinearPath(pointsInWorld, pointSize, pointColor, lineThickness, lineColor));
+		}
 
-        public void AddPath(Vector3[] pointsInWorld)
-        {
-            _gizmos.Add(new LinearPath(pointsInWorld));
-        }
+		public void AddPath(List<Vector3> pointsInWorld, string key, Color _pointColor)
+		{
+			if (!_gizmos.ContainsKey(key))
+			{
+				_gizmos[key] = new List<DrawGizmo>();
+			}
+			_gizmos[key].Add((DrawGizmo) new LinearPath(pointsInWorld, pointSize, _pointColor, lineThickness, lineColor));
+		}
+		
+		public void AddPath(LinearPath path, string key)
+		{
+			if (!_gizmos.ContainsKey(key))
+			{
+				_gizmos[key] = new List<DrawGizmo>();
+			}
+			_gizmos[key].Add((DrawGizmo) path);
+		}
 
-        public void AddTransform(UnityEngine.Transform transform)
-        {
-            _gizmos.Add(new Labust.Visualization.Primitives.Transform(transform));
-        }
+		public void AddTransform(UnityEngine.Transform transform, string key)
+		{
+			if (!_gizmos.ContainsKey(key))
+			{
+				_gizmos[key] = new List<DrawGizmo>();
+			}
+			_gizmos[key].Add((DrawGizmo) new Labust.Visualization.Primitives.Transform(transform));
+		}
 
-
-        void OnDrawGizmos()
-        {
-            for (var i = 0; i < _gizmos.Count; i++)
-            {
-                _gizmos[i].Draw();
-            }
-        }
-    }
+		public void FlushKey(string key)
+		{
+			foreach (DrawGizmo gizmo in _gizmos[key])
+			{
+				gizmo.Destroy();
+			}
+			_gizmos.Remove(key);
+		}
+		void Update()
+		{
+			foreach (var list in _gizmos.Values)
+			{
+				foreach (var gizmo in list)
+				{
+					gizmo.Draw();
+				}
+			}
+		}
+	}
 }
