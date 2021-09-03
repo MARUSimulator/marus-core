@@ -6,11 +6,12 @@ using Labust.Sensors.Primitive.GenericMedium;
 using Labust.Networking;
 using Sensorstreaming;
 
-namespace Labust.Sensors.AIS 
+namespace Labust.Sensors.AIS
 {
 	/// <summary>
 	///  This class implements AIS capabilities.
 	/// </summary>
+	[RequireComponent(typeof(AISSensor))]
 	public class AISDevice : MediumDeviceBase<AISMessage>
 	{	
 		/// <summary>
@@ -46,7 +47,7 @@ namespace Labust.Sensors.AIS
 		private AISSensor aisSensor;
 		
 
-		public void Awake()
+		public void Start()
 		{
 			
 			if (string.IsNullOrEmpty(MMSI))
@@ -58,7 +59,6 @@ namespace Labust.Sensors.AIS
 			AISMedium = AISManager.Instance;
 			AISMedium.Register(this);
 			aisSensor = GetComponent<AISSensor>();
-			
 
 			geoSensor = GetComponent<GNSSSensor>();
 		}

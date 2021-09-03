@@ -15,11 +15,11 @@ namespace Labust.Visualization
         /// Position sample rate in Hz.
         /// </summary>
         public float SampleRateHz = 5;
+
         ///	<summary>
         /// Minimum distance in meters between points to be recorded.
         /// </summary>
         private float MinimumDistanceDelta = 0.1f;
-
         private float _timer = 0f;
         private string _fileName;
         private Vector3 _lastPosition;

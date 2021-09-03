@@ -7,7 +7,8 @@ using UnityEngine;
 namespace Labust.Visualization.Primitives
 {
     /// <summary>
-    /// Draw path as by-part linear using builtin LineRenderer to draw lines.
+    /// Draw path as by-part linear.
+    /// If Transform[] is given in the constructor, follow the transform origins of every point in every frame
     /// </summary>
     public class Path : VisualElement
     {
@@ -15,17 +16,14 @@ namespace Labust.Visualization.Primitives
         /// Line thickness
         /// </summary>
         public float LineThickness = 0.05f;
-
         /// <summary>
         /// Line color
         /// </summary>
         public Color LineColor = Color.yellow;
-
         /// <summary>
         /// Point size
         /// </summary>
         public float PointSize = 0.1f;
-
         /// <summary>
         /// Point color
         /// </summary>
@@ -36,18 +34,12 @@ namespace Labust.Visualization.Primitives
         /// </summary>
         private List<Point> _points;
 
-        /// <summary>
-        /// Empty GameObject used to add LineRenderer component to it
-        /// </summary>
         private GameObject line;
-
-        /// <summary>
-        /// LineRenderer component which draws lines
-        /// </summary>
         private LineRenderer lr;
 
         /// <summary>
-        /// Empty constructor which initializes empty _points list and LineRenderer
+        /// Empty constructor which initializes empty _points list and empty 
+        /// _startPointLineDict dictionary
         /// </summary>
         public Path()
         {
@@ -56,21 +48,21 @@ namespace Labust.Visualization.Primitives
         }
 
         /// <summary>
-        /// Constructor which initializes empty _points list and LineRenderer
-        /// and sets line color
+        /// Constructor which initializes empty _points list and empty
+        /// _startPointLineDict dictionary and sets line color and line thickness.
         /// </summary>
-        public Path(float lineThickness, Color lc)
+        public Path(float LineThickness, Color lc)
         {
-            LineThickness = lineThickness;
+            this.LineThickness = LineThickness;
             _points = new List<Point>();
             LineColor = lc;
             InitLineRenderer();
         }
 
         /// <summary>
-        /// Constructor which initializes _points list from given list parameter
-        /// and LineRenderer
+        /// Constructor which initializes path from list of points.
         /// </summary>
+        /// <param name="pointsInWorld">List of points to create a path from.</param>
         public Path(List<Vector3> pointsInWorld)
         {
             _points = new List<Point>();
@@ -82,9 +74,13 @@ namespace Labust.Visualization.Primitives
         }
 
         /// <summary>
-        /// Constructor which initializes _points list from given list parameter
-        /// and sets point size, point color, line thickness and line color
+        /// Constructor which initializes path from given points and sets all the path properties.
         /// </summary>
+        /// <param name="pointsInWorld">List of points</param>
+        /// <param name="_PointSize">Point size</param>
+        /// <param name="_PointColor">Point color</param>
+        /// <param name="_LineThickness">Line thickness</param>
+        /// <param name="_LineColor">Line color</param>
         public Path(List<Vector3> pointsInWorld, float _PointSize, Color _PointColor, float _LineThickness, Color _LineColor)
         {
             _points = new List<Point>();
@@ -99,8 +95,9 @@ namespace Labust.Visualization.Primitives
             InitLineRenderer();
         }
 
+
         /// <summary>
-        /// Initializes LineRenderer object and sets it's material, color and thickness properties.
+        /// Initializes LineRenderer component and sets material, color and thickness of line.
         /// </summary>
         private void InitLineRenderer()
         {
@@ -126,18 +123,20 @@ namespace Labust.Visualization.Primitives
         }
 
         /// <summary>
-        /// Adds Vector3 representation of point in space to path.
+        /// Adds a single point to existing path.
         /// </summary>
-        /// <param name="point"></param>
+        /// <param name="point">Point to add</param>
         public void AddPointToPath(Vector3 point)
         {
             _points.Add(new Point(point));
         }
 
-        /// <summary>
-        /// Adds Vector3 representation of point in space to path and sets it's size and color.
+        // <summary>
+        /// Adds a single point to existing path with given size and color.
         /// </summary>
-        /// <param name="point"></param>
+        /// <param name="point">Point to add</param>
+        /// <param name="PointSize">Point size</param>
+        /// <param name="PointColor">Point color</param>
         public void AddPointToPath(Vector3 point, float PointSize, Color PointColor)
         {
             _points.Add(new Point(point, PointSize, PointColor));
@@ -169,7 +168,6 @@ namespace Labust.Visualization.Primitives
             {
                 lr.positionCount = i + 1;
                 _points[i].Draw();
-
                 lr.SetPosition(i, _points[i].Position);
             }
         }

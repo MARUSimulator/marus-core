@@ -27,10 +27,9 @@ namespace Labust.Visualization.Primitives
         /// Line color
         /// </summary>
         public Color LineColor = Color.yellow;
-        
+
         private GameObject line;
         private LineRenderer lr;
-        
 
         public Line()
         {
@@ -84,7 +83,7 @@ namespace Labust.Visualization.Primitives
         }
 
         private void InitLineRenderer()
-        {	
+        {
             if (line == null)
             {
                 line = new GameObject();
@@ -96,7 +95,7 @@ namespace Labust.Visualization.Primitives
                 lr = line.GetComponent<LineRenderer>();
                 lr.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
             }
-            
+
             float alpha = 1.0f;
             Gradient gradient = new Gradient();
             gradient.SetKeys(
@@ -104,12 +103,12 @@ namespace Labust.Visualization.Primitives
                 new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }
             );
             lr.colorGradient = gradient;
-    
+
             // set width of the renderer
             lr.startWidth = Thickness;
             lr.endWidth = Thickness;
             // set layer to visualisation initially
             line.layer = 6;
-        }              
+        }
     }
 }

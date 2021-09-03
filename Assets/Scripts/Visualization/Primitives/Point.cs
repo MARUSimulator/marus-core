@@ -10,7 +10,7 @@ namespace Labust.Visualization.Primitives
     public class Point : VisualElement
     {
         /// <summary>
-        /// Positionof point in space
+        /// Position of point in space
         /// </summary>
         public Vector3 Position;
 

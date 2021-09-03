@@ -3,6 +3,7 @@ using Labust.Visualization.Primitives;
 using Labust.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Labust.Visualization.Primitives;
 
 namespace Labust.Visualization
 {
@@ -11,7 +12,7 @@ namespace Labust.Visualization
     /// You can add points and paths with a string key tag for easy selective destroying of visualization objects.
     /// Note: Visualizer object is not needed for drawing VisualElement objects.
     /// </summary>
-    public class Visualizer : GenericSingleton<Visualizer>
+    public class Visualizer : Singleton<Visualizer>
     {
         /// <summary>
         /// Point color default if not provided any other way
@@ -49,7 +50,7 @@ namespace Labust.Visualization
 
         private void OnSceneChange(Scene oldScene, Scene newScene)
         {
-            _gizmos.Clear();
+            _visualElements.Clear();
         }
 
         void Start()

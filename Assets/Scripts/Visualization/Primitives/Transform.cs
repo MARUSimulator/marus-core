@@ -1,26 +1,24 @@
-
 using UnityEditor;
 using UnityEngine;
 
 namespace Labust.Visualization.Primitives
 {
     /// <summary>
-    /// Class to draw direction of x, y and z axes of GameObject transform
+    /// Implements visual representation of GameObject's transform.
+    /// Lines are drawn from center of the object in each of the axes' direction.
     /// </summary>
     public class Transform : VisualElement
     {
-        /// <summary>
-        /// Transform reference of the GameObject
-        /// </summary>
-        public UnityEngine.Transform _transform;
+        UnityEngine.Transform _transform;
+
         private Line _xLine;
         private Line _yLine;
         private Line _zLine;
 
         /// <summary>
-        /// Constructor to initialize Transfrom visual representation.
+        /// Constructor which initializes visual element with gameobject's transform reference.
         /// </summary>
-        /// <param name="transform">GameObject's transform property reference.</param>
+        /// <param name="transform"></param>
         public Transform(UnityEngine.Transform transform)
         {
             _transform = transform;
@@ -40,7 +38,7 @@ namespace Labust.Visualization.Primitives
         }
 
         /// <summary>
-        /// Draws transform visual
+        /// Draws transform
         /// </summary>
         public void Draw()
         {
@@ -64,7 +62,7 @@ namespace Labust.Visualization.Primitives
         }
 
         /// <summary>
-        /// Destroys Transform visual object
+        /// Destroys and removes transform
         /// </summary>
         public void Destroy()
         {
