@@ -24,6 +24,10 @@ namespace Labust.Controllers
 
 		public void FixedUpdate()
 		{  
+			if (Target == null)
+			{
+				return;
+			}
 			RotateTowards();
 			MoveTowards();
 		}
