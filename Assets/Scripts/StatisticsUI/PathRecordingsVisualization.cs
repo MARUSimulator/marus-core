@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,14 +11,12 @@ namespace Labust.StatisticsUI
 {
 	public class PathRecordingsVisualization : MonoBehaviour
 	{
-		Button m_Button;
-		Dropdown m_Dropdown;
-
-		Visualizer visualizer;
+		private Button m_Button;
+		private Dropdown m_Dropdown;
 		
 		private List<StatisticsEntry> activePaths;
 
-		List<string> pathRecordings;
+		private List<string> pathRecordings;
 		
 		private GameObject i1;
 		private GameObject i2;
@@ -47,6 +44,20 @@ namespace Labust.StatisticsUI
 			m_Dropdown.ClearOptions();
 			m_Dropdown.AddOptions(pathRecordings);
 			path.gameObject.SetActive(false);
+		}
+
+		public void RefreshPaths()
+		{
+			pathRecordings = GetRecordings();
+			foreach (StatisticsEntry entry in activePaths)
+			{
+				if (pathRecordings.Contains(entry.FileName))
+				{
+					pathRecordings.Remove(entry.FileName);
+				}
+			}
+			m_Dropdown.ClearOptions();
+			m_Dropdown.AddOptions(pathRecordings);
 		}
 
 		private void AddDiverPath()
@@ -98,6 +109,7 @@ namespace Labust.StatisticsUI
 		public string FileName;
 
 		private Slider _slider;
+		private Slider _lineSlider;
 		private Button _removeButton;
 		private Dropdown _colorDropdown;
 		private Image _colorRepr;
@@ -127,6 +139,12 @@ namespace Labust.StatisticsUI
 			_slider.maxValue = 2f;
 			_slider.value = 0.5f;
 			_slider.onValueChanged.AddListener(delegate {ChangeSize();});
+
+			_lineSlider = transform.Find("LineWidthSlider").gameObject.GetComponent<Slider>();
+			_lineSlider.minValue = 0.01f;
+			_lineSlider.maxValue = 5f;
+			_lineSlider.value = 0.05f;
+			_lineSlider.onValueChanged.AddListener(delegate {ChangeLineSize();});
 			
 			_removeButton = transform.Find("DisableButton").gameObject.GetComponent<Button>();
 			_removeButton.onClick.AddListener(RemovePath);
@@ -157,6 +175,14 @@ namespace Labust.StatisticsUI
 			if (path != null)
 			{
 				path.SetPointSize(_slider.value);
+			}
+		}
+
+		void ChangeLineSize()
+		{
+			if (path != null)
+			{
+				path.SetLineThickness(_lineSlider.value);
 			}
 		}
 
