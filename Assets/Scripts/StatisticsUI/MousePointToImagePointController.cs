@@ -26,7 +26,7 @@ namespace Labust.StatisticsUI
 				return;
 			}
 
-			topDownCamera.transform.position -= new Vector3(0, Input.mouseScrollDelta.y * ZoomScale, 0) * 10;
+			topDownCamera.orthographicSize -= Input.mouseScrollDelta.y * ZoomScale;
 
 			if ( Input.GetMouseButtonDown(0) )
 			{
