@@ -13,6 +13,8 @@ public class WhaleController : MonoBehaviour
 		private float period;
 		private float distanceDelta;
 		RaycastHit hit;
+		RaycastHit hit1;
+		RaycastHit hit2;
 
 		void Start()
 		{
@@ -20,11 +22,11 @@ public class WhaleController : MonoBehaviour
 			period = Random.Range(3.0f, 15.0f);
 			speed = Random.Range(0.5f, 1.5f);
 			lastSpeed = speed;
-			rotationSpeed = Random.Range(0.0f, 20.0f);
+			rotationSpeed = Random.Range(0.0f, 1.5f);
 
-			float x = Random.Range(0, 250);
-			float z = Random.Range(100, 600);
-			transform.position = new Vector3(x, 20, z);
+			float x = Random.Range(220, 580);
+			float z = Random.Range(220, 580);
+			transform.position = new Vector3(x, 45, z);
 
 			float x1 = transform.eulerAngles.x;
 			float y1 = Random.Range(0, 180);
@@ -47,27 +49,25 @@ public class WhaleController : MonoBehaviour
 				ray = new Ray(transform.position, transform.forward);
 			}
 			
-			Ray ray1 = new Ray(transform.position, -transform.right);
-			Ray ray2 = new Ray(transform.position, transform.right);
-			if (Physics.Raycast(ray, out hit) || Physics.Raycast(ray1, out hit) || Physics.Raycast(ray2, out hit))
+			Ray ray1 = new Ray(transform.position, transform.right);
+			Ray ray2 = new Ray(transform.position, -transform.right);
+			Physics.Raycast(ray, out hit);
+			Physics.Raycast(ray1, out hit1);
+			Physics.Raycast(ray2, out hit2);
+			//if (Physics.Raycast(ray, out hit) || Physics.Raycast(ray1, out hit1) || Physics.Raycast(ray2, out hit2))
+			//{
+			if (hit.distance < 100 || hit1.distance < 100 || hit2.distance < 100)
 			{
-				if (hit.distance < 20 && speed > 0)
-				{
-					lastSpeed = speed;
-					speed = 0;
-					return;
-				}
-				else if (hit.distance < 10 && speed == 0)
-				{
-					currentEulerAngles += new Vector3(0, 1, 0) * Time.deltaTime * rotationSpeed * 40;
-					transform.eulerAngles = currentEulerAngles;
-					return;
-				}
-				else
-				{
-					speed = lastSpeed;
-				}
+				speed = 2;
+				currentEulerAngles += new Vector3(0, 1, 0) * Time.deltaTime * 20;
+				transform.eulerAngles = currentEulerAngles;
+				return;
 			}
+			else
+			{
+				speed = lastSpeed;
+			}
+			//}
 
 			timer += Time.deltaTime;
 			if (InvertMovement)
@@ -82,11 +82,11 @@ public class WhaleController : MonoBehaviour
 
 			if (timer >= period)
 			{
-				mod = mod * (-1);
+				//mod = mod * (-1);
 				timer = 0;
 				period = Random.Range(3.0f, 15.0f);
-				speed = Random.Range(0.5f, 3.0f);
-				rotationSpeed = Random.Range(0.0f, 20.0f);
+				speed = Random.Range(0.5f, 1.5f);
+				rotationSpeed = Random.Range(0.0f, 1.5f);
 			}
 			currentEulerAngles += new Vector3(0, 1, 0) * Time.deltaTime * rotationSpeed * mod;
 			transform.eulerAngles = currentEulerAngles;
