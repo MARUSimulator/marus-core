@@ -2,16 +2,18 @@ using UnityEngine;
 
 public class MovePlayer : MonoBehaviour
 {
+    ///<summary>
+    ///This class implements basic WASD player controller
+    ///Q and E represent up and down, respectively.
+    ///<summary/>
+
     public Rigidbody rb;
     public Transform player;
     public float speed = 2f;
     public Vector3 AngleVelocity = new Vector3(0, 30, 0); // deg/sec
 
-
-    // Update is called once per frame
     void FixedUpdate()
     {   
-        
         if (Input.GetKey(KeyCode.W))
         {
             //Move forward
@@ -38,12 +40,13 @@ public class MovePlayer : MonoBehaviour
         }
         if(Input.GetKey(KeyCode.Q))
         {
+            //Move up
             rb.AddForce(0, speed * Time.deltaTime, 0, ForceMode.VelocityChange);
         }
         if(Input.GetKey(KeyCode.E))
         {
+            //Move down
             rb.AddForce(0, -speed * Time.deltaTime, 0, ForceMode.VelocityChange);
         }
-
     }
 }

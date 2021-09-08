@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class WhaleController : MonoBehaviour
 {
+		/// <summary>
+		/// This class implements controller for whale object.
+		/// </summary>
+
 		public float speed = 0.05f;
 		public bool InvertMovement = true;
 		private float lastSpeed;
@@ -32,7 +36,6 @@ public class WhaleController : MonoBehaviour
 			float y1 = Random.Range(0, 180);
 			float z1 = transform.eulerAngles.z;
 			transform.eulerAngles = new Vector3(x1, y1, z1);
-
 			lastPosition = transform.position;
 
 		}
@@ -40,6 +43,7 @@ public class WhaleController : MonoBehaviour
 		void Update()
 		{	
 			Ray ray;
+			
 			if (InvertMovement)
 			{
 				ray = new Ray(transform.position, -transform.forward);
@@ -54,8 +58,7 @@ public class WhaleController : MonoBehaviour
 			Physics.Raycast(ray, out hit);
 			Physics.Raycast(ray1, out hit1);
 			Physics.Raycast(ray2, out hit2);
-			//if (Physics.Raycast(ray, out hit) || Physics.Raycast(ray1, out hit1) || Physics.Raycast(ray2, out hit2))
-			//{
+
 			if (hit.distance < 100 || hit1.distance < 100 || hit2.distance < 100)
 			{
 				speed = 2;
@@ -67,7 +70,6 @@ public class WhaleController : MonoBehaviour
 			{
 				speed = lastSpeed;
 			}
-			//}
 
 			timer += Time.deltaTime;
 			if (InvertMovement)
@@ -78,17 +80,14 @@ public class WhaleController : MonoBehaviour
 			{
 				transform.position += transform.forward * Time.deltaTime * speed;
 			}
-			
-
 			if (timer >= period)
 			{
-				//mod = mod * (-1);
 				timer = 0;
 				period = Random.Range(3.0f, 15.0f);
 				speed = Random.Range(0.5f, 1.5f);
 				rotationSpeed = Random.Range(0.0f, 1.5f);
 			}
-			currentEulerAngles += new Vector3(0, 1, 0) * Time.deltaTime * rotationSpeed * mod;
+			currentEulerAngles += new Vector3(0, 1, 0) * Time.deltaTime * rotationSpeed;
 			transform.eulerAngles = currentEulerAngles;
 
 		}
