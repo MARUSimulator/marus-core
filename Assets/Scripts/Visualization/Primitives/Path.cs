@@ -129,7 +129,12 @@ namespace Labust.Visualization.Primitives
 			{
 				p.Destroy();
 			}
-			UnityEngine.Object.Destroy(lr.gameObject);
+			_points.Clear();
+			
+			if (lr != null)
+			{
+				UnityEngine.Object.Destroy(lr.gameObject);
+			}
 		}
 
 		public void SetPointSize(float size)

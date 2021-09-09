@@ -13,13 +13,16 @@ namespace Labust.StatisticsUI
 	{
 		private Button m_Button;
 		private Dropdown m_Dropdown;
+		private Slider _slider;
+		private ScrollRect _scrollView;
 		
 		private List<StatisticsEntry> activePaths;
 
 		private List<string> pathRecordings;
+
+		public UnityEngine.Transform _scrollViewContent;
 		
-		private GameObject i1;
-		private GameObject i2;
+		public GameObject tripInfo;
 		
 		void Start()
 		{
@@ -28,12 +31,15 @@ namespace Labust.StatisticsUI
 			m_Dropdown = GetComponentInChildren<Dropdown>();
 			pathRecordings = GetRecordings();
 			m_Dropdown.AddOptions(pathRecordings);
-
-			i1 = GameObject.Find("TripInfo1");
-			i1.SetActive(false);
-			i2 = GameObject.Find("TripInfo2");
-			i2.SetActive(false);
 			activePaths = new List<StatisticsEntry>();
+
+			_slider = GameObject.Find("PointSizeSlider").GetComponent<Slider>();
+			_slider.minValue = 0.01f;
+			_slider.maxValue = 4f;
+			_slider.value = 1f;
+			_slider.onValueChanged.AddListener(delegate {ChangePointSize();});
+
+			_scrollView = GetComponentInChildren<ScrollRect>();
 		}
 
 		public void RemovePath(StatisticsEntry path)
@@ -43,7 +49,7 @@ namespace Labust.StatisticsUI
 			pathRecordings.Add(path.FileName);
 			m_Dropdown.ClearOptions();
 			m_Dropdown.AddOptions(pathRecordings);
-			path.gameObject.SetActive(false);
+			Destroy(path.gameObject);
 		}
 
 		public void RefreshPaths()
@@ -62,19 +68,13 @@ namespace Labust.StatisticsUI
 
 		private void AddDiverPath()
 		{
+			GameObject t = Instantiate(tripInfo) as GameObject;
+			t.transform.SetParent(_scrollViewContent, false);
+
 			string _filename = pathRecordings[m_Dropdown.value];
 			StatisticsEntry se;
-			if (!i1.activeSelf)
-			{
-				i1.SetActive(true);
-				se = i1.AddComponent(typeof(StatisticsEntry)) as StatisticsEntry;
-				
-			}
-			else
-			{
-				i2.SetActive(true);
-				se = i2.AddComponent(typeof(StatisticsEntry)) as StatisticsEntry;
-			}
+			se = t.AddComponent(typeof(StatisticsEntry)) as StatisticsEntry;
+			
 			se.FileName = _filename;
 			se.ParentController = this;
 			activePaths.Add(se);
@@ -97,9 +97,28 @@ namespace Labust.StatisticsUI
 				{
 					recordings.Add(f);
 				}
-				
 			}
 			return recordings;
+		}
+
+		public void ChangePointSize()
+		{
+			foreach (StatisticsEntry se in activePaths)
+			{
+				se.ChangeSize(_slider.value);
+			}
+		}
+
+		public void ToggleScroll()
+		{
+			if (_scrollView.isActiveAndEnabled == true)
+			{
+				_scrollView.enabled = false;
+			}
+			else
+			{
+				_scrollView.enabled = true;
+			}
 		}
 	}
 
@@ -107,74 +126,95 @@ namespace Labust.StatisticsUI
 	{
 		public PathRecordingsVisualization ParentController;
 		public string FileName;
-
-		private Slider _slider;
+		private GameObject _colorPicker;
 		private Slider _lineSlider;
 		private Button _removeButton;
-		private Dropdown _colorDropdown;
+		private Button _colorButton;
 		private Image _colorRepr;
+		private Text _name;
 		private UnityEngine.Transform _labels;
-		private Visualizer visualizer;
-
 		private List<Color> colors = new List<Color> {Color.white, Color.yellow, Color.green, Color.red};
 		private List<string> colorOptions = new List<string> {"White", "Yellow", "Green", "Red"};
 		private LinearPath path;
 		private Color activeColor;
-
+		private Color lastColor;
 		private List<Vector3> pathPositions;
 		private List<double> pathTimestamps;
 		
-		
 		void Start()
 		{
+			_colorPicker = transform.Find("FlexibleColorPicker").gameObject;
+			_colorPicker.SetActive(false);
+			
+			_colorRepr = transform.Find("ColorMarker").gameObject.GetComponent<Image>();
+			_colorRepr.color = Color.white;
+
 			pathPositions = new List<Vector3>();
 			pathTimestamps = new List<double>();
 
-			visualizer = Visualizer.Instance;
-
 			_labels = transform.Find("Labels");
 
-			_slider = transform.Find("PointSizeSlider").gameObject.GetComponent<Slider>();
-			_slider.minValue = 0.01f;
-			_slider.maxValue = 2f;
-			_slider.value = 0.5f;
-			_slider.onValueChanged.AddListener(delegate {ChangeSize();});
-
-			_lineSlider = transform.Find("LineWidthSlider").gameObject.GetComponent<Slider>();
+			_lineSlider = transform.Find("LineWidthSlider").GetComponent<Slider>();
 			_lineSlider.minValue = 0.01f;
 			_lineSlider.maxValue = 5f;
 			_lineSlider.value = 0.05f;
 			_lineSlider.onValueChanged.AddListener(delegate {ChangeLineSize();});
-			
+
 			_removeButton = transform.Find("DisableButton").gameObject.GetComponent<Button>();
 			_removeButton.onClick.AddListener(RemovePath);
-
-			_colorDropdown = transform.Find("ColorDropdown").gameObject.GetComponent<Dropdown>();
-			_colorDropdown.ClearOptions();
-			_colorDropdown.AddOptions(colorOptions);
-			_colorRepr = transform.Find("ColorMarker").gameObject.GetComponent<Image>();
-			_colorDropdown.onValueChanged.AddListener(delegate {ChangeColor();});
-			ChangeColor();
-
-			DrawPath();
+		
+			_name = transform.Find("PathNameLabel").gameObject.GetComponent<Text>();
+			_name.text = FileName;
+		
+			_colorButton = transform.Find("ChangeColorButton").gameObject.GetComponent<Button>();
+			_colorButton.onClick.AddListener(ChooseColor);
+			activeColor = Color.white;
+			lastColor = Color.white;
+			ChangeLineSize();
 			
+			DrawPath();
+			ParentController.ChangePointSize();
 		}
+
+		void ChooseColor()
+		{
+			if (_colorPicker.activeSelf)
+			{
+				_colorPicker.SetActive(false);
+				ParentController.ToggleScroll();
+				transform.Find("ChangeColorButton").gameObject.GetComponentInChildren<Text>().text = "Change color";
+			}
+			else
+			{
+				_colorPicker.SetActive(true);
+				ParentController.ToggleScroll();
+				transform.Find("ChangeColorButton").gameObject.GetComponentInChildren<Text>().text = "OK";
+			}
+		}
+
+		void Update()
+		{
+			if (_colorPicker != null &&_colorPicker.activeSelf)
+			{
+				activeColor = _colorPicker.GetComponent<FlexibleColorPicker>().color;
+				ChangeColor();
+			}
+		}
+
 		void ChangeColor()
 		{
-			activeColor = colors[_colorDropdown.value];
 			_colorRepr.color = activeColor;
-
 			if (path != null)
 			{
 				path.SetPointColor(activeColor);
 			}
 		}
 
-		void ChangeSize()
+		public void ChangeSize(float value)
 		{
 			if (path != null)
 			{
-				path.SetPointSize(_slider.value);
+				path.SetPointSize(value);
 			}
 		}
 
@@ -192,6 +232,7 @@ namespace Labust.StatisticsUI
 			ParentController.RemovePath(this);
 
 		}
+
 		void DrawPath()
 		{
 			var completeFilename = Path.Combine(Application.dataPath, "PathRecordings") + FileName;
@@ -235,7 +276,6 @@ namespace Labust.StatisticsUI
 			GameObject o3 = _labels.Find("MaxDepthVariableLabel").gameObject;
 			Text t3 = o3.GetComponent<Text>();
 			t3.text = string.Format("{0:0.##} meters", maxDepth);
-
 		}
 	}
 }
