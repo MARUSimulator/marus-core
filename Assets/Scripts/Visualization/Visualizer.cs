@@ -25,14 +25,15 @@ namespace Labust.Visualization
 		
 		void Start()
 		{
-			/*   
+			/*
 			var boat = GameObject.Find("Target");
 			AddTransform(boat.transform, "test transform");
 
 			AddPoint(new Vector3(0, 2, 10), "test point", 0.5f);
 
 			List<Vector3> path = new List<Vector3> {new Vector3(0, 1, 0), new Vector3(14, 1, 0), new Vector3(25, 1, 0)};
-			AddPath(path, "test point");
+			//AddPath(path, "test path");
+			AddPath3D(path, "test path");
 			*/
 		}
 
@@ -82,6 +83,33 @@ namespace Labust.Visualization
 		}
 		
 		public void AddPath(LinearPath path, string key)
+		{
+			if (!_gizmos.ContainsKey(key))
+			{
+				_gizmos[key] = new List<DrawGizmo>();
+			}
+			_gizmos[key].Add((DrawGizmo) path);
+		}
+
+		public void AddPath3D(List<Vector3> pointsInWorld, string key)
+		{
+			if (!_gizmos.ContainsKey(key))
+			{
+				_gizmos[key] = new List<DrawGizmo>();
+			}
+			_gizmos[key].Add((DrawGizmo) new Path3D(pointsInWorld, pointSize, pointColor, lineThickness, lineColor));
+		}
+
+		public void AddPath3D(List<Vector3> pointsInWorld, string key, Color _pointColor)
+		{
+			if (!_gizmos.ContainsKey(key))
+			{
+				_gizmos[key] = new List<DrawGizmo>();
+			}
+			_gizmos[key].Add((DrawGizmo) new Path3D(pointsInWorld, pointSize, _pointColor, lineThickness, lineColor));
+		}
+		
+		public void AddPath3D(Path3D path, string key)
 		{
 			if (!_gizmos.ContainsKey(key))
 			{
