@@ -93,5 +93,4 @@ namespace Labust.Visualization.Primitives
 			line.layer = 6;
 		}
 	}
-
 }

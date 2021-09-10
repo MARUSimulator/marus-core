@@ -20,14 +20,14 @@ namespace Labust.Visualization
 		public float MinimumDistanceDelta = 0.1f;
 
 		private float elapsedTime = 0;
-		private LinearPath path;
+		private Path3D path;
 		private Vector3 lastPosition;
 		private float lastPointSize;
 
 		void Awake()
 		{
 			lastPosition = transform.position;
-			path = new LinearPath(LineThickness, LineColor);
+			path = new Path3D(LineThickness, LineColor);
 			lastPointSize = PointSize;
 		}
 

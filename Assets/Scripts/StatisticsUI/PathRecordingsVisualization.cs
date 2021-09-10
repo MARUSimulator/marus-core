@@ -135,7 +135,7 @@ namespace Labust.StatisticsUI
 		private UnityEngine.Transform _labels;
 		private List<Color> colors = new List<Color> {Color.white, Color.yellow, Color.green, Color.red};
 		private List<string> colorOptions = new List<string> {"White", "Yellow", "Green", "Red"};
-		private LinearPath path;
+		private Path3D path;
 		private Color activeColor;
 		private Color lastColor;
 		private List<Vector3> pathPositions;
@@ -244,7 +244,7 @@ namespace Labust.StatisticsUI
 					pathTimestamps.Add(timestamp);
 				}
 			}
-			path = new LinearPath(pathPositions, 0.5f, activeColor, 0.05f, Color.red);
+			path = new Path3D(pathPositions, 0.5f, activeColor, 0.05f, Color.red);
 
 			path.Draw();
 			CalculateStats();
