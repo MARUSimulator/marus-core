@@ -1,3 +1,4 @@
+#!/bin/bash
 createDirectory() {
     if [ ! -d $1 ]; then
         mkdir -p $1
@@ -58,10 +59,9 @@ else
 fi
 
 # Cleanup, remove Temp download directory since this is not needed anymore
-# rm -rf $DownloadPath ;
+rm -rf $DownloadPath ;
 
 echo "Setup successful. Press <ENTER> to exit.";
-read
 
 
 
