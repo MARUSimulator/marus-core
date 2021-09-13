@@ -18,7 +18,7 @@ namespace Labust.Sensors.AIS
 		/// AIS class type: A or B
 		/// More info <see cref="!:https://www.navcen.uscg.gov/?pageName=typesAIS">here.</see>
 		/// </summary>
-		public AISClassType AISType = AISClassType.ClassA;
+		public AISClassType ClassType = AISClassType.ClassA;
 
 		/// <summary>
 		/// Maritime Mobile Service Identity
@@ -68,7 +68,7 @@ namespace Labust.Sensors.AIS
 			
 			if (ActiveTransmission)
 			{
-				period = TimeIntervals.getInterval(AISClassType.ClassA, aisSensor.SOG);
+				period = TimeIntervals.getInterval(ClassType, aisSensor.SOG);
 				if (delta > period)
 				{	
 					aisSensor.PositionReport();
@@ -97,7 +97,7 @@ namespace Labust.Sensors.AIS
 		
 		private void SetRange()
 		{
-			if (AISType == AISClassType.ClassA)
+			if (ClassType == AISClassType.ClassA)
 			{	
 				// 75km range for 12.5W transponder
 				this.Range = 75f * 1000;

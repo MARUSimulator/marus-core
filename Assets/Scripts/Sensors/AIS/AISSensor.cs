@@ -37,7 +37,7 @@ namespace Labust.Sensors.AIS
 		public void FixedUpdate()
 		{
 			lastPosition = transform.position;
-			SensorUpdateHz = 1 / TimeIntervals.getInterval(aisDevice.AISType, SOG);
+			SensorUpdateHz = 1 / TimeIntervals.getInterval(aisDevice.ClassType, SOG);
 			PositionReport();
 
 		}
