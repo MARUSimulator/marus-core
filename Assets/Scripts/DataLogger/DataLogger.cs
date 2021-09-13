@@ -8,6 +8,11 @@ using UnityEngine.SceneManagement;
 
 namespace Labust.Logger
 {
+    /// <summary>
+    /// Singleton class used for data logging
+    ///
+    /// Resets on scene change
+    /// </summary>
     public class DataLogger : Singleton<DataLogger>
     {
 
@@ -25,6 +30,12 @@ namespace Labust.Logger
             _loggers.Clear();
         }
 
+        /// <summary>
+        /// Get logger for topic with given name
+        /// </summary>
+        /// <param name="topic"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public GameObjectLogger<T> GetLogger<T>(string topic)
         {
             if (_loggers.ContainsKey(topic))
@@ -46,6 +57,10 @@ namespace Labust.Logger
             return newLogger;
         }
 
+        /// <summary>
+        /// Export logs from all loggers 
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string, IReadOnlyList<LogRecord>> ExportAllLogs()
         {
             return _loggers.ToDictionary(
@@ -54,6 +69,11 @@ namespace Labust.Logger
             );
         }
 
+        /// <summary>
+        /// Export logs from logger with given topic name
+        /// </summary>
+        /// <param name="topic"></param>
+        /// <returns></returns>
         public IReadOnlyList<LogRecord> ExportLogsForTopic(string topic)
         {
             if (_loggers.TryGetValue(topic, out var logger))
@@ -65,6 +85,12 @@ namespace Labust.Logger
     }
 
 
+    /// <summary>
+    /// Logger for game object
+    /// 
+    /// Generic type determines the message data class that is saved
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public sealed class GameObjectLogger<T> : GameObjectLogger
     {
         List<LogRecord<T>> _records;
@@ -84,6 +110,9 @@ namespace Labust.Logger
 
     }
 
+    /// <summary>
+    /// Abstract game object logger
+    /// </summary>
     public abstract class GameObjectLogger
     {
         protected string _topic;
@@ -94,10 +123,11 @@ namespace Labust.Logger
             _topic = topic;
         }
 
-
-
     }
 
+    /// <summary>
+    /// Abstract data class that defines log record header information
+    /// </summary>
     public abstract class LogRecord
     {
         public DateTime TimeStamp { get; private set; }
@@ -110,6 +140,10 @@ namespace Labust.Logger
 
     }
 
+    /// <summary>
+    /// Log record with generic type as data value
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class LogRecord<T> : LogRecord
     {
         public T Value { get; private set; }
@@ -120,6 +154,4 @@ namespace Labust.Logger
         }
     }
 
-
-    
 }

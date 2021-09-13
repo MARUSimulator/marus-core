@@ -11,8 +11,17 @@ namespace Labust.Actuators
 
         public void ApplyPwm(float[] array)
         {
-            for (int i = 0; i < array.Length; i++)
-                thrusters[i].ApplyPwm(array[i]);
+            for (int i = 0; i < thrusters.Count; i++)
+            {
+                if (i < array.Length)
+                {
+                    thrusters[i].ApplyPwm(array[i]);
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
 
 

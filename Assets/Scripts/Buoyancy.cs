@@ -15,12 +15,12 @@ public class Buoyancy : MonoBehaviour
 {
     //	public Ocean ocean;
 
-    public float density = 500;
-    public int slicesPerAxis = 2;
+    public float density = 200;
+    public int slicesPerAxis = 5;
     public bool isConcave = false;
     private const int voxelsLimit = 10000;
 
-    public float drag = 0.1f;
+    public float drag = 0.05f;
     public float fluidDensity = 1000;
 
     private float voxelHalfHeight;

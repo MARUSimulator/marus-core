@@ -71,7 +71,9 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
-/Assets/Plugins/
+/Assets/Plugins/[Gg]rpc*
+/Assets/Plugins/[Gg]oogle*
+/Assets/Plugins/[Ss]ystem.*
 
 # Protobuf should be hidden
 API/Protobuf

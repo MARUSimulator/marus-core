@@ -13,6 +13,8 @@ namespace Labust.Core
 
     /// <summary>
     /// Class used to control simulation flow
+    /// 
+    /// Play, pause, restart, quit, OnSave, etc.
     /// </summary>
     public class SimulatorController : MonoBehaviour
     {
@@ -45,6 +47,9 @@ namespace Labust.Core
             }
         }
 
+        /// <summary>
+        /// Called from UI button. Not to be called directly
+        /// </summary>
         public void Pause()
         {
             timeScaleBeforePause = Time.timeScale;
@@ -53,6 +58,9 @@ namespace Labust.Core
             _isRunning = false;
         }
 
+        /// <summary>
+        /// Called from UI button. Not to be called directly
+        /// </summary>
         public void Resume()
         {
             PauseMenuUi.SetActive(false);
@@ -60,6 +68,9 @@ namespace Labust.Core
             _isRunning = true;
         }
 
+        /// <summary>
+        /// Called from UI button. Not to be called directly
+        /// </summary>
         public void Restart()
         {
             if (SaveOnExit)
@@ -70,6 +81,9 @@ namespace Labust.Core
             Resume();
         }
 
+        /// <summary>
+        /// Called from UI button. Not to be called directly
+        /// </summary>
         public void Exit()
         {
             if (SaveOnExit)
@@ -100,6 +114,10 @@ namespace Labust.Core
         }
     }
 
+
+    /// <summary>
+    /// Custom json converter for Unity Quaternion struct
+    /// </summary>   
     internal class UnityQuaternionJsonConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
@@ -130,6 +148,9 @@ namespace Labust.Core
         }
     }
 
+    /// <summary>
+    /// Custom json converter for Unity Vector struct
+    /// </summary>
     internal class UnityVectorJsonConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)

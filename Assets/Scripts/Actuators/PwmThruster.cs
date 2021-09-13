@@ -79,7 +79,7 @@ namespace Labust.Actuators
             // from kgf to N       
             float value = sheetData[step] * 9.80665f;
 
-            Vector3 force = -transform.forward * value;
+            Vector3 force = transform.forward * value;
             body.AddForceAtPosition(force, transform.position, ForceMode.Force);
             return true;
         }

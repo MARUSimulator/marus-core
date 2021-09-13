@@ -10,6 +10,7 @@ using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 using Sensorstreaming;
+using System.Threading;
 
 /// <summary>
 /// Lidar that cast N rays evenly distributed in configured field of view.
@@ -177,6 +178,9 @@ public class RaycastLidar : SensorBase<LidarStreamingRequest>
 
     void OnDestroy()
     {
+        _raycastHandle.Complete();
+        _readbackHandle.Complete();
+
         // dispse allocated buffers
         _commands.Dispose();
         _directionsLocal.Dispose();

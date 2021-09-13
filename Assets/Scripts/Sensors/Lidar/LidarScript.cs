@@ -225,6 +225,7 @@ namespace Labust.Sensors {
             particeData.Delete();
             lidarDataByte.Delete();
             randomStateVector.Delete();
+            debug.Delete();
         }
 
     }

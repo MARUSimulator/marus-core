@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Labust.Core;
 using Labust.Networking;
 using Sensorstreaming;
 using UnityEngine;
@@ -54,11 +55,12 @@ namespace Labust.Sensors.Primitive
 
         public async override void SendMessage()
         {
+            var toRad = eulerAngles * Mathf.Deg2Rad;
             await _streamWriter.WriteAsync(new ImuStreamingRequest
             {
-                Acceleration = linearAcceleration.AsMsg(),
-                AngularVelocity = angularVelocity.AsMsg(),
-                Orientation = eulerAngles.AsMsg(),
+                Acceleration = linearAcceleration.Unity2Standard().AsMsg(),
+                AngularVelocity = angularVelocity.Unity2Standard().AsMsg(),
+                Orientation = toRad.AsMsg(),
                 Address = address
             });
             hasData = false;
