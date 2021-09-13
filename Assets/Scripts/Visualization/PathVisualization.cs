@@ -23,12 +23,19 @@ namespace Labust.Visualization
 		private Path3D path;
 		private Vector3 lastPosition;
 		private float lastPointSize;
+		private Color lastPointColor;
+
+		private float lastLineThickness;
+		private Color lastLineColor;
 
 		void Awake()
 		{
 			lastPosition = transform.position;
 			path = new Path3D(LineThickness, LineColor);
 			lastPointSize = PointSize;
+			lastPointColor = PointColor;
+			lastLineThickness = LineThickness;
+			lastLineColor = LineColor;
 		}
 
 		void Update()
@@ -60,8 +67,27 @@ namespace Labust.Visualization
 			if (lastPointSize != PointSize)
 			{
 				path.SetPointSize(PointSize);
+				lastPointSize = PointSize;
 			}
 
+			if (lastPointColor != PointColor)
+			{
+				path.SetPointColor(PointColor);
+				lastPointColor = PointColor;
+			}
+
+			if (lastLineThickness != LineThickness)
+			{
+				path.SetLineThickness(LineThickness);
+				lastLineThickness = LineThickness;
+			}
+
+			if (lastLineColor != LineColor)
+			{
+				path.SetLineColor(LineColor);
+				lastLineColor = LineColor;
+			}
+			
 			path.Draw();
 		}
 	}

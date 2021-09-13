@@ -80,12 +80,19 @@ namespace Labust.Visualization.Primitives
 			for (int i = 0; i < _points.Count; i++)
 			{
 				if (DateTime.UtcNow.Subtract(_points[i].Timestamp).TotalSeconds > limit)
-				{
-					_startPointLineDict[_points[i]].Destroy();
-					_startPointLineDict.Remove(_points[i]);
-					_points[i].Destroy();
-					_points.Remove(_points[i]);
-					i--;
+				{	
+					try
+					{
+						_startPointLineDict[_points[i]].Destroy();
+						_startPointLineDict.Remove(_points[i]);
+						_points[i].Destroy();
+						_points.Remove(_points[i]);
+						i--;
+					}
+					catch
+					{
+
+					}
 				}
 			}
 		}
