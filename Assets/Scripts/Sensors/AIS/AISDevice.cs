@@ -6,18 +6,19 @@ using Labust.Sensors.Primitive.GenericMedium;
 using Labust.Networking;
 using Sensorstreaming;
 
-namespace Labust.Sensors.AIS 
+namespace Labust.Sensors.AIS
 {
 	/// <summary>
 	///  This class implements AIS capabilities.
 	/// </summary>
+	[RequireComponent(typeof(AISSensor))]
 	public class AISDevice : MediumDeviceBase<AISMessage>
 	{	
 		/// <summary>
 		/// AIS class type: A or B
 		/// More info <see cref="!:https://www.navcen.uscg.gov/?pageName=typesAIS">here.</see>
 		/// </summary>
-		public AISClassType ClassType;
+		public AISClassType AISType = AISClassType.ClassA;
 
 		/// <summary>
 		/// Maritime Mobile Service Identity
@@ -46,7 +47,7 @@ namespace Labust.Sensors.AIS
 		private AISSensor aisSensor;
 		
 
-		public void Awake()
+		public void Start()
 		{
 			
 			if (string.IsNullOrEmpty(MMSI))
@@ -58,7 +59,6 @@ namespace Labust.Sensors.AIS
 			AISMedium = AISManager.Instance;
 			AISMedium.Register(this);
 			aisSensor = GetComponent<AISSensor>();
-			
 
 			geoSensor = GetComponent<GNSSSensor>();
 		}
@@ -68,7 +68,7 @@ namespace Labust.Sensors.AIS
 			
 			if (ActiveTransmission)
 			{
-				period = TimeIntervals.getInterval(ClassType, aisSensor.SOG);
+				period = TimeIntervals.getInterval(AISClassType.ClassA, aisSensor.SOG);
 				if (delta > period)
 				{	
 					aisSensor.PositionReport();
@@ -97,7 +97,7 @@ namespace Labust.Sensors.AIS
 		
 		private void SetRange()
 		{
-			if (ClassType == AISClassType.ClassA)
+			if (AISType == AISClassType.ClassA)
 			{	
 				// 75km range for 12.5W transponder
 				this.Range = 75f * 1000;
