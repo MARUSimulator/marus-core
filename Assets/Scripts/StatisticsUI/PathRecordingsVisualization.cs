@@ -276,14 +276,14 @@ namespace Labust.StatisticsUI
             if (path != null)
             {
                 path.Destroy();
-                ParentController.RemovePath(this);
             }
+            ParentController.RemovePath(this);
         }
 
         void DrawPath()
         {
-            /*try
-            {*/
+            try
+            {
                 var completeFilename = System.IO.Path.Combine(Application.dataPath, "PathRecordings") + FileName;
 
                 List<LogRecord<Vector3>> records = DataLoggerUtilities.GetLogRecordsFromFile<Vector3>(completeFilename);
@@ -297,12 +297,12 @@ namespace Labust.StatisticsUI
 
                 path.Draw();
                 CalculateStats();
-            /*}
+            }
             catch
             {
                 Debug.Log("Invalid recording file");
                 RemovePath();
-            }*/
+            }
         }
 
         void CalculateStats()
