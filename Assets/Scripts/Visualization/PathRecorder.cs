@@ -17,6 +17,8 @@ namespace Labust.Visualization
         /// </summary>
         public float SampleRateHz = 5;
 
+        private bool _enabled = true;
+
         ///	<summary>
         /// Minimum distance in meters between points to be recorded.
         /// </summary>
@@ -33,6 +35,11 @@ namespace Labust.Visualization
 
         void Update()
         {
+            if (!_enabled)
+            {
+                return;
+            }
+
             var distanceDeltaCondition = Vector3.Distance(_lastPosition, transform.position) > MinimumDistanceDelta;
             if (_timer >= (1 / SampleRateHz) && distanceDeltaCondition)
             {
@@ -41,6 +48,22 @@ namespace Labust.Visualization
                 _timer = 0;
             }
             _timer += Time.deltaTime;
+        }
+
+        public bool IsEnabled()
+        {
+            return _enabled;
+        }
+
+        public void Enable()
+        {
+            _enabled = true;
+        }
+
+        public void Disable()
+        {
+            _enabled = false;
+            OnDisable();
         }
 
         void OnDisable()
