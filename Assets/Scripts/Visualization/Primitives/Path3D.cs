@@ -186,6 +186,7 @@ namespace Labust.Visualization.Primitives
 
         public void SetPointSize(float size)
         {
+            this.PointSize = size;
             foreach (Point p in _points)
             {
                 p.SetSize(size);
@@ -194,6 +195,7 @@ namespace Labust.Visualization.Primitives
 
         public void SetPointColor(Color color)
         {
+            this.PointColor = color;
             foreach (Point p in _points)
             {
                 p.SetColor(color);
@@ -202,6 +204,7 @@ namespace Labust.Visualization.Primitives
 
         public void SetLineColor(Color color)
         {
+            this.LineColor = color;
             foreach (Line3D line in _startPointLineDict.Values)
             {
                 line.SetColor(color);
@@ -210,6 +213,7 @@ namespace Labust.Visualization.Primitives
 
         public void SetLineThickness(float LineThickness)
         {
+            this.LineThickness = LineThickness;
             foreach (Line3D line in _startPointLineDict.Values)
             {
                 line.SetThickness(LineThickness);

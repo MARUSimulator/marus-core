@@ -52,6 +52,23 @@ namespace Labust.StatisticsUI
             _scrollView = GetComponentInChildren<ScrollRect>();
         }
 
+        void Update()
+        {
+            if (_pathRecordings == null)
+            {
+                return;
+            }
+
+            if (_pathRecordings.Count == 0)
+            {
+                _addPathButton.enabled = false;
+            }
+            else
+            {
+                _addPathButton.enabled = true;
+            }
+        }
+
         /// <summary>
         /// Removes path from scene and scrollview
         /// </summary>
