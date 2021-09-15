@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,6 +6,7 @@ using System.Linq;
 using Labust.Visualization;
 using Labust.Visualization.Primitives;
 using Labust.Utils;
+using Labust.Logger;
 
 namespace Labust.StatisticsUI
 {
@@ -119,7 +121,7 @@ namespace Labust.StatisticsUI
             {
                 var i = fileName.LastIndexOf('/');
                 var f = fileName.Substring(i);
-                if (f.EndsWith(".bin"))
+                if (f.EndsWith(".json"))
                 {
                     recordings.Add(f);
                 }
@@ -280,27 +282,27 @@ namespace Labust.StatisticsUI
 
         void DrawPath()
         {
-            try
-            {
+            /*try
+            {*/
                 var completeFilename = System.IO.Path.Combine(Application.dataPath, "PathRecordings") + FileName;
-                using (PathRecordingBinaryReader reader = new PathRecordingBinaryReader(System.IO.File.Open(completeFilename, System.IO.FileMode.Open))) 
+
+                List<LogRecord<Vector3>> records = DataLoggerUtilities.GetLogRecordsFromFile<Vector3>(completeFilename);
+                foreach (var record in records)
                 {
-                    while (reader.BaseStream.Position != reader.BaseStream.Length) {
-                        (Vector3 pos, double timestamp) = reader.ReadVector();
-                        pathPositions.Add(pos);
-                        pathTimestamps.Add(timestamp);
-                    }
+                    pathPositions.Add(record.Value);
+                    pathTimestamps.Add(record.TimeStamp.Subtract(new DateTime(1970,1,1,0,0,0)).TotalSeconds);
                 }
+
                 path = new Path3D(pathPositions, 0.5f, activeColor, 0.05f, Color.red);
 
                 path.Draw();
                 CalculateStats();
-            }
+            /*}
             catch
             {
                 Debug.Log("Invalid recording file");
                 RemovePath();
-            }
+            }*/
         }
 
         void CalculateStats()

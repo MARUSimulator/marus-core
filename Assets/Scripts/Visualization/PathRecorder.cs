@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using System.IO;
 using Labust.Utils;
+using Labust.Logger;
 
 namespace Labust.Visualization
 {
@@ -23,17 +24,11 @@ namespace Labust.Visualization
         private float _timer = 0f;
         private string _fileName;
         private Vector3 _lastPosition;
+        private GameObjectLogger<Vector3> logger;
 
         void Start()
         {
-            string timeRepr = DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss");
-            string PathRecordingsPath = Path.Combine(Application.dataPath, "PathRecordings");
-            _fileName = PathRecordingsPath + "/PathRecording-" + timeRepr + ".bin";
-            _lastPosition = transform.position;
-            if (!Directory.Exists(PathRecordingsPath))
-            {
-                Directory.CreateDirectory(PathRecordingsPath);
-            }
+            logger = DataLogger.Instance.GetLogger<Vector3>("PathRecordings");
         }
 
         void Update()
@@ -41,26 +36,17 @@ namespace Labust.Visualization
             var distanceDeltaCondition = Vector3.Distance(_lastPosition, transform.position) > MinimumDistanceDelta;
             if (_timer >= (1 / SampleRateHz) && distanceDeltaCondition)
             {
-                WritePositionToFile(transform.position, _fileName);
+                logger.Log(transform.position);
                 _lastPosition = transform.position;
                 _timer = 0;
             }
             _timer += Time.deltaTime;
         }
 
-        /// <summary>
-        /// Writes given Vector3 position to a filename using BinaryWriter and adds a timestamp.
-        /// </summary>
-        /// <param name="position">Vector3 position in space.</param>
-        /// <param name="filename">Path to the output file.</param>
-        public static void WritePositionToFile(Vector3 position, string filename)
+        void OnDisable()
         {
-            using (PathRecordingBinaryWriter writer = new PathRecordingBinaryWriter(File.Open(filename, FileMode.Append)))
-                {
-                    TimeSpan span = DateTime.UtcNow.Subtract(new DateTime(1970,1,1,0,0,0));
-                    double secs = span.TotalSeconds;
-                    writer.WriteVector(position, secs);
-                }
+            string savePath = Path.Combine(Application.dataPath, "PathRecordings");
+            DataLoggerUtilities.SaveLogsForTopic("PathRecordings", savePath);
         }
     }
 }
