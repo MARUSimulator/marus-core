@@ -1,0 +1,153 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Ocean-BTS
+  m_Shader: {fileID: 4800000, guid: 197b8a87a0f26de4fafd1944ca43f6b2, type: 3}
+  m_ShaderKeywords: CREST_CAUSTICS_ON CREST_FLOW_ON CREST_FOAM_ON CREST_GENERATED_SHADER_ON
+    _ALPHATEST_ON _BLENDMODE_OFF _DOUBLESIDED_ON _ENABLE_FOG_ON_TRANSPARENT _REFRACTION_OFF
+    _SURFACE_TYPE_TRANSPARENT
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 1
+  m_CustomRenderQueue: 3000
+  stringTagMap:
+    MotionVector: User
+    RenderType: Transparent
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  - TransparentDepthPostpass
+  - TransparentBackface
+  - RayTracingPrepass
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _CausticsDistortionTexture:
+        m_Texture: {fileID: 2800000, guid: 800e061692ff7a84e887f439d3364410, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CausticsTexture:
+        m_Texture: {fileID: 2800000, guid: 24552fd937a31a842aa7ee1c2e14d89d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TextureFoam:
+        m_Texture: {fileID: 2800000, guid: 02e417d5711139342884479f53dbecea, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TextureNormals:
+        m_Texture: {fileID: 2800000, guid: 800e061692ff7a84e887f439d3364410, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - CREST_CAUSTICS: 1
+    - CREST_FLOW: 1
+    - CREST_FOAM: 1
+    - CREST_GENERATED_SHADER: 1
+    - Vector1_89268251: 10
+    - _AddPrecomputedVelocity: 0
+    - _AlphaCutoffEnable: 1
+    - _AlphaDstBlend: 10
+    - _AlphaSrcBlend: 1
+    - _AlphaToMask: 0
+    - _AlphaToMaskInspectorValue: 0
+    - _BlendMode: 0
+    - _CausticsDepthOfField: 6
+    - _CausticsDistortionScale: 25
+    - _CausticsDistortionStrength: 0.16
+    - _CausticsFocalDepth: 2
+    - _CausticsStrength: 3.2
+    - _CausticsTextureAverage: 0.07
+    - _CausticsTextureScale: 5
+    - _CullMode: 0
+    - _CullModeForward: 0
+    - _DepthOffsetEnable: 0
+    - _DoubleSidedEnable: 1
+    - _DoubleSidedNormalMode: 2
+    - _DstBlend: 10
+    - _EnableBlendModePreserveSpecularLighting: 0
+    - _EnableFogOnTransparent: 1
+    - _FoamBubbleParallax: 0.14
+    - _FoamBubblesCoverage: 1.68
+    - _FoamFeather: 0.32
+    - _FoamIntensityAlbedo: 1
+    - _FoamIntensityEmissive: 0.5
+    - _FoamNormalStrength: 1
+    - _FoamScale: 5
+    - _FoamSmoothness: 0.7
+    - _MinReflectionDirectionY: 0
+    - _NormalsScale: 40
+    - _NormalsStrength: 0.387
+    - _NormalsStrengthOverall: 1
+    - _Occlusion: 1
+    - _OpaqueCullMode: 2
+    - _RayTracing: 0
+    - _ReceivesSSR: 1
+    - _ReceivesSSRTransparent: 1
+    - _RefractionModel: 0
+    - _RefractionStrength: 0.2
+    - _RefractiveIndexOfWater: 1.33
+    - _RenderQueueType: 4
+    - _RequireSplitLighting: 0
+    - _SSSIntensityBase: 0.11
+    - _SSSIntensitySun: 2.19
+    - _SSSSunFalloff: 10.24
+    - _ScatterColourShallowDepthFalloff: 2.57
+    - _ScatterColourShallowDepthMax: 7
+    - _Smoothness: 0.95
+    - _SmoothnessFalloff: 0.5
+    - _SmoothnessFar: 0.298
+    - _SmoothnessFarDistance: 2000
+    - _Specular: 0.34
+    - _SrcBlend: 1
+    - _StencilRef: 0
+    - _StencilRefDepth: 8
+    - _StencilRefDistortionVec: 4
+    - _StencilRefGBuffer: 10
+    - _StencilRefMV: 40
+    - _StencilWriteMask: 6
+    - _StencilWriteMaskDepth: 8
+    - _StencilWriteMaskDistortionVec: 4
+    - _StencilWriteMaskGBuffer: 14
+    - _StencilWriteMaskMV: 40
+    - _SupportDecals: 1
+    - _SurfaceType: 1
+    - _TransparentBackfaceEnable: 0
+    - _TransparentCullMode: 0
+    - _TransparentDepthPostpassEnable: 0
+    - _TransparentDepthPrepassEnable: 0
+    - _TransparentSortPriority: 0
+    - _TransparentWritingMotionVec: 1
+    - _TransparentZWrite: 1
+    - _UseShadowThreshold: 0
+    - _ZTestDepthEqualForOpaque: 4
+    - _ZTestGBuffer: 3
+    - _ZTestTransparent: 4
+    - _ZWrite: 1
+    m_Colors:
+    - _DepthFogDensity: {r: 0.1, g: 0.1, b: 0.1, a: 0}
+    - _DoubleSidedConstants: {r: 1, g: 1, b: 1, a: 0}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FoamBubbleColor: {r: 0.6392157, g: 0.8313726, b: 0.8196079, a: 0}
+    - _SSSTint: {r: 0.0763862, g: 0.426, b: 0.39074484, a: 0}
+    - _ScatterColourBase: {r: 0, g: 0.107907996, b: 0.16470589, a: 0}
+    - _ScatterColourShadow: {r: 0, g: 0.03921569, b: 0.078431346, a: 1}
+    - _ScatterColourShallow: {r: 0.1313141, g: 0.241, b: 0.241, a: 1}
+    - _Specular: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
