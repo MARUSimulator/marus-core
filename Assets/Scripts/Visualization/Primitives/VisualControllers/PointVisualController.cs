@@ -37,7 +37,7 @@ namespace Labust.Visualization
 			}
 		}
 
-		void OnDest() {
+		void OnDestroy() {
 			MyPoint.Destroy();
 		}
 	}

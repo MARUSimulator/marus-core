@@ -214,13 +214,13 @@ namespace Labust.StatisticsUI
             _labels = transform.Find("Labels");
 
             _lineSlider = transform.Find("LineWidthSlider").GetComponent<Slider>();
-            _lineSlider.minValue = 0.01f;
+            _lineSlider.minValue = 0f;
             _lineSlider.maxValue = 2f;
             _lineSlider.value = 0.55f;
             _lineSlider.onValueChanged.AddListener(delegate {ChangeLineSize();});
 
             _pointSizeSlider = transform.Find("PointSizeSlider").GetComponent<Slider>();
-            _pointSizeSlider.minValue = 0.01f;
+            _pointSizeSlider.minValue = 0f;
             _pointSizeSlider.maxValue = 4f;
             _pointSizeSlider.value = 0.8f;
             _pointSizeSlider.onValueChanged.AddListener(ChangeSize);

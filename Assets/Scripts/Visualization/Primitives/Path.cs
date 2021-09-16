@@ -19,7 +19,7 @@ namespace Labust.Visualization.Primitives
         /// <summary>
         /// Line color
         /// </summary>
-        public Color LineColor = Color.yellow;
+        public Color LineColor = Color.red;
         /// <summary>
         /// Point size
         /// </summary>
