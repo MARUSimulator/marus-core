@@ -5,7 +5,8 @@ public class WhaleController : MonoBehaviour
 		/// <summary>
 		/// This class implements controller for whale object.
 		/// </summary>
-
+		
+		public float depthOfFlight = -15;
 		public float speed = 0.05f;
 		public bool InvertMovement = true;
 		private float lastSpeed;
@@ -30,7 +31,7 @@ public class WhaleController : MonoBehaviour
 
 			float x = Random.Range(220, 580);
 			float z = Random.Range(220, 580);
-			transform.position = new Vector3(x, 45, z);
+			transform.position = new Vector3(x, depthOfFlight, z);
 
 			float x1 = transform.eulerAngles.x;
 			float y1 = Random.Range(0, 180);
