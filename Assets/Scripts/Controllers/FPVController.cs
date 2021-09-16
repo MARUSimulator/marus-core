@@ -1,7 +1,10 @@
+#define CREST_AVAILABLE
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if CREST_AVAILABLE
 using Crest;
+#endif
 
 public class FPVController : MonoBehaviour
 {
@@ -90,19 +93,22 @@ public class FPVController : MonoBehaviour
             eul.y = Input.GetAxis("Mouse X") * lookSpeed * dt;
             // rotate global yaw
             _targetTransform.Rotate(eul, Space.World);
-            
+#if CREST_AVAILABLE
             if(OceanRenderer.Instance)
             {
                 _targetTransform.position += OceanRenderer.Instance.ViewerHeightAboveWater > 0 ? new Vector3(0,-OceanRenderer.Instance.ViewerHeightAboveWater,0) : new Vector3(0,0,0);
             }
             else
             {
+#endif
                 // disable driving above water level
                 if(_targetTransform.position.y >= surfaceLevel)
                 {
                     _targetTransform.position += new Vector3(0,surfaceLevel-_targetTransform.position.y,0);
                 }
+#if CREST_AVAILABLE
             }
+#endif
         }
     }
 }
