@@ -17,24 +17,22 @@ namespace Labust.Visualization
         /// <summary>
         /// Point color default if not provided any other way
         /// </summary>
-        public Color pointColor = Color.yellow;
+        private Color pointColor = Color.red;
 
         /// <summary>
-        /// Point size
+        /// Default point size
         /// </summary>
-        [Range(0, 1)]
-        public float pointSize = 0.1f;
+        private float pointSize = 0.1f;
 
         /// <summary>
-        /// Line thickness
+        /// Default line thickness
         /// </summary>
-        [Range(0, 1)]
-        public float lineThickness = 0.05f;
+        private float lineThickness = 0.05f;
 
         /// <summary>
-        /// Line color
+        /// Default line color
         /// </summary>
-        public Color lineColor = Color.red;
+        private Color lineColor = Color.red;
 
         /// <summary>
         /// Dictionary used for storing visual elements by string key
@@ -43,7 +41,7 @@ namespace Labust.Visualization
         private Dictionary<string, List<VisualElement>> _visualElements = new Dictionary<string, List<VisualElement>>();
 
 
-        void Awake()
+        void Initialize()
         {
             SceneManager.activeSceneChanged += OnSceneChange;
         }
@@ -55,18 +53,13 @@ namespace Labust.Visualization
 
         void Start()
         {
-            // This are some examples how to use
-
-            /*
-            var boat = GameObject.Find("Target");
-            AddTransform(boat.transform, "test transform");
-
-            AddPoint(new Vector3(0, 2, 10), "test point", 0.5f);
-
+            // These are some examples how to use
             List<Vector3> path = new List<Vector3> {new Vector3(0, 1, 0), new Vector3(14, 1, 0), new Vector3(25, 1, 0)};
-            //AddPath(path, "test path");
-            AddPath3D(path, "test path");
-            */
+            AddPath(path, "test path");
+            AddPoint(new Vector3(0, 2, 10), "test point", 0.5f);
+            var sphere = GameObject.Find("Sphere");
+            AddTransform(sphere.transform, "test transform");
+            AddLine(new Vector3(0, 1, 0), new Vector3(0, 10, 0), "test line");
         }
 
         /// <summary>
@@ -74,13 +67,16 @@ namespace Labust.Visualization
         /// </summary>
         /// <param name="pointInWorld">Position in space</param>
         /// <param name="key">String key tag</param>
-        public void AddPoint(Vector3 pointInWorld, string key)
+        public Point AddPoint(Vector3 pointInWorld, string key)
         {
             if (!_visualElements.ContainsKey(key))
             {
                 _visualElements[key] = new List<VisualElement>();
             }
-            _visualElements[key].Add((VisualElement) new Point(pointInWorld));
+            VisualElement p = (VisualElement) new Point(pointInWorld);
+            CreateAndAttachPointGameObject(p, key);
+            _visualElements[key].Add(p);
+            return (Point) p;
         }
 
         /// <summary>
@@ -89,13 +85,16 @@ namespace Labust.Visualization
         /// <param name="pointInWorld">Position in space</param>
         /// <param name="key">String key tag</param>
         /// <param name="pointSize">Point size</param>
-        public void AddPoint(Vector3 pointInWorld, string key, float pointSize)
+        public Point AddPoint(Vector3 pointInWorld, string key, float pointSize)
         {
             if (!_visualElements.ContainsKey(key))
             {
                 _visualElements[key] = new List<VisualElement>();
             }
-            _visualElements[key].Add((VisualElement) new Point(pointInWorld, pointSize));
+            VisualElement p = (VisualElement) new Point(pointInWorld, pointSize);
+            CreateAndAttachPointGameObject(p, key);
+            _visualElements[key].Add(p);
+            return (Point) p;
         }
 
         /// <summary>
@@ -105,13 +104,29 @@ namespace Labust.Visualization
         /// <param name="key">String key tag</param>
         /// <param name="pointSize">Point size</param>
         /// <param name="pointColor">Point color</param>
-        public void AddPoint(Vector3 pointInWorld, string key, float pointSize, Color pointColor)
+        public Point AddPoint(Vector3 pointInWorld, string key, float pointSize, Color pointColor)
         {
             if (!_visualElements.ContainsKey(key))
             {
                 _visualElements[key] = new List<VisualElement>();
             }
-            _visualElements[key].Add((VisualElement) new Point(pointInWorld, pointSize, pointColor));
+            VisualElement p = (VisualElement) new Point(pointInWorld, pointSize, pointColor);
+            CreateAndAttachPointGameObject(p, key);
+            _visualElements[key].Add(p);
+            return (Point) p;
+        }
+
+        /// Adds Point object for visualizer to draw
+        /// </summary>
+        /// <param name="point">Point object to add</param>
+        public void AddPoint(Point point, string key)
+        {
+            if (!_visualElements.ContainsKey(key))
+            {
+                _visualElements[key] = new List<VisualElement>();
+            }
+            CreateAndAttachPointGameObject(point, key);
+            _visualElements[key].Add((VisualElement) point);
         }
 
         /// <summary>
@@ -119,28 +134,34 @@ namespace Labust.Visualization
         /// </summary>
         /// <param name="pointsInWorld">List of positions for path initialization</param>
         /// <param name="key">String key tag</param>
-        public void AddPath(List<Vector3> pointsInWorld, string key)
+        public Path AddPath(List<Vector3> pointsInWorld, string key)
         {
             if (!_visualElements.ContainsKey(key))
             {
                 _visualElements[key] = new List<VisualElement>();
             }
-            _visualElements[key].Add((VisualElement) new Path(pointsInWorld, pointSize, pointColor, lineThickness, lineColor));
+            VisualElement p = (VisualElement) new Path(pointsInWorld, pointSize, pointColor, lineThickness, lineColor);
+            CreateAndAttachPathGameObject(p, key);
+            _visualElements[key].Add(p);
+            return (Path) p;
         }
 
         /// <summary>
-        /// Creates Path object for visualizer to draw from given positions list and sets point color
+        /// Creates Path object for visualizer to draw from given positions list from given positions list and sets point color
         /// </summary>
         /// <param name="pointsInWorld">List of positions for path initialization</param>
         /// <param name="key">String key tag</param>
         /// <param name="_pointColor">Point color</param>
-        public void AddPath(List<Vector3> pointsInWorld, string key, Color _pointColor)
+        public Path AddPath(List<Vector3> pointsInWorld, string key, Color _pointColor)
         {
             if (!_visualElements.ContainsKey(key))
             {
                 _visualElements[key] = new List<VisualElement>();
             }
-            _visualElements[key].Add((VisualElement) new Path(pointsInWorld, pointSize, _pointColor, lineThickness, lineColor));
+            VisualElement p = (VisualElement) new Path(pointsInWorld, pointSize, _pointColor, lineThickness, lineColor);
+            CreateAndAttachPathGameObject(p, key);
+            _visualElements[key].Add(p);
+            return (Path) p;
         }
 
         /// <summary>
@@ -154,49 +175,7 @@ namespace Labust.Visualization
             {
                 _visualElements[key] = new List<VisualElement>();
             }
-            _visualElements[key].Add((VisualElement) path);
-        }
-
-        /// <summary>
-        /// Creates Path3D object for visualizer to draw from given positions list
-        /// </summary>
-        /// <param name="pointsInWorld">List of positions for path initialization</param>
-        /// <param name="key">String key tag</param>
-        public void AddPath3D(List<Vector3> pointsInWorld, string key)
-        {
-            if (!_visualElements.ContainsKey(key))
-            {
-                _visualElements[key] = new List<VisualElement>();
-            }
-            _visualElements[key].Add((VisualElement) new Path3D(pointsInWorld, pointSize, pointColor, lineThickness, lineColor));
-        }
-
-        /// <summary>
-        /// Creates Path3D object for visualizer to draw from given positions list from given positions list and sets point color
-        /// </summary>
-        /// <param name="pointsInWorld">List of positions for path initialization</param>
-        /// <param name="key">String key tag</param>
-        /// <param name="_pointColor">Point color</param>
-        public void AddPath3D(List<Vector3> pointsInWorld, string key, Color _pointColor)
-        {
-            if (!_visualElements.ContainsKey(key))
-            {
-                _visualElements[key] = new List<VisualElement>();
-            }
-            _visualElements[key].Add((VisualElement) new Path3D(pointsInWorld, pointSize, _pointColor, lineThickness, lineColor));
-        }
-
-        /// <summary>
-        /// Adds Path3D object for visualizer to draw
-        /// </summary>
-        /// <param name="path">Path3D object</param>
-        /// <param name="key">String key tag</param>
-        public void AddPath3D(Path3D path, string key)
-        {
-            if (!_visualElements.ContainsKey(key))
-            {
-                _visualElements[key] = new List<VisualElement>();
-            }
+            CreateAndAttachPathGameObject(path, key);
             _visualElements[key].Add((VisualElement) path);
         }
 
@@ -212,7 +191,45 @@ namespace Labust.Visualization
             {
                 _visualElements[key] = new List<VisualElement>();
             }
-            _visualElements[key].Add((VisualElement) new Labust.Visualization.Primitives.Transform(transform));
+            VisualElement _transform = (VisualElement) new Labust.Visualization.Primitives.Transform(transform);
+            CreateAndAttachTransformGameObject(_transform, key);
+            _visualElements[key].Add(_transform);
+        }
+
+        public Line AddLine(Vector3 startPoint, Vector3 endPoint, string key)
+        {
+            if (!_visualElements.ContainsKey(key))
+            {
+                _visualElements[key] = new List<VisualElement>();
+            }
+            VisualElement _line3d = (VisualElement) new Line(startPoint, endPoint, lineThickness, lineColor);
+            CreateAndAttachLineGameObject(_line3d, key);
+            _visualElements[key].Add(_line3d);
+            return (Line) _line3d;
+        }
+
+        public Line AddLine(Vector3 startPoint, Vector3 endPoint, string key, float thickness)
+        {
+            if (!_visualElements.ContainsKey(key))
+            {
+                _visualElements[key] = new List<VisualElement>();
+            }
+            VisualElement _line3d = (VisualElement) new Line(startPoint, endPoint, thickness, lineColor);
+            CreateAndAttachLineGameObject(_line3d, key);
+            _visualElements[key].Add(_line3d);
+            return (Line) _line3d;
+        }
+
+        public Line AddLine(Vector3 startPoint, Vector3 endPoint, string key, float thickness, Color color)
+        {
+            if (!_visualElements.ContainsKey(key))
+            {
+                _visualElements[key] = new List<VisualElement>();
+            }
+            VisualElement _line3d = (VisualElement) new Line(startPoint, endPoint, thickness, color);
+            CreateAndAttachLineGameObject(_line3d, key);
+            _visualElements[key].Add(_line3d);
+            return (Line) _line3d;
         }
 
         /// <summary>
@@ -221,20 +238,57 @@ namespace Labust.Visualization
         /// <param name="key">String key tag</param>
         public void FlushKey(string key)
         {
-            foreach (VisualElement gizmo in _visualElements[key])
+            foreach (VisualElement visual in _visualElements[key])
             {
-                gizmo.Destroy();
+                visual.Destroy();
             }
             _visualElements.Remove(key);
+        }
+
+        private void CreateAndAttachPathGameObject(VisualElement p, string name)
+        {
+            GameObject path = new GameObject(name);
+            PathVisualController pc = path.AddComponent(typeof(PathVisualController)) as PathVisualController;
+            pc.MyPath = (Path) p;
+            path.transform.SetParent(transform);
+            pc.MyPath.SetPointParent(path);
+        }
+
+        private void CreateAndAttachPointGameObject(VisualElement p, string name)
+        {
+            GameObject point = new GameObject(name);
+            PointVisualController pc = point.AddComponent(typeof(PointVisualController)) as PointVisualController;
+            pc.MyPoint = (Point) p;
+            point.transform.SetParent(transform);
+            pc.MyPoint.SetParent(point);
+        }
+
+        private void CreateAndAttachTransformGameObject(VisualElement t, string name)
+        {
+            GameObject _transform = new GameObject(name);
+            _transform.transform.position = ((Labust.Visualization.Primitives.Transform) t).MyTransform.position;
+            TransformVisualController tvc = _transform.AddComponent(typeof(TransformVisualController)) as TransformVisualController;
+            tvc.MyTransform = (Labust.Visualization.Primitives.Transform) t;
+            _transform.transform.SetParent(transform);
+            tvc.MyTransform.SetParent(_transform);
+        }
+
+        void CreateAndAttachLineGameObject(VisualElement l, string name)
+        {
+            GameObject _line = new GameObject(name);
+            LineVisualController lvc = _line.AddComponent(typeof(LineVisualController)) as LineVisualController;
+            lvc.MyLine = (Line) l;
+            _line.transform.SetParent(transform);
+            lvc.MyLine.SetParent(_line);
         }
 
         void Update()
         {
             foreach (var list in _visualElements.Values)
             {
-                foreach (var gizmo in list)
+                foreach (var visual in list)
                 {
-                    gizmo.Draw();
+                    visual.Draw();
                 }
             }
         }

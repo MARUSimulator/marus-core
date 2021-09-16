@@ -4,7 +4,7 @@ using System;
 namespace Labust.Visualization.Primitives
 {
     /// <summary>
-    /// Line represented as set of two points using builtin LineRenderer object.
+    /// Line represented as set of two points connected with a cylinder 3D primitive object.
     /// </summary>
     public class Line : VisualElement
     {
@@ -28,8 +28,11 @@ namespace Labust.Visualization.Primitives
         /// </summary>
         public Color LineColor = Color.yellow;
 
-        private GameObject line;
-        private LineRenderer lr;
+        private GameObject cylinder;
+
+        private GameObject parent;
+
+        private bool destroyed = false;
 
         public Line()
         {
@@ -39,24 +42,21 @@ namespace Labust.Visualization.Primitives
         {
             StartPoint = start;
             EndPoint = end;
-            InitLineRenderer();
         }
 
-        public Line(Vector3 start, Vector3 end, Color color)
+        public Line(Vector3 start, Vector3 end, float width)
         {
             StartPoint = start;
             EndPoint = end;
-            LineColor = color;
-            InitLineRenderer();
+            Thickness = width;
         }
 
-        public Line(Vector3 start, Vector3 end, Color color, float thickness)
+        public Line(Vector3 start, Vector3 end, float width, Color _color)
         {
             StartPoint = start;
             EndPoint = end;
-            LineColor = color;
-            Thickness = thickness;
-            InitLineRenderer();
+            Thickness = width;
+            LineColor = _color;
         }
 
         /// <summary>
@@ -64,10 +64,32 @@ namespace Labust.Visualization.Primitives
         /// </summary>
         public void Draw()
         {
-            InitLineRenderer();
-            lr.positionCount = 2;
-            lr.SetPosition(0, StartPoint);
-            lr.SetPosition(1, EndPoint);
+            if (destroyed)
+            {
+                return;
+            }
+
+            if (cylinder == null)
+            {
+                cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                var offset = EndPoint - StartPoint;
+                var scale = new Vector3(Thickness, offset.magnitude / 2.0f, Thickness);
+                var position = StartPoint + (offset / 2.0f);
+
+                cylinder.transform.position = position;
+                cylinder.transform.rotation = Quaternion.identity;
+                cylinder.transform.up = offset;
+                cylinder.transform.localScale = scale;
+                cylinder.GetComponent<Renderer>().material.color = LineColor;
+                cylinder.hideFlags = HideFlags.HideInHierarchy;
+                UnityEngine.Object.Destroy(cylinder.GetComponent<CapsuleCollider>());
+                cylinder.layer = 6;
+            }
+
+            if (parent != null)
+            {
+                cylinder.transform.SetParent(parent.transform);
+            }
         }
 
         /// <summary>
@@ -75,40 +97,42 @@ namespace Labust.Visualization.Primitives
         /// </summary>
         public void Destroy()
         {
-            if (lr == null)
+            if (cylinder == null)
             {
                 return;
             }
-            UnityEngine.Object.Destroy(lr.gameObject);
+            UnityEngine.Object.Destroy(cylinder);
+            destroyed = true;
         }
 
-        private void InitLineRenderer()
+        /// <summary>
+        /// Sets line thickness
+        /// </summary>
+        public void SetThickness(float width)
         {
-            if (line == null)
+            if (cylinder == null)
             {
-                line = new GameObject();
-                line.hideFlags = HideFlags.HideInHierarchy;
-                line.AddComponent<LineRenderer>();
+                return;
             }
-            if (lr == null)
+            var oldScale = cylinder.transform.localScale;
+            cylinder.transform.localScale = new Vector3(width, oldScale.y, width);
+        }
+
+        /// <summary>
+        /// Sets line color
+        /// </summary>
+        public void SetColor(Color color)
+        {
+            if (cylinder == null)
             {
-                lr = line.GetComponent<LineRenderer>();
-                lr.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
+                return;
             }
+            cylinder.GetComponent<Renderer>().material.color = color;
+        }
 
-            float alpha = 1.0f;
-            Gradient gradient = new Gradient();
-            gradient.SetKeys(
-                new GradientColorKey[] { new GradientColorKey(LineColor, 0.0f), new GradientColorKey(LineColor, 1.0f) },
-                new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }
-            );
-            lr.colorGradient = gradient;
-
-            // set width of the renderer
-            lr.startWidth = Thickness;
-            lr.endWidth = Thickness;
-            // set layer to visualisation initially
-            line.layer = 6;
+        public void SetParent(GameObject parent)
+        {
+            this.parent = parent;
         }
     }
 }

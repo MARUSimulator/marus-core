@@ -32,9 +32,13 @@ namespace Labust.Visualization.Primitives
         /// <summary>
         /// Point color
         /// </summary>
-        public Color PointColor = Color.blue;
+        public Color PointColor = Color.red;
 
         private GameObject sphere = null;
+
+        private GameObject parent;
+
+        private bool destroyed = false;
 
         /// <summary>
         /// Constructor which initializes point with given position
@@ -113,6 +117,11 @@ namespace Labust.Visualization.Primitives
         /// </summary>
         public void Draw()
         {
+            if (destroyed)
+            {
+                return;
+            }
+
             if (sphere == null)
             {
                 sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -127,6 +136,10 @@ namespace Labust.Visualization.Primitives
             {
                 sphere.transform.position = _pointTransform.position;
             }
+            if (parent != null && sphere.transform.parent == null)
+            {
+                sphere.transform.SetParent(parent.transform);
+            }
         }
 
         /// <summary>
@@ -134,6 +147,7 @@ namespace Labust.Visualization.Primitives
         /// </summary>
         public void Destroy()
         {
+            destroyed = true;
             if (sphere == null)
             {
                 return;
@@ -158,6 +172,11 @@ namespace Labust.Visualization.Primitives
                 return;
             }
             sphere.GetComponent<Renderer>().material.color = color;
+        }
+
+        public void SetParent(GameObject parent)
+        {
+            this.parent = parent;
         }
     }
 }

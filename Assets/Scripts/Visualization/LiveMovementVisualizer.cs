@@ -8,7 +8,7 @@ namespace Labust.Visualization
     /// Attach script to an object and it will visualize it's trajectory over time.
     /// Path is visualized with points and lines between those points.
     /// </summary>
-    public class PathVisualization : MonoBehaviour
+    public class LiveMovementVisualizer : MonoBehaviour
     {
         /// <summary>
         /// Point color
@@ -60,7 +60,7 @@ namespace Labust.Visualization
         public float MinimumDistanceDelta = 0.1f;
 
         private float elapsedTime = 0;
-        private Path3D path;
+        private Path path;
         private Vector3 lastPosition;
         private float lastPointSize;
         private Color lastPointColor;
@@ -71,7 +71,7 @@ namespace Labust.Visualization
         void Awake()
         {
             lastPosition = transform.position;
-            path = new Path3D(LineThickness, LineColor);
+            path = new Path(LineThickness, LineColor);
             lastPointSize = PointSize;
             lastPointColor = PointColor;
             lastLineThickness = LineThickness;

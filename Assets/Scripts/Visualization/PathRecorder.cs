@@ -27,10 +27,12 @@ namespace Labust.Visualization
         private string _fileName;
         private Vector3 _lastPosition;
         private GameObjectLogger<Vector3> logger;
+        private string topic;
 
         void Start()
         {
-            logger = DataLogger.Instance.GetLogger<Vector3>("PathRecordings");
+            topic = $"PathRecording-{gameObject.name}";
+            logger = DataLogger.Instance.GetLogger<Vector3>(topic);
         }
 
         void Update()
@@ -69,7 +71,7 @@ namespace Labust.Visualization
         void OnDisable()
         {
             string savePath = Path.Combine(Application.dataPath, "PathRecordings");
-            DataLoggerUtilities.SaveLogsForTopic("PathRecordings", savePath);
+            DataLoggerUtilities.SaveLogsForTopic(topic, savePath);
         }
     }
 }

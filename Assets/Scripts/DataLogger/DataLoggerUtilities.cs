@@ -12,6 +12,11 @@ namespace Labust.Logger
     public static class DataLoggerUtilities
     {
         private static string _savesPath = Path.Combine(Application.dataPath, "Saves");
+        private static JsonSerializerSettings _jsonConfig = new JsonSerializerSettings
+        {
+            Converters  = new List<JsonConverter>(){ new UnityVectorJsonConverter(), new UnityQuaternionJsonConverter()},
+            Formatting = Formatting.Indented
+        };
 
         /// <summary>
         /// Save all logs to file
@@ -30,7 +35,7 @@ namespace Labust.Logger
                 Directory.CreateDirectory(savesPath);
             }
             var currentPath = Path.Combine(savesPath, $"Scenario{DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss")}.json");
-            var asJson = JsonConvert.SerializeObject(logs, Formatting.Indented, new UnityVectorJsonConverter(), new UnityQuaternionJsonConverter());
+            var asJson = JsonConvert.SerializeObject(logs, _jsonConfig);
             using(var writer = new StreamWriter(currentPath))
             {
                 writer.Write(asJson);
@@ -49,13 +54,21 @@ namespace Labust.Logger
                 savesPath = _savesPath;
             }
 
-            var logs = DataLogger.Instance.ExportLogsForTopic(topic);
+            IReadOnlyList<LogRecord> logs = DataLogger.Instance.ExportLogsForTopic(topic);
+
+            if (logs.Count == 0)
+            {
+                Debug.Log($"No logs available for topic {topic}!\nNo file created.");
+                return;
+
+            }
+
             if (!Directory.Exists(savesPath))
             {
                 Directory.CreateDirectory(savesPath);
             }
             var currentPath = Path.Combine(savesPath, $"{topic}-Scenario{DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss")}.json");
-            var asJson = JsonConvert.SerializeObject(logs, Formatting.Indented, new UnityVectorJsonConverter(), new UnityQuaternionJsonConverter());
+            var asJson = JsonConvert.SerializeObject(logs, _jsonConfig);
             using(var writer = new StreamWriter(currentPath))
             {
                 writer.Write(asJson);
@@ -77,7 +90,7 @@ namespace Labust.Logger
                 return recordsList;
             }
             string jsonString = File.ReadAllText(fileName);
-            recordsList = JsonConvert.DeserializeObject<List<LogRecord<T>>>(jsonString, new UnityVectorJsonConverter(), new UnityQuaternionJsonConverter());
+            recordsList = JsonConvert.DeserializeObject<List<LogRecord<T>>>(jsonString, _jsonConfig);
             return recordsList;
         }
     }
