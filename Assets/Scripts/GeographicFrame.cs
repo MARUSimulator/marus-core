@@ -26,7 +26,7 @@ namespace Labust.Core
         
         public GeoPoint Unity2Geo(Vector3 position)
         {
-            var enu = position.Unity2Standard();
+            var enu = position.Unity2Map();
 
             ecef = GeoPoint.Enu2ECEF(this, enu);
             return new GeoPoint(ecef);

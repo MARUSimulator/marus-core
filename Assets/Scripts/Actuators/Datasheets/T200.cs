@@ -1,8 +1,5 @@
-
-
 namespace Labust.Actuators.Datasheets
 {
-
     public static class T200ThrusterDatasheet
     {
         public static float step = 0.01f;

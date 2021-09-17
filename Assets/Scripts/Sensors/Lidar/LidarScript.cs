@@ -18,7 +18,7 @@ namespace Labust.Sensors {
     /// <summary>
     /// STIL DOES NOT WORK ON UNITY 2020. Works on Unity 2019
     /// </summary>
-    public class LidarScript : Sensor
+    public class LidarScript : Gemini.EMRS.Core.Sensor
     {
         public ComputeShader lidarShader;
         [Range(3, 5)] public int NumCameras = 4;

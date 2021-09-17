@@ -43,17 +43,19 @@ namespace Labust.Sensors.Primitive
 
         public async override void SendMessage()
         {
+            /*
             var toRad = orientation.eulerAngles * Mathf.Deg2Rad;
             await _streamWriter.WriteAsync(new PoseStreamingRequest
             {
                 Address = address,
-                Pose = new Common.Pose
+                Pose = new Geometry.Pose
                 {
-                    Position = position.Unity2Standard().AsMsg(),
-                    Orientation = toRad.Unity2Standard().AsMsg()
+                    Position = position.Unity2Map().AsMsg(),
+                    Orientation = orientation.Unity2Map().AsMsg()
                 }
             });
             hasData = false;
+            */
         }
     }
 }

@@ -47,13 +47,13 @@ namespace Labust.Sensors.AIS
 			var msg = new AISStreamingRequest
             {
 				Address = address,
-				AisPositionReport = new Common.AISPositionReport 
+				AisPositionReport = new Marine.AISPositionReport 
 				{
 					Type = (uint) AISMessageType.PositionReportClassA,
 					Mmsi = (uint) Int32.Parse(aisDevice.MMSI),
 					Heading = (float) TrueHeading,
 					Timestamp = (uint) System.DateTime.UtcNow.Second,
-					Geopoint = new Common.GeoPoint {
+					Geopoint = new Geographic.GeoPoint {
 						Latitude = this.geoSensor.point.latitude,
 						Longitude = this.geoSensor.point.longitude,
 						Altitude = 0

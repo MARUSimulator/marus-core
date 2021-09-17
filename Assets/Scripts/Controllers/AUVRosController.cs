@@ -43,7 +43,7 @@ namespace Labust.Actuators
 
         void UpdateMovement(ForceResponse result)
         {
-            thrusterController.ApplyPwm(result.Pwm.Out.ToArray());
+            thrusterController.ApplyPwm(result.Pwm.Data.ToArray());
         }
     }
 

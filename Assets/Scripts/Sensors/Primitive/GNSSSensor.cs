@@ -1,8 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Labust.Core;
 using Labust.Networking;
+using Sensor;
 using Sensorstreaming;
+using Std;
 using UnityEngine;
 
 namespace Labust.Sensors.Primitive
@@ -35,13 +38,23 @@ namespace Labust.Sensors.Primitive
             hasData = true;
         }
 
-        public async override void SendMessage()
+        public override async void SendMessage()
         {
             var msg = new GnssStreamingRequest
             {
                 Address = address,
-                Point = new Common.GeoPoint
+                Data = new NavSatFix
                 {
+                    Header = new Header
+                    {
+                        FrameId = frameId,
+                        Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
+                    },
+                    Status = new NavSatStatus
+                    {
+                        Service = NavSatStatus.Types.Service.Gps,
+                        Status = NavSatStatus.Types.Status.SbasFix
+                    },
                     Latitude = point.latitude,
                     Longitude = point.longitude,
                     Altitude = point.altitude

@@ -12,7 +12,7 @@ using Labust.Sensors.Core;
 
 namespace Labust.Sensors
 {
-    public class RadarScript : Sensor
+    public class RadarScript : Gemini.EMRS.Core.Sensor
     {
 
         public ComputeShader computeShader;

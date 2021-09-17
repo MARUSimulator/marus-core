@@ -1,8 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Labust.Core;
 using Labust.Networking;
+using Sensor;
 using Sensorstreaming;
+using Std;
 using UnityEngine;
 
 namespace Labust.Sensors.Primitive
@@ -13,17 +16,19 @@ namespace Labust.Sensors.Primitive
     [RequireComponent(typeof(Rigidbody))]
     public class ImuSensor : SensorBase<ImuStreamingRequest>
     {
-        
         [Header("Accelerometer")]
         public Vector3 linearAcceleration;
         public bool withGravity = true;
+        public double[] linearAccelerationCovariance = new double[9]; 
 
         [Header("Gyro")]
         public Vector3 angularVelocity;
+        public double[] angularVelocityCovariance = new double[9];
 
         [Header("Orientation")]
         public Vector3 eulerAngles;
-        public Quaternion quaternion;
+        private Quaternion orientation;
+        public double[] orientationCovariance = new double[9];
 
         [Header("Debug")]
         public Vector3 localVelocity;
@@ -40,7 +45,6 @@ namespace Labust.Sensors.Primitive
                 address = vehicle.name + "/imu";
         }
 
-
         void CalculateAccelerationAsVelocityDerivative()
         {
             localVelocity = sensor.transform.InverseTransformVector(sensor.velocity);
@@ -53,14 +57,39 @@ namespace Labust.Sensors.Primitive
             hasData = true;
         }
 
-        public async override void SendMessage()
+        private void FixedUpdate()
         {
-            var toRad = eulerAngles * Mathf.Deg2Rad;
+            CalculateAccelerationAsVelocityDerivative();
+        }
+
+        private void SampleSensor()
+        {
+            angularVelocity = sensor.angularVelocity;
+            orientation = sensor.rotation;
+            eulerAngles = orientation.eulerAngles;
+        }
+
+        public override async void SendMessage()
+        {
+            SampleSensor();
+            var imuOut = new Imu()
+            {
+                Header = new Header
+                {
+                    FrameId = frameId,
+                    Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
+                },
+                Orientation = orientation.Unity2Map().AsMsg(),
+                AngularVelocity = (-angularVelocity).Unity2Map().AsMsg(),
+                LinearAcceleration = linearAcceleration.Unity2Map().AsMsg(),
+            };
+            imuOut.OrientationCovariance.AddRange(orientationCovariance);
+            imuOut.LinearAccelerationCovariance.AddRange(linearAccelerationCovariance);
+            imuOut.AngularVelocityCovariance.AddRange(angularVelocityCovariance);
+
             await _streamWriter.WriteAsync(new ImuStreamingRequest
             {
-                Acceleration = linearAcceleration.Unity2Standard().AsMsg(),
-                AngularVelocity = angularVelocity.Unity2Standard().AsMsg(),
-                Orientation = toRad.AsMsg(),
+                Data = imuOut,
                 Address = address
             });
             hasData = false;

@@ -276,7 +276,7 @@ namespace Labust.Networking
             }
 
             var frameClient = GetClient<TfClient>();
-            var framesMsg = frameClient.GetAllFrames(new Common.Empty(), cancellationToken:cancellationToken);
+            var framesMsg = frameClient.GetAllFrames(new Std.Empty(), cancellationToken:cancellationToken);
 
 
             var worldFrameMsg = framesMsg.Frames.FirstOrDefault(tf => tf.FrameId == "earth" && tf.ChildFrameId == OriginFrameName);
