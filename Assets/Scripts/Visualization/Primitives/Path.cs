@@ -80,7 +80,7 @@ namespace Labust.Visualization.Primitives
             {
                 _points.Add(new Point(pointInWorld));
             }
-            for (int i = 0; i < _points.Count - 2; i++)
+            for (int i = 0; i < _points.Count - 1; i++)
             {
                 if (_points.Count >= 2 && !_startPointLineDict.ContainsKey(_points[i]))
                 {
@@ -108,7 +108,7 @@ namespace Labust.Visualization.Primitives
                 _points.Add(new Point(pointInWorld, _PointSize, _PointColor));
             }
 
-            for (int i = 0; i < _points.Count - 2; i++)
+            for (int i = 0; i < _points.Count - 1; i++)
             {
                 if (_points.Count >= 2 && !_startPointLineDict.ContainsKey(_points[i]))
                 {
