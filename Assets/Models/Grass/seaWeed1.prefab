@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6813124787535531669
+--- !u!1 &7684744445673822888
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,9 +8,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2322515573883854254}
-  - component: {fileID: 642911694649746660}
-  - component: {fileID: 4164051636486520944}
+  - component: {fileID: 1446672691847580051}
+  - component: {fileID: 4378820973239431385}
+  - component: {fileID: 1000089769294976077}
   m_Layer: 0
   m_Name: seaWeed1
   m_TagString: Untagged
@@ -18,35 +18,35 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2322515573883854254
+--- !u!4 &1446672691847580051
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6813124787535531669}
+  m_GameObject: {fileID: 7684744445673822888}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 352.96207, y: 14.392577, z: 250.43723}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 298.02933, y: -41.02371, z: 343.5344}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &642911694649746660
+--- !u!33 &4378820973239431385
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6813124787535531669}
+  m_GameObject: {fileID: 7684744445673822888}
   m_Mesh: {fileID: -2432090755550338912, guid: 1842edf77a6c4a41b8413b76e74d29d9, type: 3}
---- !u!23 &4164051636486520944
+--- !u!23 &1000089769294976077
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6813124787535531669}
+  m_GameObject: {fileID: 7684744445673822888}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
