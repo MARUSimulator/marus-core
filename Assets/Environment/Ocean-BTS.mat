@@ -101,7 +101,7 @@ Material:
     - _ReceivesSSR: 1
     - _ReceivesSSRTransparent: 1
     - _RefractionModel: 0
-    - _RefractionStrength: 0.2
+    - _RefractionStrength: 0.386
     - _RefractiveIndexOfWater: 1.33
     - _RenderQueueType: 4
     - _RequireSplitLighting: 0
@@ -141,7 +141,7 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     m_Colors:
-    - _DepthFogDensity: {r: 0.1, g: 0.1, b: 0.1, a: 0}
+    - _DepthFogDensity: {r: 0.2, g: 0.2, b: 0.2, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: 1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _FoamBubbleColor: {r: 0.6392157, g: 0.8313726, b: 0.8196079, a: 0}
