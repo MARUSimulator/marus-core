@@ -23,6 +23,9 @@ namespace Labust.Sensors
         public float SensorUpdateHz = 1;
         public string address;
         //public bool RunRecording = false;
+        
+        [Header("Sensor parameters")] 
+        public String frameId;
 
         protected Rigidbody body;
         /// <summary>

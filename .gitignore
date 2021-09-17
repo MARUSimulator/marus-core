@@ -74,6 +74,9 @@ crashlytics-build.properties
 /Assets/Plugins/[Gg]rpc*
 /Assets/Plugins/[Gg]oogle*
 /Assets/Plugins/[Ss]ystem.*
+/Assets/Plugins/Plugins*
 
 # Protobuf should be hidden
 API/Protobuf
+
+.idea

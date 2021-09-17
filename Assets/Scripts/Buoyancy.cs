@@ -18,6 +18,7 @@ public class Buoyancy : MonoBehaviour
     public float density = 200;
     public int slicesPerAxis = 5;
     public bool isConcave = false;
+    public float deltaCBG = 0.0f;
     private const int voxelsLimit = 10000;
 
     public float drag = 0.05f;
@@ -239,7 +240,7 @@ public class Buoyancy : MonoBehaviour
 
         foreach (var point in voxels)
         {
-            var wp = transform.TransformPoint(point);
+            var wp = transform.TransformPoint(point + deltaCBG*Vector3.up);
             float waterLevel = GetWaterLevel(wp.x, wp.z);
 
             if (wp.y - voxelHalfHeight < waterLevel)

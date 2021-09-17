@@ -1,19 +1,30 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Geometry;
+using Labust.Core;
 using Labust.Networking;
+using Marine;
 using Sensorstreaming;
+using Std;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Vector3 = UnityEngine.Vector3;
 
 namespace Labust.Sensors.Primitive
 {
     public class DvlSensor : SensorBase<DvlStreamingRequest>
     {
+        [Header("Sensor parameters measurements")]
         [Header("Core measurements")]
         public Vector3 groundVelocity = new Vector3();
+        public double[] velocityCovariance = new double[9];
+        //public Vector3 velocity;
+        //public Rigidbody body;
+        
         public float altitude;
+        public double altitudeCovariance;
 
         [Header("Debug Beams")]
         public float[] beamRanges;
@@ -28,8 +39,14 @@ namespace Labust.Sensors.Primitive
             beams = GetComponentsInChildren<RangeSensor>();
             beamRanges = new float[beams.Length];
             lastPosition = sensor.position;
-            AddSensorCallback(SensorCallbackOrder.Last, Refresh);
+            //AddSensorCallback(SensorCallbackOrder.Last, Refresh);
             streamHandle = streamingClient.StreamDvlSensor(cancellationToken:RosConnection.Instance.cancellationToken);
+        }
+
+        private void FixedUpdate()
+        {
+            Refresh();
+            //velocity = sensor.worldToLocalMatrix * body.velocity;
         }
 
         void Refresh()
@@ -54,13 +71,29 @@ namespace Labust.Sensors.Primitive
 
         public async override void SendMessage()
         {
+    var dvlOut = new TwistWithCovarianceStamped
+            {
+                Header = new Header()
+                {
+                    FrameId = frameId,
+                    Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
+                },
+                Twist = new TwistWithCovariance 
+                {
+                    Twist = new Twist
+                    {
+                        Linear = groundVelocity.Unity2Body().AsMsg()
+                    }
+                }
+            };
+            dvlOut.Twist.Covariance.AddRange(velocityCovariance);
+            
             var request = new DvlStreamingRequest
             {
                 Address = address,
-                Altitude = altitude,
-                GroundVelocity = groundVelocity.AsMsg(),
+                Data = dvlOut
             };
-            request.BeamRanges.AddRange(beamRanges);
+            
             Log(new { altitude, groundVelocity });
             await _streamWriter.WriteAsync(request);
             hasData = false;

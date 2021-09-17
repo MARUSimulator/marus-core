@@ -1,7 +1,11 @@
-﻿using Labust.Networking;
+﻿using System;
+using Geometry;
+using Labust.Networking;
 using Labust.Sensors;
 using Sensorstreaming;
+using Std;
 using UnityEngine;
+using Quaternion = Geometry.Quaternion;
 
 namespace Labust.Sensors.Primitive
 {
@@ -10,7 +14,8 @@ namespace Labust.Sensors.Primitive
     /// </summary>
     public class DepthSensor : SensorBase<DepthStreamingRequest>
     {
-        float depth;
+        double depth;
+        public double covariance;
 
         public void Awake()
         {
@@ -22,17 +27,40 @@ namespace Labust.Sensors.Primitive
 
         public async override void SendMessage()
         {
-            await _streamWriter.WriteAsync( new DepthStreamingRequest
+            var depthOut = new DepthStreamingRequest
             {
                 Address = address,
-                Depth = depth
-            });
+                Data = new PoseWithCovarianceStamped()
+                {
+                    Header = new Header
+                    {
+                        FrameId = frameId,
+                        Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0
+                    },
+                    Pose = new PoseWithCovariance
+                    {
+                        Pose = new Geometry.Pose
+                        {
+                            Position = new Point()
+                            {
+                                X = 0,
+                                Y = 0,
+                                Z = depth
+                            },
+                            Orientation = new Quaternion() { }
+                        }
+                    }
+                }
+            };
+            var covOut = new double[36];
+            covOut[15] = covariance;
+            depthOut.Data.Pose.Covariance.AddRange(covOut);
+            await _streamWriter.WriteAsync(depthOut);
             hasData = false;
         }
 
         public void Refresh()
         {
-            var o = new { V1 = depth, V3 = "gfdsg"};
             depth = -transform.position.y;
             Log(new { depth });
             hasData = true;
