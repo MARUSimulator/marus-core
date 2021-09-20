@@ -28,6 +28,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         float m_GroundCheckDistance = 0.1f;
         [SerializeField]
         bool m_doGroundCheck = false;
+        [SerializeField]
+        bool m_UseForceMovement = false;
+        [SerializeField]
+        float m_VerticalForce = 3f;
 
         Rigidbody m_Rigidbody;
         Animator m_Animator;
@@ -45,7 +49,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         bool m_Crouching;
 
         float startingBuoyHeight;
-
+#if CREST_AVAILABLE
+        Crest.SampleHeightHelper _sampleHeightHelper;
+#endif
 
         void Start()
         {
@@ -59,6 +65,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
             m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
             m_OrigGroundCheckDistance = m_GroundCheckDistance;
+
+#if CREST_AVAILABLE
+            _sampleHeightHelper = new Crest.SampleHeightHelper();
+#endif
         }
 
 
@@ -234,33 +244,84 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
         void HandleSwimmingMovement(bool crouch, bool jump)
         {
-            if(crouch)
+            if (m_UseForceMovement)
             {
-                floaterBuoy.buoyUp = false;
-                m_Rigidbody.useGravity = false;
+                var forcePosition = m_Rigidbody.position;
 
-                m_Rigidbody.velocity = (-m_Rigidbody.transform.up * 2);
-            }
-            else if(jump)
-            {
-                if (m_Rigidbody.transform.position.y < floaterBuoy.waterLevel - floaterBuoy.buoyancyCentreOffset.y)
-                {
-                    m_Rigidbody.velocity = (m_Rigidbody.transform.up * 2);
-                }
-                else
-                {
-                    floaterBuoy.buoyUp = true;
-                    m_Rigidbody.useGravity = true;
-                }
-            }
-            else if(m_Rigidbody.useGravity == false)
-            {
-                // Zero out Y-value
-                m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z);
-            }
+                // go forward
+                m_Rigidbody.AddForceAtPosition(m_Rigidbody.transform.forward * m_ForwardAmount * 3, forcePosition, ForceMode.Acceleration);
 
-            m_GroundCheckDistance = m_OrigGroundCheckDistance; // This is implemented to fix bug when jumping near water
-            m_Rigidbody.velocity = (m_Rigidbody.transform.forward * m_ForwardAmount * 5) + new Vector3(0, m_Rigidbody.velocity.y, 0);
+                // rotate yaw
+                var rotVec = m_Rigidbody.transform.up;
+                m_Rigidbody.AddTorque(rotVec * m_MovingTurnSpeed * m_TurnAmount, ForceMode.Acceleration);
+
+                // handle going up and down
+                if (crouch)
+                {
+                    floaterBuoy.buoyUp = false;
+                    m_Rigidbody.useGravity = false;
+                    m_Rigidbody.AddForceAtPosition(-m_Rigidbody.transform.up * m_VerticalForce, forcePosition, ForceMode.Acceleration);
+                }
+                else if (jump)
+                {
+#if CREST_AVAILABLE
+                    _sampleHeightHelper.Init(m_Rigidbody.transform.position, 0.5f, true);
+                    
+                    if (_sampleHeightHelper.Sample(out var height))
+                    {
+                        floaterBuoy.waterLevel = height;
+                    }
+#endif
+                    if (m_Rigidbody.transform.position.y < floaterBuoy.waterLevel - floaterBuoy.buoyancyCentreOffset.y)
+                    {
+                        m_Rigidbody.AddForceAtPosition(m_Rigidbody.transform.up * m_VerticalForce, forcePosition, ForceMode.Acceleration);
+                    }
+                    else
+                    {
+                        floaterBuoy.buoyUp = true;
+                        m_Rigidbody.useGravity = true;
+                    }
+                }
+            }
+            else
+            {
+                if (crouch)
+                {
+                    floaterBuoy.buoyUp = false;
+                    m_Rigidbody.useGravity = false;
+
+                    m_Rigidbody.velocity = (-m_Rigidbody.transform.up * 2);
+                }
+                else if (jump)
+                {
+#if CREST_AVAILABLE
+                    _sampleHeightHelper.Init(m_Rigidbody.transform.position, 0.5f, true);
+                    
+                    if (_sampleHeightHelper.Sample(out var height))
+                    {
+                        floaterBuoy.waterLevel = height;
+                    }
+#endif
+
+                    if (m_Rigidbody.transform.position.y < floaterBuoy.waterLevel - floaterBuoy.buoyancyCentreOffset.y)
+                    {
+                        m_Rigidbody.velocity = (m_Rigidbody.transform.up * 2);
+                    }
+                    else
+                    {
+                        floaterBuoy.buoyUp = false;
+                        m_Rigidbody.useGravity = true;
+                    }
+                }
+                else if (m_Rigidbody.useGravity == false)
+                {
+                    // Zero out Y-value
+                    m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, 0, m_Rigidbody.velocity.z);
+                }
+
+                m_GroundCheckDistance = m_OrigGroundCheckDistance; // This is implemented to fix bug when jumping near water
+                m_Rigidbody.velocity = (m_Rigidbody.transform.forward * m_ForwardAmount * 5) + new Vector3(0, m_Rigidbody.velocity.y, 0);
+            }
         }
 
         void HandleAirborneMovement()

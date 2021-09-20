@@ -30,10 +30,12 @@ namespace Labust.Core
         {
             _isRunning = true;
             PauseMenuUi.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         void LateUpdate()
         {
+            
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (_isRunning)
@@ -52,6 +54,7 @@ namespace Labust.Core
         /// </summary>
         public void Pause()
         {
+            Cursor.lockState = CursorLockMode.Confined;
             timeScaleBeforePause = Time.timeScale;
             Time.timeScale = 0;
             PauseMenuUi.SetActive(true);
@@ -63,6 +66,7 @@ namespace Labust.Core
         /// </summary>
         public void Resume()
         {
+            Cursor.lockState = CursorLockMode.Locked;
             PauseMenuUi.SetActive(false);
             Time.timeScale = timeScaleBeforePause;
             _isRunning = true;
@@ -89,6 +93,10 @@ namespace Labust.Core
             if (SaveOnExit)
             {
                 Save();
+            }
+            if (Application.isEditor)
+            {
+                UnityEditor.EditorApplication.isPlaying = false;
             }
             Application.Quit();
         }
