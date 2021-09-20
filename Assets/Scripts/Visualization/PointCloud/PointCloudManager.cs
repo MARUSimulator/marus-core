@@ -79,5 +79,30 @@ namespace Labust.Visualization
             _particleMesh.SetVertices(points);
         }
 
+        public static PointCloudManager CreatePointCloud(string name, int numPoints, Material particleMaterial, ComputeShader computeShader)
+        {
+            GameObject pointCloud = new GameObject(name + "_PointCloud");
+            pointCloud.transform.position = Vector3.zero;
+            pointCloud.transform.rotation = Quaternion.identity;
+            var pointCloudManager = pointCloud.AddComponent<PointCloudManager>();
+            pointCloudManager.particleMaterial = particleMaterial;
+            pointCloudManager.computeParticle = computeShader ?? FindComputeShader("PointCloudCS");
+            pointCloudManager.SetupPointCloud(numPoints);
+            return pointCloudManager;
+        }
+
+        private static ComputeShader FindComputeShader(string shaderName)
+        {
+            ComputeShader[] compShaders = (ComputeShader[])Resources.FindObjectsOfTypeAll(typeof(ComputeShader));
+            for (int i = 0; i < compShaders.Length; i++)
+            {
+                if (compShaders[i].name == shaderName)
+                {
+                    return compShaders[i];
+                }
+            }
+            throw new UnityException($"Shader {shaderName} not found in the project");
+        }
+
     }
 }
