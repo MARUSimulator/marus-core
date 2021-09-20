@@ -30,14 +30,14 @@ namespace Labust.Sensors.AIS
 		/// East positive, west negative.
 		/// 2644228 -> 264.4228’ -> 4° 24.4228’
 		/// </summary>
-		public float Longitude { get; set; }
+		public double Longitude { get; set; }
 
 		/// <summary>
 		/// Latitude in in 1/10000 min.
 		/// North positive, south negative.
 		/// 30737782 -> 3073.7782’ -> 51° 13.7782’
 		/// </summary>
-		public float Latitude { get; set; }
+		public double Latitude { get; set; }
 
 		/// <summary>
 		/// Heading (orientation) of vessel in degrees (0-359) 

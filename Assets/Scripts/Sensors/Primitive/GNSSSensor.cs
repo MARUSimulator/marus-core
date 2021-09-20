@@ -19,6 +19,7 @@ namespace Labust.Sensors.Primitive
         [Header("Precision")]
         public double[] covariance;
         public bool isRTK = true;
+        public float maximumOperatingDepth = 0.5f;
 
 
         void Start()
@@ -53,14 +54,14 @@ namespace Labust.Sensors.Primitive
                     Status = new NavSatStatus
                     {
                         Service = NavSatStatus.Types.Service.Gps,
-                        Status = NavSatStatus.Types.Status.SbasFix
+                        Status = isRTK?NavSatStatus.Types.Status.GbasFix:NavSatStatus.Types.Status.SbasFix
                     },
                     Latitude = point.latitude,
                     Longitude = point.longitude,
                     Altitude = point.altitude
                 }
             };
-            await _streamWriter.WriteAsync(msg);
+            if (transform.position.y > -maximumOperatingDepth) await _streamWriter.WriteAsync(msg);
             hasData = false;
         }
     }
