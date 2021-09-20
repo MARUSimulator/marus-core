@@ -1,5 +1,4 @@
-﻿#define CREST_AVAILABLE
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
