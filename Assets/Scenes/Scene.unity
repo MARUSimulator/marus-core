@@ -235,7 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25d0e6062362dad408bb84d9d309a317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverIP: 172.24.229.71
+  serverIP: localhost
   serverPort: 30052
   connectionTimeout: 5
   RealtimeSimulation: 0
@@ -2028,7 +2028,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1326001571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2041,7 +2041,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4aae2301c839306478e3695b2c84ee76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SensorUpdateHz: 1
+  SensorUpdateHz: 10
   address: /boat1/point_cloud
   frameId: 
   ParticleMaterial: {fileID: 2100000, guid: 2896c8197dda1784cb9bf8d6deb6ea11, type: 2}
