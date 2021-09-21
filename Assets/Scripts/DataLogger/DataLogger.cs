@@ -87,7 +87,7 @@ namespace Labust.Logger
 
     /// <summary>
     /// Logger for game object
-    /// 
+    ///
     /// Generic type determines the message data class that is saved
     /// </summary>
     /// <typeparam name="T"></typeparam>
@@ -153,5 +153,4 @@ namespace Labust.Logger
             Value = value;
         }
     }
-
 }
