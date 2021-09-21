@@ -37,7 +37,7 @@ namespace Labust.StatisticsUI
         {
             // instantiate visualizer
             var v = Visualizer.Instance;
-            _addPathButton = transform.Find("Panel/Canvas/PathSelector/AddPathButton").GetComponent<Button>();
+            _addPathButton = transform.Find("Panel/StatisticsUI/PathSelector/AddPathButton").GetComponent<Button>();
             _addPathButton.onClick.AddListener(AddStatisticsInformation);
             _pathsDropdown = GetComponentInChildren<Dropdown>();
             _pathRecordings = GetRecordings();

@@ -31,7 +31,7 @@ namespace Labust.StatisticsUI
 
         private void Awake() {
             cameraRectTransform = GetComponent<RectTransform>();
-            _statisticsUI = transform.parent.parent.GetComponent<Canvas>();
+            _statisticsUI = transform.parent.parent.parent.GetComponent<Canvas>();
         }
 
         void Update()
