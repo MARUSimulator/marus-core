@@ -19,7 +19,7 @@ namespace Labust.Logger
         private static Dictionary<string, GameObjectLogger> _loggers;
 
 
-        public override void Initialize()
+        protected override void Initialize()
         {
             _loggers = new Dictionary<string, GameObjectLogger>();
             SceneManager.activeSceneChanged += OnSceneChange;

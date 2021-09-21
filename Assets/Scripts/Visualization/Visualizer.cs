@@ -3,7 +3,6 @@ using Labust.Visualization.Primitives;
 using Labust.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Labust.Visualization.Primitives;
 
 namespace Labust.Visualization
 {
@@ -41,25 +40,19 @@ namespace Labust.Visualization
         private Dictionary<string, List<VisualElement>> _visualElements = new Dictionary<string, List<VisualElement>>();
 
 
-        void Initialize()
+        protected override void Initialize()
         {
             SceneManager.activeSceneChanged += OnSceneChange;
         }
 
         private void OnSceneChange(Scene oldScene, Scene newScene)
         {
+            if (string.IsNullOrEmpty(oldScene.name)) return;
             _visualElements.Clear();
         }
 
         void Start()
         {
-            // These are some examples how to use
-            List<Vector3> path = new List<Vector3> {new Vector3(0, 1, 0), new Vector3(14, 1, 0), new Vector3(25, 1, 0)};
-            AddPath(path, "test path");
-            AddPoint(new Vector3(0, 2, 10), "test point", 0.5f);
-            var sphere = GameObject.Find("Sphere");
-            AddTransform(sphere.transform, "test transform");
-            AddLine(new Vector3(0, 1, 0), new Vector3(0, 10, 0), "test line");
         }
 
         /// <summary>
@@ -185,15 +178,16 @@ namespace Labust.Visualization
         /// </summary>
         /// <param name="transform">Transform </param>
         /// <param name="key"></param>
-        public void AddTransform(UnityEngine.Transform transform, string key)
+        public Primitives.Transform AddTransform(UnityEngine.Transform transform, string key)
         {
             if (!_visualElements.ContainsKey(key))
             {
                 _visualElements[key] = new List<VisualElement>();
             }
-            VisualElement _transform = (VisualElement) new Labust.Visualization.Primitives.Transform(transform);
-            CreateAndAttachTransformGameObject(_transform, key);
+            var _transform = new Primitives.Transform(transform);
+            AttachTransformGameObject(_transform);
             _visualElements[key].Add(_transform);
+            return _transform;
         }
 
         public Line AddLine(Vector3 startPoint, Vector3 endPoint, string key)
@@ -263,14 +257,10 @@ namespace Labust.Visualization
             pc.MyPoint.SetParent(point);
         }
 
-        private void CreateAndAttachTransformGameObject(VisualElement t, string name)
+        private void AttachTransformGameObject(Primitives.Transform t)
         {
-            GameObject _transform = new GameObject(name);
-            _transform.transform.position = ((Labust.Visualization.Primitives.Transform) t).MyTransform.position;
-            TransformVisualController tvc = _transform.AddComponent(typeof(TransformVisualController)) as TransformVisualController;
-            tvc.MyTransform = (Labust.Visualization.Primitives.Transform) t;
-            _transform.transform.SetParent(transform);
-            tvc.MyTransform.SetParent(_transform);
+            var tvc = t.MyTransform.gameObject.AddComponent<TransformVisualController>();
+            tvc.MyTransform = t;
         }
 
         void CreateAndAttachLineGameObject(VisualElement l, string name)

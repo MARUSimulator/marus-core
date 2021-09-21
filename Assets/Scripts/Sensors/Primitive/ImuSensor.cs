@@ -77,7 +77,7 @@ namespace Labust.Sensors.Primitive
                 Header = new Header
                 {
                     FrameId = frameId,
-                    Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
+                    Timestamp = TimeHandler.Instance.TimeDouble
                 },
                 Orientation = orientation.Unity2Map().AsMsg(),
                 AngularVelocity = (-angularVelocity).Unity2Map().AsMsg(),

@@ -23,6 +23,7 @@ namespace Labust.Core
         public GameObject PauseMenuUi;
         bool _isRunning;
         float timeScaleBeforePause;
+        public bool LockCursor;
 
         public string SavesPath => Path.Combine(Application.dataPath, "Saves");
 
@@ -30,7 +31,8 @@ namespace Labust.Core
         {
             _isRunning = true;
             PauseMenuUi.SetActive(false);
-            Cursor.lockState = CursorLockMode.Locked;
+            if (LockCursor)
+                Cursor.lockState = CursorLockMode.Locked;
         }
 
         void LateUpdate()
@@ -66,7 +68,8 @@ namespace Labust.Core
         /// </summary>
         public void Resume()
         {
-            Cursor.lockState = CursorLockMode.Locked;
+            if (LockCursor)
+                Cursor.lockState = CursorLockMode.Locked;
             PauseMenuUi.SetActive(false);
             Time.timeScale = timeScaleBeforePause;
             _isRunning = true;

@@ -1225,7 +1225,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4299875294064686662}
   - component: {fileID: 4299875294064686663}
-  - component: {fileID: 4299875294064686660}
   - component: {fileID: 4299875294064686657}
   - component: {fileID: 4299875294064686656}
   m_Layer: 0
@@ -1292,14 +1291,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &4299875294064686660
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4299875294064686661}
-  m_Enabled: 1
 --- !u!114 &4299875294064686657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2418,6 +2409,7 @@ GameObject:
   - component: {fileID: 6020194498835905237}
   - component: {fileID: 6020194498835905242}
   - component: {fileID: 6020194498835905238}
+  - component: {fileID: 8846036528469152809}
   m_Layer: 0
   m_Name: D2
   m_TagString: Untagged
@@ -2507,6 +2499,21 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.6, y: 0.3, z: 0.6}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8846036528469152809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6020194498835905241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc3f69fd608bf8d438317b6319f9e6e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RadiusTopic: 
+  GuidanceTopic: 
+  Radius: 0
 --- !u!1 &6020194498869346695
 GameObject:
   m_ObjectHideFlags: 0
