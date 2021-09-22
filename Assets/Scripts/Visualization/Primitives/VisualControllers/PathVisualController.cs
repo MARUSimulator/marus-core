@@ -12,10 +12,10 @@ namespace Labust.Visualization
 
 		public Color PointColor = Color.white;
 		[Range(0.1f, 4f)]
-		public float PointSize = 0.8f;
+		public float PointSize = 0.7f;
 		public Color LineColor = Color.red;
 		[Range(0f, 2f)]
-		public float LineThickness = 0.55f;
+		public float LineThickness = 0.01f;
 
 		private Color _lastPointColor;
 		private Color _lastLineColor;

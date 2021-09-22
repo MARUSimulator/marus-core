@@ -21,12 +21,12 @@ namespace Labust.Visualization.Primitives
         /// <summary>
         /// Line thickness
         /// </summary>
-        public float Thickness = 0.01f;
+        public float Thickness = 0.05f;
 
         /// <summary>
         /// Line color
         /// </summary>
-        public Color LineColor = Color.yellow;
+        public Color LineColor = Color.red;
 
         private GameObject cylinder;
 
@@ -83,7 +83,7 @@ namespace Labust.Visualization.Primitives
                 cylinder.GetComponent<Renderer>().material.color = LineColor;
                 cylinder.hideFlags = HideFlags.HideInHierarchy;
                 UnityEngine.Object.Destroy(cylinder.GetComponent<CapsuleCollider>());
-                cylinder.layer = 6;
+                cylinder.layer = LayerMask.NameToLayer("Visualization");
             }
 
             if (parent != null)

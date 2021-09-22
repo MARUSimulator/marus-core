@@ -23,11 +23,11 @@ namespace Labust.Visualization.Primitives
         /// <summary>
         /// Point size
         /// </summary>
-        public float PointSize = 0.1f;
+        public float PointSize = 0.7f;
         /// <summary>
         /// Point color
         /// </summary>
-        public Color PointColor = Color.yellow;
+        public Color PointColor = Color.white;
 
         /// <summary>
         /// List containing all path points
@@ -272,6 +272,15 @@ namespace Labust.Visualization.Primitives
                     l.SetParent(parent);
                 }
             }
+        }
+
+        public Vector3 GetPathPosition()
+        {
+            if (_points.Count > 0)
+            {
+                return _points[0].Position;
+            }
+            return Vector3.zero;
         }
 
         public GameObject GetPathGameObject()

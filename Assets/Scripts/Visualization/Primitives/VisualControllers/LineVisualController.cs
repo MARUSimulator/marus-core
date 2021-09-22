@@ -13,7 +13,7 @@ namespace Labust.Visualization
 		public Color LineColor = Color.red;
 
 		[Range(0f, 4f)]
-		public float LineThickness = 0.8f;
+		public float LineThickness = 0.01f;
 
 		private Color _lastLineColor;
 		private float _lastLineThickness;

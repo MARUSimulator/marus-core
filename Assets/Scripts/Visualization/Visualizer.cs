@@ -17,12 +17,12 @@ namespace Labust.Visualization
         /// <summary>
         /// Point color default if not provided any other way
         /// </summary>
-        private Color pointColor = Color.red;
+        private Color pointColor = Color.white;
 
         /// <summary>
         /// Default point size
         /// </summary>
-        private float pointSize = 0.1f;
+        private float pointSize = 0.7f;
 
         /// <summary>
         /// Default line thickness
@@ -57,8 +57,8 @@ namespace Labust.Visualization
             List<Vector3> path = new List<Vector3> {new Vector3(0, 1, 0), new Vector3(14, 1, 0), new Vector3(25, 1, 0)};
             AddPath(path, "test path");
             AddPoint(new Vector3(0, 2, 10), "test point", 0.5f);
-            var sphere = GameObject.Find("Sphere");
-            AddTransform(sphere.transform, "test transform");
+            //var sphere = GameObject.Find("Sphere");
+            //AddTransform(sphere.transform, "test transform");
             AddLine(new Vector3(0, 1, 0), new Vector3(0, 10, 0), "test line");
         }
 
