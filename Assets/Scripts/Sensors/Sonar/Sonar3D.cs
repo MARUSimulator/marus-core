@@ -22,7 +22,7 @@ namespace Labust.Sensors
     /// Implemented using IJobParallelFor on CPU
     /// Can drop performance
     /// </summary>
-    public class Sonar3D : SensorBase<LidarStreamingRequest>
+    public class Sonar3D : SensorBase<PointCloudStreamingRequest>
     {
 
         /// Instantiates 3 Jobs:
@@ -69,7 +69,7 @@ namespace Labust.Sensors
         {
 
             int totalRays = WidthRes * HeightRes * NumRaysPerAccusticRay;
-            streamHandle = streamingClient.StreamLidarSensor(cancellationToken: RosConnection.Instance.cancellationToken);
+            streamHandle = streamingClient.StreamSonarSensor(cancellationToken: RosConnection.Instance.cancellationToken);
             if (string.IsNullOrEmpty(address))
                 address = transform.name + "/sonar3d";
 
@@ -117,7 +117,7 @@ namespace Labust.Sensors
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
             };
 
-            var msg = new LidarStreamingRequest()
+            var msg = new PointCloudStreamingRequest()
             {
                 Data = _pointCloud,
                 Address = address

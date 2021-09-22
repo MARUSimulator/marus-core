@@ -187,7 +187,7 @@ namespace Labust.Sensors {
         {
             //Debug.Log("Lidar message time: " + message.timeInSeconds.ToString());
 
-            LidarStreamingRequest2 lidarStreamingRequest = new LidarStreamingRequest2();
+            PointCloud2StreamingRequest lidarStreamingRequest = new PointCloud2StreamingRequest();
 
             Sensor.PointCloud2 _pointCloud = new Sensor.PointCloud2();
 

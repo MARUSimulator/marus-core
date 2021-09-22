@@ -22,7 +22,7 @@ namespace Labust.Sensors
     /// Implemented using IJobParallelFor on CPU 
     /// Can drop performance
     /// </summary>
-    public class Sonar2D : SensorBase<LidarStreamingRequest>
+    public class Sonar2D : SensorBase<PointCloudStreamingRequest>
     {
 
         /// Instantiates 3 Jobs: 
@@ -108,7 +108,7 @@ namespace Labust.Sensors
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
             };
 
-            var msg = new LidarStreamingRequest()
+            var msg = new PointCloudStreamingRequest()
             {
                 Data = _pointCloud,
                 Address = address

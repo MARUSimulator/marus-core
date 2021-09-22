@@ -18,7 +18,7 @@ namespace Labust.Sensors.Primitive
         // Start is called before the first frame update
         void Start()
         {
-            streamHandle = streamingClient.StreamSonarSensor(cancellationToken:RosConnection.Instance.cancellationToken);
+            //streamHandle = streamingClient.StreamSonarSensor(cancellationToken:RosConnection.Instance.cancellationToken);
             AddSensorCallback(SensorCallbackOrder.Last, Refresh);
             if (string.IsNullOrEmpty(address))
                 address = vehicle.name + "/sonar";
@@ -73,13 +73,13 @@ namespace Labust.Sensors.Primitive
 
         public async override void SendMessage()
         {
-            await _streamWriter.WriteAsync(new SonarStreamingRequest
-            {
-                Address = address,
-                Range = range,
-                Bearing = bearing
-            });
-            hasData = false;
+        //     await _streamWriter.WriteAsync(new SonarStreamingRequest
+        //     {
+        //         Address = address,
+        //         Range = range,
+        //         Bearing = bearing
+        //     });
+        //     hasData = false;
         }
     }
 }

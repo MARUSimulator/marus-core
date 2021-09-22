@@ -21,7 +21,7 @@ namespace Labust.Sensors
     /// Implemented using IJobParallelFor on CPU
     /// Can drop performance
     /// </summary>
-    public class RaycastLidar : SensorBase<LidarStreamingRequest>
+    public class RaycastLidar : SensorBase<PointCloudStreamingRequest>
     {
 
         /// Instantiates 3 Jobs:
@@ -114,7 +114,7 @@ namespace Labust.Sensors
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
             };
 
-            var msg = new LidarStreamingRequest()
+            var msg = new PointCloudStreamingRequest()
             {
                 Data = _pointCloud,
                 Address = address
