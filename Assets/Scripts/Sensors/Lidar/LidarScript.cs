@@ -186,34 +186,37 @@ namespace Labust.Sensors {
         public override bool SendMessage()
         {
             //Debug.Log("Lidar message time: " + message.timeInSeconds.ToString());
-            
-            LidarStreamingRequest lidarStreamingRequest = new LidarStreamingRequest();
-            
-            lidarStreamingRequest.TimeInSeconds = message.timeInSeconds;
-            lidarStreamingRequest.Height = message.height;
-            lidarStreamingRequest.Width = message.width;
+
+            PointCloud2StreamingRequest lidarStreamingRequest = new PointCloud2StreamingRequest();
+
+            Sensor.PointCloud2 _pointCloud = new Sensor.PointCloud2();
+
+            _pointCloud.TimeInSeconds = message.timeInSeconds;
+            _pointCloud.Height = message.height;
+            _pointCloud.Width = message.width;
 
             Core.PointField[] fields = message.fields;
-            Sensorstreaming.PointField[] pointFields = new Sensorstreaming.PointField[fields.Length];
+            Sensor.PointField[] pointFields = new Sensor.PointField[fields.Length];
             for (int i = 0; i < fields.Length; i++)
             {
-                Sensorstreaming.PointField tempPointField = new Sensorstreaming.PointField();
+                Sensor.PointField tempPointField = new Sensor.PointField();
                 tempPointField.Name = fields[i]._name;
                 tempPointField.Offset = fields[i]._offset;
                 tempPointField.Datatype = fields[i]._datatype;
                 tempPointField.Count = fields[i]._count;
 
-                lidarStreamingRequest.Fields.Add(tempPointField);
+                _pointCloud.Fields.Add(tempPointField);
             }
 
-            lidarStreamingRequest.IsBigEndian = message.is_bigendian;
-            lidarStreamingRequest.PointStep = message.point_step;
-            lidarStreamingRequest.RowStep = message.row_step;
-            lidarStreamingRequest.Data = ByteString.CopyFrom(message.data);
-            lidarStreamingRequest.IsDense = message.is_dense;
+            _pointCloud.IsBigEndian = message.is_bigendian;
+            _pointCloud.PointStep = message.point_step;
+            _pointCloud.RowStep = message.row_step;
+            _pointCloud.Data = ByteString.CopyFrom(message.data);
+            _pointCloud.IsDense = message.is_dense;
 
-            lidarStreamingRequest.IsDense = message.is_dense;
+            _pointCloud.IsDense = message.is_dense;
 
+            lidarStreamingRequest.Data = _pointCloud;
             // bool success = _streamingClient.StreamLidarSensor(lidarStreamingRequest).Success;
 
             // if (success)
@@ -227,8 +230,5 @@ namespace Labust.Sensors {
             randomStateVector.Delete();
             debug.Delete();
         }
-
     }
-
-
 }

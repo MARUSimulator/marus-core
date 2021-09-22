@@ -11,21 +11,21 @@ using Unity.Jobs;
 using UnityEngine;
 using Sensorstreaming;
 using System.Threading;
-
+using Labust.Core;
 
 
 namespace Labust.Sensors
 {
 
     /// <summary>
-    /// Lidar that cast N rays evenly distributed in configured field of view.
-    /// Implemented using IJobParallelFor on CPU 
+    /// Sonar that cast N rays evenly distributed in configured field of view.
+    /// Implemented using IJobParallelFor on CPU
     /// Can drop performance
     /// </summary>
-    public class Sonar3D : SensorBase<LidarStreamingRequest>
+    public class Sonar3D : SensorBase<PointCloudStreamingRequest>
     {
 
-        /// Instantiates 3 Jobs: 
+        /// Instantiates 3 Jobs:
         /// 1) RaycastCommand creation - create raycast commands <see cref="RaycastCommand"> for lidar FoV
         /// 2) RaycastCommand execution
         /// 3) RaycastHit data interpretation - extract points, distances etc.
@@ -54,6 +54,7 @@ namespace Labust.Sensors
                                        // float rayWidth = 0.001f; // in radians
 
         public ComputeShader pointCloudShader;
+        private NativeArray<Vector3> _pointsCopy;
 
         const float PIOVERTWO = Mathf.PI / 2;
         const float TWOPI = Mathf.PI * 2;
@@ -68,7 +69,11 @@ namespace Labust.Sensors
         {
 
             int totalRays = WidthRes * HeightRes * NumRaysPerAccusticRay;
-            streamHandle = streamingClient.StreamLidarSensor(cancellationToken: RosConnection.Instance.cancellationToken);
+            streamHandle = streamingClient.StreamSonarSensor(cancellationToken: RosConnection.Instance.cancellationToken);
+            if (string.IsNullOrEmpty(address))
+                address = transform.name + "/sonar3d";
+
+            _pointsCopy = new NativeArray<Vector3>(totalRays, Allocator.Persistent);
 
             var directionsLocal = RaycastJobHelper.EvenlyDistributeRays(WidthRes, HeightRes, HorizontalFieldOfView, VerticalFieldOfView);
             _raycastHelper = new RaycastJobHelper<SonarReading>(gameObject, directionsLocal, OnSonarHit, OnFinish, MaxDistance);
@@ -81,20 +86,43 @@ namespace Labust.Sensors
         private void OnFinish(NativeArray<Vector3> points, NativeArray<SonarReading> reading)
         {
             _pointCloudManager.UpdatePointCloud(points);
+            points.CopyTo(_pointsCopy);
+            hasData = true;
         }
 
         void OnDestroy()
         {
             _raycastHelper.Dispose();
+            _pointsCopy.Dispose();
         }
 
-        public override void SendMessage()
+        public async override void SendMessage()
         {
-            // TBD
-            // streamWriter.WriteAsync(new LidarStreamingRequest
-            // {
+            Sensor.PointCloud _pointCloud = new Sensor.PointCloud();
+            foreach (Vector3 point in _pointsCopy)
+            {
+                var tmp = TfExtensions.Unity2Map(point);
+                Geometry.Point p = new Geometry.Point()
+                {
+                    X = tmp.x,
+                    Y = tmp.y,
+                    Z = tmp.z
+                };
+                _pointCloud.Points.Add(p);
+            }
 
-            // });
+            _pointCloud.Header = new Std.Header()
+            {
+                FrameId = RosConnection.Instance.OriginFrameName,
+                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
+            };
+
+            var msg = new PointCloudStreamingRequest()
+            {
+                Data = _pointCloud,
+                Address = address
+            };
+            await _streamWriter.WriteAsync(msg);
             hasData = false;
         }
 
