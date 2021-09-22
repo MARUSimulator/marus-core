@@ -45,8 +45,8 @@ namespace Labust.Networking
         public string OriginFrameLatitude = "/d2/LocalOriginLat";
         public string OriginFrameLongitude = "/d2/LocalOriginLon";
 
-        public float DefaultLatitude = 45f;
-        public float DefaultLongitude = 15f;
+        public double DefaultLatitude = 45;
+        public double DefaultLongitude = 15;
 
         Channel _streamingChannel;
         Dictionary<Type, ClientBase> _grpcClients;
@@ -284,7 +284,7 @@ namespace Labust.Networking
             {
                 _worldFrame.transform.position = worldFrameMsg.Translation.AsUnity();
                 _worldFrame.transform.rotation = worldFrameMsg.Rotation.AsUnity();
-                _worldFrame = new GeographicFrame(_worldFrame.transform, (float)lat, (float)lon, 0f);
+                _worldFrame = new GeographicFrame(_worldFrame.transform, lat, lon, 0f);
 
                 _mapFrame.transform.position = Vector3.zero;
                 _mapFrame.transform.rotation = Quaternion.identity;

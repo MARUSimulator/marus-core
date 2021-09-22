@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Auv;
 using Labust.Networking;
 using Sensorstreaming;
 using UnityEngine;
 using Labust.Utils;
 using Labust.Core;
+using Std;
 
 namespace Labust.Sensors.Primitive
 {
@@ -43,19 +46,28 @@ namespace Labust.Sensors.Primitive
 
         public async override void SendMessage()
         {
-            /*
             var toRad = orientation.eulerAngles * Mathf.Deg2Rad;
+            var toEnu = position.Unity2Map();
             await _streamWriter.WriteAsync(new PoseStreamingRequest
             {
                 Address = address,
-                Pose = new Geometry.Pose
+                Data = new NavigationStatus
                 {
-                    Position = position.Unity2Map().AsMsg(),
-                    Orientation = orientation.Unity2Map().AsMsg()
+                    Header = new Header
+                    {
+                        FrameId = frameId,
+                        Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
+                    },
+                    Position = new NED
+                    {
+                        North = toEnu.y,
+                        East = toEnu.x,
+                        Depth = - toEnu.z
+                    },
+                    Orientation = toRad.Unity2Map().AsMsg()
                 }
             });
             hasData = false;
-            */
         }
     }
 }
