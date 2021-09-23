@@ -54,12 +54,14 @@ namespace Labust.Visualization
         void Start()
         {
             // These are some examples how to use
+            /*
             List<Vector3> path = new List<Vector3> {new Vector3(0, 1, 0), new Vector3(14, 1, 0), new Vector3(25, 1, 0)};
             AddPath(path, "test path");
             AddPoint(new Vector3(0, 2, 10), "test point", 0.5f);
-            //var sphere = GameObject.Find("Sphere");
-            //AddTransform(sphere.transform, "test transform");
+            var sphere = GameObject.Find("Sphere");
+            AddTransform(sphere.transform, "test transform");
             AddLine(new Vector3(0, 1, 0), new Vector3(0, 10, 0), "test line");
+            */
         }
 
         /// <summary>

@@ -131,6 +131,9 @@ namespace Labust.Visualization.Primitives
                 sphere.transform.position = Position;
                 sphere.GetComponent<Renderer>().material.color = PointColor;
                 sphere.layer = LayerMask.NameToLayer("Visualization");
+                sphere.GetComponent<Renderer>().sortingLayerID = SortingLayer.NameToID("Points");
+                Material newMat = new Material(Shader.Find("HDRP/Unlit"));
+                sphere.GetComponent<Renderer>().material = newMat;
             }
             if (sphere != null && _pointTransform != null)
             {

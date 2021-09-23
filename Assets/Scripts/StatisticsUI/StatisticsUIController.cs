@@ -36,7 +36,10 @@ namespace Labust.StatisticsUI
                     _cameraObject.SetActive(false);
                     _canvas.enabled = false;
                     Cursor.lockState = CursorLockMode.Locked;
+
+                    #if CREST_AVAILABLE
                     _ocean.GetComponent<OceanRenderer>().ViewCamera = null;
+                    #endif
                 }
                 else
                 {
@@ -44,7 +47,9 @@ namespace Labust.StatisticsUI
                     _canvas.enabled = true;
                     _controller.RefreshPaths();
                     Cursor.lockState = CursorLockMode.Confined;
+                    #if CREST_AVAILABLE
                     _ocean.GetComponent<OceanRenderer>().ViewCamera = _camera;
+                    #endif
                 }
             }
         }

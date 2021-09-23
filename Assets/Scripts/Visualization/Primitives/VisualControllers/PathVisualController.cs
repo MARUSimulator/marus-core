@@ -55,6 +55,30 @@ namespace Labust.Visualization
 			}
 		}
 
+		public void SetPointColor(Color c)
+		{
+			PointColor = c;
+			MyPath.SetPointColor(c);
+		}
+
+		public void SetLineColor(Color c)
+		{
+			LineColor = c;
+			MyPath.SetLineColor(c);
+		}
+
+		public void SetPointSize(float s)
+		{
+			PointSize = s;
+			MyPath.SetPointSize(s);
+		}
+
+		public void SetLineThickness(float s)
+		{
+			LineThickness = s;
+			MyPath.SetLineThickness(s);
+		}
+
 		void OnDestroy() {
 			MyPath.Destroy();
 		}

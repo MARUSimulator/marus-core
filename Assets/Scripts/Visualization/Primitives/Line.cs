@@ -84,6 +84,9 @@ namespace Labust.Visualization.Primitives
                 cylinder.hideFlags = HideFlags.HideInHierarchy;
                 UnityEngine.Object.Destroy(cylinder.GetComponent<CapsuleCollider>());
                 cylinder.layer = LayerMask.NameToLayer("Visualization");
+                cylinder.GetComponent<Renderer>().sortingLayerID = SortingLayer.NameToID("Lines");
+                Material newMat = new Material(Shader.Find("HDRP/Unlit"));
+                cylinder.GetComponent<Renderer>().material = newMat;
             }
 
             if (parent != null)
