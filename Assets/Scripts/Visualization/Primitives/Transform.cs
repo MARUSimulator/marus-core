@@ -1,3 +1,4 @@
+using Labust.Utils;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,6 +11,8 @@ namespace Labust.Visualization.Primitives
     public class Transform : VisualElement
     {
         public UnityEngine.Transform MyTransform;
+        public float LengthScale = 0.5f;
+        public float LineThickness = 0.03f;
 
         private Line _xLine;
         private Line _yLine;
@@ -24,19 +27,21 @@ namespace Labust.Visualization.Primitives
         public Transform(UnityEngine.Transform transform)
         {
             MyTransform = transform;
+
             var origin = MyTransform.TransformPoint(Vector3.zero);
-            var x = MyTransform.TransformPoint(Vector3.right);
-            var y = MyTransform.TransformPoint(Vector3.up);
-            var z = MyTransform.TransformPoint(Vector3.forward);
+            (var x, var y, var z) = CalculateAxisPoints();
 
-            _xLine = new Line(origin, x);
+            _xLine = new Line(origin, x, LineThickness);
             _xLine.LineColor = Color.red;
+            _xLine.SetParent(transform.gameObject);
 
-            _yLine = new Line(origin, y);
+            _yLine = new Line(origin, y, LineThickness);
             _yLine.LineColor = Color.green;
+            _yLine.SetParent(transform.gameObject);
 
-            _zLine = new Line(origin, z);
+            _zLine = new Line(origin, z, LineThickness);
             _zLine.LineColor = Color.blue;
+            _zLine.SetParent(transform.gameObject);
         }
 
         /// <summary>
@@ -44,14 +49,14 @@ namespace Labust.Visualization.Primitives
         /// </summary>
         public void Draw()
         {
+            
             if (destroyed)
             {
                 return;
             }
+
             var origin = MyTransform.TransformPoint(Vector3.zero);
-            var x = MyTransform.TransformPoint(Vector3.right);
-            var y = MyTransform.TransformPoint(Vector3.up);
-            var z = MyTransform.TransformPoint(Vector3.forward);
+            (var x, var y, var z) = CalculateAxisPoints();
 
             _xLine.StartPoint = origin;
             _xLine.EndPoint = x;
@@ -83,6 +88,21 @@ namespace Labust.Visualization.Primitives
             _xLine.SetParent(parent);
             _yLine.SetParent(parent);
             _zLine.SetParent(parent);
+        }
+
+        private (Vector3, Vector3, Vector3) CalculateAxisPoints()
+        {
+            var totalScale = Helpers.GetObjectScale(MyTransform);
+            var x_scale = 1 / totalScale.x;
+            var y_scale = 1 / totalScale.y;
+            var z_scale = 1 / totalScale.z;
+
+            var origin = MyTransform.TransformPoint(Vector3.zero);
+            var x = MyTransform.TransformPoint(Vector3.right * LengthScale * x_scale);
+            var y = MyTransform.TransformPoint(Vector3.up * LengthScale * y_scale);
+            var z = MyTransform.TransformPoint(Vector3.forward * LengthScale * z_scale);
+
+            return (x, y, z);
         }
     }
 }

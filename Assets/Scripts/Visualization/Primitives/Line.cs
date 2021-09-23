@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using Labust.Utils;
 
 namespace Labust.Visualization.Primitives
 {
@@ -28,15 +29,11 @@ namespace Labust.Visualization.Primitives
         /// </summary>
         public Color LineColor = Color.red;
 
-        private GameObject cylinder;
+        GameObject line;
 
         private GameObject parent;
 
         private bool destroyed = false;
-
-        public Line()
-        {
-        }
 
         public Line(Vector3 start, Vector3 end)
         {
@@ -44,18 +41,13 @@ namespace Labust.Visualization.Primitives
             EndPoint = end;
         }
 
-        public Line(Vector3 start, Vector3 end, float width)
+        public Line(Vector3 start, Vector3 end, float width) : this(start, end)
         {
-            StartPoint = start;
-            EndPoint = end;
             Thickness = width;
         }
 
-        public Line(Vector3 start, Vector3 end, float width, Color _color)
+        public Line(Vector3 start, Vector3 end, float width, Color _color) : this(start, end, width)
         {
-            StartPoint = start;
-            EndPoint = end;
-            Thickness = width;
             LineColor = _color;
         }
 
@@ -69,30 +61,33 @@ namespace Labust.Visualization.Primitives
                 return;
             }
 
-            if (cylinder == null)
+            if (line == null)
             {
-                cylinder = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                var offset = EndPoint - StartPoint;
-                var scale = new Vector3(Thickness, offset.magnitude / 2.0f, Thickness);
-                var position = StartPoint + (offset / 2.0f);
-
-                cylinder.transform.position = position;
-                cylinder.transform.rotation = Quaternion.identity;
-                cylinder.transform.up = offset;
-                cylinder.transform.localScale = scale;
-                cylinder.GetComponent<Renderer>().material.color = LineColor;
-                cylinder.hideFlags = HideFlags.HideInHierarchy;
-                UnityEngine.Object.Destroy(cylinder.GetComponent<CapsuleCollider>());
-                cylinder.layer = LayerMask.NameToLayer("Visualization");
-                cylinder.GetComponent<Renderer>().sortingLayerID = SortingLayer.NameToID("Lines");
-                Material newMat = new Material(Shader.Find("HDRP/Unlit"));
-                cylinder.GetComponent<Renderer>().material = newMat;
+                line = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                UnityEngine.Object.Destroy(line.GetComponent<CapsuleCollider>());
+                line.hideFlags = HideFlags.HideInHierarchy;
+                line.isStatic = true;
             }
-
             if (parent != null)
             {
-                cylinder.transform.SetParent(parent.transform);
+                line.transform.SetParent(parent.transform);
             }
+
+            var totalScale = Helpers.GetObjectScale(line.transform, includeSelf:false);
+
+            var offset = EndPoint - StartPoint;
+            var scale = new Vector3(Thickness / totalScale.x, offset.magnitude / 2.0f / totalScale.y, Thickness / totalScale.z);
+            var position = StartPoint + (offset / 2.0f);
+            line.transform.position = position;
+            line.transform.rotation = Quaternion.identity;
+            line.transform.up = offset.normalized;
+            line.transform.localScale = scale;
+            line.GetComponent<Renderer>().material.color = LineColor;
+            line.layer = LayerMask.NameToLayer("Visualization");
+            line.GetComponent<Renderer>().sortingLayerID = SortingLayer.NameToID("Lines");
+            Material newMat = new Material(Shader.Find("HDRP/Unlit"));
+            line.GetComponent<Renderer>().material = newMat;
+
         }
 
         /// <summary>
@@ -100,11 +95,11 @@ namespace Labust.Visualization.Primitives
         /// </summary>
         public void Destroy()
         {
-            if (cylinder == null)
+            if (line == null)
             {
                 return;
             }
-            UnityEngine.Object.Destroy(cylinder);
+            UnityEngine.Object.Destroy(line);
             destroyed = true;
         }
 
@@ -113,12 +108,7 @@ namespace Labust.Visualization.Primitives
         /// </summary>
         public void SetThickness(float width)
         {
-            if (cylinder == null)
-            {
-                return;
-            }
-            var oldScale = cylinder.transform.localScale;
-            cylinder.transform.localScale = new Vector3(width, oldScale.y, width);
+            Thickness = width;
         }
 
         /// <summary>
@@ -126,11 +116,7 @@ namespace Labust.Visualization.Primitives
         /// </summary>
         public void SetColor(Color color)
         {
-            if (cylinder == null)
-            {
-                return;
-            }
-            cylinder.GetComponent<Renderer>().material.color = color;
+            LineColor = color;
         }
 
         public void SetParent(GameObject parent)

@@ -33,7 +33,7 @@ namespace Labust.Sensors.Primitive
 
         void Refresh()
         {
-            var world = RosConnection.Instance.WorldFrame;
+            var world = TfHandler.Instance.OriginGeoFrame;
             point = world.Unity2Geo(transform.position);
             Log(new { point.latitude, point.longitude, point.altitude });
             hasData = true;
@@ -49,7 +49,7 @@ namespace Labust.Sensors.Primitive
                     Header = new Header
                     {
                         FrameId = frameId,
-                        Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
+                        Timestamp = TimeHandler.Instance.TimeDouble
                     },
                     Status = new NavSatStatus
                     {

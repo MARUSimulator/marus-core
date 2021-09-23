@@ -1,5 +1,6 @@
 ﻿using System;
 using Geometry;
+using Labust.Core;
 using Labust.Networking;
 using Labust.Sensors;
 using Sensorstreaming;
@@ -35,7 +36,7 @@ namespace Labust.Sensors.Primitive
                     Header = new Header
                     {
                         FrameId = frameId,
-                        Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0
+                        Timestamp = TimeHandler.Instance.TimeDouble
                     },
                     Pose = new PoseWithCovariance
                     {

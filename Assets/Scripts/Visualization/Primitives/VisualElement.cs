@@ -8,5 +8,6 @@ namespace Labust.Visualization.Primitives
     {
         void Draw();
         void Destroy();
+
     }
 }

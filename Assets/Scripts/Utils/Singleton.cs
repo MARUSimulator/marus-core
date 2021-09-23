@@ -24,7 +24,7 @@ namespace Labust.Utils
 			}
 		}
 	
-		public void Awake()
+		void Awake()
 		{
 			if (instance == null) {
 				instance = this as T;
@@ -36,7 +36,7 @@ namespace Labust.Utils
 		}
 
 
-		public virtual void Initialize()
+		protected virtual void Initialize()
 		{
 
 		}
