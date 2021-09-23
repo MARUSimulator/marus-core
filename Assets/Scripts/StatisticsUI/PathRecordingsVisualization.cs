@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,6 +34,8 @@ namespace Labust.StatisticsUI
         /// </summary>
         public GameObject TripInfoPrefab;
 
+        public List<Tuple<Color, Color>> ColorPresets;
+
         void Start()
         {
             // instantiate visualizer
@@ -45,6 +48,21 @@ namespace Labust.StatisticsUI
             _activePaths = new List<StatisticsEntry>();
 
             _scrollView = GetComponentInChildren<ScrollRect>();
+
+            ColorPresets = new List<Tuple<Color, Color>>()
+            {
+                new Tuple<Color, Color>(Color.white, Color.red),
+                new Tuple<Color, Color>(MakeColor(254, 127, 45), MakeColor(35, 61, 77)),
+                new Tuple<Color, Color>(MakeColor(126, 47, 142), MakeColor(63, 142, 47)),
+                new Tuple<Color, Color>(MakeColor(10, 161, 245), MakeColor(245, 94, 10)),
+                new Tuple<Color, Color>(MakeColor(15, 240, 146), MakeColor(240, 15, 109)),
+                new Tuple<Color, Color>(MakeColor(32, 194, 223), MakeColor(223, 61, 32))
+            };
+        }
+
+        private Color MakeColor(int r, int g, int b)
+        {
+            return new Color(r/255f, g/255f, b/255f);
         }
 
         void Update()
@@ -54,7 +72,7 @@ namespace Labust.StatisticsUI
                 return;
             }
 
-            if (_pathRecordings.Count == 0)
+            if (_pathRecordings.Count == 0 || ColorPresets.Count == 0)
             {
                 _addPathButton.enabled = false;
             }
@@ -70,6 +88,7 @@ namespace Labust.StatisticsUI
         /// <param name="path"></param>
         public void RemovePath(StatisticsEntry path)
         {
+            ColorPresets.Insert(0, path.GetColors());
             _activePaths.Remove(path);
             Destroy(path.gameObject.GetComponent<StatisticsEntry>());
             _pathRecordings.Add(path.FileName);
@@ -109,6 +128,7 @@ namespace Labust.StatisticsUI
 
             se.FileName = _filename;
             se.ParentController = this;
+            se.cameraViewController = transform.Find("Panel/TopDownCamera/CameraView").gameObject.GetComponent<MousePointToImagePointController>();
             _activePaths.Add(se);
             _pathRecordings.Remove(_filename);
             _pathsDropdown.ClearOptions();
@@ -140,19 +160,15 @@ namespace Labust.StatisticsUI
             return recordings;
         }
 
-        /// <summary>
-        /// Helper function to disable/enable scroll while color picker is active/inactive
-        /// </summary>
-        public void ToggleScroll()
+        public Tuple<Color, Color> GetAvailableColorPreset()
         {
-            if (_scrollView.isActiveAndEnabled == true)
+            if (ColorPresets.Count == 0)
             {
-                _scrollView.enabled = false;
+                return null;
             }
-            else
-            {
-                _scrollView.enabled = true;
-            }
+            var colors = ColorPresets[0];
+            ColorPresets.RemoveAt(0);
+            return colors;
         }
     }
 
@@ -165,20 +181,15 @@ namespace Labust.StatisticsUI
         /// Reference to parent script for communicating
         /// </summary>
         public PathRecordingsVisualization ParentController;
+        public MousePointToImagePointController cameraViewController;
 
         /// <summary>
         /// Recording filename
         /// </summary>
         public string FileName;
-
-        private GameObject _pointColorPicker;
-        private GameObject _lineColorPicker;
-        private Slider _lineSlider;
-        private Slider _pointSizeSlider;
+        private Slider _sizeSlider;
         private Button _removeButton;
-        private Button _confirmColorButton;
-        private Button _pointColorButton;
-        private Button _lineColorButton;
+        private Button _focusButton;
         private Image _pointColorRepr;
         private Image _lineColorRepr;
         private Text _name;
@@ -190,43 +201,29 @@ namespace Labust.StatisticsUI
         private List<double> pathTimestamps;
         private PathVisualController visualController;
 
+        private const float _ratio = 1.61f;
+        private int index = 5;
         void Start()
         {
-            _pointColorPicker = transform.Find("ColorObjects/PointColorPicker").gameObject;
-            _pointColorPicker.SetActive(false);
-            _lineColorPicker = transform.Find("ColorObjects/LineColorPicker").gameObject;
-            _lineColorPicker.SetActive(false);
-
             _pointColorRepr = transform.Find("ColorObjects/PointColorMarker").gameObject.GetComponent<Image>();
             _lineColorRepr = transform.Find("ColorObjects/LineColorMarker").gameObject.GetComponent<Image>();
-            _pointColorButton = transform.Find("ColorObjects/SetPointColorButton").gameObject.GetComponent<Button>();
-            _pointColorButton.onClick.AddListener(ChoosePointColor);
-            _lineColorButton = transform.Find("ColorObjects/SetLineColorButton").gameObject.GetComponent<Button>();
-            _lineColorButton.onClick.AddListener(ChooseLineColor);
-
-            _confirmColorButton = transform.Find("ColorObjects/ConfirmColorButton").gameObject.GetComponent<Button>();
-            _confirmColorButton.gameObject.SetActive(false);
-            _confirmColorButton.onClick.AddListener(CloseColorPickers);
 
             pathPositions = new List<Vector3>();
             pathTimestamps = new List<double>();
 
             _labels = transform.Find("Labels");
 
-            _lineSlider = transform.Find("LineWidthSlider").GetComponent<Slider>();
-            _lineSlider.minValue = 0f;
-            _lineSlider.maxValue = 2f;
-            _lineSlider.value = 0.55f;
-            _lineSlider.onValueChanged.AddListener(delegate {ChangeLineSize();});
+            _sizeSlider = transform.Find("ColorObjects/SizeSlider").GetComponent<Slider>();
+            _sizeSlider.minValue = 0f;
+            _sizeSlider.maxValue = 0.725f;
+            _sizeSlider.value = 0.1f;
+            _sizeSlider.onValueChanged.AddListener(ChangeSize);
 
-            _pointSizeSlider = transform.Find("PointSizeSlider").GetComponent<Slider>();
-            _pointSizeSlider.minValue = 0f;
-            _pointSizeSlider.maxValue = 4f;
-            _pointSizeSlider.value = 0.8f;
-            _pointSizeSlider.onValueChanged.AddListener(ChangeSize);
-
-            _removeButton = transform.Find("DisableButton").gameObject.GetComponent<Button>();
+            _removeButton = transform.Find("Buttons/DisableButton").gameObject.GetComponent<Button>();
             _removeButton.onClick.AddListener(DestroyPath);
+
+            _focusButton = transform.Find("Buttons/FocusButton").gameObject.GetComponent<Button>();
+            _focusButton.onClick.AddListener(FocusPath);
 
             _name = transform.Find("PathNameLabel").gameObject.GetComponent<Text>();
             _name.text = FileName;
@@ -234,103 +231,12 @@ namespace Labust.StatisticsUI
             DrawPath();
         }
 
-        void Update()
-        {
-            if (visualController == null)
-            {
-                return;
-            }
-
-            if (_pointColorPicker != null && _pointColorPicker.activeSelf)
-            {
-                activePointColor = _pointColorPicker.GetComponent<FlexibleColorPicker>().color;
-                visualController.PointColor = activePointColor;
-                _pointColorRepr.color = activePointColor;
-            }
-
-            if (_lineColorPicker != null && _lineColorPicker.activeSelf)
-            {
-                activeLineColor = _lineColorPicker.GetComponent<FlexibleColorPicker>().color;
-                visualController.LineColor = activeLineColor;
-                _lineColorRepr.color = activeLineColor;
-            }
-
-            if (_lineSlider.value != visualController.LineThickness)
-            {
-                _lineSlider.value = visualController.LineThickness;
-            }
-
-            if (_pointSizeSlider.value != visualController.PointSize)
-            {
-                _pointSizeSlider.value = visualController.PointSize;
-            }
-
-            if (activePointColor != visualController.PointColor)
-            {
-                activePointColor = visualController.PointColor;
-                _pointColorRepr.color = activePointColor;
-            }
-
-            if (activeLineColor != visualController.LineColor)
-            {
-                activeLineColor = visualController.LineColor;
-                _lineColorRepr.color = activeLineColor;
-            }
-        }
-
-        void CloseColorPickers()
-        {
-            _pointColorPicker.SetActive(false);
-            _lineColorPicker.SetActive(false);
-            transform.Find("ColorObjects/ConfirmColorButton").gameObject.SetActive(false);
-            ParentController.ToggleScroll();
-        }
-
-        void ChoosePointColor()
-        {
-            if (_pointColorPicker.activeSelf)
-            {
-                _pointColorPicker.SetActive(false);
-                ParentController.ToggleScroll();
-                transform.Find("ColorObjects/ConfirmColorButton").gameObject.SetActive(false);
-            }
-            else
-            {
-                _pointColorPicker.SetActive(true);
-                ParentController.ToggleScroll();
-                transform.Find("ColorObjects/ConfirmColorButton").gameObject.SetActive(true);
-            }
-        }
-
-        void ChooseLineColor()
-        {
-            if (_lineColorPicker.activeSelf)
-            {
-                _lineColorPicker.SetActive(false);
-                ParentController.ToggleScroll();
-                transform.Find("ColorObjects/ConfirmColorButton").gameObject.SetActive(false);
-            }
-            else
-            {
-                _lineColorPicker.SetActive(true);
-                ParentController.ToggleScroll();
-                transform.Find("ColorObjects/ConfirmColorButton").gameObject.SetActive(true);
-            }
-        }
-
         public void ChangeSize(float value)
         {
             if (visualController != null && path != null)
             {
-                visualController.PointSize = value;
-            }
-        }
-
-        void ChangeLineSize()
-        {
-            if (visualController != null && path != null)
-            {
-                visualController.LineThickness = _lineSlider.value;
+                visualController.SetLineThickness(value);
+                visualController.SetPointSize(_ratio * value);
             }
         }
 
@@ -352,10 +258,18 @@ namespace Labust.StatisticsUI
             }
         }
 
+        void FocusPath()
+        {
+            if (path != null)
+            {
+                cameraViewController.Focus(path.GetPathPosition());
+            }
+        }
+
         void DrawPath()
         {
-            /*try
-            {*/
+            try
+            {
                 var completeFilename = System.IO.Path.Combine(Application.dataPath, "PathRecordings", FileName);
 
                 List<LogRecord<Vector3>> records = DataLoggerUtilities.GetLogRecordsFromFile<Vector3>(completeFilename);
@@ -364,21 +278,30 @@ namespace Labust.StatisticsUI
                     pathPositions.Add(record.Value);
                     pathTimestamps.Add(record.TimeStamp.Subtract(new DateTime(1970,1,1,0,0,0)).TotalSeconds);
                 }
-                path = Visualizer.Instance.AddPath(pathPositions, "Path-" + FileName);
-                path.OnDestroyPath.AddListener(RemovePath);
                 CalculateStats();
+                var everyNth = (pathPositions.Where((x,i) => i % index == 0)).ToList();
+                path = Visualizer.Instance.AddPath(everyNth, "Path-" + FileName);
+                path.OnDestroyPath.AddListener(RemovePath);
+
+                var colors = ParentController.GetAvailableColorPreset();
+
                 visualController = path.GetPathGameObject().GetComponent<PathVisualController>();
-                _pointColorRepr.color = visualController.PointColor;
-                _pointColorPicker.GetComponent<FlexibleColorPicker>().color = visualController.PointColor;
-                _lineColorRepr.color = visualController.LineColor;
-                _lineColorPicker.GetComponent<FlexibleColorPicker>().color = visualController.LineColor;
+                activeLineColor = colors.Item2;
+                activePointColor = colors.Item1;
+                visualController.SetPointColor(activePointColor);
+                _pointColorRepr.color = activePointColor;
+                visualController.SetLineColor(activeLineColor);
+                _lineColorRepr.color = activeLineColor;
+                ChangeSize(_sizeSlider.value);
+                FocusPath();
                 Debug.Log("Path recording loaded: " + FileName);
-            /*}
-            catch
+            }
+            catch(Exception e)
             {
+                Debug.Log(e);
                 Debug.Log("Invalid recording file");
                 RemovePath();
-            }*/
+            }
         }
 
         void CalculateStats()
@@ -407,6 +330,11 @@ namespace Labust.StatisticsUI
             GameObject o3 = _labels.Find("MaxDepthVariableLabel").gameObject;
             Text t3 = o3.GetComponent<Text>();
             t3.text = string.Format("{0:0.##} meters", maxDepth);
+        }
+
+        public Tuple<Color, Color> GetColors()
+        {
+            return new Tuple<Color, Color>(_pointColorRepr.color, _lineColorRepr.color);
         }
     }
 }

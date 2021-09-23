@@ -22,12 +22,12 @@ namespace Labust.Visualization.Primitives
         /// <summary>
         /// Line thickness
         /// </summary>
-        public float Thickness = 0.01f;
+        public float Thickness = 0.05f;
 
         /// <summary>
         /// Line color
         /// </summary>
-        public Color LineColor = Color.yellow;
+        public Color LineColor = Color.red;
 
         GameObject line;
 
@@ -65,7 +65,11 @@ namespace Labust.Visualization.Primitives
             {
                 line = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                 UnityEngine.Object.Destroy(line.GetComponent<CapsuleCollider>());
+                Material newMat = new Material(Shader.Find("HDRP/Unlit"));
+                line.GetComponent<Renderer>().material = newMat;
                 line.hideFlags = HideFlags.HideInHierarchy;
+                line.layer = LayerMask.NameToLayer("Visualization");
+                line.GetComponent<Renderer>().sortingLayerID = SortingLayer.NameToID("Lines");
                 line.isStatic = true;
             }
             if (parent != null)
@@ -83,8 +87,6 @@ namespace Labust.Visualization.Primitives
             line.transform.up = offset.normalized;
             line.transform.localScale = scale;
             line.GetComponent<Renderer>().material.color = LineColor;
-            // line.layer = 6;
-
         }
 
         /// <summary>

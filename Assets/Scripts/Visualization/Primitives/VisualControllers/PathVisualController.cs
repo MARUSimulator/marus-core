@@ -12,10 +12,10 @@ namespace Labust.Visualization
 
 		public Color PointColor = Color.white;
 		[Range(0.1f, 4f)]
-		public float PointSize = 0.8f;
+		public float PointSize = 0.7f;
 		public Color LineColor = Color.red;
 		[Range(0f, 2f)]
-		public float LineThickness = 0.55f;
+		public float LineThickness = 0.01f;
 
 		private Color _lastPointColor;
 		private Color _lastLineColor;
@@ -53,6 +53,30 @@ namespace Labust.Visualization
 				MyPath.SetLineColor(LineColor);
 				_lastLineColor = LineColor;
 			}
+		}
+
+		public void SetPointColor(Color c)
+		{
+			PointColor = c;
+			MyPath.SetPointColor(c);
+		}
+
+		public void SetLineColor(Color c)
+		{
+			LineColor = c;
+			MyPath.SetLineColor(c);
+		}
+
+		public void SetPointSize(float s)
+		{
+			PointSize = s;
+			MyPath.SetPointSize(s);
+		}
+
+		public void SetLineThickness(float s)
+		{
+			LineThickness = s;
+			MyPath.SetLineThickness(s);
 		}
 
 		void OnDestroy() {

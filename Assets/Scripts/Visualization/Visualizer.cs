@@ -16,12 +16,12 @@ namespace Labust.Visualization
         /// <summary>
         /// Point color default if not provided any other way
         /// </summary>
-        private Color pointColor = Color.red;
+        private Color pointColor = Color.white;
 
         /// <summary>
         /// Default point size
         /// </summary>
-        private float pointSize = 0.1f;
+        private float pointSize = 0.7f;
 
         /// <summary>
         /// Default line thickness

@@ -27,12 +27,12 @@ namespace Labust.Visualization.Primitives
         /// <summary>
         /// Point size
         /// </summary>
-        public float PointSize = 0.1f;
+        public float PointSize = 0.7f;
 
         /// <summary>
         /// Point color
         /// </summary>
-        public Color PointColor = Color.red;
+        public Color PointColor = Color.white;
 
         private GameObject sphere = null;
 
@@ -130,7 +130,10 @@ namespace Labust.Visualization.Primitives
                 sphere.transform.localScale = new Vector3(PointSize, PointSize, PointSize);
                 sphere.transform.position = Position;
                 sphere.GetComponent<Renderer>().material.color = PointColor;
-                sphere.layer = 6;
+                sphere.layer = LayerMask.NameToLayer("Visualization");
+                sphere.GetComponent<Renderer>().sortingLayerID = SortingLayer.NameToID("Points");
+                Material newMat = new Material(Shader.Find("HDRP/Unlit"));
+                sphere.GetComponent<Renderer>().material = newMat;
             }
             if (sphere != null && _pointTransform != null)
             {

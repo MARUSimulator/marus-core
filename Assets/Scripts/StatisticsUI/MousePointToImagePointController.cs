@@ -41,9 +41,12 @@ namespace Labust.StatisticsUI
             {
                 return;
             }
-
+            var scrollDelta = Input.mouseScrollDelta.y;
             var currentZoomLevel = topDownCamera.orthographicSize;
-            currentZoomLevel -= Input.mouseScrollDelta.y * ZoomScale;
+            currentZoomLevel -= scrollDelta * ZoomScale;
+
+            ZoomScale = currentZoomLevel / 10f;
+            MovementSpeed = currentZoomLevel / 500f;
             if (currentZoomLevel > 0.5)
             {
                 topDownCamera.orthographicSize = currentZoomLevel;
@@ -59,6 +62,12 @@ namespace Labust.StatisticsUI
                 topDownCamera.transform.position -= new Vector3 (delta.x, 0, delta.y) * MovementSpeed;
                 lastPos = Input.mousePosition;
             }
+        }
+
+        public void Focus(Vector3 position)
+        {
+            topDownCamera.transform.position = new Vector3(position.x, 0, position.z);
+            topDownCamera.orthographicSize = 30f;
         }
     }
 }
