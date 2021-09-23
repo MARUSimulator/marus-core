@@ -65,7 +65,11 @@ namespace Labust.Visualization.Primitives
             {
                 line = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                 UnityEngine.Object.Destroy(line.GetComponent<CapsuleCollider>());
+                Material newMat = new Material(Shader.Find("HDRP/Unlit"));
+                line.GetComponent<Renderer>().material = newMat;
                 line.hideFlags = HideFlags.HideInHierarchy;
+                line.layer = LayerMask.NameToLayer("Visualization");
+                line.GetComponent<Renderer>().sortingLayerID = SortingLayer.NameToID("Lines");
                 line.isStatic = true;
             }
             if (parent != null)
@@ -83,11 +87,6 @@ namespace Labust.Visualization.Primitives
             line.transform.up = offset.normalized;
             line.transform.localScale = scale;
             line.GetComponent<Renderer>().material.color = LineColor;
-            line.layer = LayerMask.NameToLayer("Visualization");
-            line.GetComponent<Renderer>().sortingLayerID = SortingLayer.NameToID("Lines");
-            Material newMat = new Material(Shader.Find("HDRP/Unlit"));
-            line.GetComponent<Renderer>().material = newMat;
-
         }
 
         /// <summary>
