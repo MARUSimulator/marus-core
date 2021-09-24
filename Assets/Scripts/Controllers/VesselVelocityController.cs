@@ -11,7 +11,7 @@ namespace Labust.Controllers
 	public class VesselVelocityController : MonoBehaviour
 	{
 		public Transform Target;
-		private Boolean stop;
+		public Boolean stop;
 		public float Speed = 0.5f;
 		public float RotationSpeed = 1.0f;
 		public float StoppingDistance = 1f;
@@ -23,7 +23,7 @@ namespace Labust.Controllers
 		}
 
 		public void FixedUpdate()
-		{  
+		{ 
 			if (Target == null)
 			{
 				return;
@@ -56,7 +56,7 @@ namespace Labust.Controllers
 			}
 		}
 
-		public void RotateTowards() 
+		public void RotateTowards()
 		{
 			Vector3 relativePos = Target.position - transform.position;
 			Quaternion targetRotation = Quaternion.LookRotation(relativePos, Vector3.up);
