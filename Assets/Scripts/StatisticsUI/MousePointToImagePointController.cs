@@ -66,8 +66,13 @@ namespace Labust.StatisticsUI
 
         public void Focus(Vector3 position)
         {
-            topDownCamera.transform.position = new Vector3(position.x, 0, position.z);
+            topDownCamera.transform.position = new Vector3(position.x, topDownCamera.transform.position.y, position.z);
             topDownCamera.orthographicSize = 30f;
+        }
+        public void Focus(Vector3 position, float orthographicSize)
+        {
+            topDownCamera.transform.position = new Vector3(position.x, topDownCamera.transform.position.y, position.z);
+            topDownCamera.orthographicSize = orthographicSize;
         }
     }
 }

@@ -215,8 +215,8 @@ namespace Labust.StatisticsUI
 
             _sizeSlider = transform.Find("ColorObjects/SizeSlider").GetComponent<Slider>();
             _sizeSlider.minValue = 0f;
-            _sizeSlider.maxValue = 0.725f;
-            _sizeSlider.value = 0.1f;
+            _sizeSlider.maxValue = 2.0f;
+            _sizeSlider.value = 0.8f;
             _sizeSlider.onValueChanged.AddListener(ChangeSize);
 
             _removeButton = transform.Find("Buttons/DisableButton").gameObject.GetComponent<Button>();
@@ -262,7 +262,8 @@ namespace Labust.StatisticsUI
         {
             if (path != null)
             {
-                cameraViewController.Focus(path.GetPathPosition());
+                Vector3 pathDimension = path.GetPathDimension();
+                cameraViewController.Focus(path.GetPathPosition(), Math.Max(pathDimension.x, pathDimension.z));
             }
         }
 

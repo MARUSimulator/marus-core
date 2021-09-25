@@ -283,6 +283,23 @@ namespace Labust.Visualization.Primitives
             return Vector3.zero;
         }
 
+        public Vector3 GetPathDimension()
+        {
+            if (_points.Count > 0)
+            {
+                Vector3 min, max;
+                min = _points[0].Position;
+                max = _points[0].Position;
+                foreach (Point point in _points)
+                {
+                    min = Vector3.Min(min,point.Position);
+                    max = Vector3.Max(max,point.Position);
+                }
+                return max-min;
+            }
+            return Vector3.zero;
+        }
+
         public GameObject GetPathGameObject()
         {
             return parent;
