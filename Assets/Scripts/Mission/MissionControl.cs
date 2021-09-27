@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using MissionWaypointNS;
-
+using System;
 
 public class MissionControl : MonoBehaviour
 {
@@ -22,7 +22,10 @@ public class MissionControl : MonoBehaviour
 
     // Waypoint can be hidden.
     public bool displayWaypoints = true;
-    
+
+
+    public event Action<MissionWaypoint> OnWaypointChange;
+
     void Update()
     {
         for(int i = 0; i<= waypoints.Count; i++)
@@ -30,7 +33,10 @@ public class MissionControl : MonoBehaviour
             // Display final message after all the waypoints have been visited..
             if (i == waypoints.Count)
             {
-                textElement.text = messages[i]; 
+                if (TextBoxAndMessageExist(i))
+                {
+                    textElement.text = messages[i]; 
+                }
             }
             // Skip every waypoint that has already been visited.
             // Initially, "visited" property for all the waypoints is set to false.
@@ -41,12 +47,22 @@ public class MissionControl : MonoBehaviour
             // and show that waypoint.
             else if(waypoints[i].visited == false)
             {
-                textElement.text = messages[i];
+                if (TextBoxAndMessageExist(i))
+                {
+                    textElement.text = messages[i]; 
+                }
                 waypoints[i].EnableWaypoint(displayWaypoints);
+                if(OnWaypointChange != null)
+                {
+                    OnWaypointChange.Invoke(waypoints[i]);
+                }
             }
         break;
         }
     }
 
-
+    private bool TextBoxAndMessageExist(int i)
+    {
+        return textElement != null && !string.IsNullOrEmpty(messages[i]);
+    }
 }

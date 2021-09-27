@@ -32,7 +32,10 @@ public class Buoyancy : MonoBehaviour
 
     private new Collider collider;
     private new Rigidbody rigidbody;
-
+	
+#if CREST_AVAILABLE
+	Crest.SampleHeightHelper _sampleHeightHelper;
+#endif
     /// <summary>
     /// Provides initialization.
     /// </summary>
@@ -71,6 +74,10 @@ public class Buoyancy : MonoBehaviour
         localArchimedesForce = new Vector3(0, totalBuoyancyForce, 0) / voxels.Count;
 
         Debug.Log(string.Format("[Buoyancy.cs] Name=\"{0}\" volume={1:0.0}, mass={2:0.0}, density={3:0.0}", name, volume, rigidbody.mass, density));
+		
+#if CREST_AVAILABLE
+		_sampleHeightHelper = new Crest.SampleHeightHelper();
+#endif
     }
 
     /// <summary>
@@ -227,7 +234,15 @@ public class Buoyancy : MonoBehaviour
     /// <returns>Water level</returns>
     private float GetWaterLevel(float x, float z)
     {
+#if CREST_AVAILABLE
         //return ocean == null ? 0.0f : ocean.GetWaterHeightAtLocation(x, z);
+		_sampleHeightHelper.Init(new Vector3(x,0.0f,z), 0.5f, true);
+                    
+		if (_sampleHeightHelper.Sample(out var height))
+		{
+			return height;
+		}
+#endif
         return 0.0f;
     }
 

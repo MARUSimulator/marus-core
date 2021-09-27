@@ -38,7 +38,7 @@ namespace Labust.Networking
         [HideInRuntimeInspector]
         public bool RealtimeSimulation = true;
 
-        // [ConditionalHideInInspector("RealtimeSimulation", true)]
+        [ConditionalHideInInspector("RealtimeSimulation", true)]
         [HideInRuntimeInspector]
         public float SimulationSpeed = 1;
 
