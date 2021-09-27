@@ -76,6 +76,7 @@ namespace Labust.Networking
             request.GuidanceTopic = GuidanceTopic;
             request.GuidanceEnable = GuidanceEnable;
             var toEnu = GuidanceTarget.Unity2Map();
+            request.GuidanceTarget = new Geometry.Vector3();
             request.GuidanceTarget.X = toEnu.y;
             request.GuidanceTarget.Y = toEnu.x;
             request.GuidanceTarget.Z = -toEnu.z;

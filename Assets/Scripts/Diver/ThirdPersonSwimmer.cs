@@ -249,7 +249,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 var forcePosition = m_Rigidbody.position;
 
                 // go forward
-                m_Rigidbody.AddForceAtPosition(m_Rigidbody.transform.forward * m_ForwardAmount * 3, forcePosition, ForceMode.Acceleration);
+                m_Rigidbody.AddForceAtPosition(m_Rigidbody.transform.forward * m_ForwardAmount * m_MoveSpeedMultiplier, forcePosition, ForceMode.Acceleration);
 
                 // rotate yaw
                 var rotVec = m_Rigidbody.transform.up;

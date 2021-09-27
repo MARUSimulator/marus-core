@@ -52,7 +52,10 @@ public class MissionControl : MonoBehaviour
                     textElement.text = messages[i]; 
                 }
                 waypoints[i].EnableWaypoint(displayWaypoints);
-                OnWaypointChange.Invoke(waypoints[i]);
+                if(OnWaypointChange != null)
+                {
+                    OnWaypointChange.Invoke(waypoints[i]);
+                }
             }
         break;
         }
