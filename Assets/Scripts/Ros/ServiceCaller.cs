@@ -1,5 +1,6 @@
 using Grpc.Core;
 using Labust.Utils;
+using MissionWaypointNS;
 using UnityEngine;
 using static Service.Commander;
 
@@ -17,12 +18,21 @@ namespace Labust.Networking
         public bool GuidanceEnable;
         public Vector3 GuidanceTarget;
         public double Radius;
+        public double VerticalOffset;
+        public MissionControl MissionControl;
 
 
 
         void Start()
         {
             RosConnection.Instance.OnConnected += OnConnected;
+            MissionControl.OnWaypointChange += OnWaypointChange;
+        }
+
+        private void OnWaypointChange(MissionWaypoint obj)
+        {
+            GuidanceTarget = obj.transform.position;
+            CallPrimitivePointerService();
         }
 
         public void OnConnected(Channel channel)
@@ -66,6 +76,7 @@ namespace Labust.Networking
             request.GuidanceEnable = GuidanceEnable;
             request.GuidanceTarget = GuidanceTarget.AsMsg();
             request.GuidanceTopic = GuidanceTopic;
+            request.VerticalOffset = VerticalOffset;
 
             // TODO: fill request
             // request
