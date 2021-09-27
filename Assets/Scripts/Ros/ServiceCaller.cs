@@ -1,4 +1,5 @@
 using Grpc.Core;
+using Labust.Core;
 using Labust.Utils;
 using MissionWaypointNS;
 using UnityEngine;
@@ -74,7 +75,10 @@ namespace Labust.Networking
             request.Radius = Radius;
             request.GuidanceTopic = GuidanceTopic;
             request.GuidanceEnable = GuidanceEnable;
-            request.GuidanceTarget = GuidanceTarget.AsMsg();
+            var toEnu = GuidanceTarget.Unity2Map();
+            request.GuidanceTarget.X = toEnu.y;
+            request.GuidanceTarget.Y = toEnu.x;
+            request.GuidanceTarget.Z = -toEnu.z;
             request.GuidanceTopic = GuidanceTopic;
             request.VerticalOffset = VerticalOffset;
 
