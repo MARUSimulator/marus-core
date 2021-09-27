@@ -27,7 +27,8 @@ namespace Labust.Networking
         void Start()
         {
             RosConnection.Instance.OnConnected += OnConnected;
-            MissionControl.OnWaypointChange += OnWaypointChange;
+            if (MissionControl != null)
+                MissionControl.OnWaypointChange += OnWaypointChange;
         }
 
         private void OnWaypointChange(MissionWaypoint obj)

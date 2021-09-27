@@ -19,6 +19,7 @@ namespace Labust.Sensors.Primitive
         [Header("Pose")] 
         public Vector3 position;
         public Quaternion orientation;
+        public float verticalOffset;
         [Header("Twist")] 
         public Vector3 linearVelocity;
         public Vector3 angularVelocity;
@@ -62,7 +63,7 @@ namespace Labust.Sensors.Primitive
                     {
                         North = toEnu.y,
                         East = toEnu.x,
-                        Depth = - toEnu.z
+                        Depth = - toEnu.z + verticalOffset
                     },
                     Orientation = toRad.Unity2Map().AsMsg(),
                     SeafloorVelocity = linearVelocity.Unity2Body().AsMsg(),
