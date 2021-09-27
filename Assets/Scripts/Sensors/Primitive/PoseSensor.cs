@@ -64,7 +64,10 @@ namespace Labust.Sensors.Primitive
                         East = toEnu.x,
                         Depth = - toEnu.z
                     },
-                    Orientation = toRad.Unity2Map().AsMsg()
+                    Orientation = toRad.Unity2Map().AsMsg(),
+                    SeafloorVelocity = linearVelocity.Unity2Body().AsMsg(),
+                    BodyVelocity = linearVelocity.Unity2Body().AsMsg(),
+                    OrientationRate = angularVelocity.Unity2Body().AsMsg()
                 }
             });
             hasData = false;
