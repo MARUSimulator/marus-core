@@ -28,7 +28,7 @@ namespace Labust.Core
         public uint StartTimeSecs => _startTimeSecs;
         public uint StartTimeNsecs => _startTimeNsecs;
 
-        public double TimeDouble => _totalTimeSecs + 1e-9 * _totalTimeNsecs;
+        public double TimeDouble => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;//_totalTimeSecs + 1e-9 * _totalTimeNsecs;
 
         protected override void Initialize()
         {
@@ -57,8 +57,8 @@ namespace Labust.Core
 
         public void UpdateTime()
         {
-            var deltaTimeSecs = (uint)Time.deltaTime; // truncate after decimal
-            var deltaTimeNsecs = Convert.ToUInt32((Time.deltaTime - deltaTimeSecs) * SEC2NSEC);
+            var deltaTimeSecs = (uint)Time.fixedDeltaTime; // truncate after decimal
+            var deltaTimeNsecs = Convert.ToUInt32((Time.fixedDeltaTime - deltaTimeSecs) * SEC2NSEC);
 
             var nSecOverflow = (deltaTimeNsecs + _totalTimeNsecs) / SEC2NSEC;
             _totalTimeSecs += deltaTimeSecs + nSecOverflow;
