@@ -13,6 +13,7 @@ namespace MissionWaypointNS
 
         [System.NonSerialized]
         public bool visited = false;
+        public bool eventTriggered = false;
 
         void Start() 
         {

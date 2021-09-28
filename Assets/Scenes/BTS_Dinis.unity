@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2177.7285, g: 2306.459, b: 3432.0547, a: 1}
+  m_IndirectSpecularColor: {r: 2173.4688, g: 2287.9688, b: 3365.9219, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3285,7 +3285,7 @@ MonoBehaviour:
   frameId: map
   position: {x: 0, y: 0, z: 0}
   orientation: {x: 0, y: 0, z: 0, w: 0}
-  verticalOffset: 1.5
+  verticalOffset: -1.5
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
 --- !u!120 &566751685
@@ -3972,7 +3972,7 @@ PrefabInstance:
     - target: {fileID: 6020194498835905236, guid: 13f2afbe8e8fa1c48b49440ff5f551e0,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 341.4635
+      value: 341
       objectReference: {fileID: 0}
     - target: {fileID: 6020194498835905236, guid: 13f2afbe8e8fa1c48b49440ff5f551e0,
         type: 3}
@@ -4048,7 +4048,7 @@ PrefabInstance:
         type: 3}
       propertyPath: MissionControl
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1765856447}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 13f2afbe8e8fa1c48b49440ff5f551e0, type: 3}
 --- !u!1001 &742291118
@@ -4210,6 +4210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ba7694436ba654f5b20aae9d0c713d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventTriggered: 0
 --- !u!136 &780493974
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -10133,6 +10134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ba7694436ba654f5b20aae9d0c713d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventTriggered: 0
 --- !u!136 &1747992958
 CapsuleCollider:
   m_ObjectHideFlags: 0

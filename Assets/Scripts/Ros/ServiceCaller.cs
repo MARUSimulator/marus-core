@@ -34,6 +34,7 @@ namespace Labust.Networking
         private void OnWaypointChange(MissionWaypoint obj)
         {
             GuidanceTarget = obj.transform.position;
+            GuidanceEnable = true;
             CallPrimitivePointerService();
         }
 
@@ -86,8 +87,11 @@ namespace Labust.Networking
 
             // TODO: fill request
             // request
-            var response = _client.PrimitivePointer(request);
-            Debug.Log($"PrimitivePointer: succes={response.Success}");
+            if (_client != null)
+            {
+                var response = _client.PrimitivePointer(request);
+                Debug.Log($"PrimitivePointer: succes={response.Success}");
+            }
         }
 
 

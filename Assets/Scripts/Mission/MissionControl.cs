@@ -52,12 +52,14 @@ public class MissionControl : MonoBehaviour
                     textElement.text = messages[i]; 
                 }
                 waypoints[i].EnableWaypoint(displayWaypoints);
-                if(OnWaypointChange != null)
+                if(OnWaypointChange != null && !waypoints[i].eventTriggered)
                 {
                     OnWaypointChange.Invoke(waypoints[i]);
+                    waypoints[i].eventTriggered = true;
                 }
+                break;
             }
-        break;
+        
         }
     }
 

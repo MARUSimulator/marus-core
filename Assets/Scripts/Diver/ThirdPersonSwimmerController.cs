@@ -11,6 +11,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private Transform m_Cam;                  // A reference to the main camera in the scenes transform
         private Vector3 m_CamForward;             // The current forward direction of the camera
         private Vector3 m_Move;
+        bool isCaps = false;
 
         private void Start()
         {
@@ -47,10 +48,16 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         {
             // read inputs
             float h = Input.GetAxis("Horizontal"); //uncomment
-            float v = Input.GetAxis("Vertical"); //uncomment
+            float v = (isCaps) ? 1.0f : Input.GetAxis("Vertical"); //uncomment
             bool crouch = Input.GetKey(KeyCode.C);
             bool jump = Input.GetKey(KeyCode.Space);
 
+
+            if (Input.GetKeyDown(KeyCode.CapsLock))
+            {
+                isCaps = !isCaps;
+            }
+              
             // calculate move direction to pass to character
             if (m_Cam != null)
             {
