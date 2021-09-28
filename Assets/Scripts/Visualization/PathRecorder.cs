@@ -3,6 +3,7 @@ using UnityEngine;
 using System.IO;
 using Labust.Utils;
 using Labust.Logger;
+using UnityEngine.SceneManagement;
 
 namespace Labust.Visualization
 {
@@ -28,11 +29,57 @@ namespace Labust.Visualization
         private Vector3 _lastPosition;
         private GameObjectLogger<Vector3> logger;
         private string topic;
+        private string savePath;
+        private MissionControl missionControl;
 
         void Start()
         {
-            topic = $"PathRecording-{gameObject.name}";
+            missionControl = GameObject.Find("Mission").GetComponent<MissionControl>();
+            savePath = Path.Combine(Application.dataPath, "PathRecordings");
+            Scene scene = SceneManager.GetActiveScene();
+            RefreshTopic();
             logger = DataLogger.Instance.GetLogger<Vector3>(topic);
+        }
+
+        private void RefreshTopic()
+        {
+            int index;
+            string prefix;
+            (prefix, index) = GetPathNumber();
+            topic = $"{prefix}-{index}-";
+        }
+
+        private (string, int) GetPathNumber()
+        {
+            string [] fileEntries = System.IO.Directory.GetFiles(savePath);
+            Scene scene = SceneManager.GetActiveScene();
+            string prefix;
+            if (scene.name == "BTS")
+            {
+                prefix = "Classic";
+            }
+            else if (scene.name == "BTS_Dinis")
+            {
+                prefix = "Guided";
+            }
+            else
+            {
+                prefix = "PathRecording";
+            }
+            int index = 0;
+            foreach(string fileName in fileEntries)
+            {
+                var f = System.IO.Path.GetFileName(fileName);
+                if (f.EndsWith(".json") && f.StartsWith(prefix))
+                {
+                    Debug.Log(f);
+                    index++;
+                }
+            }
+
+            index++;
+
+            return (prefix, index);
         }
 
         void Update()
@@ -41,7 +88,10 @@ namespace Labust.Visualization
             {
                 return;
             }
-
+            if (missionControl.MissionComplete)
+            {
+                Disable();
+            }
             var distanceDeltaCondition = Vector3.Distance(_lastPosition, transform.position) > MinimumDistanceDelta;
             if (_timer >= (1 / SampleRateHz) && distanceDeltaCondition)
             {
@@ -50,6 +100,8 @@ namespace Labust.Visualization
                 _timer = 0;
             }
             _timer += Time.deltaTime;
+
+
         }
 
         public bool IsEnabled()
@@ -64,13 +116,13 @@ namespace Labust.Visualization
 
         public void Disable()
         {
+            RefreshTopic();
             _enabled = false;
             OnDisable();
         }
 
         void OnDisable()
         {
-            string savePath = Path.Combine(Application.dataPath, "PathRecordings");
             DataLoggerUtilities.SaveLogsForTopic(topic, savePath);
         }
     }

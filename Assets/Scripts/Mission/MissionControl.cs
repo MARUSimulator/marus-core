@@ -19,6 +19,7 @@ public class MissionControl : MonoBehaviour
     // Messeges are publicly set and displayed in Text object.
     public Text textElement;
     public List<string> messages;
+    public bool MissionComplete = false;
 
     // Waypoint can be hidden.
     public bool displayWaypoints = true;
@@ -28,15 +29,19 @@ public class MissionControl : MonoBehaviour
 
     void Update()
     {
+        if (MissionComplete )
+        {
+            return;
+        }
+
         for(int i = 0; i<= waypoints.Count; i++)
         {
             // Display final message after all the waypoints have been visited..
-            if (i == waypoints.Count)
+            if (i == waypoints.Count && TextBoxAndMessageExist(i))
             {
-                if (TextBoxAndMessageExist(i))
-                {
-                    textElement.text = messages[i]; 
-                }
+                textElement.text = messages[i];
+                MissionComplete = true;
+                return;
             }
             // Skip every waypoint that has already been visited.
             // Initially, "visited" property for all the waypoints is set to false.
@@ -52,12 +57,14 @@ public class MissionControl : MonoBehaviour
                     textElement.text = messages[i]; 
                 }
                 waypoints[i].EnableWaypoint(displayWaypoints);
-                if(OnWaypointChange != null)
+                if(OnWaypointChange != null && !waypoints[i].eventTriggered)
                 {
                     OnWaypointChange.Invoke(waypoints[i]);
+                    waypoints[i].eventTriggered = true;
                 }
+                break;
             }
-        break;
+        
         }
     }
 

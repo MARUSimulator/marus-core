@@ -134,7 +134,7 @@ namespace Labust.Sensors
         {
             var distance = hit.distance;
             var sonarReading = new SonarReading();
-            if (distance < MinDistance || hit.point.y > WATER_LEVEL) // if above water, it is not hit!
+            if (distance < MinDistance) //|| hit.point.y > WATER_LEVEL) // if above water, it is not hit!
             {
                 sonarReading.Valid = false;
             }

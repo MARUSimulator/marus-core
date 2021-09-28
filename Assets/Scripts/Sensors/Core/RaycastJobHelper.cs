@@ -37,7 +37,7 @@ namespace Labust.Sensors
                     var coshor = Mathf.Cos(horizontalAngle);
                     var sinver = Mathf.Sin(verticalAngle);
                     var cosver = Mathf.Cos(verticalAngle);
-                    directionsLocal[i * heightRes + j] = new Vector3(cosver * sinhor, sinver, -cosver * coshor); // y is up; y angle is (90 - theta) in spherical 
+                    directionsLocal[i * heightRes + j] = new Vector3(cosver * sinhor, sinver, cosver * coshor); // y is up; y angle is (90 - theta) in spherical 
                 }
             }
             return directionsLocal;
@@ -193,14 +193,14 @@ namespace Labust.Sensors
         private JobHandle ScheduleNewRaycastJob()
         {
             var transform = _obj.transform;
-            var inverseRotation = Matrix4x4.TRS(Vector3.zero, transform.rotation, Vector3.one).inverse;
+            // var inverseRotation = Matrix4x4.TRS(Vector3.zero, transform.rotation, Vector3.one).inverse;
 
             var commandsJob = new CreateRaycastCommandsJob();
             commandsJob.commands = _commands;
             commandsJob.maxDistance = _maxDistance;
             commandsJob.directions = _directionsLocal;
             commandsJob.position = transform.position;
-            commandsJob.inverseRotation = inverseRotation;
+            commandsJob.inverseRotation = transform.localToWorldMatrix;
             var commandsJobHandle = commandsJob.Schedule(_directionsLocal.Length, 10);
 
             return RaycastCommand.ScheduleBatch(_commands, _hits, 10, commandsJobHandle);
