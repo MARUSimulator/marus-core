@@ -35,6 +35,8 @@ namespace Labust.Networking
 
 
         [Header("Simulation")]
+        public bool DisplayTf = false;
+
         [HideInRuntimeInspector]
         public bool RealtimeSimulation = true;
 
@@ -63,6 +65,8 @@ namespace Labust.Networking
 
 
         public event Action<Channel> OnConnected;
+
+        
 
 
 

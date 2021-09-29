@@ -162,7 +162,10 @@ namespace Labust.Networking
             {
                 obj = new GameObject(frame.ChildFrameId);
                 obj.transform.parent = _tf.transform;
-                Visualizer.Instance.AddTransform(obj.transform, "tf");
+                if (RosConnection.Instance.DisplayTf)
+                {
+                    Visualizer.Instance.AddTransform(obj.transform, "tf");
+                }
             }
             return obj;
         }

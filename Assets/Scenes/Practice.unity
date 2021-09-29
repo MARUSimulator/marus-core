@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2157.9219, g: 2259.9922, b: 3292.6838, a: 1}
+  m_IndirectSpecularColor: {r: 2184.7158, g: 2324.6562, b: 3473.922, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10122,7 +10122,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1765856448}
-  - component: {fileID: 1765856447}
   m_Layer: 0
   m_Name: Mission
   m_TagString: Untagged
@@ -10130,28 +10129,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1765856447
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1765856446}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9557b1efafdef1908bb69b401fedde79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  textElement: {fileID: 697875093}
-  messages:
-  - Move 250m NW and you will find an old milirary aircraft.
-  - Well done! Now move 200 m NE and you will find an old navy ship.
-  - Well done! Mission accomplished!
-  MissionComplete: 0
-  displayWaypoints: 1
 --- !u!4 &1765856448
 Transform:
   m_ObjectHideFlags: 0
