@@ -48,6 +48,7 @@ namespace Labust.Visualization
         private void OnSceneChange(Scene oldScene, Scene newScene)
         {
             if (string.IsNullOrEmpty(oldScene.name)) return;
+            ClearAll();
             _visualElements.Clear();
         }
 
