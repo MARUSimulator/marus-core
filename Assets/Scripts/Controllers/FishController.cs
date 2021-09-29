@@ -21,6 +21,7 @@ namespace Labust.Controllers
             vesselVelocityController = gameObject.AddComponent(typeof(VesselVelocityController)) as VesselVelocityController;
             var target = Targets[random.Next(0, Targets.Count)];
             vesselVelocityController.Target = target.transform;
+            vesselVelocityController.Use3DTarget = true;
             vesselVelocityController.StoppingDistance = 5f;
             vesselVelocityController.Speed = UnityEngine.Random.Range(0.1f, 0.5f);
         }
