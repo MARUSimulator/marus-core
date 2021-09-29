@@ -239,6 +239,22 @@ namespace Labust.Visualization
             _visualElements.Remove(key);
         }
 
+        /// <summary>
+        /// Removes all objects stored under given key.
+        /// </summary>
+        /// <param name="key">String key tag</param>
+        public void ClearAll()
+        {
+            foreach (string key in _visualElements.Keys)
+            {
+                foreach (VisualElement visual in _visualElements[key])
+                {
+                    visual.Destroy();
+                }
+                _visualElements.Remove(key);
+            }
+        }
+
         private void CreateAndAttachPathGameObject(VisualElement p, string name)
         {
             GameObject path = new GameObject(name);

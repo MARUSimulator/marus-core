@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2182.3965, g: 2318.879, b: 3472.195, a: 1}
+  m_IndirectSpecularColor: {r: 2157.9219, g: 2259.9922, b: 3292.6838, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3099,7 +3099,6 @@ GameObject:
   - component: {fileID: 566751677}
   - component: {fileID: 566751676}
   - component: {fileID: 566751682}
-  - component: {fileID: 566751683}
   m_Layer: 0
   m_Name: Diver
   m_TagString: Player
@@ -3252,19 +3251,6 @@ MonoBehaviour:
   _playerControlled: 0
   _engineBias: 0
   _turnBias: 0
---- !u!114 &566751683
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 566751674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10629be331ab5c2eca589d2aac345df0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SampleRateHz: 5
 --- !u!1001 &575755880
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10164,6 +10150,7 @@ MonoBehaviour:
   - Move 250m NW and you will find an old milirary aircraft.
   - Well done! Now move 200 m NE and you will find an old navy ship.
   - Well done! Mission accomplished!
+  MissionComplete: 0
   displayWaypoints: 1
 --- !u!4 &1765856448
 Transform:

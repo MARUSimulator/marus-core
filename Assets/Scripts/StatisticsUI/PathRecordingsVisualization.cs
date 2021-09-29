@@ -8,6 +8,7 @@ using Labust.Visualization;
 using Labust.Visualization.Primitives;
 using Labust.Utils;
 using Labust.Logger;
+using UnityEngine.SceneManagement;
 
 namespace Labust.StatisticsUI
 {
@@ -23,6 +24,8 @@ namespace Labust.StatisticsUI
         private List<StatisticsEntry> _activePaths;
 
         private List<string> _pathRecordings;
+
+        private MissionControl missionControl;
 
         /// <summary>
         /// Content child object of relevant ScrollView object
@@ -48,6 +51,9 @@ namespace Labust.StatisticsUI
             _activePaths = new List<StatisticsEntry>();
 
             _scrollView = GetComponentInChildren<ScrollRect>();
+
+            SceneManager.activeSceneChanged += OnSceneChange;
+            missionControl = GameObject.Find("Mission").GetComponent<MissionControl>();
 
             ColorPresets = new List<Tuple<Color, Color>>()
             {
@@ -97,6 +103,29 @@ namespace Labust.StatisticsUI
             Destroy(path.gameObject);
         }
 
+        /// <summary>
+        /// Removes all paths from scene and scrollview
+        /// </summary>
+        /// <param name="path"></param>
+        public void RemoveAllPaths()
+        {
+            foreach (StatisticsEntry path in _activePaths)
+            {
+                ColorPresets.Insert(0, path.GetColors());
+                _activePaths.Remove(path);
+                Destroy(path.gameObject.GetComponent<StatisticsEntry>());
+                _pathRecordings.Add(path.FileName);
+                _pathsDropdown.ClearOptions();
+                _pathsDropdown.AddOptions(_pathRecordings);
+                Destroy(path.gameObject);
+            }
+        }
+
+        private void OnSceneChange(Scene oldScene, Scene newScene)
+        {
+            RemoveAllPaths();
+            Visualizer.Instance.ClearAll();
+        }
         /// <summary>
         ///  Refreshes list of available path recordings
         /// </summary>
