@@ -3,7 +3,7 @@ using System;
 using Labust.Networking;
 using Labust.Utils;
 using UnityEngine;
-using static Simulatoncontrol.SimulationControl;
+using static Simulationcontrol.SimulationControl;
 
 namespace Labust.Core
 {

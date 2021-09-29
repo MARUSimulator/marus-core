@@ -4,10 +4,15 @@ using UnityEngine;
 
 namespace Labust.Controllers
 {
+    /// <summary>
+    /// Controller that positions the object with respect to the diver
+    /// 
+    /// Implements a P regulator for position and orientation of the object with
+    /// respect to the diver. Object reference is set on the straight line that connects the diver
+    /// and target object at the given distance.
+    /// </summary>
     public class DiverGuidanceController : MonoBehaviour
     {
-
-
         public GameObject Diver;
         public GameObject Target;
         public MissionControl MissionControl;

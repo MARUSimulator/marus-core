@@ -201,7 +201,8 @@ namespace Labust.Sensors {
                 Sensor.PointField tempPointField = new Sensor.PointField();
                 tempPointField.Name = fields[i]._name;
                 tempPointField.Offset = fields[i]._offset;
-                tempPointField.Datatype = fields[i]._datatype;
+                // TEMP
+                tempPointField.Datatype = Sensor.PointField.Types.DataType.Float32;
                 tempPointField.Count = fields[i]._count;
 
                 _pointCloud.Fields.Add(tempPointField);

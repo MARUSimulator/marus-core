@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2157.6719, g: 2259.8516, b: 3292.4648, a: 1}
+  m_IndirectSpecularColor: {r: 2184.7158, g: 2324.6562, b: 3492.2266, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6026,7 +6026,7 @@ MonoBehaviour:
   - {fileID: 934248146}
   textElement: {fileID: 1864952051}
   messages:
-  - Move 250m NW and you will find an old milirary aircraft.
+  - Move 150m NW and you will find an old milirary aircraft.
   - Well done! Now move 200 m NE and you will find an old navy ship.
   - Well done! Mission accomplished!
   MissionComplete: 0

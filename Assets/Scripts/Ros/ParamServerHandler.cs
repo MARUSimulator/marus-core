@@ -10,11 +10,11 @@ using static Sensorstreaming.SensorStreaming;
 using static Remotecontrol.RemoteControl;
 using static Ping.Ping;
 using static Parameterserver.ParameterServer;
-using static Simulatoncontrol.SimulationControl;
+using static Simulationcontrol.SimulationControl;
 
 using Parameterserver;
 using System.Collections;
-using Simulatoncontrol;
+using Simulationcontrol;
 using Labust.Utils;
 
 namespace Labust.Networking

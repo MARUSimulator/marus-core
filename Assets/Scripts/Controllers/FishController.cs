@@ -6,6 +6,8 @@ namespace Labust.Controllers
 {
     /// <summary>
     /// This script rotates object around target object.
+    ///
+    /// DO NOT USE
     /// </summary>
     public class FishController : MonoBehaviour
     {

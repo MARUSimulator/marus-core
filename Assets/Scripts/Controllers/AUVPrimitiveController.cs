@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This controller is for using keyboard to control desired object
+/// 
+/// It is under control of agent manager.
+/// </summary>
 public class AUVPrimitiveController : MonoBehaviour
 {
 
@@ -16,14 +21,14 @@ public class AUVPrimitiveController : MonoBehaviour
     void Awake()
     {
         _targetTransform = transform;
-        // agentManager = GameObject.FindObjectOfType<AgentManager>();
+        agentManager = GameObject.FindObjectOfType<AgentManager>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        // if (agentManager.activeAgent != gameObject)
-        //     return;
+        if (agentManager.activeAgent != gameObject)
+            return;
         float dt = Time.fixedDeltaTime;
         UpdateMovement(dt);
     }

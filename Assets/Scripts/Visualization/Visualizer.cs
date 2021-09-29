@@ -39,6 +39,9 @@ namespace Labust.Visualization
         /// <returns></returns>
         private Dictionary<string, List<VisualElement>> _visualElements = new Dictionary<string, List<VisualElement>>();
 
+        [System.Flags] public enum FilterValues { Points=1, Lines=2, Transforms=4 }
+        [EnumFlags(typeof(FilterValues))]
+        public FilterValues DrawFilter;
 
         protected override void Initialize()
         {
@@ -248,11 +251,7 @@ namespace Labust.Visualization
         {
             foreach (string key in _visualElements.Keys)
             {
-                foreach (VisualElement visual in _visualElements[key])
-                {
-                    visual.Destroy();
-                }
-                _visualElements.Remove(key);
+                FlushKey(key);
             }
         }
 
@@ -291,9 +290,12 @@ namespace Labust.Visualization
 
         void Update()
         {
-            foreach (var list in _visualElements.Values)
+            var selected = EnumFlagsAttribute.ReturnSelectedElements((int)DrawFilter, typeof(FilterValues));
+            foreach (var kvp in _visualElements)
             {
-                foreach (var visual in list)
+                if (selected.Contains(kvp.Key))
+                    continue;
+                foreach (var visual in kvp.Value)
                 {
                     visual.Draw();
                 }

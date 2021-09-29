@@ -1,23 +1,13 @@
-using System;
-using System.Collections.Generic;
 using Grpc.Core;
 using UnityEngine;
-using System.Threading;
 using System.Linq;
 using Labust.Core;
 using static Tf.Tf;
-using static Sensorstreaming.SensorStreaming;
-using static Remotecontrol.RemoteControl;
-using static Ping.Ping;
-using static Parameterserver.ParameterServer;
-using static Simulatoncontrol.SimulationControl;
 
-using Parameterserver;
-using System.Collections;
-using Simulatoncontrol;
 using Labust.Utils;
 using Labust.Visualization;
 using Tf;
+using System;
 
 namespace Labust.Networking
 {
@@ -153,6 +143,11 @@ namespace Labust.Networking
             var defaultLatitude = RosConnection.Instance.DefaultLatitude;
             var defaultLongitude = RosConnection.Instance.DefaultLongitude;
             _originGeoFrame = new GeographicFrame(mapFrame.transform, defaultLatitude, defaultLongitude, 0f);
+
+            if (!RosConnection.Instance.DisplayTf)
+            {
+                Visualizer.Instance.DrawFilter |=  Visualizer.FilterValues.Transforms;
+            }
         }
 
         private GameObject GetOrCreateGameObjectForFrame(TfFrame frame)
