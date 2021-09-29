@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2184.711, g: 2324.584, b: 3491.746, a: 1}
+  m_IndirectSpecularColor: {r: 2158.7012, g: 2262.4258, b: 3299.8945, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2035,6 +2035,81 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2686127887169128950, guid: c5e9019e83f7aad808046ff1c7c8b913,
     type: 3}
   m_PrefabInstance: {fileID: 373522185}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &381917108
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 943709586}
+    m_Modifications:
+    - target: {fileID: 1888862204458188538, guid: 369b177c3f4af3edab0239b67d3b0174,
+        type: 3}
+      propertyPath: m_Name
+      value: Fishv1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3837021697232425850, guid: 369b177c3f4af3edab0239b67d3b0174,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 3837021697232425850, guid: 369b177c3f4af3edab0239b67d3b0174,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -56.612976
+      objectReference: {fileID: 0}
+    - target: {fileID: 3837021697232425850, guid: 369b177c3f4af3edab0239b67d3b0174,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -60.538864
+      objectReference: {fileID: 0}
+    - target: {fileID: 3837021697232425850, guid: 369b177c3f4af3edab0239b67d3b0174,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 206.51709
+      objectReference: {fileID: 0}
+    - target: {fileID: 3837021697232425850, guid: 369b177c3f4af3edab0239b67d3b0174,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3837021697232425850, guid: 369b177c3f4af3edab0239b67d3b0174,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3837021697232425850, guid: 369b177c3f4af3edab0239b67d3b0174,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3837021697232425850, guid: 369b177c3f4af3edab0239b67d3b0174,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3837021697232425850, guid: 369b177c3f4af3edab0239b67d3b0174,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3837021697232425850, guid: 369b177c3f4af3edab0239b67d3b0174,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3837021697232425850, guid: 369b177c3f4af3edab0239b67d3b0174,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 369b177c3f4af3edab0239b67d3b0174, type: 3}
+--- !u!4 &381917109 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3837021697232425850, guid: 369b177c3f4af3edab0239b67d3b0174,
+    type: 3}
+  m_PrefabInstance: {fileID: 381917108}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &394818630
 PrefabInstance:
@@ -4922,6 +4997,7 @@ Transform:
   - {fileID: 106281914}
   - {fileID: 1695775944}
   - {fileID: 1255365423}
+  - {fileID: 381917109}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5216,6 +5292,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7bce06320fb51b41b842dc415e597fa, type: 3}
+--- !u!1 &1040282895 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100000, guid: f7bce06320fb51b41b842dc415e597fa,
+    type: 3}
+  m_PrefabInstance: {fileID: 1040282894}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1040282896
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1040282895}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: f7bce06320fb51b41b842dc415e597fa, type: 3}
 --- !u!4 &1043114764 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2886453629920690495, guid: a5c9292e2c604872ca6de5adff9e33c3,
@@ -6865,6 +6961,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b1766c5263fa4eb4ab0661bea258d7b8, type: 3}
+--- !u!1 &1325070930 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100000, guid: b1766c5263fa4eb4ab0661bea258d7b8,
+    type: 3}
+  m_PrefabInstance: {fileID: 1325070929}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1325070931
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1325070930}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: b1766c5263fa4eb4ab0661bea258d7b8, type: 3}
 --- !u!1 &1337401287
 GameObject:
   m_ObjectHideFlags: 0
@@ -8233,6 +8349,7 @@ MonoBehaviour:
   serverIP: localhost
   serverPort: 30052
   connectionTimeout: 5
+  DisplayTf: 0
   RealtimeSimulation: 1
   SimulationSpeed: 1
   OriginFrameName: map
@@ -10701,9 +10818,10 @@ MonoBehaviour:
   - {fileID: 1747992957}
   textElement: {fileID: 697875093}
   messages:
-  - Move 250m NW and you will find an old milirary aircraft.
+  - Move 150m NW and you will find an old milirary aircraft.
   - Well done! Now move 200 m NE and you will find an old navy ship.
   - Well done! Mission accomplished!
+  MissionComplete: 0
   displayWaypoints: 1
 --- !u!4 &1765856448
 Transform:
