@@ -28,13 +28,12 @@ namespace Labust.Sensors.Primitive
         void Start()
         {
             measuredObject = Helpers.GetParentRigidBody(transform);
-            streamHandle = streamingClient.StreamPoseSensor(cancellationToken:RosConnection.Instance.cancellationToken);
-            AddSensorCallback(SensorCallbackOrder.Last, Refresh);
+            streamHandle = streamingClient?.StreamPoseSensor(cancellationToken:RosConnection.Instance.cancellationToken);
             if (string.IsNullOrEmpty(address))
                 address = vehicle.name + "/pose";
         }
 
-        public void Refresh()
+        protected override void SampleSensor()
         {
             position = measuredObject.position;
             orientation = measuredObject.rotation;
@@ -44,7 +43,7 @@ namespace Labust.Sensors.Primitive
             hasData = true;
         }
 
-        public async override void SendMessage()
+        protected async override void SendMessage()
         {
             var toRad = orientation.eulerAngles * Mathf.Deg2Rad;
             var toEnu = position.Unity2Map();

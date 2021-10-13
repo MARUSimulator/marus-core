@@ -18,15 +18,14 @@ namespace Labust.Sensors.Primitive
         double depth;
         public double covariance;
 
-        public void Awake()
+        public void Start()
         {
-            streamHandle =  streamingClient.StreamDepthSensor(cancellationToken:RosConnection.Instance.cancellationToken);
-            AddSensorCallback(SensorCallbackOrder.Last, Refresh);
+            streamHandle =  streamingClient?.StreamDepthSensor(cancellationToken:RosConnection.Instance.cancellationToken);
             if (string.IsNullOrEmpty(address))
                 address = vehicle.name + "/depth";
         }
 
-        public async override void SendMessage()
+        protected async override void SendMessage()
         {
             var depthOut = new DepthStreamingRequest
             {
@@ -60,7 +59,7 @@ namespace Labust.Sensors.Primitive
             hasData = false;
         }
 
-        public void Refresh()
+        protected override void SampleSensor()
         {
             depth = -transform.position.y;
             Log(new { depth });

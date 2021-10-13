@@ -20,7 +20,7 @@ namespace Labust.Sensors
         public int ImageCrop = 4;
         public bool SynchronousUpdate = false;
 
-        Camera camera;
+        new Camera camera;
         ComputeBufferDataExtractor<byte> cameraData;
         RenderTextureFormat renderTextureFormat = RenderTextureFormat.Default;
         TextureFormat textureFormat = TextureFormat.RGB24;
@@ -38,8 +38,7 @@ namespace Labust.Sensors
         {
             CameraSetup();
 
-            streamHandle = streamingClient.StreamCameraSensor(cancellationToken:RosConnection.Instance.cancellationToken);
-            AddSensorCallback(SensorCallbackOrder.First, RGBUpdate);
+            streamHandle = streamingClient?.StreamCameraSensor(cancellationToken:RosConnection.Instance.cancellationToken);
 
             int kernelIndex = cameraShader.FindKernel("CSMain");
             cameraData = new ComputeBufferDataExtractor<byte>(PixelHeight * PixelWidth, sizeof(float) * 3, "CameraData");
@@ -52,7 +51,7 @@ namespace Labust.Sensors
         }
 
         public byte[] Data { get; private set; } = new byte[0];
-        public async override void SendMessage()
+        protected async override void SendMessage()
         {
             try
             {
@@ -73,7 +72,7 @@ namespace Labust.Sensors
             }
         }
 
-        void RGBUpdate()
+        protected override void SampleSensor()
         {
             if (SynchronousUpdate)
             {

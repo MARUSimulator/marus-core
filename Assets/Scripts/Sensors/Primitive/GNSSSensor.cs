@@ -25,13 +25,15 @@ namespace Labust.Sensors.Primitive
         void Start()
         {
             covariance = new double[] { 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1 };
-            AddSensorCallback(SensorCallbackOrder.Last, Refresh);
-            streamHandle = streamingClient.StreamGnssSensor(cancellationToken: RosConnection.Instance.cancellationToken);
+            if (streamingClient != null)
+            {
+                StreamSensor(streamingClient.StreamGnssSensor(cancellationToken:RosConnection.Instance.cancellationToken));
+            }
             if (string.IsNullOrEmpty(address))
-                address = vehicle.name + "/gps";
+                address = $"{vehicle?.name}/gps";
         }
 
-        void Refresh()
+        protected override void SampleSensor()
         {
             var world = TfHandler.Instance.OriginGeoFrame;
             point = world.Unity2Geo(transform.position);
@@ -39,7 +41,7 @@ namespace Labust.Sensors.Primitive
             hasData = true;
         }
 
-        public override async void SendMessage()
+        protected override async void SendMessage()
         {
             var msg = new GnssStreamingRequest
             {

@@ -22,10 +22,9 @@ namespace Labust.Sensors.AIS
 		private Vector3 lastPosition;
 		
 
-        void Awake()
+        void Start()
         {
-            streamHandle = streamingClient.StreamAisSensor(cancellationToken:RosConnection.Instance.cancellationToken);
-            AddSensorCallback(SensorCallbackOrder.Last, PositionReport);
+            streamHandle = streamingClient?.StreamAisSensor(cancellationToken:RosConnection.Instance.cancellationToken);
             if (string.IsNullOrEmpty(address))
                 address = transform.name + "/ais";
 
@@ -34,15 +33,7 @@ namespace Labust.Sensors.AIS
 			aisDevice = GetComponent<AISDevice>();
         }
 
-		public void FixedUpdate()
-		{
-			lastPosition = transform.position;
-			SensorUpdateHz = 1 / TimeIntervals.getInterval(aisDevice.ClassType, SOG);
-			PositionReport();
-
-		}
-
-        public async override void SendMessage()
+        protected async override void SendMessage()
         {
 			var msg = new AISStreamingRequest
             {
@@ -66,13 +57,14 @@ namespace Labust.Sensors.AIS
             hasData = false;
 			
         }
-		public void PositionReport()
+		protected override void SampleSensor()
 		{
+			lastPosition = transform.position;
+			SensorUpdateHz = 1 / TimeIntervals.getInterval(aisDevice.ClassType, SOG);
 			SetCOG();
 			SetSOG();
 			SetTrueHeading();
 			hasData = true;
-			
 		}
 
 		private void SetTrueHeading()

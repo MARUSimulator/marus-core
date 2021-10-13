@@ -60,7 +60,7 @@ namespace Labust.Sensors
         {
 
             int totalRays = Resolution;
-            streamHandle = streamingClient.StreamLidarSensor(cancellationToken: RosConnection.Instance.cancellationToken);
+            streamHandle = streamingClient?.StreamLidarSensor(cancellationToken: RosConnection.Instance.cancellationToken);
             if (string.IsNullOrEmpty(address))
                 address = transform.name + "/sonar3d";
 
@@ -71,7 +71,11 @@ namespace Labust.Sensors
 
             _pointCloudManager = PointCloudManager.CreatePointCloud(name + "_PointClout", totalRays, ParticleMaterial, pointCloudShader);
 
-            StartCoroutine(_raycastHelper.RaycastInLoop());
+        }
+
+        protected override void SampleSensor()
+        {
+            _raycastHelper.RaycastAsync();
         }
 
         private void OnFinish(NativeArray<Vector3> points, NativeArray<SonarReading> reading)
@@ -87,7 +91,7 @@ namespace Labust.Sensors
             _pointsCopy.Dispose();
         }
 
-        public async override void SendMessage()
+        protected async override void SendMessage()
         {
             Sensor.PointCloud _pointCloud = new Sensor.PointCloud();
             foreach (Vector3 point in _pointsCopy)

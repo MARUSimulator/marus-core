@@ -18,13 +18,12 @@ namespace Labust.Sensors.Primitive
         // Start is called before the first frame update
         void Start()
         {
-            //streamHandle = streamingClient.StreamSonarSensor(cancellationToken:RosConnection.Instance.cancellationToken);
-            AddSensorCallback(SensorCallbackOrder.Last, Refresh);
+            //streamHandle = streamingClient?.StreamSonarSensor(cancellationToken:RosConnection.Instance.cancellationToken);
             if (string.IsNullOrEmpty(address))
                 address = vehicle.name + "/sonar";
         }
 
-        public void Refresh()
+        protected override void SampleSensor()
         {
             var sonar = transform;
             if (Vector3.Distance(sonar.position, trackedObject.position) > 0 &&
@@ -71,7 +70,7 @@ namespace Labust.Sensors.Primitive
             hasData = true;
         }
 
-        public async override void SendMessage()
+        protected async override void SendMessage()
         {
         //     await _streamWriter.WriteAsync(new SonarStreamingRequest
         //     {

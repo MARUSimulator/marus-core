@@ -27,7 +27,7 @@ namespace Labust.Sensors.Primitive
 
         [Header("Orientation")]
         public Vector3 eulerAngles;
-        private Quaternion orientation;
+        public Quaternion orientation;
         public double[] orientationCovariance = new double[9];
 
         [Header("Debug")]
@@ -36,19 +36,24 @@ namespace Labust.Sensors.Primitive
         private Rigidbody sensor;
         private Vector3 lastVelocity;
 
-        void Awake()
+        void Start()
         {
             sensor = GetComponent<Rigidbody>();
-            streamHandle = streamingClient.StreamImuSensor(cancellationToken:RosConnection.Instance.cancellationToken);
-            AddSensorCallback(SensorCallbackOrder.First, CalculateAccelerationAsVelocityDerivative);
+            if (streamingClient != null)
+            {
+                StreamSensor(streamingClient.StreamImuSensor(cancellationToken:RosConnection.Instance.cancellationToken));
+            }
             if (string.IsNullOrEmpty(address))
-                address = vehicle.name + "/imu";
+                address = $"{vehicle.name}/imu";
         }
 
-        void CalculateAccelerationAsVelocityDerivative()
+        protected override void SampleSensor()
         {
             localVelocity = sensor.transform.InverseTransformVector(sensor.velocity);
-            linearAcceleration = (localVelocity - lastVelocity) / Time.deltaTime;
+            linearAcceleration = (localVelocity - lastVelocity) / Time.fixedDeltaTime;
+            angularVelocity = sensor.angularVelocity;
+            orientation = sensor.rotation;
+            eulerAngles = orientation.eulerAngles;
             lastVelocity = localVelocity;
 
             if (withGravity)
@@ -57,21 +62,8 @@ namespace Labust.Sensors.Primitive
             hasData = true;
         }
 
-        private void FixedUpdate()
+        protected override async void SendMessage()
         {
-            CalculateAccelerationAsVelocityDerivative();
-        }
-
-        private void SampleSensor()
-        {
-            angularVelocity = sensor.angularVelocity;
-            orientation = sensor.rotation;
-            eulerAngles = orientation.eulerAngles;
-        }
-
-        public override async void SendMessage()
-        {
-            SampleSensor();
             var imuOut = new Imu()
             {
                 Header = new Header

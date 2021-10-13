@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
@@ -92,6 +93,32 @@ namespace Labust.Sensors
             _getResultFromHit.Add(_obj.GetInstanceID(), getResultFromHit);
         }
 
+        public Task RaycastAsync()
+        {
+            return Task.Run(_RaycastAsync);
+        }
+
+        
+
+        public void RaycastSync()
+        {
+            if (_raycastHandle.IsCompleted && !_readbackInProgress)
+            {
+                _raycastHandle = ScheduleNewRaycastJob();
+                _readbackHandle = ReadbackData();
+                _readbackInProgress = true;
+            }
+            _readbackHandle.Complete();
+            if (_readbackHandle.IsCompleted)
+            {
+                _readbackHandle.Complete();
+                _readbackInProgress = false;
+                _onFinishCallback(_points, _results);
+                _hasData = true;
+            }
+        }
+
+
         public IEnumerator RaycastInLoop()
         {
             while (true)
@@ -129,6 +156,28 @@ namespace Labust.Sensors
             _points.Dispose();
         }
 
+        private void _RaycastAsync()
+        {
+            while(true)
+            {
+                if (_raycastHandle.IsCompleted && !_readbackInProgress)
+                {
+                    _raycastHandle = ScheduleNewRaycastJob();
+                    _readbackHandle = ReadbackData();
+                    _readbackInProgress = true;
+                }
+
+                if (_readbackHandle.IsCompleted)
+                {
+                    _readbackHandle.Complete();
+
+                    _readbackInProgress = false;
+                    _onFinishCallback(_points, _results);
+                    _hasData = true;
+                    return;
+                }
+            }
+        }
 
         private JobHandle ReadbackData()
         {

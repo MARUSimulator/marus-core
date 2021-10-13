@@ -63,7 +63,7 @@ namespace Labust.Sensors.AIS
 			geoSensor = GetComponent<GNSSSensor>();
 		}
 
-		public void FixedUpdate()
+		void Update()
 		{   
 			
 			if (ActiveTransmission)
@@ -71,7 +71,6 @@ namespace Labust.Sensors.AIS
 				period = TimeIntervals.getInterval(ClassType, aisSensor.SOG);
 				if (delta > period)
 				{	
-					aisSensor.PositionReport();
 					message = new PositionReportClassA();
 					message.SOG = aisSensor.SOG;
 					message.COG = aisSensor.COG;
@@ -90,7 +89,7 @@ namespace Labust.Sensors.AIS
 		}
 
 	
-		public override void Receive<AISMessage>(MediumMessageBase<AISMessage> msg)
+		public override void Receive(MediumMessageBase<AISMessage> msg)
 		{
 			Debug.Log(msg);
 		}

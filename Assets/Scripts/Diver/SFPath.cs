@@ -12,10 +12,12 @@ public class SFPath : MonoBehaviour
     {
         lineRenderer = GetComponent<LineRenderer>();
         //lineRenderer.SetColors(c1, c2);
-        lineRenderer.SetWidth(0.2F, 0.2F);
+        lineRenderer.startWidth = 0.2f;
+        lineRenderer.endWidth = 0.2f;
+        // lineRenderer.SetWidth(0.2F, 0.2F);
         int i = 0;
         var theta_scale = 0.1f;
-        lineRenderer.SetVertexCount(Convert.ToInt32(Math.Ceiling(2*Math.PI/theta_scale + 1)));
+        lineRenderer.positionCount = Convert.ToInt32(Math.Ceiling(2*Math.PI/theta_scale + 1));
         var r = 3.0f;
         for(float theta = 0; theta <= 2 * Math.PI + theta_scale; theta += theta_scale) {
             var x = (float)(r*Math.Cos(theta));

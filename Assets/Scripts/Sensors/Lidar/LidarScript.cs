@@ -127,7 +127,6 @@ namespace Labust.Sensors {
             debug.SynchUpdate(lidarShader, "CSMain");
 
             var max = debug.data.Max(x => x.x);
-            var a = 5;
             // lidarShader.Dispatch(kernelHandle, (int)Mathf.Ceil(NumberOfLidarPoints / 1024.0f), 1, 1);
         }
 

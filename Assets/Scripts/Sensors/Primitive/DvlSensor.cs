@@ -40,16 +40,10 @@ namespace Labust.Sensors.Primitive
             beamRanges = new float[beams.Length];
             lastPosition = sensor.position;
             //AddSensorCallback(SensorCallbackOrder.Last, Refresh);
-            streamHandle = streamingClient.StreamDvlSensor(cancellationToken:RosConnection.Instance.cancellationToken);
+            streamHandle = streamingClient?.StreamDvlSensor(cancellationToken:RosConnection.Instance.cancellationToken);
         }
 
-        private void FixedUpdate()
-        {
-            Refresh();
-            //velocity = sensor.worldToLocalMatrix * body.velocity;
-        }
-
-        void Refresh()
+        protected override void SampleSensor()
         {
             var position = sensor.position;
             groundVelocity = sensor.worldToLocalMatrix * ((position - lastPosition) / Time.fixedDeltaTime);
@@ -69,9 +63,9 @@ namespace Labust.Sensors.Primitive
             hasData = true;
         }
 
-        public async override void SendMessage()
+        protected async override void SendMessage()
         {
-    var dvlOut = new TwistWithCovarianceStamped
+            var dvlOut = new TwistWithCovarianceStamped
             {
                 Header = new Header()
                 {

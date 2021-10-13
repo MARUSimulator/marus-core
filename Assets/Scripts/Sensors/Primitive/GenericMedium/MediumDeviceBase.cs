@@ -18,6 +18,6 @@ namespace Labust.Sensors.Primitive.GenericMedium
 		/// <summary>
 		/// Method that receives messages.
 		/// </summary>
-		public abstract void Receive<T>(MediumMessageBase<T> message);
+		public abstract void Receive(MediumMessageBase<T> message);
 	}
 }
