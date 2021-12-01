@@ -6,6 +6,10 @@ namespace UnitTests
 
     public static class TestUtils
     {
+        public static void CallUpdate<T> (T script)
+        {
+            CallNonpublicMethod(script, "Update");
+        }
         public static void CallFixedUpdate<T>(T script)
         {
             CallNonpublicMethod(script, "FixedUpdate");
@@ -19,6 +23,11 @@ namespace UnitTests
         public static void CallStart<T>(T script)
         {
             CallNonpublicMethod(script, "Start");
+        }
+        public static void CallOnTriggerEnter<T>(T script, object collider)
+        {
+            object[] colliderArr = new object[] {collider};
+            CallNonpublicMethod(script, "OnTriggerEnter", colliderArr);
         }
 
         public static bool CallNonpublicMethod<T>(T script, string methodName, object[] parameters=null) 

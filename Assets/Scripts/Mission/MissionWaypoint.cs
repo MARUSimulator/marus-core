@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace MissionWaypointNS
+namespace Labust.Mission
 {
     public class MissionWaypoint : MonoBehaviour
     {
@@ -13,7 +13,12 @@ namespace MissionWaypointNS
 
         [System.NonSerialized]
         public bool visited = false;
+        
+        [System.NonSerialized]
         public bool eventTriggered = false;
+
+        [System.NonSerialized]
+        public MissionControl mission;
 
         void Start() 
         {
@@ -33,7 +38,7 @@ namespace MissionWaypointNS
             /// </summary>
             // Make sure other movable objects in the scene don't trigger a waypoint.
 
-            if(collider.gameObject.name == "Diver"){
+            if(collider.gameObject.name == mission.player.name){
                 visited = true;
                 DisableWaypoint();
             }
@@ -48,7 +53,7 @@ namespace MissionWaypointNS
             gameObject.SetActive(false);
         }
 
-        public void EnableWaypoint(bool displayWaypoints)
+        public void EnableWaypoint(bool dispayWaypoint)
         {
             /// <summary>
             /// Enable waypoint object.
@@ -56,7 +61,7 @@ namespace MissionWaypointNS
             /// </summary>
 
             gameObject.SetActive(true);
-            if (displayWaypoints)
+            if (dispayWaypoint)
             {
                 GetComponent<MeshRenderer>().enabled = true;
             }

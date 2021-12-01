@@ -1,7 +1,7 @@
 using Grpc.Core;
 using Labust.Core;
 using Labust.Utils;
-using MissionWaypointNS;
+using Labust.Mission;
 using UnityEngine;
 using static Service.Commander;
 
