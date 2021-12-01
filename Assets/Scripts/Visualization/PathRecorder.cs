@@ -3,6 +3,7 @@ using UnityEngine;
 using System.IO;
 using Labust.Utils;
 using Labust.Logger;
+using Labust.Mission;
 using UnityEngine.SceneManagement;
 
 namespace Labust.Visualization

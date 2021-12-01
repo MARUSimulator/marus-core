@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Labust.Visualization;
 using Labust.Visualization.Primitives;
 using Labust.Logger;
+using Labust.Mission;
 using UnityEngine.SceneManagement;
 
 namespace Labust.StatisticsUI

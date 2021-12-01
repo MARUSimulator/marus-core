@@ -1,5 +1,5 @@
 using System;
-using MissionWaypointNS;
+using Labust.Mission;
 using UnityEngine;
 
 namespace Labust.Controllers
