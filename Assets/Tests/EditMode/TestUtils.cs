@@ -10,6 +10,8 @@ namespace UnitTests
         {
             CallNonpublicMethod(script, "Update");
         }
+
+
         public static void CallFixedUpdate<T>(T script)
         {
             CallNonpublicMethod(script, "FixedUpdate");

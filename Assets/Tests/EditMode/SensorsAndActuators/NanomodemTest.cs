@@ -45,7 +45,7 @@ public class NanomodemTest
 		};
 
 		NanomodemROS rosController = _nanomodem1.gameObject.GetComponent<NanomodemROS>();
-		TestUtils.CallAwake<NanomodemROS>(rosController);
+		//TestUtils.CallAwake<NanomodemROS>(rosController);
 
 		// List<AcousticPayload> payloadList = rosController.ParseAndExecuteCommand(req);
 		// Assert.AreEqual(3, payloadList.Count, "Number of response payloads is wrong");

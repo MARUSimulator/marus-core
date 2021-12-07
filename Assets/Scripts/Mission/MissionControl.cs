@@ -13,8 +13,8 @@ namespace Labust.Mission {
         /// Show text for every waypoint.
         /// </summary>
 
-        public GameObject player;
-        public List<GameObject> waypointObjects;
+        public GameObject agent;
+        public List<MissionWaypoint> waypointObjects = new List<MissionWaypoint>();
 
         // Messeges are publicly set and displayed in Text object.
         public Text textElement;
@@ -28,11 +28,14 @@ namespace Labust.Mission {
 
         public event Action<MissionWaypoint> OnWaypointChange;
 
-        void Start() {
+        int _eventCount;
 
+        void Start() 
+        {
+            _eventCount = -1;
             //Set mission parameter for every waypoint
-            foreach (GameObject wp in waypointObjects){
-                wp.GetComponent<MissionWaypoint>().mission = this;
+            foreach (MissionWaypoint wp in waypointObjects){
+                wp.mission = this;
             }     
         }
 
@@ -52,7 +55,7 @@ namespace Labust.Mission {
                     MissionComplete = true;
                     return;
                 }
-                MissionWaypoint waypoint = waypointObjects[i].GetComponent<MissionWaypoint>();
+                var waypoint = waypointObjects[i].GetComponent<MissionWaypoint>();
                 // Skip every waypoint that has already been visited.
                 // Initially, "visited" property for all the waypoints is set to false.
                 if(waypoint.visited == true){
@@ -66,13 +69,15 @@ namespace Labust.Mission {
                     {
                         textElement.text = messages[i]; 
                     }
-                    waypoint.EnableWaypoint(displayWaypoints);
-                    if(OnWaypointChange != null && !waypoint.eventTriggered)
+
+                    if(_eventCount != i)
                     {
-                        OnWaypointChange.Invoke(waypoint);
-                        waypoint.eventTriggered = true;
+                        waypoint.EnableWaypoint(displayWaypoints);
+                        OnWaypointChange?.Invoke(waypoint);
+                        _eventCount = i;
                     }
                     break;
+                    
                 }
             
             }
