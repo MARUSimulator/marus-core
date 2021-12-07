@@ -1,0 +1,23 @@
+{
+    "name": "LabustAssembly",
+    "rootNamespace": "",
+    "references": [
+        "GUID:5b35af79ebbe89647a157055d52c59d3",
+        "GUID:3eae0364be2026648bf74846acb8a731",
+        "GUID:46a67ded66a63de48b9329c593fc08de",
+        "GUID:df380645f10b7bc4b97d4f5eb6303d95",
+        "GUID:a075b55b404a34748ac14ea9b6039911",
+        "GUID:78bd2ddd6e276394a9615c203e574844",
+        "GUID:457756d89b35d2941b3e7b37b4ece6f1",
+        "GUID:5b5e144fbbfa9e24188cdc68fa9a4b3c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
