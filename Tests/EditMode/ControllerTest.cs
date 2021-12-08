@@ -12,7 +12,7 @@ public class ControllerTest
 
     [OneTimeSetUp]
     public void SetUp()
-    {   
+    {
         agent1 = new GameObject();
         agent2 = new GameObject();
 
@@ -36,15 +36,15 @@ public class ControllerTest
     {
         var agent1Controller = agent1.AddComponent<AUVPrimitiveController>();
         Utils.CallAwake<AUVPrimitiveController>(agent1Controller);
-        
+
         //Test translation.
         Utils.CallNonpublicMethod<AUVPrimitiveController>(agent1Controller, "UpdateMovement", new object[]{1, KeyCode.W, 1});
         Assert.AreEqual(1, agent1.transform.position.z, "AUV primitive controller translation doesn't work as expected");
-        
+
         //Test rotation.
         agent1Controller.rotSpeed = 1000f;
         Utils.CallNonpublicMethod<AUVPrimitiveController>(agent1Controller, "UpdateMovement", new object[]{1, KeyCode.X, 1});
-        
+
         Assert.IsTrue(Mathf.Abs(100 - agent1.transform.eulerAngles.y) < 0.01, "AUV primitive controller rotation doesn't work as expected");
     }
 
@@ -64,7 +64,7 @@ public class ControllerTest
         //Test rotation
         cameraController.rotSpeed = 1000f;
         Utils.CallNonpublicMethod<CameraController>(cameraController, "UpdateMovement", new object[]{1, KeyCode.X, 1});
-        
+
         Assert.IsTrue(Mathf.Abs(100 - cameraObj.transform.eulerAngles.y) < 0.01, "Camera controller rotation doesn't work as expected");
 
     }

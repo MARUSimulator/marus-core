@@ -1,25 +1,26 @@
 ﻿using System;
 using Std;
 using UnityEngine;
-using Vector3 = UnityEngine.Vector3;
+using Labust.Utils;
 
 namespace Labust.Sensors.Primitive
 {
     public class DvlSensor : SensorBase
     {
+        public bool debug = true;
+        [NonSerialized] public Vector3 groundVelocity = new Vector3();
+        [NonSerialized] public double[] velocityCovariance = new double[9];
+        [NonSerialized] public float altitude;
+        [NonSerialized] public double altitudeCovariance;
+
         [Header("Sensor parameters measurements")]
         [Header("Core measurements")]
-        public Vector3 groundVelocity = new Vector3();
-        public double[] velocityCovariance = new double[9];
-        //public Vector3 velocity;
-        //public Rigidbody body;
-        
-        public float altitude;
-        public double altitudeCovariance;
+        [ReadOnly] public Vector3 GroundVelocity;
+        [ReadOnly] public float Altitude;
 
         [Header("Debug Beams")]
-        public float[] beamRanges;
-        RangeSensor[] beams;
+        [ReadOnly] public float[] beamRanges;
+        [ReadOnly][SerializeField] RangeSensor[] beams;
 
         private Vector3 lastPosition;
 
@@ -44,11 +45,17 @@ namespace Labust.Sensors.Primitive
 
                 if (beams[i].range < altitude)
                     altitude = beams[i].range;
-
-                beamRanges[i] = beams[i].range;
+                if (debug)
+                {
+                    beamRanges[i] = beams[i].range;
+                }
+            }
+            if (debug)
+            {
+                Altitude = altitude;
+                GroundVelocity = groundVelocity.Round(2);
             }
             hasData = true;
         }
     }
-
 }

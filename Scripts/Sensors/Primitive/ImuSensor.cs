@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using Labust.Core;
-using Labust.Networking;
 using Labust.Utils;
-using Sensor;
-using Sensorstreaming;
 using Std;
 using UnityEngine;
 
@@ -22,7 +15,7 @@ namespace Labust.Sensors.Primitive
         public bool debug = true;
         [NonSerialized] public Vector3 linearAcceleration;
         [NonSerialized] public Vector3 localVelocity;
-        [NonSerialized] public double[] linearAccelerationCovariance = new double[9]; 
+        [NonSerialized] public double[] linearAccelerationCovariance = new double[9];
 
         [NonSerialized] public Vector3 angularVelocity;
         [NonSerialized] public double[] angularVelocityCovariance = new double[9];
