@@ -1,14 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.TestTools;
 using Labust.Sensors;
 using Labust.Sensors.Primitive;
-using Labust.Networking;
-using UnitTests;
+using TestUtils;
 
 public class ImuTest
 {
@@ -19,7 +13,7 @@ public class ImuTest
     [OneTimeSetUp]
     public void SetUp()
     {
-        _imu = TestUtils.CreateAndInitializeObject<ImuSensor>("Imu", PrimitiveType.Cube);
+        _imu = Utils.CreateAndInitializeObject<ImuSensor>("Imu", PrimitiveType.Cube);
         _imu.transform.position = new Vector3(1, 0, 0);
         _rigigBody = _imu.gameObject.GetComponent<Rigidbody>();
         _rigigBody.useGravity = false;
@@ -31,10 +25,10 @@ public class ImuTest
     [Test]
     public void TestImuSample()
     {
-        TestUtils.CallFixedUpdate(SensorSampler.Instance);
+        Utils.CallFixedUpdate(SensorSampler.Instance);
         _rigigBody.velocity = new Vector3(0.25f, 0, 0);
         _rigigBody.angularVelocity = new Vector3(0.35f, 0, 0);
-        TestUtils.CallFixedUpdate(SensorSampler.Instance);
+        Utils.CallFixedUpdate(SensorSampler.Instance);
 
         Assert.AreEqual(2.5f, _imu.linearAcceleration.x, "Linear acceleration in z should be 2.5f");
         Assert.AreEqual(_imu.orientation.x, 0.6f, "Orientation in x should be 0.6f");

@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-namespace Labust.Mission {
+namespace Labust.Mission 
+{
     public class MissionControl : MonoBehaviour
     {
         /// <summary>
@@ -13,8 +14,8 @@ namespace Labust.Mission {
         /// Show text for every waypoint.
         /// </summary>
 
-        public GameObject player;
-        public List<GameObject> waypointObjects;
+        public GameObject agent;
+        public List<MissionWaypoint> waypointObjects;
 
         // Messeges are publicly set and displayed in Text object.
         public Text textElement;
@@ -28,22 +29,27 @@ namespace Labust.Mission {
 
         public event Action<MissionWaypoint> OnWaypointChange;
 
-        void Start() {
-
+        // Count how many events have been triggered.
+        // Counts until eventCount == waypointsObjects.Count
+        int eventCount;
+        void Start() 
+        {
+            eventCount = -1;
             //Set mission parameter for every waypoint
-            foreach (GameObject wp in waypointObjects){
-                wp.GetComponent<MissionWaypoint>().mission = this;
+            foreach (var wp in waypointObjects)
+            {
+                wp.mission = this;
             }     
         }
 
         void Update()
         {
-            if (MissionComplete )
+            if (MissionComplete)
             {
                 return;
             }
 
-            for(int i = 0; i<= waypointObjects.Count; i++)
+            for (int i = 0; i<= waypointObjects.Count; i++)
             {
                 // Display final message after all the waypoints have been visited.
                 if (i == waypointObjects.Count && TextBoxAndMessageExist(i))
@@ -55,22 +61,22 @@ namespace Labust.Mission {
                 MissionWaypoint waypoint = waypointObjects[i].GetComponent<MissionWaypoint>();
                 // Skip every waypoint that has already been visited.
                 // Initially, "visited" property for all the waypoints is set to false.
-                if(waypoint.visited == true){
+                if(waypoint.Visited == true){
                     continue;
                 }
                 // For the first waypoint that hasn't been visited display proper message
                 // and show that waypoint.
-                else if(waypoint.visited == false)
+                else if(waypoint.Visited == false)
                 {
                     if (TextBoxAndMessageExist(i))
                     {
                         textElement.text = messages[i]; 
                     }
-                    waypoint.EnableWaypoint(displayWaypoints);
-                    if(OnWaypointChange != null && !waypoint.eventTriggered)
+                    if (eventCount != i)
                     {
-                        OnWaypointChange.Invoke(waypoint);
-                        waypoint.eventTriggered = true;
+                        waypoint.EnableWaypoint(displayWaypoints);
+                        OnWaypointChange?.Invoke(waypoint);
+                        eventCount = i;
                     }
                     break;
                 }

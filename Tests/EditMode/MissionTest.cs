@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using NUnit.Framework;
 using UnityEngine;
 using Labust.Mission;
 using System.Linq;
-using UnitTests;
+using TestUtils;
+using NUnit.Framework;
 
 public class MissionTest
 {
@@ -21,22 +21,23 @@ public class MissionTest
         MissionControl mission = missionObject.AddComponent<MissionControl>();
         player.AddComponent<MeshCollider>();
 
-        mission.waypointObjects = waypointsObject.ToList();
         mission.messages = new List<string>{waypointsObject[0].name, waypointsObject[1].name, "finished"};
         
         GameObject text = new GameObject();
         UnityEngine.UI.Text textComponent = text.AddComponent<UnityEngine.UI.Text>();
         mission.textElement = textComponent;
 
-        mission.player = player;
+        mission.agent = player;
 
-        foreach(GameObject wp in waypointsObject){
+        foreach(var wp in waypointsObject){
             wp.AddComponent<MeshRenderer>();
             MissionWaypoint waypoint = wp.AddComponent<MissionWaypoint>();
 
             //This is used in onTriggerEnter function for checking if mission player has entered waypoint.
             waypoint.mission = mission;
         }
+
+        mission.waypointObjects = waypointsObject.Select(x => x.GetComponent<MissionWaypoint>()).ToList();
     }
 
     [Test]
@@ -79,7 +80,7 @@ public class MissionTest
         waypointsObject[0].SetActive(true);
 
         //Simulate player entering the waypoint.
-        TestUtils.CallOnTriggerEnter(waypointsObject[0].GetComponent<MissionWaypoint>(), player.GetComponent<MeshCollider>());
+        Utils.CallOnTriggerEnter(waypointsObject[0].GetComponent<MissionWaypoint>(), player.GetComponent<MeshCollider>());
 
         Assert.AreEqual(waypointsObject[0].activeSelf, false, "Waypoint wasn't disabled after the player has entered it's area");
     }
@@ -88,13 +89,16 @@ public class MissionTest
     public void TestMissionControl()
     {
         MissionControl mission = missionObject.GetComponent<MissionControl>();
+        Utils.CallStart(mission);
         //Set inital waypoint values.
-        foreach(GameObject wp in waypointsObject){
+        foreach(var wp in waypointsObject){
             wp.SetActive(false);
-            wp.GetComponent<MissionWaypoint>().visited = false;
+            
+            Utils.SetNonpublicField(
+                wp.GetComponent<MissionWaypoint>(), "_visited", false);
         }
 
-        TestUtils.CallUpdate(mission);
+        Utils.CallUpdate(mission);
 
         //Check if initally fist message is dispalyed and if only first waypoint is enabled.
         Assert.AreEqual(mission.textElement.text, waypointsObject[0].name, "Initialy text element is not set correctly.");
@@ -102,15 +106,15 @@ public class MissionTest
         Assert.AreEqual(waypointsObject[1].activeSelf, false, "Only first waypoint should be enabled at the beginning of the mission.");
 
         // Trigger first waypoint.
-        TestUtils.CallOnTriggerEnter(waypointsObject[0].GetComponent<MissionWaypoint>(), player.GetComponent<MeshCollider>());
-        TestUtils.CallUpdate(mission);
+        Utils.CallOnTriggerEnter(waypointsObject[0].GetComponent<MissionWaypoint>(), player.GetComponent<MeshCollider>());
+        Utils.CallUpdate(mission);
         Assert.AreEqual(mission.textElement.text, waypointsObject[1].name, "Text element hasn't been changed after first waypoint is reached.");
         Assert.AreEqual(waypointsObject[0].activeSelf, false, "First waypoint should be disabled after visited.");
         Assert.AreEqual(waypointsObject[1].activeSelf, true, "Only second waypoint should be enabled after first waypoint is reached."); 
 
         // Trigger second waypoint.
-        TestUtils.CallOnTriggerEnter(waypointsObject[1].GetComponent<MissionWaypoint>(), player.GetComponent<MeshCollider>());
-        TestUtils.CallUpdate(mission);
+        Utils.CallOnTriggerEnter(waypointsObject[1].GetComponent<MissionWaypoint>(), player.GetComponent<MeshCollider>());
+        Utils.CallUpdate(mission);
         Assert.AreEqual(mission.textElement.text, "finished", "Final message doesn't display in text element.");
         Assert.AreEqual(waypointsObject[0].activeSelf, false, "First waypoint should be disabled after mission has finished.");
         Assert.AreEqual(waypointsObject[1].activeSelf, false, "Second waypoint should be disabled after mission has finished."); 

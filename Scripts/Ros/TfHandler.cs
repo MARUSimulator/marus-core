@@ -24,7 +24,6 @@ namespace Labust.Networking
         private GeographicFrame _originGeoFrame;
         public GeographicFrame OriginGeoFrame => _originGeoFrame;
 
-        public TfFrameList FrameList;
 
         public bool StreamFrames = true;
         AsyncServerStreamingCall<TfFrameList> _frameStream;
@@ -38,7 +37,6 @@ namespace Labust.Networking
             InitializeTf();
             RosConnection.Instance.OnConnected += OnConnected;
         }
-
 
         public void OnConnected(Channel channel)
         {

@@ -45,25 +45,34 @@ namespace Labust.Networking
         {
             object value = null;
             outValue = default(T);
-            var paramValue = _parameterServerClient.GetParameter(new GetParamRequest() { Name = name });
-            switch (paramValue.ParameterValueCase)
+            ParamValue paramValue;
+            try
             {
-                case ParamValue.ParameterValueOneofCase.None:
-                    return false;
-                case ParamValue.ParameterValueOneofCase.ValueBool:
-                    value = paramValue.ValueBool;
-                    break;
-                case ParamValue.ParameterValueOneofCase.ValueInt:
-                    value = paramValue.ValueInt;
-                    break;
-                case ParamValue.ParameterValueOneofCase.ValueDouble:
-                    value = paramValue.ValueDouble;
-                    break;
-                case ParamValue.ParameterValueOneofCase.ValueStr:
-                    value = paramValue.ValueStr;
-                    break;
+                paramValue = _parameterServerClient.GetParameter(new GetParamRequest() { Name = name });
+                switch (paramValue.ParameterValueCase)
+                {
+                    case ParamValue.ParameterValueOneofCase.None:
+                        return false;
+                    case ParamValue.ParameterValueOneofCase.ValueBool:
+                        value = paramValue.ValueBool;
+                        break;
+                    case ParamValue.ParameterValueOneofCase.ValueInt:
+                        value = paramValue.ValueInt;
+                        break;
+                    case ParamValue.ParameterValueOneofCase.ValueDouble:
+                        value = paramValue.ValueDouble;
+                        break;
+                    case ParamValue.ParameterValueOneofCase.ValueStr:
+                        value = paramValue.ValueStr;
+                        break;
+                }
+                outValue = (T)value;
             }
-            outValue = (T)value;
+            catch (Exception e)
+            {
+                outValue = default(T);
+                return false;
+            }
             return true;
         }
 
@@ -92,7 +101,14 @@ namespace Labust.Networking
                 default:
                     return false;
             }
-            _parameterServerClient.SetParameter(request);
+            try
+            {
+                _parameterServerClient.SetParameter(request);
+            }
+            catch
+            {
+                return false;
+            }
             return true;
         }
 

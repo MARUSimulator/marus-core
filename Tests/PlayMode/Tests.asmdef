@@ -4,14 +4,18 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "LabustAssembly"
+        "LabustAssembly",
+        "PluginsAssembly",
+        "TestUtils"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "nunit.framework.dll"
+        "nunit.framework.dll",
+        "Grpc.Core.Api.dll",
+        "Grpc.Core.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [

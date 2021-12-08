@@ -11,12 +11,9 @@ namespace Labust.Mission
         /// Class that represents waypoint in the simulator.
         /// </summary>
 
-        [System.NonSerialized]
-        public bool visited = false;
+        bool _visited = false;
+        public bool Visited => _visited;
         
-        [System.NonSerialized]
-        public bool eventTriggered = false;
-
         [System.NonSerialized]
         public MissionControl mission;
 
@@ -38,8 +35,8 @@ namespace Labust.Mission
             /// </summary>
             // Make sure other movable objects in the scene don't trigger a waypoint.
 
-            if(collider.gameObject.name == mission.player.name){
-                visited = true;
+            if(collider.gameObject.GetInstanceID() == mission.agent.GetInstanceID()){
+                _visited = true;
                 DisableWaypoint();
             }
         }

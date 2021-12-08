@@ -28,7 +28,8 @@ namespace Labust.Core
         public uint StartTimeSecs => _startTimeSecs;
         public uint StartTimeNsecs => _startTimeNsecs;
 
-        public double TimeDouble => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;//_totalTimeSecs + 1e-9 * _totalTimeNsecs;
+        // public double TimeDouble => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
+        public double TimeDouble => _totalTimeSecs + 1e-9 * _totalTimeNsecs;
 
         protected override void Initialize()
         {
@@ -49,13 +50,13 @@ namespace Labust.Core
 
         // TODO: Based on FPS, limit maximal simulation speed
         // idk if it is needed. is the physics simulated well? Needs testing 
-        void AdaptSimulationSpeed()
+        private void AdaptSimulationSpeed()
         {
             // var a = Time.smoothDeltaTime;
             Time.timeScale = SimulationSpeed;
         }
 
-        public void UpdateTime()
+        private void UpdateTime()
         {
             var deltaTimeSecs = (uint)Time.fixedDeltaTime; // truncate after decimal
             var deltaTimeNsecs = Convert.ToUInt32((Time.fixedDeltaTime - deltaTimeSecs) * SEC2NSEC);

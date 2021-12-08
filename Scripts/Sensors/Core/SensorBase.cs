@@ -38,6 +38,10 @@ namespace Labust.Sensors
                     else
                         body = Utils.Helpers.GetParentRigidBody(transform);
                 }
+                if (body == null)
+                {
+                    return transform;
+                }
                 return body?.transform;
             }
         }

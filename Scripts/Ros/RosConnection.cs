@@ -16,6 +16,7 @@ using Parameterserver;
 using System.Collections;
 using Simulationcontrol;
 using Labust.Utils;
+using static Acoustictransmission.AcousticTransmission;
 
 namespace Labust.Networking
 {
@@ -56,8 +57,6 @@ namespace Labust.Networking
         Channel _streamingChannel;
         Dictionary<Type, ClientBase> _grpcClients;
         volatile bool _connected;
-        volatile bool _onConnectedCalled;
-
         public bool IsConnected => _connected;
         public CancellationToken cancellationToken => _streamingChannel.ShutdownToken;
 
@@ -65,10 +64,6 @@ namespace Labust.Networking
 
 
         public event Action<Channel> OnConnected;
-
-        
-
-
 
         /// <summary>
         /// Adds new client of type if it does not currently exists.
@@ -128,6 +123,8 @@ namespace Labust.Networking
             {
                 if (_connected)
                 {
+                    OnRosConnected();
+                    OnConnected?.Invoke(_streamingChannel);
                     break;
                 }
                 yield return null;
@@ -136,18 +133,14 @@ namespace Labust.Networking
 
         void OnRosConnected()
         {
-            GetSimulationController();
-            OnConnected?.Invoke(_streamingChannel);
+            if (!RealtimeSimulation)
+            {
+                GetSimulationController();
+            }
         }
 
         void Update()
         {
-            // call event if connected
-            if (_connected && !_onConnectedCalled)
-            {
-                OnRosConnected();
-            }
-
             if (!RealtimeSimulation && IsConnected)
             {
                 StartCoroutine(RosStep());
@@ -206,6 +199,10 @@ namespace Labust.Networking
                 {
                     typeof(TfClient),
                     new TfClient(_streamingChannel)
+                },
+                {
+                    typeof(AcousticTransmissionClient),
+                    new AcousticTransmissionClient(_streamingChannel)
                 }
             };
         }

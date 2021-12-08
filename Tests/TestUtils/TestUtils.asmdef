@@ -1,0 +1,21 @@
+{
+    "name": "TestUtils",
+    "rootNamespace": "",
+    "references": [
+        "GUID:92fc685510b84ba4180e4f8997af0a94",
+        "GUID:c47c588af94a289439184f626352a939"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [
+        "Grpc.Core.Api.dll",
+        "Grpc.Core.dll", 
+        "Google.Protobuf.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
