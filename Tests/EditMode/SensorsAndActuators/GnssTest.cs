@@ -13,12 +13,12 @@ using UnitTests;
 public class GnssTest
 {
 
-    GNSSSensor _gnss;
+    GnssSensor _gnss;
 
     [OneTimeSetUp]
     public void SetUp()
     {
-        _gnss = TestUtils.CreateAndInitializeObject<GNSSSensor>("Gnss", PrimitiveType.Cube);
+        _gnss = TestUtils.CreateAndInitializeObject<GnssSensor>("Gnss", PrimitiveType.Cube);
         _gnss.transform.position = new Vector3(200, 5, 100);
     }
 

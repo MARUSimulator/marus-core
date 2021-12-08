@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Labust.Sensors.Primitive
 {
-    public class GNSSSensor : SensorBase<GnssStreamingRequest>
+    public class GnssSensor : SensorBase
     {
         [Header("Position")]
         public GeographicFrame origin;
@@ -25,12 +25,6 @@ namespace Labust.Sensors.Primitive
         void Start()
         {
             covariance = new double[] { 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1 };
-            if (streamingClient != null)
-            {
-                StreamSensor(streamingClient.StreamGnssSensor(cancellationToken:RosConnection.Instance.cancellationToken));
-            }
-            if (string.IsNullOrEmpty(address))
-                address = $"{vehicle?.name}/gps";
         }
 
         protected override void SampleSensor()
@@ -39,32 +33,6 @@ namespace Labust.Sensors.Primitive
             point = world.Unity2Geo(transform.position);
             Log(new { point.latitude, point.longitude, point.altitude });
             hasData = true;
-        }
-
-        protected override async void SendMessage()
-        {
-            var msg = new GnssStreamingRequest
-            {
-                Address = address,
-                Data = new NavSatFix
-                {
-                    Header = new Header
-                    {
-                        FrameId = frameId,
-                        Timestamp = TimeHandler.Instance.TimeDouble
-                    },
-                    Status = new NavSatStatus
-                    {
-                        Service = NavSatStatus.Types.Service.Gps,
-                        Status = isRTK?NavSatStatus.Types.Status.GbasFix:NavSatStatus.Types.Status.SbasFix
-                    },
-                    Latitude = point.latitude,
-                    Longitude = point.longitude,
-                    Altitude = point.altitude
-                }
-            };
-            if (transform.position.y > -maximumOperatingDepth) await _streamWriter.WriteAsync(msg);
-            hasData = false;
         }
     }
 }

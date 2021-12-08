@@ -21,7 +21,7 @@ namespace Labust.Sensors
     /// Implemented using IJobParallelFor on CPU
     /// Can drop performance
     /// </summary>
-    public class RaycastLidar : SensorBase<PointCloudStreamingRequest>
+    public class RaycastLidar : SensorBase
     {
 
         /// Instantiates 3 Jobs:
@@ -45,7 +45,7 @@ namespace Labust.Sensors
 
         public ComputeShader pointCloudShader;
 
-        private NativeArray<Vector3> _pointsCopy;
+        public NativeArray<Vector3> pointsCopy;
 
         const float PIOVERTWO = Mathf.PI / 2;
         const float TWOPI = Mathf.PI * 2;
@@ -60,11 +60,8 @@ namespace Labust.Sensors
         void Start()
         {
             int totalRays = WidthRes * HeightRes;
-            streamHandle = streamingClient?.StreamLidarSensor(cancellationToken: RosConnection.Instance.cancellationToken);
-            if (string.IsNullOrEmpty(address))
-                address = transform.name + "/lidar";
 
-            _pointsCopy = new NativeArray<Vector3>(WidthRes * HeightRes, Allocator.Persistent);
+            pointsCopy = new NativeArray<Vector3>(WidthRes * HeightRes, Allocator.Persistent);
 
             var directionsLocal = RaycastJobHelper.EvenlyDistributeRays(WidthRes, HeightRes, 360, FieldOfView);
 
@@ -81,7 +78,8 @@ namespace Labust.Sensors
         private void OnFinish(NativeArray<Vector3> points, NativeArray<LidarReading> reading)
         {
             _pointCloudManager.UpdatePointCloud(points);
-            points.CopyTo(_pointsCopy);
+            points.CopyTo(pointsCopy);
+            Log(new {points});
             hasData = true;
         }
 
@@ -93,38 +91,9 @@ namespace Labust.Sensors
         void OnDestroy()
         {
             _raycastHelper.Dispose();
-            _pointsCopy.Dispose();
+            pointsCopy.Dispose();
         }
 
-        protected async override void SendMessage()
-        {
-            Sensor.PointCloud _pointCloud = new Sensor.PointCloud();
-            foreach (Vector3 point in _pointsCopy)
-            {
-                var tmp = TfExtensions.Unity2Map(point);
-                Geometry.Point p = new Geometry.Point()
-                {
-                    X = tmp.x,
-                    Y = tmp.y,
-                    Z = tmp.z
-                };
-                _pointCloud.Points.Add(p);
-            }
-
-            _pointCloud.Header = new Std.Header()
-            {
-                FrameId = RosConnection.Instance.OriginFrameName,
-                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
-            };
-
-            var msg = new PointCloudStreamingRequest()
-            {
-                Data = _pointCloud,
-                Address = address
-            };
-            await _streamWriter.WriteAsync(msg);
-            hasData = false;
-        }
     }
 
 

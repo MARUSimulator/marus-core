@@ -22,7 +22,7 @@ namespace Labust.Sensors
     /// Implemented using IJobParallelFor on CPU 
     /// Can drop performance
     /// </summary>
-    public class Sonar2D : SensorBase<PointCloudStreamingRequest>
+    public class Sonar2D : SensorBase
     {
 
         /// Instantiates 3 Jobs: 
@@ -45,7 +45,7 @@ namespace Labust.Sensors
         public float RayIntensity = 30;
 
         public ComputeShader pointCloudShader;
-        private NativeArray<Vector3> _pointsCopy;
+        public NativeArray<Vector3> pointsCopy;
 
         const float PIOVERTWO = Mathf.PI / 2;
         const float TWOPI = Mathf.PI * 2;
@@ -60,11 +60,8 @@ namespace Labust.Sensors
         {
 
             int totalRays = Resolution;
-            streamHandle = streamingClient?.StreamLidarSensor(cancellationToken: RosConnection.Instance.cancellationToken);
-            if (string.IsNullOrEmpty(address))
-                address = transform.name + "/sonar3d";
 
-            _pointsCopy = new NativeArray<Vector3>(totalRays, Allocator.Persistent);
+            pointsCopy = new NativeArray<Vector3>(totalRays, Allocator.Persistent);
 
             var directionsLocal = RaycastJobHelper.EvenlyDistributeRays(Resolution, 1, FieldOfView, 0);
             _raycastHelper = new RaycastJobHelper<SonarReading>(gameObject, directionsLocal, OnSonarHit, OnFinish);
@@ -81,44 +78,14 @@ namespace Labust.Sensors
         private void OnFinish(NativeArray<Vector3> points, NativeArray<SonarReading> reading)
         {
             _pointCloudManager.UpdatePointCloud(points);
-            points.CopyTo(_pointsCopy);
+            points.CopyTo(pointsCopy);
             hasData = true;
         }
 
         void OnDestroy()
         {
             _raycastHelper.Dispose();
-            _pointsCopy.Dispose();
-        }
-
-        protected async override void SendMessage()
-        {
-            Sensor.PointCloud _pointCloud = new Sensor.PointCloud();
-            foreach (Vector3 point in _pointsCopy)
-            {
-                var tmp = TfExtensions.Unity2Map(point);
-                Geometry.Point p = new Geometry.Point()
-                {
-                    X = tmp.x,
-                    Y = tmp.y,
-                    Z = tmp.z
-                };
-                _pointCloud.Points.Add(p);
-            }
-
-            _pointCloud.Header = new Std.Header()
-            {
-                FrameId = RosConnection.Instance.OriginFrameName,
-                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
-            };
-
-            var msg = new PointCloudStreamingRequest()
-            {
-                Data = _pointCloud,
-                Address = address
-            };
-            await _streamWriter.WriteAsync(msg);
-            hasData = false;
+            pointsCopy.Dispose();
         }
 
         public SonarReading OnSonarHit(RaycastHit hit, Vector3 direction, int i)

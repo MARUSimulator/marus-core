@@ -19,10 +19,6 @@ namespace Labust.Sensors
             SensorSampler.Instance.AddSensorCallback(this, SampleSensor);
         }
 
-        [Space]
-        [Header("Streaming Parameters")]
-        public float SensorUpdateHz = 1;
-        public string address;
         //public bool RunRecording = false;
         
         [Header("Sensor parameters")] 
@@ -30,13 +26,6 @@ namespace Labust.Sensors
 
         protected Rigidbody body;
 
-        protected abstract void SampleSensor();
-
-        /// <summary>
-        /// Vehichle that sensor is attached to
-        /// Gets rigid body component of a first ancestor
-        /// </summary>
-        /// <value></value>
         public Transform vehicle
         {
             get
@@ -52,25 +41,22 @@ namespace Labust.Sensors
                 return body?.transform;
             }
         }
+
         /// <summary>
         /// Set this when there is new data sampled
         /// </summary>
         protected volatile bool hasData = false;
+        protected abstract void SampleSensor();
 
         protected GameObjectLogger Logger;
         protected void Log<W>(W data)
         {
             if (Logger == null)
             {
-                Logger = DataLogger.Instance.GetLogger<W>(address);
+                Logger = DataLogger.Instance.GetLogger<W>($"{vehicle.name}/{name}");
             }
             (Logger as GameObjectLogger<W>).Log(data);
         }
-
-        protected void AddSensorCallback(Action callback)
-        {
-        }
-
 
         void OnEnable()
         {
@@ -89,8 +75,14 @@ namespace Labust.Sensors
     /// Sensor streams readings to the server defined in RosConnection singleton instance
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class SensorBase<T> : SensorBase where T : IMessage
+    public abstract class SensorStreamer<T> : MonoBehaviour where T : IMessage
     {
+
+        [Space]
+        [Header("Streaming Parameters")]
+        public float UpdateFrequency = 1;
+        public string address;
+        public bool hasData;
 
         /// <summary>
         /// A client instance used for streaming sensor readings
@@ -110,7 +102,7 @@ namespace Labust.Sensors
         /// Set this in the Awake() method of the sensor script.
         /// Instantiate appropriate client service
         /// </summary>
-        protected AsyncClientStreamingCall<T, StreamingResponse> streamHandle;
+        AsyncClientStreamingCall<T, StreamingResponse> streamHandle;
 
 
         /// <summary>
@@ -131,7 +123,7 @@ namespace Labust.Sensors
         void Update()
         {
             cumulativeTime += Time.deltaTime;
-            if (cumulativeTime > (1 / SensorUpdateHz))
+            if (cumulativeTime > (1 / UpdateFrequency))
             {
                 cumulativeTime = 0;
                 if (hasData && RosConnection.Instance.IsConnected)
