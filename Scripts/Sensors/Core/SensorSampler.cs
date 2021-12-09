@@ -13,16 +13,36 @@ namespace Labust.Sensors
     {
 
         Dictionary<int, SensorCallback> _sensorCallbacks = new Dictionary<int, SensorCallback>();
+        Dictionary<int, float> _timeSinceLastCallback = new Dictionary<int, float>();
 
         void FixedUpdate()
         {
-            foreach (var callback in _sensorCallbacks.Values)
+            foreach (var kvp in _sensorCallbacks)
             {
-                if (callback.active)
+                var callback = kvp.Value;
+                if (!_timeSinceLastCallback.TryGetValue(kvp.Key, out var time))
+                {
+                    _timeSinceLastCallback[kvp.Key] = 0;
+                    time = 0;
+                }
+
+                if (callback.active 
+                    && callback.sensor.isActiveAndEnabled
+                    && EnoughTimePassed(time, callback.sensor))
                 {
                     callback.callback();
+                    _timeSinceLastCallback[kvp.Key] = 0;
+                }
+                else
+                {
+                    _timeSinceLastCallback[kvp.Key] += Time.fixedDeltaTime;
                 }
             }
+        }
+
+        private bool EnoughTimePassed(float time, SensorBase sensor)
+        {
+            return time > 1 / sensor.SampleFrequency;
         }
 
         public void AddSensorCallback(SensorBase sensor, Action callback)

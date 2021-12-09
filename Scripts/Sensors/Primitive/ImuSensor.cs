@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Labust.Core;
 using Labust.Networking;
+using Labust.Utils;
 using Sensor;
 using Sensorstreaming;
 using Std;
@@ -16,25 +18,33 @@ namespace Labust.Sensors.Primitive
     [RequireComponent(typeof(Rigidbody))]
     public class ImuSensor : SensorBase
     {
-        [Header("Accelerometer")]
-        public Vector3 linearAcceleration;
         public bool withGravity = true;
-        public double[] linearAccelerationCovariance = new double[9]; 
+        public bool debug = true;
+        [NonSerialized] public Vector3 linearAcceleration;
+        [NonSerialized] public Vector3 localVelocity;
+        [NonSerialized] public double[] linearAccelerationCovariance = new double[9]; 
+
+        [NonSerialized] public Vector3 angularVelocity;
+        [NonSerialized] public double[] angularVelocityCovariance = new double[9];
+
+        [NonSerialized]public Vector3 eulerAngles;
+        [NonSerialized]public Quaternion orientation;
+        [NonSerialized] public double[] orientationCovariance = new double[9];
+
+
+        [Header("Accelerometer")]
+        [ReadOnly] public Vector3 LinearAcceleration;
+        [ReadOnly] public Vector3 LocalVelocity;
 
         [Header("Gyro")]
-        public Vector3 angularVelocity;
-        public double[] angularVelocityCovariance = new double[9];
+        [ReadOnly] public Vector3 AngularVelocity;
 
         [Header("Orientation")]
-        public Vector3 eulerAngles;
-        public Quaternion orientation;
-        public double[] orientationCovariance = new double[9];
-
-        [Header("Debug")]
-        public Vector3 localVelocity;
-
+        [ReadOnly] public Vector3 EulerAngles;
+        [ReadOnly] public Quaternion Orientation;
         private Rigidbody rb;
         private Vector3 lastVelocity;
+
 
         void Start()
         {
@@ -52,6 +62,15 @@ namespace Labust.Sensors.Primitive
 
             if (withGravity)
                 linearAcceleration -= rb.transform.InverseTransformVector(UnityEngine.Physics.gravity);
+
+            if (debug)
+            {
+                LinearAcceleration = linearAcceleration.Round(2);
+                LocalVelocity = localVelocity.Round(2);
+                AngularVelocity = angularVelocity.Round(2);
+                EulerAngles = eulerAngles.Round(2);
+                Orientation = orientation.Round(2);
+            }
             Log(new { linearAcceleration, angularVelocity, eulerAngles });
             hasData = true;
         }

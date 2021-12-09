@@ -45,6 +45,31 @@ namespace Labust.Utils
             return currScale;
         }
 
+        public static Vector3 Round(this Vector3 vector3, int decimalPlaces = 2)
+        {
+            float multiplier = 1;
+            for (int i = 0; i < decimalPlaces; i++)
+            {
+                multiplier *= 10f;
+            }
+            return new Vector3(
+                Mathf.Round(vector3.x * multiplier) / multiplier,
+                Mathf.Round(vector3.y * multiplier) / multiplier,
+                Mathf.Round(vector3.z * multiplier) / multiplier);
+        }
+        public static Quaternion Round(this Quaternion quat, int decimalPlaces = 2)
+        {
+            float multiplier = 1;
+            for (int i = 0; i < decimalPlaces; i++)
+            {
+                multiplier *= 10f;
+            }
+            return new Quaternion(
+                Mathf.Round(quat.x * multiplier) / multiplier,
+                Mathf.Round(quat.y * multiplier) / multiplier,
+                Mathf.Round(quat.z * multiplier) / multiplier,
+                Mathf.Round(quat.w * multiplier) / multiplier);
+        }
 
 
     }

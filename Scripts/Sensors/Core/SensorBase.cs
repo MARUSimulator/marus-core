@@ -24,6 +24,8 @@ namespace Labust.Sensors
         [Header("Sensor parameters")] 
         public String frameId;
 
+        public float SampleFrequency = 20;
+
         protected Rigidbody body;
 
         public Transform vehicle

@@ -7,9 +7,11 @@ using Labust.Sensors.Primitive;
 using Sensor;
 using Sensorstreaming;
 using Std;
+using UnityEngine;
 
 namespace Labust.Sensors.ROS
 {
+    [RequireComponent(typeof(GnssSensor))]
     public class GnssROS : SensorStreamer<GnssStreamingRequest>
     {
         GnssSensor sensor;
