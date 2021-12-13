@@ -64,6 +64,7 @@ namespace Labust.Sensors
         // Start is called before the first frame update
         PointCloudManager _pointCloudManager;
         RaycastJobHelper<SonarReading> _raycastHelper;
+        Coroutine _coroutine;
 
         void Start()
         {
@@ -77,16 +78,16 @@ namespace Labust.Sensors
 
             _pointCloudManager = PointCloudManager.CreatePointCloud(name + "_PointClout", totalRays, ParticleMaterial, pointCloudShader);
 
+            _coroutine = StartCoroutine(_raycastHelper.RaycastInLoop());
         }
 
         protected override void SampleSensor()
         {
-            _raycastHelper.RaycastAsync();
+            _pointCloudManager.UpdatePointCloud(pointsCopy);
         }
 
         private void OnFinish(NativeArray<Vector3> points, NativeArray<SonarReading> reading)
         {
-            _pointCloudManager.UpdatePointCloud(points);
             points.CopyTo(pointsCopy);
             hasData = true;
         }

@@ -50,12 +50,10 @@ namespace Labust.Sensors
         const float PIOVERTWO = Mathf.PI / 2;
         const float TWOPI = Mathf.PI * 2;
 
-
-
-
         // Start is called before the first frame update
         PointCloudManager _pointCloudManager;
         RaycastJobHelper<LidarReading> _raycastHelper;
+        Coroutine _coroutine;
 
         void Start()
         {
@@ -68,16 +66,16 @@ namespace Labust.Sensors
             _raycastHelper = new RaycastJobHelper<LidarReading>(gameObject, directionsLocal, OnLidarHit, OnFinish);
 
             _pointCloudManager = PointCloudManager.CreatePointCloud(name + "_PointClout", totalRays, ParticleMaterial, pointCloudShader);
+            _coroutine = StartCoroutine(_raycastHelper.RaycastInLoop());
         }
 
         protected override void SampleSensor()
         {
-            _raycastHelper.RaycastAsync();
+            _pointCloudManager.UpdatePointCloud(pointsCopy);
         }
 
         private void OnFinish(NativeArray<Vector3> points, NativeArray<LidarReading> reading)
         {
-            _pointCloudManager.UpdatePointCloud(points);
             points.CopyTo(pointsCopy);
             Log(new {points});
             hasData = true;
