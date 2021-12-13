@@ -19,6 +19,7 @@ public class AgentManager : MonoBehaviour
     void Start()
     {
         _index = 0;
+        if (agents != null)
         activeAgent = agents[0];
     }
 
@@ -29,10 +30,14 @@ public class AgentManager : MonoBehaviour
             return;
         if (Input.GetKeyDown(KeyCode.C))
         {
-            _index = (_index + 1) % agents.Count;
-            activeAgent = agents[_index];
-            Debug.Log($"Selected agent: {agents[_index].name}");
+            ChangeAgent();
         }
+    }
 
+    void ChangeAgent()
+    {
+        _index = (_index + 1) % agents.Count;
+        activeAgent = agents[_index];
+        Debug.Log($"Selected agent: {agents[_index].name}");
     }
 }
