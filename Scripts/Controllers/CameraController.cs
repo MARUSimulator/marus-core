@@ -19,6 +19,7 @@ public class CameraController : MonoBehaviour
     Camera _camera;
 
     public float _fixedDt = 1 / 60f;
+    private readonly List<KeyCode> keycodes = new List<KeyCode>{KeyCode.W, KeyCode.S, KeyCode.E, KeyCode.Q, KeyCode.A, KeyCode.D, KeyCode.X, KeyCode.Y};
 
     Transform _targetTransform;
     AgentManager agentManager;
@@ -82,7 +83,6 @@ public class CameraController : MonoBehaviour
             speed *= 3f;
         }
 
-        List<KeyCode> keycodes = new List<KeyCode>{KeyCode.W, KeyCode.S, KeyCode.E, KeyCode.Q, KeyCode.A, KeyCode.D, KeyCode.X, KeyCode.Y};
         foreach (var item in keycodes)
         {
             if (Input.GetKey(item))
@@ -124,7 +124,6 @@ public class CameraController : MonoBehaviour
             _targetTransform.localScale = parent.localScale;
             return;
         }
-
 
         _targetTransform.position += speed * _targetTransform.forward * (key == KeyCode.W ? 1 : 0) * dt;
         _targetTransform.position -= speed * _targetTransform.forward * (key == KeyCode.S ? 1 : 0) * dt;

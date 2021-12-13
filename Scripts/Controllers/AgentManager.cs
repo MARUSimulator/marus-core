@@ -20,7 +20,7 @@ public class AgentManager : MonoBehaviour
     {
         _index = 0;
         if (agents != null)
-        activeAgent = agents[0];
+            activeAgent = agents[0];
     }
 
     // Update is called once per frame

@@ -12,6 +12,7 @@ public class AUVPrimitiveController : MonoBehaviour
 
     public float linSpeed = 2f;
     public float rotSpeed = 700f;
+    private readonly List<KeyCode> keycodes = new List<KeyCode>{KeyCode.W, KeyCode.S, KeyCode.E, KeyCode.Q, KeyCode.A, KeyCode.D, KeyCode.X, KeyCode.Y};
 
     Transform _targetTransform;
     AgentManager agentManager;
@@ -39,7 +40,7 @@ public class AUVPrimitiveController : MonoBehaviour
         }
 
         float dt = Time.fixedDeltaTime;
-        List<KeyCode> keycodes = new List<KeyCode>{KeyCode.W, KeyCode.S, KeyCode.E, KeyCode.Q, KeyCode.A, KeyCode.D, KeyCode.X, KeyCode.Y};
+        
         foreach (var item in keycodes)
         {
             if (Input.GetKey(item))
