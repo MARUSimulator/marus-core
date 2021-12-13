@@ -72,11 +72,13 @@ namespace Labust.Visualization
 
         public void UpdatePointCloud(NativeArray<Vector3> points){
             _particleMesh.SetVertices(points);
+            _particleMesh.RecalculateBounds();
         }
 
         public void UpdatePointCloud(Vector3[] points)
         {
             _particleMesh.SetVertices(points);
+            _particleMesh.RecalculateBounds();
         }
 
         public static PointCloudManager CreatePointCloud(string name, int numPoints, Material particleMaterial, ComputeShader computeShader)
