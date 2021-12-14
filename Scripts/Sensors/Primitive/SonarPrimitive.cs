@@ -1,7 +1,4 @@
 ﻿using UnityEngine;
-using System;
-using Sensorstreaming;
-using Labust.Networking;
 
 namespace Labust.Sensors.Primitive
 {

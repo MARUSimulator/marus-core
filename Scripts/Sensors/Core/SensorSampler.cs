@@ -20,21 +20,16 @@ namespace Labust.Sensors
             foreach (var kvp in _sensorCallbacks)
             {
                 var callback = kvp.Value;
-                if (!_timeSinceLastCallback.TryGetValue(kvp.Key, out var time))
-                {
-                    _timeSinceLastCallback[kvp.Key] = 0;
-                    time = 0;
-                }
 
-                if (callback.active 
-                    && callback.sensor.isActiveAndEnabled
-                    && EnoughTimePassed(time, callback.sensor))
+                if (callback.active
+                    && callback.sensor.isActiveAndEnabled)
                 {
-                    callback.callback();
-                    _timeSinceLastCallback[kvp.Key] = 0;
-                }
-                else
-                {
+                    if (!_timeSinceLastCallback.TryGetValue(kvp.Key, out var time)
+                        || EnoughTimePassed(time, callback.sensor))
+                    {
+                        callback.callback();
+                        _timeSinceLastCallback[kvp.Key] = 0;
+                    }
                     _timeSinceLastCallback[kvp.Key] += Time.fixedDeltaTime;
                 }
             }

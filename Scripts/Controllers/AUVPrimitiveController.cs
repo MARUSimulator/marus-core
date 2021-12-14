@@ -4,7 +4,7 @@ using UnityEngine;
 
 /// <summary>
 /// This controller is for using keyboard to control desired object
-/// 
+///
 /// It is under control of agent manager.
 /// </summary>
 public class AUVPrimitiveController : MonoBehaviour
@@ -40,19 +40,16 @@ public class AUVPrimitiveController : MonoBehaviour
         }
 
         float dt = Time.fixedDeltaTime;
-        
+
         foreach (var item in keycodes)
         {
             if (Input.GetKey(item))
-            UpdateMovement(dt, item, speed);    
+            UpdateMovement(dt, item, speed);
         }
     }
 
     void UpdateMovement(float dt, KeyCode key, float speed)
     {
-
-        Debug.Log(key);
-        Debug.Log(speed);
         _targetTransform.position += speed * _targetTransform.forward * (key == KeyCode.W ? 1 : 0) * dt;
         _targetTransform.position -= speed * _targetTransform.forward * (key == KeyCode.S ? 1 : 0) * dt;
         _targetTransform.position += speed * _targetTransform.up * (key == KeyCode.E ? 1 : 0) * dt;

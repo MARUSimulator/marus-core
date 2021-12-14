@@ -108,5 +108,17 @@ namespace TestUtils
             CallStart(script);
             return script;
         }
+
+        public static void CreateEmptyScene()
+        {
+            UnityEditor.SceneManagement.EditorSceneManager.NewScene(UnityEditor.SceneManagement.NewSceneSetup.EmptyScene, UnityEditor.SceneManagement.NewSceneMode.Single);
+        }
+
+        public static void CallPhysicsUpdate()
+        {
+            Physics.autoSimulation = false;
+            Physics.Simulate(Time.fixedDeltaTime);
+            Physics.autoSimulation = true;
+        }
     }
 }

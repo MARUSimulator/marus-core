@@ -32,11 +32,11 @@ namespace Labust.Sensors.AIS
 
         protected override void SampleSensor()
         {
-            lastPosition = transform.position;
             SetCOG();
             SetSOG();
             SetTrueHeading();
             hasData = true;
+            lastPosition = transform.position;
         }
 
         private void SetTrueHeading()
@@ -53,7 +53,7 @@ namespace Labust.Sensors.AIS
         {
             Vector3 d = transform.position - lastPosition;
             Vector3 direction = new Vector3(d.x, 0, d.z);
-            if (direction != Vector3.zero) 
+            if (direction != Vector3.zero)
             {
                 Quaternion rotation = Quaternion.LookRotation(direction, Vector3.up);
                 float r = rotation.eulerAngles.y;
