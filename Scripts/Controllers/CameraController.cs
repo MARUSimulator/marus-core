@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.XR;
 
 /// <summary>
@@ -18,6 +19,7 @@ public class CameraController : MonoBehaviour
     Camera _camera;
 
     public float _fixedDt = 1 / 60f;
+    private readonly List<KeyCode> keycodes = new List<KeyCode>{KeyCode.W, KeyCode.S, KeyCode.E, KeyCode.Q, KeyCode.A, KeyCode.D, KeyCode.X, KeyCode.Y};
 
     Transform _targetTransform;
     AgentManager agentManager;
@@ -73,7 +75,19 @@ public class CameraController : MonoBehaviour
         if (_fixedDt > 0f)
             dt = _fixedDt;
 
-        UpdateMovement(dt);
+        var speed = linSpeed;
+
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            speed *= 3f;
+        }
+
+        foreach (var item in keycodes)
+        {
+            if (Input.GetKey(item))
+            UpdateMovement(dt, item, speed);    
+        }
 
         // These aren't useful and can break for XR hardware.
         if (!XRSettings.enabled || XRSettings.loadedDeviceName == "MockHMD")
@@ -94,7 +108,7 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    void UpdateMovement(float dt)
+    void UpdateMovement(float dt, KeyCode key, float speed)
     {
 
         if (agentManager.activeAgent != gameObject)
@@ -111,23 +125,17 @@ public class CameraController : MonoBehaviour
             return;
         }
 
-        var speed = linSpeed;
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            speed *= 3f;
-        }
-
-        _targetTransform.position += speed * _targetTransform.forward * (Input.GetKey(KeyCode.W) ? 1 : 0) * dt;
-        _targetTransform.position -= speed * _targetTransform.forward * (Input.GetKey(KeyCode.S) ? 1 : 0) * dt;
-        _targetTransform.position += speed * _targetTransform.up * (Input.GetKey(KeyCode.E) ? 1 : 0) * dt;
-        _targetTransform.position -= speed * _targetTransform.up * (Input.GetKey(KeyCode.Q) ? 1 : 0) * dt;
-        _targetTransform.position -= speed * _targetTransform.right * (Input.GetKey(KeyCode.A) ? 1 : 0) * dt;
-        _targetTransform.position += speed * _targetTransform.right * (Input.GetKey(KeyCode.D) ? 1 : 0) * dt;
+        _targetTransform.position += speed * _targetTransform.forward * (key == KeyCode.W ? 1 : 0) * dt;
+        _targetTransform.position -= speed * _targetTransform.forward * (key == KeyCode.S ? 1 : 0) * dt;
+        _targetTransform.position += speed * _targetTransform.up * (key == KeyCode.E ? 1 : 0) * dt;
+        _targetTransform.position -= speed * _targetTransform.up * (key == KeyCode.Q ? 1 : 0) * dt;
+        _targetTransform.position -= speed * _targetTransform.right * (key == KeyCode.A ? 1 : 0) * dt;
+        _targetTransform.position += speed * _targetTransform.right * (key == KeyCode.D ? 1 : 0) * dt;
 
         {
             float rotate = 0f;
-            rotate += (Input.GetKey(KeyCode.X) ? 1 : 0);
-            rotate -= (Input.GetKey(KeyCode.Y) ? 1 : 0);
+            rotate += (key == KeyCode.X ? 1 : 0);
+            rotate -= (key == KeyCode.Y ? 1 : 0);
             Vector3 ea = _targetTransform.eulerAngles;
             ea.y += 0.1f * rotSpeed * rotate * dt;
             _targetTransform.eulerAngles = ea;
