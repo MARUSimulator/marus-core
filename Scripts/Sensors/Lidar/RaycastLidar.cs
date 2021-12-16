@@ -47,10 +47,6 @@ namespace Labust.Sensors
 
         public NativeArray<Vector3> pointsCopy;
 
-        const float PIOVERTWO = Mathf.PI / 2;
-        const float TWOPI = Mathf.PI * 2;
-
-        // Start is called before the first frame update
         PointCloudManager _pointCloudManager;
         RaycastJobHelper<LidarReading> _raycastHelper;
         Coroutine _coroutine;
@@ -93,7 +89,6 @@ namespace Labust.Sensors
         }
 
     }
-
 
     internal struct LidarReading
     {

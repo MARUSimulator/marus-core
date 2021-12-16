@@ -16,7 +16,6 @@ namespace Labust.Sensors.Primitive
         public bool isRTK = true;
         public float maximumOperatingDepth = 0.5f;
 
-
         void Start()
         {
             covariance = new double[] { 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1 };

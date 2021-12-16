@@ -13,7 +13,6 @@ namespace Labust.Sensors.AIS
     [RequireComponent(typeof(AisDevice))]
     public class AisSensorROS : SensorStreamer<AISStreamingRequest>
     {
-        
         AisSensor sensor;
         AisDevice device;
         void Start()
@@ -24,6 +23,12 @@ namespace Labust.Sensors.AIS
                 address = transform.name + "/ais";
             StreamSensor(streamingClient?.StreamAisSensor(cancellationToken:RosConnection.Instance.cancellationToken));
             UpdateFrequency = 1 / TimeIntervals.getInterval(device.ClassType, sensor.SOG);
+        }
+
+        void Update()
+        {
+            hasData = sensor.hasData;
+            base.Update();
         }
 
         protected async override void SendMessage()

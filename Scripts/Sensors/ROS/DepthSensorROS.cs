@@ -25,6 +25,12 @@ namespace Labust.Sensors.ROS
             StreamSensor(streamingClient?.StreamDepthSensor(cancellationToken:RosConnection.Instance.cancellationToken));
         }
 
+        void Update()
+        {
+            hasData = sensor.hasData;
+            base.Update();
+        }
+
         protected async override void SendMessage()
         {
             var depthOut = new DepthStreamingRequest

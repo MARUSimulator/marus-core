@@ -21,10 +21,9 @@ namespace Labust.Sensors
     /// Implemented using IJobParallelFor on CPU
     /// Can drop performance
     /// </summary>
-    [RequireComponent(typeof(RaycastLidar))] 
+    [RequireComponent(typeof(RaycastLidar))]
     public class RaycastLidarROS : SensorStreamer<PointCloudStreamingRequest>
     {
-        
         RaycastLidar sensor;
         void Start()
         {
@@ -32,6 +31,12 @@ namespace Labust.Sensors
             if (string.IsNullOrEmpty(address))
                 address = transform.name + "/lidar";
             StreamSensor(streamingClient?.StreamLidarSensor(cancellationToken: RosConnection.Instance.cancellationToken));
+        }
+
+        void Update()
+        {
+            hasData = sensor.hasData;
+            base.Update();
         }
 
         protected async override void SendMessage()
@@ -52,7 +57,7 @@ namespace Labust.Sensors
             _pointCloud.Header = new Std.Header()
             {
                 FrameId = RosConnection.Instance.OriginFrameName,
-                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
+                Timestamp = TimeHandler.Instance.TimeDouble
             };
 
             var msg = new PointCloudStreamingRequest()

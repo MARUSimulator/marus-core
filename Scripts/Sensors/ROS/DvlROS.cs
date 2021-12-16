@@ -21,6 +21,12 @@ namespace Labust.Sensors.ROS
             StreamSensor(streamingClient?.StreamDvlSensor(cancellationToken:RosConnection.Instance.cancellationToken));
         }
 
+        void Update()
+        {
+            hasData = sensor.hasData;
+            base.Update();
+        }
+
         protected async override void SendMessage()
         {
             var dvlOut = new TwistWithCovarianceStamped

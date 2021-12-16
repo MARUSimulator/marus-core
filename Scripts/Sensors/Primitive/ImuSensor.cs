@@ -38,7 +38,6 @@ namespace Labust.Sensors.Primitive
         private Rigidbody rb;
         private Vector3 lastVelocity;
 
-
         void Start()
         {
             rb = GetComponent<Rigidbody>();

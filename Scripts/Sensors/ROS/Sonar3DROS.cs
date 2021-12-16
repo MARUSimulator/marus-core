@@ -18,6 +18,12 @@ namespace Labust.Sensors.Primitive
             StreamSensor(streamingClient?.StreamSonarSensor(cancellationToken: RosConnection.Instance.cancellationToken));
         }
 
+        void Update()
+        {
+            hasData = sensor.hasData;
+            base.Update();
+        }
+
         protected async override void SendMessage()
         {
             Sensor.PointCloud _pointCloud = new Sensor.PointCloud();
