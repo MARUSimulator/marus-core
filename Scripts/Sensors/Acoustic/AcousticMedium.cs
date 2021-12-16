@@ -1,9 +1,7 @@
-using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
-using Labust.Sensors.Acoustics;
 
-namespace Labust.Sensors.Primitive.Acoustic
+namespace Labust.Sensors.Acoustics
 {
 
     public class AcousticMedium : MediumBase

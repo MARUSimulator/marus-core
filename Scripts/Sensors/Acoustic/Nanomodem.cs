@@ -66,7 +66,7 @@ namespace Labust.Sensors.Acoustics
             msg.PhysicalParams = GetPhysicalParams();
             msg.CompositionDuration = CompositionDuration(msg.Message);
             var medium = AcousticMediumHelper.GetAcousticMediumForTransform(transform);
-            
+
             if (msg.TransmitionType == TransmitionType.Unicast)
             {
                 medium.Transmit(msg, 
