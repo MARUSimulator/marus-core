@@ -18,13 +18,19 @@ namespace Labust.Sensors.Primitive
     public class PoseSensorROS : SensorStreamer<PoseStreamingRequest>
     {
         PoseSensor sensor;
-      
+
         void Start()
         {
             sensor = GetComponent<PoseSensor>();
             if (string.IsNullOrEmpty(address))
                 address = sensor.vehicle.name + "/pose";
             StreamSensor(streamingClient?.StreamPoseSensor(cancellationToken:RosConnection.Instance.cancellationToken));
+        }
+
+        void Update()
+        {
+            hasData = sensor.hasData;
+            base.Update();
         }
 
         protected async override void SendMessage()

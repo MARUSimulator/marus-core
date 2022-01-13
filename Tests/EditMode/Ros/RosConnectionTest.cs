@@ -76,7 +76,7 @@ public class RosConnectionTest
 
         // normally, this would be called from coroutine
         var enumerator = (IEnumerator)Utils.CallNonpublicMethod(instance, "WhileConnectionAwait");
-        
+
         int i = 0;
         while (enumerator.MoveNext() && i < 1000) // half a second
         {
@@ -126,7 +126,6 @@ public class RosConnectionTest
     [Test]
     public void TestTfHandlerInit()
     {
-        
         var mapFrame = (Transform)Utils.GetNonpublicField(TfHandler.Instance, "_mapFrame");
         Assert.NotNull(mapFrame);
         Assert.AreEqual(Vector3.zero, mapFrame.position);

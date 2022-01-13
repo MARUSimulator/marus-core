@@ -25,6 +25,12 @@ namespace Labust.Sensors.Primitive
             StreamSensor(streamingClient?.StreamImuSensor(cancellationToken:RosConnection.Instance.cancellationToken));
         }
 
+        void Update()
+        {
+            hasData = sensor.hasData;
+            base.Update();
+        }
+
         protected override async void SendMessage()
         {
             var imuOut = new Imu()

@@ -17,6 +17,13 @@ namespace Labust.Sensors.Primitive
                 address = transform.name + "/sonar3d";
             StreamSensor(streamingClient?.StreamLidarSensor(cancellationToken: RosConnection.Instance.cancellationToken));
         }
+
+        void Update()
+        {
+            hasData = sensor.hasData;
+            base.Update();
+        }
+
         protected async override void SendMessage()
         {
             Sensor.PointCloud _pointCloud = new Sensor.PointCloud();

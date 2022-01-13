@@ -61,7 +61,7 @@ namespace Labust.Sensors.Primitive
             Vector3 targetHeading = new Vector3(trackedObject.position.x, 0, trackedObject.position.z) - 
                                     new Vector3(sonar.position.x, 0, sonar.position.z);
             bearing = -Vector3.SignedAngle(targetHeading, sonar.forward, sonar.up);
-            
+
             if (bearing > maxBearing || bearing < minBearing || range == 0)
             {
                 bearing = 0;

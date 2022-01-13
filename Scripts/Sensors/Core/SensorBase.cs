@@ -11,17 +11,17 @@ using Labust.Logger;
 
 namespace Labust.Sensors
 {
-
     public abstract class SensorBase : MonoBehaviour
     {
         protected void Awake()
         {
             SensorSampler.Instance.AddSensorCallback(this, SampleSensor);
+            var r = RosConnection.Instance;
         }
 
         //public bool RunRecording = false;
-        
-        [Header("Sensor parameters")] 
+
+        [Header("Sensor parameters")]
         public String frameId;
 
         public float SampleFrequency = 20;
@@ -51,7 +51,7 @@ namespace Labust.Sensors
         /// <summary>
         /// Set this when there is new data sampled
         /// </summary>
-        protected volatile bool hasData = false;
+        [NonSerialized] public volatile bool hasData = false;
         protected abstract void SampleSensor();
 
         protected GameObjectLogger Logger;
@@ -88,7 +88,7 @@ namespace Labust.Sensors
         [Header("Streaming Parameters")]
         public float UpdateFrequency = 1;
         public string address;
-        public bool hasData;
+        [NonSerialized] public bool hasData;
 
         /// <summary>
         /// A client instance used for streaming sensor readings
@@ -115,7 +115,7 @@ namespace Labust.Sensors
         /// Used to write sensor reading messages
         /// </summary>
         /// <value></value>
-        protected IClientStreamWriter<T> _streamWriter 
+        protected IClientStreamWriter<T> _streamWriter
         {
             get
             {
@@ -126,7 +126,7 @@ namespace Labust.Sensors
         }
 
         double cumulativeTime = 0;
-        void Update()
+        protected void Update()
         {
             cumulativeTime += Time.deltaTime;
             if (cumulativeTime > (1 / UpdateFrequency))
@@ -134,7 +134,7 @@ namespace Labust.Sensors
                 cumulativeTime = 0;
                 if (hasData && RosConnection.Instance.IsConnected)
                 {
-                    SendMessage();       
+                    SendMessage();
                 }
             }
         }
@@ -144,47 +144,6 @@ namespace Labust.Sensors
             streamHandle = streamingCall;
         }
 
-
         protected abstract void SendMessage();
-
-
-        // public static SensorBase[] GetActiveSensors()
-        // {
-        //     var _sensors = GameObject.FindObjectsOfType<SensorBase>();
-        //     return _sensors;
-        // }
-
-
-        // External Helper functions
-
-
-        // public static void ResetSensorTime(SensorBase[] sensors)
-        // {
-        //     foreach (Sensor sensor in sensors)
-        //     {
-        //         sensor.nextOSPtime = 0;
-        //         sensor.OSPtime = sensor.nextOSPtime;
-        //     }
-        // }
-
-        // public static bool SensorTimeUpdated(Sensor[] sensors)
-        // {
-        //     bool allSensorsUpdated = true;
-        //     foreach (Sensor sensor in sensors)
-        //     {
-        //         allSensorsUpdated = allSensorsUpdated && (sensor.OSPtime == sensor.nextOSPtime);
-        //     }
-        //     return allSensorsUpdated;
-        // }
-
-        // public static void UpdateSensorTime(double newTime, Sensor[] sensors)
-        // {
-        //     foreach (Sensor sensor in sensors)
-        //     {
-        //         sensor.nextOSPtime = newTime;
-        //     }
-        // }
-
     }
-
 }
