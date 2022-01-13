@@ -184,7 +184,7 @@ namespace Labust.Sensors
 
             return RaycastCommand.ScheduleBatch(_commands, _hits, 10, commandsJobHandle);
         }
-        
+
         // Job cannot have reference type fields, so it calles one global static method to get result
         // This method then decides what Func to call
         public static T GetResultFromHit(int objId, RaycastHit hit, Vector3 direction, int index)
@@ -224,9 +224,8 @@ namespace Labust.Sensors
             public void Execute(int i)
             {
                 points[i] = hits[i].point;
-                // results[i] = GetResultFromHit(objectId, hits[i], directions[i], i);
+                results[i] = GetResultFromHit(objectId, hits[i], directions[i], i);
             }
         }
     }
-
 }
