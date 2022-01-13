@@ -95,13 +95,10 @@ namespace Labust.Visualization
 
         private static ComputeShader FindComputeShader(string shaderName)
         {
-            ComputeShader[] compShaders = (ComputeShader[])Resources.FindObjectsOfTypeAll(typeof(ComputeShader));
-            for (int i = 0; i < compShaders.Length; i++)
+            ComputeShader cs = (ComputeShader)Resources.Load(shaderName);
+            if (cs != null)
             {
-                if (compShaders[i].name == shaderName)
-                {
-                    return compShaders[i];
-                }
+                return cs;
             }
             throw new UnityException($"Shader {shaderName} not found in the project");
         }

@@ -65,7 +65,7 @@ namespace Labust.Sensors
 
             _raycastHelper = new RaycastJobHelper<LidarReading>(gameObject, directionsLocal, OnLidarHit, OnFinish);
 
-            _pointCloudManager = PointCloudManager.CreatePointCloud(name + "_PointClout", totalRays, ParticleMaterial, pointCloudShader);
+            _pointCloudManager = PointCloudManager.CreatePointCloud(name + "_PointCloud", totalRays, ParticleMaterial, pointCloudShader);
             _coroutine = StartCoroutine(_raycastHelper.RaycastInLoop());
         }
 
