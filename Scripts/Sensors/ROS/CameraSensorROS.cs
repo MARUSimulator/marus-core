@@ -23,7 +23,7 @@ namespace Labust.Sensors
             StreamSensor(streamingClient?.StreamCameraSensor(cancellationToken:RosConnection.Instance.cancellationToken));
         }
 
-        void Update()
+        new void Update()
         {
             hasData = sensor.hasData;
             base.Update();

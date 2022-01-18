@@ -25,7 +25,7 @@ namespace Labust.Sensors.AIS
             UpdateFrequency = 1 / TimeIntervals.getInterval(device.ClassType, sensor.SOG);
         }
 
-        void Update()
+        new void Update()
         {
             hasData = sensor.hasData;
             base.Update();

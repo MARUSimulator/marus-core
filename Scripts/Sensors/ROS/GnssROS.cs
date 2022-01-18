@@ -25,7 +25,7 @@ namespace Labust.Sensors.ROS
             StreamSensor(streamingClient?.StreamGnssSensor(cancellationToken:RosConnection.Instance.cancellationToken));
         }
 
-        void Update()
+        new void Update()
         {
             hasData = sensor.hasData;
             base.Update();

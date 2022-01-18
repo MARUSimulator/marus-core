@@ -1,4 +1,3 @@
-
 using Geometry;
 using Labust.Core;
 using Labust.Networking;
@@ -25,7 +24,7 @@ namespace Labust.Sensors.ROS
             StreamSensor(streamingClient?.StreamDepthSensor(cancellationToken:RosConnection.Instance.cancellationToken));
         }
 
-        void Update()
+        new void Update()
         {
             hasData = sensor.hasData;
             base.Update();
