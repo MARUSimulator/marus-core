@@ -39,6 +39,12 @@ namespace Marus.Utils
                 "DATA " + format + "\n";
         }
 
+        /// <summary>
+        /// Write pointcloud to .pcd file.
+        /// </summary>
+        /// <param name="filePath">Location for saving pcd file</param>
+        /// <param name="pointcloud">Points data</param>
+        /// <param name="format">Either ascii, binary or binary_compressed</param>
         public static void WriteToPcdFile(string filePath, NativeArray<Vector3> pointcloud, string format)
         {
             var _pointsFiltered = pointcloud.Where(x => x != Vector3.zero).ToArray();
@@ -104,7 +110,12 @@ namespace Marus.Utils
             }
         }
 
-        // Non-square matrix transpose of matrix of size r x c and base address A
+        /// <summary>
+        /// Non-square matrix transpose of matrix of size r x c and base address A
+        /// </summary>
+        /// <param name="A">Pointer to flattened matrix</param>
+        /// <param name="r">Row count</param>
+        /// <param name="c">Column count</param>
         unsafe public static void TransposeArrayInPlace(float* A, int r, int c)
         {
             int size = r*c - 1;
@@ -139,8 +150,16 @@ namespace Marus.Utils
         }
     }
 
+    /// <summary>
+    /// Used for loading pointcloud data from pcd file.
+    /// </summary>
     public static class PCDLoader
     {
+        /// <summary>
+        /// Load PointCloud object from pcd file
+        /// </summary>
+        /// <param name="path">File path</param>
+        /// <returns></returns>
         public static PointCloud LoadFromPcd(string path)
         {
             string format;
@@ -544,13 +563,30 @@ namespace Marus.Utils
         }
     }
 
+    /// <summary>
+    /// Pointcloud object
+    /// </summary>
     public class PointCloud
     {
+        /// <summary>
+        /// Holds point data (x, y, z)
+        /// </summary>
         public Vector3[] Points;
         #nullable enable
+        /// <summary>
+        /// Holds normals data (x, y, z)
+        /// </summary>
         public Vector3[]? Normals = null;
+
+        /// <summary>
+        /// Holds color data
+        /// </summary>
         public Color[]? Colors = null;
         #nullable disable
+
+        /// <summary>
+        /// Number of points
+        /// </summary>
         public int Length;
 
         public PointCloud()

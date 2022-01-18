@@ -23,7 +23,6 @@ namespace Marus.Networking
 {
     public class ServerStreamer<T> where T : IMessage
     {
-        
         private Action<T> _onMessage;
         public ServerStreamer(Action<T> onMessage)
         {

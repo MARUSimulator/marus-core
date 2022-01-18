@@ -14,7 +14,6 @@
 
 using UnityEngine;
 using UnityEditor;
-using Marus.Networking;
 
 namespace Marus.Networking
 {
@@ -25,7 +24,7 @@ namespace Marus.Networking
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
-            
+
             var conn = (RosConnection)target;
             if (EditorApplication.isPlaying &&
                 !conn.IsConnected && !conn.IsConnecting)

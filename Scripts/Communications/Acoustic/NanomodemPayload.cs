@@ -29,5 +29,4 @@ namespace Marus.Communications.Acoustics
         public override string ToString() => Message;
 
     }
-
 }

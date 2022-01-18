@@ -29,18 +29,18 @@ using System.Collections;
 using Simulationcontrol;
 using Marus.Utils;
 using Marus.Visualization;
+using Marus.CustomInspector;
 using static Acoustictransmission.AcousticTransmission;
 using static Rfcommunication.LoraTransmission;
 using Ping;
 
 namespace Marus.Networking
 {
-
     /// <summary>
     /// Singleton class for configuring and connecting to 
     /// ROS server
     /// </summary>
-    [DefaultExecutionOrder(-10)]
+    [DefaultExecutionOrder(-1)]
     public class RosConnection : Singleton<RosConnection>
     {
         [Header("Server info")]

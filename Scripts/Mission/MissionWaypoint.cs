@@ -24,7 +24,7 @@ namespace Marus.Mission
 
         bool _visited = false;
         public bool Visited => _visited;
-        
+
         [System.NonSerialized]
         public MissionControl mission;
 

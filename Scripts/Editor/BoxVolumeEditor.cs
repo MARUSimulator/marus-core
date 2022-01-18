@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
@@ -65,7 +63,7 @@ public class BoundsEditor : Editor
         {
             m_BoundsHandle.center = TransformPoint(
                 matrix, boxVolume.transform, boxVolume.bounds.center);
-            m_BoundsHandle.size = boxVolume.bounds.size;        
+            m_BoundsHandle.size = boxVolume.bounds.size;
             // draw the handle
             EditorGUI.BeginChangeCheck();
             m_BoundsHandle.DrawHandle();
@@ -86,7 +84,7 @@ public class BoundsEditor : Editor
 
     Vector3 TransformPoint(Matrix4x4 matrix, Transform transform, Vector3 point)
     {
-        return 
+        return
             matrix.inverse.MultiplyPoint3x4(
                 transform.TransformPoint(
                     point
@@ -95,7 +93,7 @@ public class BoundsEditor : Editor
 
     Vector3 InverseTransformPoint(Matrix4x4 matrix, Transform transform, Vector3 point)
     {
-        return 
+        return
             matrix.MultiplyPoint3x4(
                 transform.InverseTransformPoint(
                     point

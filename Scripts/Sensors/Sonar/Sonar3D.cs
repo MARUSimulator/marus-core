@@ -17,6 +17,7 @@ using Marus.Visualization;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using Marus.CustomInspector;
 
 namespace Marus.Sensors
 {
