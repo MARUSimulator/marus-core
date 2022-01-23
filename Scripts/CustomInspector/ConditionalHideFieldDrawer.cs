@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEditor;
-
+using System;
 
 [CustomPropertyDrawer(typeof(HideInRuntimeInspectorAttribute))]
 [CustomPropertyDrawer(typeof(ConditionalHideInInspectorAttribute))]
 public class ConditionalHidePropertyDrawer : PropertyDrawer
 {
-    public override void OnGUI( Rect position, SerializedProperty property, GUIContent label )
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label )
     {
         var enabled = GetConditionalHideAttributeResult(attribute, property);
 
@@ -20,7 +20,7 @@ public class ConditionalHidePropertyDrawer : PropertyDrawer
         GUI.enabled = wasEnabled;
     }
 
-    public override float GetPropertyHeight( SerializedProperty property, GUIContent label )
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label )
     {
         var enabled = GetConditionalHideAttributeResult(attribute, property);
 
@@ -61,24 +61,7 @@ public class ConditionalHidePropertyDrawer : PropertyDrawer
 
                 if (sourcePropertyValue != null)
                 {
-                    enabled = CheckPropertyType(sourcePropertyValue);
-                }
-                else
-                {
-                    //Debug.LogWarning("Attempting to use a ConditionalHideInInspectorAttribute but no matching SourcePropertyValue found in object: " + condHAtt.ConditionalSourceField);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(condHAtt.ConditionalSourceField2))
-            {
-                conditionPath =
-                    propertyPath.Replace(property.name,
-                        condHAtt.ConditionalSourceField2); //changes the path to the conditionalsource property path
-                var sourcePropertyValue2 = property.serializedObject.FindProperty(conditionPath);
-
-                if (sourcePropertyValue2 != null)
-                {
-                    enabled = enabled && CheckPropertyType(sourcePropertyValue2);
+                    enabled = CheckPropertyType(sourcePropertyValue, condHAtt.Value);
                 }
                 else
                 {
@@ -94,12 +77,14 @@ public class ConditionalHidePropertyDrawer : PropertyDrawer
         return true;
     }
 
-    private bool CheckPropertyType( SerializedProperty sourcePropertyValue )
+    private bool CheckPropertyType(SerializedProperty sourcePropertyValue, object value)
     {
         switch ( sourcePropertyValue.propertyType )
         {
             case SerializedPropertyType.Boolean:
                 return sourcePropertyValue.boolValue;
+            case SerializedPropertyType.Enum:
+                return sourcePropertyValue.enumValueIndex != (int)value;
             case SerializedPropertyType.ObjectReference:
                 return sourcePropertyValue.objectReferenceValue != null;
             default:

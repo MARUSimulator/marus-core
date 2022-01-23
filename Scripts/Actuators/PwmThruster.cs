@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Labust.Actuators.Datasheets;
+using Labust.Logger;
+using Labust.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,25 +28,32 @@ namespace Labust.Actuators
         float[] sheetData;
         float sheetStep;
 
-        Rigidbody _body;
-        Rigidbody body
+        Rigidbody _vehicleBody;
+        Transform _vehicle;
+        Transform vehicle
         {
             get
             {
-                if (_body == null)
+                if (_vehicleBody != null)
                 {
-                    var component = GetComponent<Rigidbody>();
-                    if (component != null)
-                        _body = component;
-                    else
-                        _body = Utils.Helpers.GetParentRigidBody(transform);
+                    return _vehicleBody.transform;
                 }
-                return _body;
+
+                _vehicle = Helpers.GetVehicle(transform);
+                _vehicleBody = _vehicle.GetComponent<Rigidbody>();
+                if (_vehicle == null)
+                {
+                    Debug.Log($@"Cannot get vehicle from sensor {transform.name}. 
+                        Using sensor as the vehicle transform");
+                    return transform;
+                }
+                return _vehicleBody.transform;
             }
         }
 
-        // Start is called before the first frame update
-        void Awake()
+        GameObjectLogger<PwmLogRecord> _logger;
+
+        void Start()
         {
             // set voltage and thruster sheet
             _voltage = (int)voltage;
@@ -65,6 +74,7 @@ namespace Labust.Actuators
                     break;
 
             }
+            _logger = DataLogger.Instance.GetLogger<PwmLogRecord>($"{vehicle.transform.name}/{name}");
         }
 
         /// <summary>
@@ -72,7 +82,7 @@ namespace Labust.Actuators
         /// </summary>
         /// <param name="pwmIn"> -1 - 1 value</param>
         /// <returns></returns>
-        public bool ApplyPwm(double pwmIn)
+        public Vector3 ApplyPwm(float pwmIn)
         {
             int step = (int)((pwmIn+1) / sheetStep); // push it to the range 0-2
 
@@ -80,10 +90,43 @@ namespace Labust.Actuators
             float value = sheetData[step] * 9.80665f;
 
             Vector3 force = transform.forward * value;
-            body.AddForceAtPosition(force, transform.position, ForceMode.Force);
-            return true;
+            _vehicleBody.AddForceAtPosition(force, transform.position, ForceMode.Force);
+            _logger.Log(new PwmLogRecord { PwmIn = pwmIn, Force = force});
+            return force;
         }
 
+        public float GetPwmForForce(float force)
+        {
+            // from N to kgf
+            force /= 9.80665f;
+            var closestIndex = BinarySearch(sheetData, force);
+            
+            return closestIndex * sheetStep - 1;
+        }
+
+        public static int BinarySearch(float[] a, float item)
+        {
+            int first = 0;
+            int last = a.Length - 1;
+            int mid = 0;
+            do
+            {
+                mid = first + (last - first) / 2;
+                if (item > a[mid])
+                    first = mid + 1;
+                else
+                    last = mid - 1;
+                if (a[mid] == item)
+                    return mid;
+            } while (first <= last);
+            return mid;
+        }
+
+        private class PwmLogRecord
+        {
+            public float PwmIn { get; set; }
+            public Vector3 Force { get; set; }
+        }
     }
 
 }

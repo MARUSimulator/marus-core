@@ -63,7 +63,7 @@ namespace Labust.Sensors.Primitive
                 EulerAngles = eulerAngles.Round(2);
                 Orientation = orientation.Round(2);
             }
-            Log(new { linearAcceleration, angularVelocity, eulerAngles });
+            Log(new { linearAcceleration, angularVelocity, eulerAngles, localVelocity });
             hasData = true;
         }
     }

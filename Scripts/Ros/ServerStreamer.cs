@@ -9,6 +9,12 @@ namespace Labust.Networking
 {
     public class ServerStreamer<T> where T : IMessage
     {
+        
+        private Action<T> _onMessage;
+        public ServerStreamer(Action<T> onMessage)
+        {
+            _onMessage = onMessage;
+        }
 
         public enum MessageHandleMode
         {
@@ -82,7 +88,7 @@ namespace Labust.Networking
         /// Call given callback method with received message 
         /// </summary>
         /// <param name="onResponseMsg"></param>
-        public void HandleNewMessages(Action<T> onResponseMsg)
+        public void HandleNewMessages()
         {
             if (_responseBuffer.Count > 0)
             {
@@ -90,7 +96,7 @@ namespace Labust.Networking
                 {
                     if (_responseBuffer.TryDequeue(out var result))
                     {
-                        onResponseMsg(result);
+                        _onMessage(result);
                     }
                 }
                 else if (mode == MessageHandleMode.DropAndTakeLast)
@@ -98,7 +104,7 @@ namespace Labust.Networking
                     var last = _responseBuffer.LastOrDefault();
                     if (last != null)
                     {
-                        onResponseMsg(last);
+                        _onMessage(last);
                         // clear queue, leave last element
                         while (_responseBuffer.Count > 1 && _responseBuffer.TryDequeue(out var item))
                         {

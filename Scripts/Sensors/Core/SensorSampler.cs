@@ -37,6 +37,8 @@ namespace Labust.Sensors
 
         private bool EnoughTimePassed(float time, SensorBase sensor)
         {
+            if (sensor.SampleFrequency <= 0)
+                return true;
             return time > 1 / sensor.SampleFrequency;
         }
 

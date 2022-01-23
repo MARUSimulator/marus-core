@@ -27,7 +27,7 @@ namespace Labust.Sensors.Acoustics
         void Awake()
         {
             nanomodem = GetComponent<Nanomodem>();
-            streamer = new ServerStreamer<AcousticRequest>();
+            streamer = new ServerStreamer<AcousticRequest>(TransmitCommand);
             
             if (string.IsNullOrEmpty(payloadAddress))
                 payloadAddress = $"nanomodem{nanomodem.DeviceId}/nanomodem_payload";
@@ -46,7 +46,7 @@ namespace Labust.Sensors.Acoustics
 
         void Update()
         {
-            streamer.HandleNewMessages(TransmitCommand);
+            streamer.HandleNewMessages();
         }
 
         /// <summary>

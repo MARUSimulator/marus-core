@@ -72,7 +72,7 @@ namespace Labust.Sensors
 
         void OnDestroy()
         {
-            _raycastHelper.Dispose();
+            _raycastHelper?.Dispose();
             pointsCopy.Dispose();
         }
 

@@ -1,4 +1,5 @@
 
+using System;
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
@@ -13,16 +14,46 @@ namespace Labust.Utils
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static Rigidbody GetParentRigidBody(Transform obj)
+        public static Rigidbody GetParentRigidBody(Transform obj, Func<Rigidbody, bool> where = null)
         {
             if(obj.TryGetComponent<Rigidbody>(out var rb))
             {
-                return rb;
+                if (where == null || where(rb))
+                {
+                    return rb;
+                }
             }
             if (obj.parent != null)
-                return GetParentRigidBody(obj.parent);
+                return GetParentRigidBody(obj.parent, where);
             else
                 return null;
+        }
+        public static bool IsVehicle(Rigidbody rb)
+        {
+            return rb.tag == "Vehicle";
+        }
+
+        public static bool IsVehicle(Transform rb)
+        {
+            return rb.tag == "Vehicle";
+        }
+
+        public static Transform GetVehicle(Transform tf)
+        {
+            var component = tf.GetComponent<Rigidbody>();
+            if (component != null && IsVehicle(component))
+            {
+                return component.transform;
+            }
+            else
+            {
+                var b = Utils.Helpers.GetParentRigidBody(tf, IsVehicle);
+                if (b != null)
+                {
+                    return b.transform;
+                }
+                return null;
+            }
         }
 
         public static GameObject FindGameObjectInChildren(string name, GameObject parent, bool includeInactive=true)
@@ -58,6 +89,7 @@ namespace Labust.Utils
                 Mathf.Round(vector3.y * multiplier) / multiplier,
                 Mathf.Round(vector3.z * multiplier) / multiplier);
         }
+
         public static Quaternion Round(this Quaternion quat, int decimalPlaces = 2)
         {
             float multiplier = 1;
@@ -94,6 +126,29 @@ namespace Labust.Utils
                     break;
                 }
             }
+        }
+
+        public static float RandomGaussian(float mean = 0.0f, float sigma = 1.0f)
+        {
+            float u, v, S;
+        
+            do
+            {
+                u = 2.0f * UnityEngine.Random.value - 1.0f;
+                v = 2.0f * UnityEngine.Random.value - 1.0f;
+                S = u * u + v * v;
+            }
+            while (S >= 1.0f);
+        
+            // Standard Normal Distribution
+            float std = u * Mathf.Sqrt(-2.0f * Mathf.Log(S) / S);
+        
+            // Normal Distribution centered between the min and max value
+            // and clamped following the "three-sigma rule"
+            var d = 1.5f * sigma;
+            float maxValue = mean + d;
+            float minValue = mean - d;
+            return Mathf.Clamp(std * sigma + mean, minValue, maxValue);
         }
     }
 }

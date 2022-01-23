@@ -8,14 +8,21 @@ using System;
 public class ConditionalHideInInspectorAttribute : PropertyAttribute
 {
     public readonly string ConditionalSourceField;
-    public string ConditionalSourceField2 = "";
     public bool HideInInspector = false;
     public bool Inverse = false;
+    public object Value;
 
     // Use this for initialization
     public ConditionalHideInInspectorAttribute(string conditionalSourceField, bool inverse=false)
     {
         ConditionalSourceField = conditionalSourceField;
         Inverse = inverse;
+    }
+
+    public ConditionalHideInInspectorAttribute(string conditionalSourceField, bool inverse=false, object value=null)
+    {
+        ConditionalSourceField = conditionalSourceField;
+        Inverse = inverse;
+        Value = value;
     }
 }

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Labust.Networking;
 using Labust.Logger;
+using Labust.Utils;
 
 namespace Labust.Sensors
 {
@@ -26,25 +27,22 @@ namespace Labust.Sensors
 
         public float SampleFrequency = 20;
 
-        protected Rigidbody body;
+        protected Transform _vehicle;
+
+
 
         public Transform vehicle
         {
             get
             {
-                if (body == null)
+                _vehicle = Helpers.GetVehicle(transform);
+                if (_vehicle == null)
                 {
-                    var component = GetComponent<Rigidbody>();
-                    if (component != null)
-                        body = component;
-                    else
-                        body = Utils.Helpers.GetParentRigidBody(transform);
-                }
-                if (body == null)
-                {
+                    Debug.Log($@"Cannot get vehicle from sensor {transform.name}. 
+                        Using sensor as the vehicle transform");
                     return transform;
                 }
-                return body?.transform;
+                return _vehicle;
             }
         }
 

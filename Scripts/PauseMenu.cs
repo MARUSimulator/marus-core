@@ -16,7 +16,7 @@ namespace Labust.Core
     ///
     /// Play, pause, restart, quit, OnSave, etc.
     /// </summary>
-    public class SimulatorController : MonoBehaviour
+    public class PauseMenu : MonoBehaviour
     {
         public bool SaveOnExit = true;
 
@@ -24,6 +24,9 @@ namespace Labust.Core
         bool _isRunning;
         float timeScaleBeforePause;
         public bool LockCursor;
+
+        public string scenarioName;
+        public string description;
 
         public string SavesPath => Path.Combine(Application.dataPath, "Saves");
 
@@ -93,10 +96,6 @@ namespace Labust.Core
         /// </summary>
         public void Exit()
         {
-            if (SaveOnExit)
-            {
-                Save();
-            }
             if (Application.isEditor)
             {
                 UnityEditor.EditorApplication.isPlaying = false;
@@ -106,7 +105,15 @@ namespace Labust.Core
 
         public void Save()
         {
-            DataLoggerUtilities.SaveAllLogs();
+            DataLoggerUtilities.SaveAllLogs(scenarioName, description);
+        }
+
+        void OnApplicationQuit()
+        {
+            if (SaveOnExit)
+            {
+                Save();
+            }
         }
     }
 }

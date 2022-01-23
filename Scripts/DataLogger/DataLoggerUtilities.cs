@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using Labust.Core;
 
 namespace Labust.Logger
 {
@@ -22,11 +23,16 @@ namespace Labust.Logger
         /// Save all logs to file
         /// </summary>
         /// <param name="savesPath">Optional save path</param>
-        public static void SaveAllLogs(string savesPath = null)
+        public static void SaveAllLogs(string scenarioName=null, 
+                string scenarioDescription=null, string savesPath = null)
         {
             if (savesPath == null)
             {
                 savesPath = _savesPath;
+            }
+            if (scenarioName == null)
+            {
+                scenarioName = $"NewScenario";
             }
 
             var logs = DataLogger.Instance.ExportAllLogs();
@@ -34,8 +40,15 @@ namespace Labust.Logger
             {
                 Directory.CreateDirectory(savesPath);
             }
-            var currentPath = Path.Combine(savesPath, $"Scenario{DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss")}.json");
-            var asJson = JsonConvert.SerializeObject(logs, _jsonConfig);
+            var currentPath = Path.Combine(savesPath, $"{scenarioName}{DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss")}.json");
+            var asJson = JsonConvert.SerializeObject(new 
+            { 
+                Name = scenarioName, 
+                Description = scenarioDescription,
+                SimulationTime = Time.timeSinceLevelLoadAsDouble,
+                Logs = logs
+            }, _jsonConfig);
+
             using(var writer = new StreamWriter(currentPath))
             {
                 writer.Write(asJson);

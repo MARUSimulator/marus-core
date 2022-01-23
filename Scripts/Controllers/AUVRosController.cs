@@ -10,6 +10,8 @@ using System;
 using System.Collections.Concurrent;
 using Labust.Networking;
 using System.Linq;
+using static Remotecontrol.RemoteControl;
+using Labust.Utils;
 
 namespace Labust.Actuators
 {
@@ -18,7 +20,7 @@ namespace Labust.Actuators
     /// Subscribes to ROS server to receive control commands
     /// WIP
     /// </summary>
-    public class AUVRosController : ControllerBase<ForceResponse>
+    public class AUVRosController : MonoBehaviour
     {
 
         public float linSpeed = 2f;
@@ -28,17 +30,24 @@ namespace Labust.Actuators
 
         Transform _targetTransform;
         Thread _handleStreamThread;
-
+        ServerStreamer<ForceResponse> _streamer;
 
         // Start is called before the first frame update
         void Awake()
         {
             _targetTransform = transform;
-            streamHandle = remoteControlClient.ApplyForce(
-                new ForceRequest { Address = vehicle.name + "/pwm_out" },
-                cancellationToken: RosConnection.Instance.cancellationToken);
+            _streamer = new ServerStreamer<ForceResponse>(UpdateMovement);
+            var client = RosConnection.Instance.GetClient<RemoteControlClient>();
+            var address = Helpers.GetVehicle(transform)?.name ?? name;
+            _streamer.StartStream(client.ApplyForce(
+                new ForceRequest { Address = $"{address}/pwm_out" },
+                cancellationToken: RosConnection.Instance.cancellationToken)
+            );
+        }
 
-            HandleResponse(UpdateMovement);
+        void Update()
+        {
+            _streamer.HandleNewMessages();
         }
 
         void UpdateMovement(ForceResponse result)

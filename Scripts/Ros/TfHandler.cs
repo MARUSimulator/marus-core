@@ -8,6 +8,7 @@ using Labust.Utils;
 using Labust.Visualization;
 using Tf;
 using System;
+using System.Collections.Generic;
 
 namespace Labust.Networking
 {
@@ -32,7 +33,7 @@ namespace Labust.Networking
 
         protected override void Initialize()
         {
-            _serverStreamer = new ServerStreamer<TfFrameList>();
+            _serverStreamer = new ServerStreamer<TfFrameList>(UpdateTf);
             transform.parent = RosConnection.Instance.transform;
             InitializeTf();
             RosConnection.Instance.OnConnected += OnConnected;
@@ -94,7 +95,7 @@ namespace Labust.Networking
                             cancellationToken:rosConn.cancellationToken);
                     _serverStreamer.StartStream(frameStream);
                 }
-                _serverStreamer.HandleNewMessages(UpdateTf);
+                _serverStreamer.HandleNewMessages();
             }
         }
 
@@ -164,5 +165,4 @@ namespace Labust.Networking
         }
 
     }
-
 }

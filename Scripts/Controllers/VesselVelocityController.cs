@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Labust.Networking;
 using UnityEngine;
 
 namespace Labust.Controllers
@@ -35,7 +36,6 @@ namespace Labust.Controllers
 
         public void MoveTowards()
         {
-
             float dist = Vector3.Distance(new Vector3(Target.position.x, 0, Target.position.z), new Vector3(transform.position.x, 0, transform.position.z));
 
             //Stop the vessel when close enough to target
