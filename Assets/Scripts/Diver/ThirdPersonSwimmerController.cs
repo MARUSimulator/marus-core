@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 //using UnityStandardAssets.CrossPlatformInput; //uncomment
 
@@ -12,9 +13,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private Vector3 m_CamForward;             // The current forward direction of the camera
         private Vector3 m_Move;
         bool isCaps = false;
+        private float _mouseAbsolute = 0.0f;
 
         private void Start()
         {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             // get the transform of the main camera
             if (Camera.main != null)
             {
@@ -47,11 +51,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private void FirstPersonInputUpdate()
         {
             // read inputs
-            float h = Input.GetAxis("Horizontal"); //uncomment
-            float v = (isCaps) ? 1.0f : Input.GetAxis("Vertical"); //uncomment
+            float h = Input.GetAxis("Horizontal");
+            float h_mousedelta = Input.GetAxis("Mouse X")*15;
+            float v = (isCaps) ? 1.0f : Input.GetAxis("Vertical");
+            h += h_mousedelta;
             bool crouch = Input.GetKey(KeyCode.C);
-            bool jump = Input.GetKey(KeyCode.Space);
-
+            
+            m_Move += Input.GetAxis("Mouse X") * transform.right;bool jump = Input.GetKey(KeyCode.Space);
 
             if (Input.GetKeyDown(KeyCode.CapsLock))
             {
@@ -64,7 +70,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 // calculate camera relative direction to move:
                 m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
                 m_Move = v * m_CamForward + h * m_Cam.right;
-                m_Move = v * transform.forward + h * transform.right; //uncomment
+                //m_Move = v * transform.forward + h * transform.right; //uncomment
             }
             else
             {

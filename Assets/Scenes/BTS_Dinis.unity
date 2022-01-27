@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2158.7012, g: 2262.4258, b: 3299.8945, a: 1}
+  m_IndirectSpecularColor: {r: 2187.086, g: 2330.7734, b: 3512.7148, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3312,7 +3312,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 566751674}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 9000000, guid: 39f809c44b7ca264283aadd4fbfdfc9e, type: 3}
   m_Controller: {fileID: 9100000, guid: 194ada92bbb884408bb0dd917f89e60f, type: 2}
   m_CullingMode: 1
