@@ -67,7 +67,7 @@ if (!(Test-Path -LiteralPath $UnityPluginsDir)) {
 }
 
 $directoryInfo = Get-ChildItem $UnityPluginsDir | Measure-Object
-if ($directoryInfo.count -eq 0) {
+#if ($directoryInfo.count -eq 0) {
 	Write-Host "Downloading and setuping Unity plugins... Path: $UnityPluginsDir"
 
 	################################## gRPC #################
@@ -76,10 +76,10 @@ if ($directoryInfo.count -eq 0) {
 	Write-Host "Setup gRPC for Unity"
 	Invoke-WebRequest -Uri "https://packages.grpc.io/archive/2021/04/ccbb2dd207635cd1c53d9255a4b82c96e6042b74-b1949379-fd83-4d31-abf8-822fae110b43/csharp/grpc_unity_package.2.38.0-dev202104010955.zip" -OutFile ".\Temp\unity_grpc.zip"
 	Expand-Archive -LiteralPath $UnityGrpcPluginsZipPath -DestinationPath $UnityPluginsExtractionDir
-}
-else {
-	Write-Host "Plugins Directory '$UnityPluginsDir' already exists, extraction stopped to prevent overwriting."  
-}
+#}
+#else {
+#	Write-Host "Plugins Directory '$UnityPluginsDir' already exists, extraction stopped to prevent overwriting."  
+#}
 
 
 ######################## DOWNLOAD CREST FOR UNITY #############

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 197b8a87a0f26de4fafd1944ca43f6b2
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _TextureNormals: {fileID: 2800000, guid: 800e061692ff7a84e887f439d3364410, type: 3}
+  - _TextureFoam: {fileID: 2800000, guid: 02e417d5711139342884479f53dbecea, type: 3}
+  - _CausticsTexture: {fileID: 2800000, guid: 24552fd937a31a842aa7ee1c2e14d89d, type: 3}
+  - _CausticsDistortionTexture: {fileID: 2800000, guid: 800e061692ff7a84e887f439d3364410,
+      type: 3}
+  - unity_Lightmaps: {instanceID: 0}
+  - unity_LightmapsInd: {instanceID: 0}
+  - unity_ShadowMasks: {instanceID: 0}
+  nonModifiableTextures: []
+  preprocessorOverride: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
