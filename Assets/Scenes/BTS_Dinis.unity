@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2187.086, g: 2330.7734, b: 3512.7148, a: 1}
+  m_IndirectSpecularColor: {r: 2178.6162, g: 2308.7422, b: 3439.7537, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7435,6 +7435,7 @@ GameObject:
   - component: {fileID: 1383621358}
   - component: {fileID: 1383621357}
   - component: {fileID: 1383621360}
+  - component: {fileID: 1383621361}
   m_Layer: 0
   m_Name: OceanCurrent
   m_TagString: Untagged
@@ -7525,6 +7526,20 @@ MonoBehaviour:
   _smoothingIterations: 0
   _version: 0
   _followHorizontalMotion: 0
+--- !u!114 &1383621361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383621356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8a983cd652676c40be224d5a4ba7f3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxCurrent: 0.2
+  MinCurrent: 0.2
 --- !u!1001 &1386099441
 PrefabInstance:
   m_ObjectHideFlags: 0
