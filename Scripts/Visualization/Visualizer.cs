@@ -3,6 +3,7 @@ using Labust.Visualization.Primitives;
 using Labust.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 namespace Labust.Visualization
 {
@@ -59,6 +60,26 @@ namespace Labust.Visualization
         {
         }
 
+        private bool AddVisual(string key, VisualElement visual)
+        {
+            bool exists = false;
+            foreach (var v in _visualElements[key])
+            {
+                if (visual.Id != null && v.Id == visual.Id)
+                {
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists)
+            {
+                _visualElements[key].Add(visual);
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Adds single point for visualizer to draw
         /// </summary>
@@ -71,8 +92,11 @@ namespace Labust.Visualization
                 _visualElements[key] = new List<VisualElement>();
             }
             VisualElement p = (VisualElement) new Point(pointInWorld);
-            CreateAndAttachPointGameObject(p, key);
-            _visualElements[key].Add(p);
+            bool created = AddVisual(key, p);
+            if (created)
+            {
+                CreateAndAttachPointGameObject(p, key);
+            }
             return (Point) p;
         }
 
@@ -89,8 +113,11 @@ namespace Labust.Visualization
                 _visualElements[key] = new List<VisualElement>();
             }
             VisualElement p = (VisualElement) new Point(pointInWorld, pointSize);
-            CreateAndAttachPointGameObject(p, key);
-            _visualElements[key].Add(p);
+            bool created = AddVisual(key, p);
+            if (created)
+            {
+                CreateAndAttachPointGameObject(p, key);
+            }
             return (Point) p;
         }
 
@@ -108,8 +135,11 @@ namespace Labust.Visualization
                 _visualElements[key] = new List<VisualElement>();
             }
             VisualElement p = (VisualElement) new Point(pointInWorld, pointSize, pointColor);
-            CreateAndAttachPointGameObject(p, key);
-            _visualElements[key].Add(p);
+            bool created = AddVisual(key, p);
+            if (created)
+            {
+                CreateAndAttachPointGameObject(p, key);
+            }
             return (Point) p;
         }
 
@@ -122,8 +152,11 @@ namespace Labust.Visualization
             {
                 _visualElements[key] = new List<VisualElement>();
             }
-            CreateAndAttachPointGameObject(point, key);
-            _visualElements[key].Add((VisualElement) point);
+            bool created = AddVisual(key, (VisualElement) point);
+            if (created)
+            {
+                CreateAndAttachPointGameObject(point, key);
+            }
         }
 
         /// <summary>
@@ -138,8 +171,11 @@ namespace Labust.Visualization
                 _visualElements[key] = new List<VisualElement>();
             }
             VisualElement p = (VisualElement) new Path(pointsInWorld, pointSize, pointColor, lineThickness, lineColor);
-            CreateAndAttachPathGameObject(p, key);
-            _visualElements[key].Add(p);
+            bool created = AddVisual(key, p);
+            if (created)
+            {
+                CreateAndAttachPathGameObject(p, key);
+            }
             return (Path) p;
         }
 
@@ -156,8 +192,11 @@ namespace Labust.Visualization
                 _visualElements[key] = new List<VisualElement>();
             }
             VisualElement p = (VisualElement) new Path(pointsInWorld, pointSize, _pointColor, lineThickness, lineColor);
-            CreateAndAttachPathGameObject(p, key);
-            _visualElements[key].Add(p);
+            bool created = AddVisual(key, p);
+            if (created)
+            {
+                CreateAndAttachPathGameObject(p, key);
+            }
             return (Path) p;
         }
 
@@ -172,8 +211,11 @@ namespace Labust.Visualization
             {
                 _visualElements[key] = new List<VisualElement>();
             }
-            CreateAndAttachPathGameObject(path, key);
-            _visualElements[key].Add((VisualElement) path);
+            bool created = AddVisual(key, (VisualElement) path);
+            if (created)
+            {
+                CreateAndAttachPathGameObject(path, key);
+            }
         }
 
         /// <summary>
@@ -189,8 +231,11 @@ namespace Labust.Visualization
                 _visualElements[key] = new List<VisualElement>();
             }
             var _transform = new Primitives.Transform(transform);
-            AttachTransformGameObject(_transform);
-            _visualElements[key].Add(_transform);
+            bool created = AddVisual(key, _transform);
+            if (created)
+            {
+                AttachTransformGameObject(_transform);
+            }
             return _transform;
         }
 
@@ -201,8 +246,11 @@ namespace Labust.Visualization
                 _visualElements[key] = new List<VisualElement>();
             }
             VisualElement _line3d = (VisualElement) new Line(startPoint, endPoint, lineThickness, lineColor);
-            CreateAndAttachLineGameObject(_line3d, key);
-            _visualElements[key].Add(_line3d);
+            bool created = AddVisual(key, _line3d);
+            if (created)
+            {
+                CreateAndAttachLineGameObject(_line3d, key);
+            }
             return (Line) _line3d;
         }
 
@@ -213,8 +261,11 @@ namespace Labust.Visualization
                 _visualElements[key] = new List<VisualElement>();
             }
             VisualElement _line3d = (VisualElement) new Line(startPoint, endPoint, thickness, lineColor);
-            CreateAndAttachLineGameObject(_line3d, key);
-            _visualElements[key].Add(_line3d);
+            bool created = AddVisual(key, _line3d);
+            if (created)
+            {
+                CreateAndAttachLineGameObject(_line3d, key);
+            }
             return (Line) _line3d;
         }
 
@@ -225,9 +276,55 @@ namespace Labust.Visualization
                 _visualElements[key] = new List<VisualElement>();
             }
             VisualElement _line3d = (VisualElement) new Line(startPoint, endPoint, thickness, color);
-            CreateAndAttachLineGameObject(_line3d, key);
-            _visualElements[key].Add(_line3d);
+            bool created = AddVisual(key, _line3d);
+            if (created)
+            {
+                CreateAndAttachLineGameObject(_line3d, key);
+            }
             return (Line) _line3d;
+        }
+
+        public Arrow AddArrow(Vector3 startPoint, Vector3 endPoint, string key, float radius, Color color)
+        {
+            if (!_visualElements.ContainsKey(key))
+            {
+                _visualElements[key] = new List<VisualElement>();
+            }
+            VisualElement _arrow = (VisualElement) new Arrow(startPoint, endPoint, radius, color);
+            bool created = AddVisual(key, _arrow);
+            if (created)
+            {
+                CreateAndAttachArrowGameObject(_arrow, key);
+            }
+            return (Arrow) _arrow;
+        }
+
+        public Arrow AddArrow(Vector3 startPoint, Vector3 endPoint, string key, float radius, Color color, float headRadius, Color headColor)
+        {
+            if (!_visualElements.ContainsKey(key))
+            {
+                _visualElements[key] = new List<VisualElement>();
+            }
+            VisualElement _arrow = (VisualElement) new Arrow(startPoint, endPoint, radius, color, headRadius, headColor);
+            bool created = AddVisual(key, _arrow);
+            if (created)
+            {
+                CreateAndAttachArrowGameObject(_arrow, key);
+            }
+            return (Arrow) _arrow;
+        }
+
+        public void AddArrow(Arrow arrow, string key)
+        {
+            if (!_visualElements.ContainsKey(key))
+            {
+                _visualElements[key] = new List<VisualElement>();
+            }
+            bool created = AddVisual(key, (VisualElement) arrow);
+            if (created)
+            {
+                CreateAndAttachArrowGameObject(arrow, key);
+            }
         }
 
         /// <summary>
@@ -244,6 +341,31 @@ namespace Labust.Visualization
         }
 
         /// <summary>
+        /// Removes visual element by it's Id
+        /// </summary>
+        /// <param name="string">String id of visual element</param>
+        public void RemoveById(string id)
+        {
+            var markForDeletion = new Tuple<string, VisualElement>("", null);
+            foreach (var kvp in _visualElements)
+            {
+                foreach (var visual in kvp.Value)
+                {
+                    if (visual.Id != null && visual.Id == id)
+                    {
+                        markForDeletion = new Tuple<string, VisualElement>(kvp.Key, visual);
+                        break;
+                    }
+                }
+            }
+            if (markForDeletion.Item2 != null)
+            {
+                _visualElements[markForDeletion.Item1].Remove(markForDeletion.Item2);
+                markForDeletion.Item2.Destroy();
+            }
+        }
+
+        /// <summary>
         /// Removes all objects stored under given key.
         /// </summary>
         /// <param name="key">String key tag</param>
@@ -257,7 +379,7 @@ namespace Labust.Visualization
 
         private void CreateAndAttachPathGameObject(VisualElement p, string name)
         {
-            GameObject path = new GameObject(name);
+            GameObject path = new GameObject($"{name}_path_{p.Id}");
             PathVisualController pc = path.AddComponent(typeof(PathVisualController)) as PathVisualController;
             pc.MyPath = (Path) p;
             path.transform.SetParent(transform);
@@ -266,7 +388,7 @@ namespace Labust.Visualization
 
         private void CreateAndAttachPointGameObject(VisualElement p, string name)
         {
-            GameObject point = new GameObject(name);
+            GameObject point = new GameObject($"{name}_point_{p.Id}");
             PointVisualController pc = point.AddComponent(typeof(PointVisualController)) as PointVisualController;
             pc.MyPoint = (Point) p;
             point.transform.SetParent(transform);
@@ -281,24 +403,46 @@ namespace Labust.Visualization
 
         void CreateAndAttachLineGameObject(VisualElement l, string name)
         {
-            GameObject _line = new GameObject(name);
+            GameObject _line = new GameObject($"{name}_line_{l.Id}");
             LineVisualController lvc = _line.AddComponent(typeof(LineVisualController)) as LineVisualController;
             lvc.MyLine = (Line) l;
             _line.transform.SetParent(transform);
             lvc.MyLine.SetParent(_line);
         }
 
+        void CreateAndAttachArrowGameObject(VisualElement a, string name)
+        {
+            GameObject _arrow = new GameObject($"{name}_arrow_{a.Id}");
+            ArrowVisualController avc = _arrow.AddComponent(typeof(ArrowVisualController)) as ArrowVisualController;
+            avc.MyArrow = (Arrow) a;
+            _arrow.transform.SetParent(transform);
+            avc.MyArrow.SetParent(_arrow);
+        }
+
         void Update()
         {
             var selected = EnumFlagsAttribute.ReturnSelectedElements((int)DrawFilter, typeof(FilterValues));
+            var markForDeletion = new List<Tuple<string, VisualElement>>();
             foreach (var kvp in _visualElements)
             {
                 if (selected.Contains(kvp.Key))
                     continue;
                 foreach (var visual in kvp.Value)
                 {
-                    visual.Draw();
+                    if (visual.Lifetime != 0 && (DateTime.UtcNow.Subtract(visual.Timestamp).TotalSeconds > visual.Lifetime))
+                    {
+                        markForDeletion.Add(new Tuple<string, VisualElement>(kvp.Key, visual));
+                    }
+                    else
+                    {
+                        visual.Draw();
+                    }
                 }
+            }
+            foreach (var kvp in markForDeletion)
+            {
+                _visualElements[kvp.Item1].Remove(kvp.Item2);
+                kvp.Item2.Destroy();
             }
         }
     }

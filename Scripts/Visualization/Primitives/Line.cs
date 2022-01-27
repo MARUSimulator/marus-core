@@ -39,6 +39,8 @@ namespace Labust.Visualization.Primitives
         {
             StartPoint = start;
             EndPoint = end;
+            Timestamp = DateTime.UtcNow;
+            Lifetime = 0;
         }
 
         public Line(Vector3 start, Vector3 end, float width) : this(start, end)
@@ -54,7 +56,7 @@ namespace Labust.Visualization.Primitives
         /// <summary>
         /// Draw line
         /// </summary>
-        public void Draw()
+        public override void Draw()
         {
             if (destroyed)
             {
@@ -92,13 +94,21 @@ namespace Labust.Visualization.Primitives
         /// <summary>
         /// Remove from scene and destroy object
         /// </summary>
-        public void Destroy()
+        public override void Destroy()
         {
             if (line == null)
             {
                 return;
             }
-            UnityEngine.Object.Destroy(line);
+            if (parent != null && parent.transform.childCount == 1)
+            {
+                UnityEngine.Object.Destroy(parent);
+            }
+            else
+            {
+                UnityEngine.Object.Destroy(line);
+            }
+            line = null;
             destroyed = true;
         }
 

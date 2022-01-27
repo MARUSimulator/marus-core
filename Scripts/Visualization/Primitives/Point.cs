@@ -20,11 +20,6 @@ namespace Labust.Visualization.Primitives
         public UnityEngine.Transform _pointTransform;
 
         /// <summary>
-        /// Timestamp when point was created
-        /// </summary>
-        public DateTime Timestamp;
-
-        /// <summary>
         /// Point size
         /// </summary>
         public float PointSize = 0.7f;
@@ -33,6 +28,8 @@ namespace Labust.Visualization.Primitives
         /// Point color
         /// </summary>
         public Color PointColor = Color.white;
+
+        public PrimitiveType PointType = PrimitiveType.Sphere;
 
         private GameObject sphere = null;
 
@@ -48,6 +45,7 @@ namespace Labust.Visualization.Primitives
         {
             Position = pointInWorld;
             Timestamp = DateTime.UtcNow;
+            Lifetime = 0;
         }
 
         /// <summary>
@@ -55,10 +53,8 @@ namespace Labust.Visualization.Primitives
         /// </summary>
         /// <param name="pointInWorld">Position in space</param>
         /// <param name="pointSize">Point size</param>
-        public Point(Vector3 pointInWorld, float pointSize)
+        public Point(Vector3 pointInWorld, float pointSize) : this(pointInWorld)
         {
-            Position = pointInWorld;
-            Timestamp = DateTime.UtcNow;
             PointSize = pointSize;
         }
 
@@ -115,7 +111,7 @@ namespace Labust.Visualization.Primitives
         /// <summary>
         /// Draw point
         /// </summary>
-        public void Draw()
+        public override void Draw()
         {
             if (destroyed)
             {
@@ -124,9 +120,9 @@ namespace Labust.Visualization.Primitives
 
             if (sphere == null)
             {
-                sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                sphere = GameObject.CreatePrimitive(PointType);
                 sphere.hideFlags = HideFlags.HideInHierarchy;
-                sphere.GetComponent<SphereCollider>().enabled = false;
+                sphere.GetComponent<Collider>().enabled = false;
                 sphere.transform.localScale = new Vector3(PointSize, PointSize, PointSize);
                 sphere.transform.position = Position;
                 sphere.GetComponent<Renderer>().material.color = PointColor;
@@ -134,6 +130,7 @@ namespace Labust.Visualization.Primitives
                 sphere.GetComponent<Renderer>().sortingLayerID = SortingLayer.NameToID("Points");
                 Material newMat = new Material(Shader.Find("HDRP/Unlit"));
                 sphere.GetComponent<Renderer>().material = newMat;
+                sphere.GetComponent<Renderer>().material.color = PointColor;
             }
             if (sphere != null && _pointTransform != null)
             {
@@ -148,14 +145,21 @@ namespace Labust.Visualization.Primitives
         /// <summary>
         /// Destroy and remove point
         /// </summary>
-        public void Destroy()
+        public override void Destroy()
         {
             destroyed = true;
             if (sphere == null)
             {
                 return;
             }
-            UnityEngine.Object.Destroy(sphere.gameObject);
+            if (parent != null && parent.transform.childCount == 1)
+            {
+                UnityEngine.Object.Destroy(parent);
+            }
+            else
+            {
+                UnityEngine.Object.Destroy(sphere.gameObject);
+            }
             sphere = null;
         }
 
@@ -170,6 +174,7 @@ namespace Labust.Visualization.Primitives
 
         public void SetColor(Color color)
         {
+            PointColor = color;
             if (sphere == null)
             {
                 return;

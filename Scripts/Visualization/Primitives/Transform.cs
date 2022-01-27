@@ -1,5 +1,5 @@
 using Labust.Utils;
-using UnityEditor;
+using System;
 using UnityEngine;
 
 namespace Labust.Visualization.Primitives
@@ -42,14 +42,15 @@ namespace Labust.Visualization.Primitives
             _zLine = new Line(origin, z, LineThickness);
             _zLine.LineColor = Color.blue;
             _zLine.SetParent(transform.gameObject);
+            Lifetime = 0;
+            Timestamp = DateTime.UtcNow;
         }
 
         /// <summary>
         /// Draws transform
         /// </summary>
-        public void Draw()
+        public override void Draw()
         {
-            
             if (destroyed)
             {
                 return;
@@ -75,7 +76,7 @@ namespace Labust.Visualization.Primitives
         /// <summary>
         /// Destroys and removes transform
         /// </summary>
-        public void Destroy()
+        public override void Destroy()
         {
             destroyed = true;
             _xLine.Destroy();

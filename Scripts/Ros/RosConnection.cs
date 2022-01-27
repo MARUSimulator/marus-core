@@ -11,6 +11,7 @@ using static Remotecontrol.RemoteControl;
 using static Ping.Ping;
 using static Parameterserver.ParameterServer;
 using static Simulationcontrol.SimulationControl;
+using static Visualization.Visualization;
 
 using Parameterserver;
 using System.Collections;
@@ -98,7 +99,9 @@ namespace Labust.Networking
         {
             CreateSingletons();
             // init channel and streaming clients
-            _streamingChannel = new Channel(serverIP, serverPort, ChannelCredentials.Insecure);
+            var options = new List<ChannelOption>();
+            options.Add(new ChannelOption(ChannelOptions.MaxSendMessageLength, 1024*1024*100));
+            _streamingChannel = new Channel(serverIP, serverPort, ChannelCredentials.Insecure, options);
             InitializeClients();
             var t = new Thread(() =>
             {
@@ -115,6 +118,7 @@ namespace Labust.Networking
             var paramServer = ParamServerHandler.Instance;
             var tfHandler = TfHandler.Instance;
             var timeHandler = TimeHandler.Instance;
+            var visualizationRos = VisualizationROS.Instance;
         }
 
         IEnumerator WhileConnectionAwait()
@@ -203,6 +207,10 @@ namespace Labust.Networking
                 {
                     typeof(AcousticTransmissionClient),
                     new AcousticTransmissionClient(_streamingChannel)
+                },
+                {
+                    typeof(VisualizationClient),
+                    new VisualizationClient(_streamingChannel)
                 }
             };
         }
