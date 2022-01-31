@@ -37,9 +37,12 @@ namespace Labust.Sensors
                     var coshor = Mathf.Cos(horizontalAngle);
                     var sinver = Mathf.Sin(verticalAngle);
                     var cosver = Mathf.Cos(verticalAngle);
+
+
                     directionsLocal[i * heightRes + j] = new Vector3(cosver * sinhor, sinver, cosver * coshor); // y is up; y angle is (90 - theta) in spherical 
                 }
             }
+             
             return directionsLocal;
         }
     }
@@ -48,6 +51,7 @@ namespace Labust.Sensors
     public class RaycastJobHelper<T> : RaycastJobHelper where T: struct
     {
         NativeArray<Vector3> _directionsLocal;
+        NativeArray<Vector3> _directionsGlobal;
         NativeArray<RaycastCommand> _commands;
         NativeArray<RaycastHit> _hits;
         NativeArray<Vector3> _points;
@@ -73,6 +77,7 @@ namespace Labust.Sensors
             var totalRays = directions.Length;
             _obj = obj;
             _directionsLocal = directions;
+            _directionsGlobal = new NativeArray<Vector3>(totalRays, Allocator.Persistent);
             _hasData = false;
             _commands = new NativeArray<RaycastCommand>(totalRays, Allocator.Persistent);
             _hits = new NativeArray<RaycastHit>(totalRays, Allocator.Persistent);
@@ -144,6 +149,7 @@ namespace Labust.Sensors
             _commands.Dispose();
             _hits.Dispose();
             _directionsLocal.Dispose();
+            _directionsGlobal.Dispose();
             _results.Dispose();
             _points.Dispose();
         }
@@ -164,13 +170,17 @@ namespace Labust.Sensors
             var transform = _obj.transform;
             // var inverseRotation = Matrix4x4.TRS(Vector3.zero, transform.rotation, Vector3.one).inverse;
 
+            for (int i=0; i<_directionsLocal.Length; i++)
+            {
+                _directionsGlobal[i] = transform.TransformDirection(_directionsLocal[i]);
+            }
             var commandsJob = new CreateRaycastCommandsJob();
             commandsJob.commands = _commands;
             commandsJob.maxDistance = _maxDistance;
-            commandsJob.directions = _directionsLocal;
+            commandsJob.directions = _directionsGlobal;
             commandsJob.position = transform.position;
-            commandsJob.inverseRotation = transform.localToWorldMatrix;
             var commandsJobHandle = commandsJob.Schedule(_directionsLocal.Length, 10);
+
 
             return RaycastCommand.ScheduleBatch(_commands, _hits, 10, commandsJobHandle);
         }
@@ -188,9 +198,6 @@ namespace Labust.Sensors
             public Vector3 position;
 
             [ReadOnly]
-            public Matrix4x4 inverseRotation;
-
-            [ReadOnly]
             public NativeArray<Vector3> directions;
 
             [ReadOnly]
@@ -200,7 +207,7 @@ namespace Labust.Sensors
 
             public void Execute(int i)
             {
-                commands[i] = new RaycastCommand(position, inverseRotation * directions[i], maxDistance);
+                commands[i] = new RaycastCommand(position, directions[i], maxDistance);
             }
         }
 
