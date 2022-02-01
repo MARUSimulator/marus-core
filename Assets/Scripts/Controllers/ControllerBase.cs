@@ -12,13 +12,14 @@ using UnityEngine;
 
 namespace Labust.Actuators
 {
-    public class ControllerBase<T> : MonoBehaviour where T : IMessage
+    public class ControllerBase<T> : MonoBehaviour where T : class, IMessage
     {
 
         public enum MessageHandleMode
         {
             DropAndTakeLast = 1,
             Sequential,
+            Latch
         }
         public MessageHandleMode mode = MessageHandleMode.DropAndTakeLast;
         protected RemoteControl.RemoteControlClient remoteControlClient
@@ -65,6 +66,7 @@ namespace Labust.Actuators
         ConcurrentQueue<T> _responseBuffer = new ConcurrentQueue<T>();
 
 
+        T _lastMsg;
         Thread _handleStreamThread;
         Action<T> _onResponseMsg;
         protected void HandleResponse(Action<T> onResponseMsg)
@@ -72,6 +74,7 @@ namespace Labust.Actuators
             _handleStreamThread = new Thread(_HandleResponse);
             _handleStreamThread.Start();
             _onResponseMsg = onResponseMsg;
+            _lastMsg = null;
         }
 
         async void _HandleResponse()
@@ -91,7 +94,7 @@ namespace Labust.Actuators
         }
 
         // Update is called once per frame
-        void Update()
+        void FixedUpdate()
         {
             if (_responseBuffer.Count > 0)
             {
@@ -99,6 +102,7 @@ namespace Labust.Actuators
                 {
                     if (_responseBuffer.TryDequeue(out var result))
                     {
+                        _lastMsg = result;
                         _onResponseMsg(result);
                     }
                 }
@@ -107,6 +111,7 @@ namespace Labust.Actuators
                     var last = _responseBuffer.LastOrDefault();
                     if (last != null)
                     {
+                        _lastMsg = last;
                         _onResponseMsg(last);
                         // clear queue, leave last element
                         while (_responseBuffer.Count > 1 && _responseBuffer.TryDequeue(out var item))
@@ -115,6 +120,10 @@ namespace Labust.Actuators
                         }
                     }
                 }
+            }
+            else if (_lastMsg != null && mode == MessageHandleMode.Latch)
+            {
+                _onResponseMsg(_lastMsg);
             }
         }
 

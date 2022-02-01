@@ -51,7 +51,7 @@ namespace Labust.Visualization
 
         private (string, int) GetPathNumber()
         {
-            string [] fileEntries = System.IO.Directory.GetFiles(savePath);
+            string [] fileEntries = Directory.GetFiles(savePath);
             Scene scene = SceneManager.GetActiveScene();
             string prefix;
             if (scene.name == "BTS")
@@ -69,10 +69,9 @@ namespace Labust.Visualization
             int index = 0;
             foreach(string fileName in fileEntries)
             {
-                var f = System.IO.Path.GetFileName(fileName);
+                var f = Path.GetFileName(fileName);
                 if (f.EndsWith(".json") && f.StartsWith(prefix))
                 {
-                    Debug.Log(f);
                     index++;
                 }
             }
@@ -116,7 +115,7 @@ namespace Labust.Visualization
 
         public void Disable()
         {
-            RefreshTopic();
+            // RefreshTopic();
             _enabled = false;
             OnDisable();
         }

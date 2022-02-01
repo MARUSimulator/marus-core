@@ -60,7 +60,6 @@ namespace Labust.Logger
             {
                 Debug.Log($"No logs available for topic {topic}!\nNo file created.");
                 return;
-
             }
 
             if (!Directory.Exists(savesPath))
