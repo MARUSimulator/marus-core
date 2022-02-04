@@ -69,7 +69,6 @@ namespace Labust.Visualization
             return obj;
         }
 
-
         public void UpdatePointCloud(NativeArray<Vector3> points){
             _particleMesh.SetVertices(points);
             _particleMesh.RecalculateBounds();
@@ -102,6 +101,5 @@ namespace Labust.Visualization
             }
             throw new UnityException($"Shader {shaderName} not found in the project");
         }
-
     }
 }

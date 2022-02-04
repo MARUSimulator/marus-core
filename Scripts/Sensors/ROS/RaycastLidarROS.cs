@@ -1,17 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Labust.Networking;
-using Labust.Sensors;
-using Labust.Sensors.Core;
-using Labust.Visualization;
-using Unity.Collections;
-using Unity.Jobs;
 using UnityEngine;
 using Sensorstreaming;
-using System.Threading;
 using Labust.Core;
+using Sensor;
+using Unity.Collections;
 
 namespace Labust.Sensors
 {
@@ -25,24 +17,26 @@ namespace Labust.Sensors
     public class RaycastLidarROS : SensorStreamer<PointCloudStreamingRequest>
     {
         RaycastLidar sensor;
+
         void Start()
         {
             sensor = GetComponent<RaycastLidar>();
+            UpdateFrequency = Mathf.Min(UpdateFrequency, sensor.SampleFrequency);
             if (string.IsNullOrEmpty(address))
                 address = transform.name + "/lidar";
             StreamSensor(streamingClient?.StreamLidarSensor(cancellationToken: RosConnection.Instance.cancellationToken));
         }
 
-        void Update()
+        new void Update()
         {
             hasData = sensor.hasData;
             base.Update();
         }
 
-        protected async override void SendMessage()
+        private static PointCloud GeneratePointCloud(NativeArray<Vector3> pointcloud)
         {
-            Sensor.PointCloud _pointCloud = new Sensor.PointCloud();
-            foreach (Vector3 point in sensor.pointsCopy)
+            PointCloud _pointCloud = new PointCloud();
+            foreach (Vector3 point in pointcloud)
             {
                 var tmp = TfExtensions.Unity2Map(point);
                 Geometry.Point p = new Geometry.Point()
@@ -60,6 +54,12 @@ namespace Labust.Sensors
                 Timestamp = TimeHandler.Instance.TimeDouble
             };
 
+            return _pointCloud;
+        }
+
+        protected async override void SendMessage()
+        {
+            PointCloud _pointCloud = GeneratePointCloud(sensor.pointsCopy);
             var msg = new PointCloudStreamingRequest()
             {
                 Data = _pointCloud,

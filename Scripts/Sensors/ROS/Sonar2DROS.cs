@@ -15,10 +15,10 @@ namespace Labust.Sensors.Primitive
             sensor = GetComponent<Sonar2D>();
             if (string.IsNullOrEmpty(address))
                 address = transform.name + "/sonar3d";
-            StreamSensor(streamingClient?.StreamLidarSensor(cancellationToken: RosConnection.Instance.cancellationToken));
+            StreamSensor(streamingClient?.StreamPointCloud(cancellationToken: RosConnection.Instance.cancellationToken));
         }
 
-        void Update()
+        new void Update()
         {
             hasData = sensor.hasData;
             base.Update();

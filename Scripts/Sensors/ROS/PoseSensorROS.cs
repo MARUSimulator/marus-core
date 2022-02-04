@@ -27,7 +27,7 @@ namespace Labust.Sensors.Primitive
             StreamSensor(streamingClient?.StreamPoseSensor(cancellationToken:RosConnection.Instance.cancellationToken));
         }
 
-        void Update()
+        new void Update()
         {
             hasData = sensor.hasData;
             base.Update();
