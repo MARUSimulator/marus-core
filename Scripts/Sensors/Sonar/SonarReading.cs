@@ -7,5 +7,6 @@ namespace Labust.Sensors
         public bool Valid;
         public float Intensity;
         public float Distance;
+        //public NativeArray<Vector3> Debug;
     }
 }

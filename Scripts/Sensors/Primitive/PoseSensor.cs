@@ -25,8 +25,8 @@ namespace Labust.Sensors.Primitive
         [ReadOnly] public Vector3 LinearVelocity;
         [ReadOnly] public Vector3 AngularVelocity;
 
-        Rigidbody measuredObject;
-
+        public Rigidbody measuredObject;
+      
         void Start()
         {
             measuredObject = Helpers.GetParentRigidBody(transform);
