@@ -110,16 +110,16 @@ namespace Labust.Sensors
 
 
             //composing a "photographic" x-y image
-            for (var y = 0; y < HeightRes; y++)
-            {
-                for (var x = 0; x < WidthRes; x++)
-                {
-                    pixel = new Color(reading[y * WidthRes + x].Intensity, reading[y * WidthRes + x].Intensity, reading[y * WidthRes + x].Intensity, 1);
-                    //normalizing the intensity to 0-255
-                    //pixel = pixel / reading.Intensity.* 256;
-                    sonarImage.SetPixel(y, x, pixel);
-                }
-            }
+            // for (var y = 0; y < HeightRes; y++)
+            // {
+            //     for (var x = 0; x < WidthRes; x++)
+            //     {
+            //         pixel = new Color(reading[y * WidthRes + x].Intensity, reading[y * WidthRes + x].Intensity, reading[y * WidthRes + x].Intensity, 1);
+            //         //normalizing the intensity to 0-255
+            //         //pixel = pixel / reading.Intensity.* 256;
+            //         sonarImage.SetPixel(y, x, pixel);
+            //     }
+            // }
 
             //composing a sonar image
             for (var x = 0; x < WidthRes; x++)

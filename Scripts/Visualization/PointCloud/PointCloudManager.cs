@@ -17,6 +17,7 @@ namespace Labust.Visualization
         string displaymentLayer = "Lidar";
         [Header("Debug")]
         [SerializeField]int _nrOfParticles;
+        static ComputeBufferDataExtractor<int> array;
 
         public void SetupPointCloud(int nrOfParticles)
         {
@@ -42,7 +43,7 @@ namespace Labust.Visualization
         {
             string kernelName = "QuickArrayAllocation";
 
-            ComputeBufferDataExtractor<int> array = new ComputeBufferDataExtractor<int>(length, sizeof(int), "array");
+            array = new ComputeBufferDataExtractor<int>(length, sizeof(int), "array");
             array.SetBuffer(shader, kernelName);
             shader.SetInt("arrayLength", length);
 

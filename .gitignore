@@ -74,3 +74,4 @@ crashlytics-build.properties
 # Protobuf should be hidden
 API/Protobuf
 .idea
+HDRPDefaultResources/HDRPDefaultSettings.asset.meta
