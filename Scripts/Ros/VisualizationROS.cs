@@ -21,6 +21,7 @@ using Labust.Visualization;
 using System.Collections.Generic;
 using Labust.Utils;
 using Grpc.Core;
+using System;
 
 namespace Labust.Networking
 {
@@ -139,6 +140,11 @@ namespace Labust.Networking
                     arrow.SetHeadLength((float) response.Scale.Z);
                     Visualizer.Instance.AddArrow(arrow, key);
                 }
+            }
+            else
+            {
+                Debug.Log($"Marker type {Enum.GetName(typeof(Marker.Types.Type), response.Type)} is not supported!");
+                return;
             }
             namespaces.Add(key);
         }

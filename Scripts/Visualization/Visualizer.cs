@@ -77,6 +77,10 @@ namespace Labust.Visualization
                 _visualElements[key].Add(visual);
                 return true;
             }
+            else
+            {
+                Debug.Log($"Visual element with id: {visual.Id} already exists!");
+            }
             return false;
         }
 

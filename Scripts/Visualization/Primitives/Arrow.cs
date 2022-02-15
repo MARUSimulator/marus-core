@@ -139,12 +139,18 @@ namespace Labust.Visualization.Primitives
 
         public void SetRadius(float Radius)
         {
-            this.Radius = Radius;
+            if (Radius != 0)
+            {
+                this.Radius = Radius;
+            }
         }
 
         public void SetHeadRadius(float Radius)
         {
-            this.HeadRadius = Radius;
+            if (Radius != 0)
+            {
+                this.HeadRadius = Radius;
+            }
         }
 
         public void SetHeadLength(float length)
