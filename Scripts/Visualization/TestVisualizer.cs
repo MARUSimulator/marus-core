@@ -11,17 +11,18 @@ public class TestVisualizer : MonoBehaviour
     void Start()
     {
         var vis = Visualizer.Instance;
-        List<Vector3> path = new List<Vector3> {new Vector3(0, 1, 0), new Vector3(14, 1, 0), new Vector3(25, 1, 0)};
-        vis.AddPath(path, "test path");
-        vis.AddPoint(new Vector3(0, 2, 10), "test point", 0.5f);
-        _sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        GameObject.Destroy(_sphere.GetComponent<Collider>());
-        _sphere.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        _sphere.transform.position = new Vector3(0f, 0f, 1f);
-        _sphere.name = "test transform";
+        // List<Vector3> path = new List<Vector3> {new Vector3(0, 1, 0), new Vector3(14, 1, 0), new Vector3(25, 1, 0)};
+        // vis.AddPath(path, "test path");
+        // vis.AddPoint(new Vector3(0, 2, 10), "test point", 0.5f);
+        // _sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        // GameObject.Destroy(_sphere.GetComponent<Collider>());
+        // _sphere.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        // _sphere.transform.position = new Vector3(0f, 0f, 1f);
+        // _sphere.name = "test transform";
 
-        var transform = vis.AddTransform(_sphere.transform, "test transform");
-        vis.AddLine(new Vector3(0, 1, 0), new Vector3(0, 10, 0), "test line");
+        // var transform = vis.AddTransform(_sphere.transform, "test transform");
+        var l = vis.AddArrow(new Vector3(0, 1, 0), new Vector3(5, 10, 2), "test arrow", 0.2f, Color.red, 0.3f, Color.blue);
+        // var l = vis.AddLine(new Vector3(0, 1, 0), new Vector3(5, 10, 2), "test_line");
         var tf = TfHandler.Instance;
     }
 

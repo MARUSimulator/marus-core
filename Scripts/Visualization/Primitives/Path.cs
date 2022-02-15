@@ -57,6 +57,8 @@ namespace Labust.Visualization.Primitives
             {
                 OnDestroyPath = new UnityEvent();
             }
+            Timestamp = DateTime.UtcNow;
+            Lifetime = 0;
 
         }
 
@@ -176,7 +178,7 @@ namespace Labust.Visualization.Primitives
         /// <summary>
         /// Draws path
         /// </summary>
-        public void Draw()
+        public override void Draw()
         {
             for (var i = 0; i < _points.Count-1; i++)
             {
@@ -196,9 +198,14 @@ namespace Labust.Visualization.Primitives
         /// <summary>
         /// Destroys path object
         /// </summary>
-        public void Destroy()
+        public override void Destroy()
         {
             if (destroyed) return;
+
+            if (parent != null && parent.transform.childCount == (_points.Count*2 -1))
+            {
+                UnityEngine.Object.Destroy(parent);
+            }
 
             foreach (Point p in _points)
             {
@@ -211,10 +218,7 @@ namespace Labust.Visualization.Primitives
                 line.Destroy();
             }
             _startPointLineDict.Clear();
-            if (parent != null)
-            {
-                UnityEngine.Object.Destroy(parent);
-            }
+
             OnDestroyPath.Invoke();
             destroyed = true;
         }

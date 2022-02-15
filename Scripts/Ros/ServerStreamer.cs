@@ -106,7 +106,7 @@ namespace Labust.Networking
                     {
                         _onMessage(last);
                         // clear queue, leave last element
-                        while (_responseBuffer.Count > 1 && _responseBuffer.TryDequeue(out var item))
+                        while (_responseBuffer.Count > 0 && _responseBuffer.TryDequeue(out var item))
                         {
                             // do nothing
                         }
