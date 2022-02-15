@@ -41,8 +41,8 @@ namespace Labust.Networking
 
         protected override void Initialize()
         {
-            streamer1 = new ServerStreamer<Marker>();
-            streamer2 = new ServerStreamer<MarkerArray>();
+            streamer1 = new ServerStreamer<Marker>(UpdateMarker);
+            streamer2 = new ServerStreamer<MarkerArray>(UpdateMarkerArray);
 
             RosConnection.Instance.OnConnected += OnConnected;
             namespaces = new HashSet<string>();
@@ -64,8 +64,8 @@ namespace Labust.Networking
 
         void Update()
         {
-            streamer1.HandleNewMessages(UpdateMarker);
-            streamer2.HandleNewMessages(UpdateMarkerArray);
+            streamer1.HandleNewMessages();
+            streamer2.HandleNewMessages();
         }
 
         public void UpdateMarker(Marker response)
