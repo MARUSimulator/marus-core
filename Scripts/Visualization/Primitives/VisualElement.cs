@@ -24,7 +24,10 @@ namespace Marus.Visualization.Primitives
     {
         public float Lifetime;
         public DateTime Timestamp;
+
+        #nullable enable
         public string? Id = null;
+        #nullable disable
 
         public abstract void Draw();
         public abstract void Destroy();

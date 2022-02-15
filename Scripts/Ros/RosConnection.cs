@@ -28,6 +28,7 @@ using static Visualization.Visualization;
 using System.Collections;
 using Simulationcontrol;
 using Marus.Utils;
+using Marus.Visualization;
 using static Acoustictransmission.AcousticTransmission;
 using static Rfcommunication.LoraTransmission;
 using Ping;
@@ -115,8 +116,11 @@ namespace Marus.Networking
 
         private void Awake()
         {
-            var options = new List<ChannelOption>();
-            options.Add(new ChannelOption(ChannelOptions.MaxSendMessageLength, 1024*1024*100));
+            var options = new List<ChannelOption>
+            {
+                new ChannelOption(ChannelOptions.MaxSendMessageLength, 1024*1024*100),
+                new ChannelOption(ChannelOptions.MaxReceiveMessageLength, 1024*1024*100)
+            };
             _streamingChannel = new Channel(serverIP, serverPort, ChannelCredentials.Insecure, options);
 
             InitializeClients();
@@ -151,6 +155,7 @@ namespace Marus.Networking
             var tfHandler = TfHandler.Instance;
             var timeHandler = TimeHandler.Instance;
             var visualizationRos = VisualizationROS.Instance;
+            var pcHandler = PointCloudRosVisualizer.Instance;
         }
 
         IEnumerator WhileConnectionAwait()
