@@ -51,6 +51,10 @@ namespace Marus.Sensors
         public float VerticalFieldOfView = 15;
 
         public int imageHeight = 256;
+        public int CartesianXRes = 30;
+        public int CartesianYRes = 10;
+        double thetha;
+        double r;
 
         public bool IsIdeal = false;
 
@@ -69,12 +73,16 @@ namespace Marus.Sensors
         const float WATER_LEVEL = 0;
         //public Image sonarImage;
         public RawImage sonarDisplay;
+        public RawImage sonarPhotoDisplay;
+        public RawImage sonarCartesianDisplay;
         // Start is called before the first frame update
         PointCloudManager _pointCloudManager;
         RaycastJobHelper<SonarReading> _raycastHelper;
         Coroutine _coroutine;
         Vector3 sonarPosition;
         Texture2D sonarImage;
+        Texture2D sonarPhotoImage;
+        Texture2D sonarCartesianImage;
 
         void Start()
         {
@@ -106,53 +114,125 @@ namespace Marus.Sensors
 
             //Debug.Log(reading[1].Intensity);
             Color pixel;
-            reading.CopyTo(sonarData); 
-            Texture2D sonarImage = new Texture2D(WidthRes,HeightRes); //new Texture2D(WidthRes,imageHeight);
+            reading.CopyTo(sonarData);
+            Texture2D sonarPhotoImage = new Texture2D(WidthRes, HeightRes); //new Texture2D(WidthRes,imageHeight);
+            Texture2D sonarImage = new Texture2D(WidthRes, imageHeight); //new Texture2D(WidthRes,imageHeight);
+            Texture2D sonarCartesianImage = new Texture2D(CartesianXRes, CartesianYRes);
 
             float[] yIntensity = new float[imageHeight];
-            int yCoordinate;
+            int xCoordinate,yCoordinate;
 
 
             //composing a "photographic" x-y image
-            // for (var y = 0; y < HeightRes; y++)
-            // {
-            //     for (var x = 0; x < WidthRes; x++)
-            //     {
-            //         pixel = new Color(reading[y * WidthRes + x].Intensity, reading[y * WidthRes + x].Intensity, reading[y * WidthRes + x].Intensity, 1);
-            //         //normalizing the intensity to 0-255
-            //         //pixel = pixel / reading.Intensity.* 256;
-            //         sonarImage.SetPixel(y, x, pixel);
-            //     }
-            // }
+            for (var y = 0; y < HeightRes; y++)
+            {
+                for (var x = 0; x < WidthRes; x++)
+                {
+                    pixel = new Color(reading[y * WidthRes + x].Intensity, reading[y * WidthRes + x].Intensity, reading[y * WidthRes + x].Intensity, 1);
+                    //normalizing the intensity to 0-255
+                    //pixel = pixel / reading.Intensity.* 256;
+                    sonarPhotoImage.SetPixel(y, x, pixel);
+                }
+            }
 
-            //composing a sonar image
+            sonarPhotoImage.Apply();
+            sonarPhotoImage.EncodeToJPG();
+            sonarPhotoDisplay.texture = sonarPhotoImage;
+
+          //composing a sonar polar image
             for (var x = 0; x < WidthRes; x++)
             {
+                //squashing all spatial columns into 2D and adding the intensities
                 for (var y = 0; y < HeightRes; y++)
                 {
-                    yCoordinate = DistanceToImageY(reading[x * WidthRes + y].Distance);
-                    yIntensity[yCoordinate] += reading[x * WidthRes + y].Intensity;
+                    yCoordinate = DistanceToImageY(reading[x * HeightRes + y].Distance);
+                    yIntensity[yCoordinate] += reading[x * HeightRes + y].Intensity;
                 }
+
+                //stacking the intensities into corresponding 2D image columns
                 for (var y = 0; y < imageHeight; y++)
                 {
                     pixel = new Color(yIntensity[y], yIntensity[y], yIntensity[y], 1);
-                    sonarImage.SetPixel(y, x, pixel);
+                    sonarImage.SetPixel(x, y, pixel);
                 }
                 Array.Clear(yIntensity, 0, yIntensity.Length);
-                                    
+
             }
 
             sonarImage.Apply();
             sonarImage.EncodeToJPG();
             sonarDisplay.texture = sonarImage;
 
+            //composing a sonar cartesian image
+
+            //populating left side of the swath
+            for (var x = CartesianXRes/2; x > 0; x--)
+            {
+                for (var y = 0; y < CartesianYRes; y++)
+                {
+                    thetha = (180 / Math.PI) * Math.Atan2(x, y);
+                    r = Math.Sqrt(x * x + y * y);
+                    r = r / (float)CartesianYRes * (MaxDistance - MinDistance);
+
+                    if (thetha <= (HorizontalFieldOfView / 2) && r <= MaxDistance && r >= MinDistance)
+                    {
+                        xCoordinate = (int)Math.Round(((HorizontalFieldOfView / 2) - thetha) / HorizontalFieldOfView * WidthRes);
+                        yCoordinate = (int)Math.Round(r / (MaxDistance - MinDistance) * imageHeight);
+                        pixel = sonarImage.GetPixel(xCoordinate, yCoordinate);
+                        sonarCartesianImage.SetPixel(CartesianXRes/2 - x, y, pixel);
+                    }    
+                    else
+                    {
+                        pixel = new Color(1, 1, 1, 1);
+                        sonarCartesianImage.SetPixel(CartesianXRes/2 - x, y, pixel);
+                    }
+                }
+
+            }
+
+            //populating right side of the swath
+            for (var x = 0; x < CartesianXRes/2; x++)
+            {
+                for (var y = 0; y < CartesianYRes; y++)
+                {
+                    thetha = (180 / Math.PI) * Math.Atan2(x, y);
+                    r = Math.Sqrt(x * x + y * y);
+                    r = r / CartesianYRes * (MaxDistance - MinDistance);
+
+                    if (thetha <= (HorizontalFieldOfView / 2) && r <= MaxDistance && r >= MinDistance)
+                    {
+                        xCoordinate = (int)Math.Round((thetha + (HorizontalFieldOfView / 2)) / HorizontalFieldOfView * WidthRes);
+                        yCoordinate = (int)Math.Round(r / (MaxDistance - MinDistance) * imageHeight);
+                        pixel = sonarImage.GetPixel(xCoordinate, yCoordinate);
+                        sonarCartesianImage.SetPixel(x + CartesianXRes/2, y, pixel);
+                    }    
+                    else
+                    {
+                        pixel = new Color(1, 1, 1, 1);
+                        sonarCartesianImage.SetPixel(x + CartesianXRes/2, y, pixel);
+                    }
+                }
+
+            }
+
+            sonarCartesianImage.Apply();
+            sonarCartesianImage.EncodeToJPG();
+            sonarCartesianDisplay.texture = sonarCartesianImage;
+
             //Debug.Log("Sonar frame recorded!");
         }
 
         private int DistanceToImageY(float distance)
         {
-            int y = (int)Math.Round((distance - MinDistance) / (MaxDistance - MinDistance) * imageHeight);
-            return y;
+            if (distance < MaxDistance && distance > MinDistance)
+            {
+                int y = (int)Math.Round((distance - MinDistance) / (MaxDistance - MinDistance) * imageHeight);
+                return y;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         void OnDestroy()
