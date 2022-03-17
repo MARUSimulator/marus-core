@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Fewer allocations version:
  * Copyright (c) 2016 Chase Pettit <chasepettit@gmail.com>
  * 
