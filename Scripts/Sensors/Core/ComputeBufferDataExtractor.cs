@@ -13,12 +13,10 @@
 // limitations under the License.
 
 using UnityEngine;
-using System.Collections;
-using Unity.Collections;
 using UnityEngine.Rendering;
 using System.Runtime.InteropServices;
 
-namespace Labust.Sensors.Core { 
+namespace Marus.Sensors.Core { 
 
     public class ComputeBufferDataExtractor<T> where T : struct
     {

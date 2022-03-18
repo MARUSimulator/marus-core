@@ -17,23 +17,20 @@ using System.Collections.Generic;
 using Grpc.Core;
 using UnityEngine;
 using System.Threading;
-using System.Linq;
-using Labust.Core;
+using Marus.Core;
 using static Tf.Tf;
 using static Sensorstreaming.SensorStreaming;
 using static Remotecontrol.RemoteControl;
 using static Ping.Ping;
-using static Parameterserver.ParameterServer;
 using static Simulationcontrol.SimulationControl;
 using static Visualization.Visualization;
 
-using Parameterserver;
 using System.Collections;
 using Simulationcontrol;
-using Labust.Utils;
+using Marus.Utils;
 using static Acoustictransmission.AcousticTransmission;
 
-namespace Labust.Networking
+namespace Marus.Networking
 {
 
     /// <summary>

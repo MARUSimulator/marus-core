@@ -14,14 +14,14 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using Labust.Networking;
-using Labust.Sensors.Primitive;
+using Marus.Networking;
+using Marus.Sensors.Primitive;
 using Sensorstreaming;
 using UnityEngine;
 using System;
 using Unity;
 
-namespace Labust.Sensors.AIS
+namespace Marus.Sensors.AIS
 {
     [RequireComponent(typeof(GnssSensor))]
     [RequireComponent(typeof(Rigidbody))]

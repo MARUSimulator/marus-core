@@ -13,13 +13,13 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using Labust.Visualization.Primitives;
-using Labust.Utils;
+using Marus.Visualization.Primitives;
+using Marus.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 
-namespace Labust.Visualization
+namespace Marus.Visualization
 {
     /// <summary>
     /// This is a singleton class used for drawing points and paths for visualizatoin purposes.

@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Labust.Visualization.Primitives;
+using Marus.Visualization.Primitives;
 using UnityEngine;
 
-namespace Labust.Visualization
+namespace Marus.Visualization
 {
     /// <summary>
     /// This class implements visualization of past movement.

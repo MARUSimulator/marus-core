@@ -16,7 +16,7 @@ using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
-using Labust.Sensors;
+using Marus.Sensors;
 
 class RadarCP : CustomPass{
     public GameObject radar;

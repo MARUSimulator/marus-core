@@ -14,9 +14,9 @@
 
 using NUnit.Framework;
 using UnityEngine;
-using Labust.Sensors;
-using Labust.Sensors.Primitive;
-using Labust.Sensors.AIS;
+using Marus.Sensors;
+using Marus.Sensors.Primitive;
+using Marus.Sensors.AIS;
 using TestUtils;
 
 public class AISTest

@@ -12,22 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 using Remotecontrol;
-using Grpc.Core;
-using System.Threading.Tasks;
 using System.Threading;
-using System;
-using System.Collections.Concurrent;
-using Labust.Networking;
+using Marus.Networking;
 using System.Linq;
 using static Remotecontrol.RemoteControl;
-using Labust.Utils;
+using Marus.Utils;
 
-namespace Labust.Actuators
+namespace Marus.Actuators
 {
 
     /// <summary>

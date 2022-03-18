@@ -14,13 +14,9 @@
 
 using UnityEngine;
 using UnityEngine.Rendering;
-using Google.Protobuf;
-using Sensorstreaming;
-using Labust.Sensors.Core;
-using System;
-using Labust.Networking;
+using Marus.Sensors.Core;
 
-namespace Labust.Sensors
+namespace Marus.Sensors
 {
     [RequireComponent(typeof(Camera))]
     /// <summary>

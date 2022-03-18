@@ -13,13 +13,11 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Linq;
 using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Labust.Visualization.Primitives
+namespace Marus.Visualization.Primitives
 {
     /// <summary>
     /// Draw path as by-part linear with points connected with a cylinder 3D primitive object.

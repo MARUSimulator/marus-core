@@ -14,7 +14,7 @@
 
 using UnityEngine;
 
-namespace Labust.Sensors.Primitive
+namespace Marus.Sensors.Primitive
 {
     public class SonarPrimitive : SensorBase
     {

@@ -15,13 +15,12 @@
 using System;
 using UnityEngine;
 using Acoustictransmission;
-using Labust.Networking;
+using Marus.Networking;
 using static Acoustictransmission.AcousticTransmission;
-using System.Collections.Generic;
-using Labust.Core;
-using System.Collections;
+using Marus.Core;
+using Labust;
 
-namespace Labust.Sensors.Acoustics
+namespace Marus.Sensors.Acoustics
 {
 
     /// <summary>

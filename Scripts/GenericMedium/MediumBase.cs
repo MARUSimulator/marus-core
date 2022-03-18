@@ -15,7 +15,7 @@
 using UnityEngine;
 using System;
 
-namespace Labust.Sensors.Acoustics
+namespace Marus.Sensors.Acoustics
 {
     /// <summary>
     /// This class serves as base for a medium for sending/receiving messages.

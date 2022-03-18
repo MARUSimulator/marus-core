@@ -20,7 +20,7 @@ using mPoint = Geometry.Point;
 using mColor = Std.ColorRGBA;
 using UnityEngine;
 
-namespace Labust.Networking
+namespace Marus.Networking
 {
     public static class MessageExtensions
     {

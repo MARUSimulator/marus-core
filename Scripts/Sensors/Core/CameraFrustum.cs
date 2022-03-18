@@ -13,17 +13,8 @@
 // limitations under the License.
 
 using UnityEngine;
-using System.Collections;
 
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
-using System.IO;
-
-using Unity.Collections;
-using UnityEngine.Rendering;
-
-
-namespace Labust.Sensors.Core
+namespace Marus.Sensors.Core
 {
     public class CameraFrustum
     {

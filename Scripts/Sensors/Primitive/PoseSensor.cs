@@ -14,10 +14,10 @@
 
 using System;
 using UnityEngine;
-using Labust.Utils;
+using Marus.Utils;
 using Std;
 
-namespace Labust.Sensors.Primitive
+namespace Marus.Sensors.Primitive
 {
     /// <summary>
     /// Pose sensor implementation

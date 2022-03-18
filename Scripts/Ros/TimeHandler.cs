@@ -14,12 +14,11 @@
 
 
 using System;
-using Labust.Networking;
-using Labust.Utils;
+using Marus.Networking;
+using Marus.Utils;
 using UnityEngine;
-using static Simulationcontrol.SimulationControl;
 
-namespace Labust.Core
+namespace Marus.Core
 {
     public class TimeHandler : Singleton<TimeHandler>
     {

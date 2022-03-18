@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Labust.Core;
-using Labust.Networking;
+using Marus.Core;
+using Marus.Networking;
 using Std;
 using UnityEngine;
 
-namespace Labust.Sensors.Primitive
+namespace Marus.Sensors.Primitive
 {
     public class GnssSensor : SensorBase
     {

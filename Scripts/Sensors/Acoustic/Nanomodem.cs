@@ -13,15 +13,9 @@
 // limitations under the License.
 
 using System;
-using System.Text;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using Unity;
-using Labust.Utils;
-using Labust.Logger;
 
-namespace Labust.Sensors.Acoustics
+namespace Marus.Sensors.Acoustics
 {
     public class Nanomodem : AcousticDevice<NanomodemMessage>
     {

@@ -13,17 +13,14 @@
 // limitations under the License.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Auv;
-using Labust.Networking;
+using Marus.Networking;
 using Sensorstreaming;
 using UnityEngine;
-using Labust.Utils;
-using Labust.Core;
+using Marus.Core;
 using Std;
 
-namespace Labust.Sensors.Primitive
+namespace Marus.Sensors.Primitive
 {
     /// <summary>
     /// Pose sensor implementation

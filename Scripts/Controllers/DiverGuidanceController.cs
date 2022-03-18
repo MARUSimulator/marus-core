@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Labust.Mission;
+using Marus.Mission;
 using UnityEngine;
 
-namespace Labust.Controllers
+namespace Marus.Controllers
 {
     /// <summary>
     /// Controller that positions the object with respect to the diver

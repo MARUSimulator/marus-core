@@ -12,11 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using UnityEngine;
-using System.Collections;
 
-
-namespace Labust.Sensors.Core
+namespace Marus.Sensors.Core
 {
 
     public struct PointField

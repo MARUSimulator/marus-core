@@ -13,15 +13,15 @@
 // limitations under the License.
 
 using Geometry;
-using Labust.Core;
-using Labust.Networking;
-using Labust.Sensors.Primitive;
+using Marus.Core;
+using Marus.Networking;
+using Marus.Sensors.Primitive;
 using Sensorstreaming;
 using Std;
 using UnityEngine;
 using Quaternion = Geometry.Quaternion;
 
-namespace Labust.Sensors.ROS
+namespace Marus.Sensors.ROS
 {
     [RequireComponent(typeof(DepthSensor))]
     public class DepthSensorROS : SensorStreamer<DepthStreamingRequest>

@@ -13,12 +13,10 @@
 // limitations under the License.
 
 using UnityEngine;
-using System.Collections;
 using Unity.Collections;
-using Gemini.EMRS.Core;
-using Labust.Sensors.Core;
+using Marus.Sensors.Core;
 
-namespace Labust.Visualization
+namespace Marus.Visualization
 {
     public class PointCloudManager : MonoBehaviour
     {

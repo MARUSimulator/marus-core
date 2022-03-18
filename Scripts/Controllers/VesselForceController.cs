@@ -13,11 +13,9 @@
 // limitations under the License.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Labust.Controllers
+namespace Marus.Controllers
 {
 	/// <summary>
 	/// Vessel controller that applies force to move and rotate towards the Target position

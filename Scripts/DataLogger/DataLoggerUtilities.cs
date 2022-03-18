@@ -17,9 +17,8 @@ using UnityEngine;
 using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using Labust.Core;
 
-namespace Labust.Logger
+namespace Marus.Logger
 {
     /// <summary>
     /// Helper utility class for saving and loading JSON log records

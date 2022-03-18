@@ -13,10 +13,9 @@
 // limitations under the License.
 
 using UnityEngine;
-using System;
 using System.Collections.Generic;
 
-namespace Labust.Controllers
+namespace Marus.Controllers
 {
     /// <summary>
     /// This script rotates object around target object.

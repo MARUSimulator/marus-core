@@ -13,12 +13,13 @@
 // limitations under the License.
 
 using Grpc.Core;
-using Labust.Core;
-using Labust.Mission;
+using Marus.Core;
+using Marus.Mission;
 using UnityEngine;
 using static Service.Commander;
+using Labust;
 
-namespace Labust.Networking
+namespace Marus.Networking
 {
 
     /// <summary>

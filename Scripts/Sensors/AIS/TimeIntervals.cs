@@ -13,9 +13,8 @@
 // limitations under the License.
 
 using System;
-using UnityEngine;
-using Unity;
-namespace Labust.Sensors.AIS
+
+namespace Marus.Sensors.AIS
 {
 
     /// <summary>

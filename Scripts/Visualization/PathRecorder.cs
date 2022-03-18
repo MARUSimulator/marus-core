@@ -14,11 +14,11 @@
 
 using UnityEngine;
 using System.IO;
-using Labust.Logger;
-using Labust.Mission;
+using Marus.Logger;
+using Marus.Mission;
 using UnityEngine.SceneManagement;
 
-namespace Labust.Visualization
+namespace Marus.Visualization
 {
     /// <summary>
     /// This script records object position at the given rate.

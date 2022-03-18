@@ -12,12 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-namespace Labust.UI
+namespace Marus.UI
 {
     /// <summary>
     /// UI script that controls the UI compass

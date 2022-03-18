@@ -15,7 +15,7 @@
 
 using UnityEngine;
 
-namespace Labust.Sensors.Acoustics
+namespace Marus.Sensors.Acoustics
 {
     public class PhysicalParams
     {

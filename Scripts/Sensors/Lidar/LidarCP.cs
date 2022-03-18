@@ -15,10 +15,9 @@
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 using UnityEngine.Rendering;
-using UnityEngine.Experimental.Rendering;
 using System.Reflection;
 
-namespace Labust.Sensors.Core
+namespace Marus.Sensors.Core
 {
     /// <summary>
     /// STIL DOES NOT WORK ON UNITY 2020. Works on Unity 2019

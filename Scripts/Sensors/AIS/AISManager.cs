@@ -15,9 +15,9 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using Labust.Utils;
+using Marus.Utils;
 
-namespace Labust.Sensors.AIS
+namespace Marus.Sensors.AIS
 {
     /// <summary>
     /// This class serves as a radio medium for AIS purposes.

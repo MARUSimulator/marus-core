@@ -13,12 +13,10 @@
 // limitations under the License.
 
 using UnityEngine;
-using Labust.Networking;
-using Labust.Sensors.Acoustics;
-using Labust.Logger;
+using Marus.Logger;
 using System;
 
-namespace Labust.Sensors.Acoustics
+namespace Marus.Sensors.Acoustics
 {
 
     public abstract class AcousticDevice<T> : AcousticDevice where T : AcousticMessage

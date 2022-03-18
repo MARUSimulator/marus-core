@@ -15,16 +15,14 @@
 using Grpc.Core;
 using UnityEngine;
 using System.Linq;
-using Labust.Core;
+using Marus.Core;
 using static Tf.Tf;
 
-using Labust.Utils;
-using Labust.Visualization;
+using Marus.Utils;
+using Marus.Visualization;
 using Tf;
-using System;
-using System.Collections.Generic;
 
-namespace Labust.Networking
+namespace Marus.Networking
 {
 
     /// <summary>

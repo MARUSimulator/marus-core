@@ -13,14 +13,13 @@
 // limitations under the License.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Labust.Utils;
+using Marus.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Labust.Logger
+namespace Marus.Logger
 {
     /// <summary>
     /// Singleton class used for data logging

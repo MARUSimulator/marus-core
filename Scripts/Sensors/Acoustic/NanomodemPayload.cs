@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-
-namespace Labust.Sensors.Acoustics
+namespace Marus.Sensors.Acoustics
 {
     public class NanomodemMessage : AcousticMessage
     {

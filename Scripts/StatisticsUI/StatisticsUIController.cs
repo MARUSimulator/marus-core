@@ -17,7 +17,7 @@ using UnityEngine;
 using Crest;
 #endif
 
-namespace Labust.StatisticsUI
+namespace Marus.StatisticsUI
 {
     /// <summary>
     /// Enable statistics canvas on P button press

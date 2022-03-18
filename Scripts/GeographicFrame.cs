@@ -12,14 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.ComponentModel;
-using System.Net.Sockets;
-using Labust.Sensors.Primitive;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Labust.Core
+namespace Marus.Core
 {
     public class GeographicFrame
     {

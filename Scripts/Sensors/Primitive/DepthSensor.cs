@@ -14,7 +14,7 @@
 
 using System;
 
-namespace Labust.Sensors.Primitive
+namespace Marus.Sensors.Primitive
 {
     /// <summary>
     /// Depth sensor implementation

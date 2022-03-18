@@ -13,13 +13,9 @@
 // limitations under the License.
 
 using UnityEngine;
-using System.Collections;
-
 using UnityEngine.Rendering;
-using System;
-using System.Linq;
 
-namespace Labust.Sensors.Core
+namespace Marus.Sensors.Core
 {
     public class SphericalProjectionFilter: MonoBehaviour
     {

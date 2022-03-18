@@ -13,11 +13,9 @@
 // limitations under the License.
 
 using UnityEngine;
-using Unity;
-using System;
-using Labust.Sensors.Primitive;
+using Marus.Sensors.Primitive;
 
-namespace Labust.Sensors.AIS
+namespace Marus.Sensors.AIS
 {
     /// <summary>
     ///  This class implements AIS capabilities.

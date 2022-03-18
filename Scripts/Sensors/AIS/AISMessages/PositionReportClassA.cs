@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using UnityEngine;
-
-namespace Labust.Sensors.AIS
+namespace Marus.Sensors.AIS
 {
     /// <summary>
     /// This class implements Class A type AIS position report message.

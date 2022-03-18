@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Sensorstreaming;
 using UnityEngine;
 
-namespace Labust.Sensors.Primitive
+namespace Marus.Sensors.Primitive
 {
     [RequireComponent(typeof(SonarPrimitive))]
     public class SonarPrimitiveROS : SensorStreamer<SonarStreamingRequest>

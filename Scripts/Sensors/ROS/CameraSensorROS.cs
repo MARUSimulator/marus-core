@@ -13,14 +13,12 @@
 // limitations under the License.
 
 using UnityEngine;
-using UnityEngine.Rendering;
 using Google.Protobuf;
 using Sensorstreaming;
-using Labust.Sensors.Core;
 using System;
-using Labust.Networking;
+using Marus.Networking;
 
-namespace Labust.Sensors
+namespace Marus.Sensors
 {
     /// <summary>
     /// Camera sensor implementation

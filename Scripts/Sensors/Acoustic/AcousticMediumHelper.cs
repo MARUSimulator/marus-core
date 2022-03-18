@@ -18,7 +18,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace Labust.Sensors.Acoustics
+namespace Marus.Sensors.Acoustics
 {
     public static class AcousticMediumHelper
     {

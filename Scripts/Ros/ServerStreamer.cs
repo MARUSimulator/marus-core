@@ -19,7 +19,7 @@ using System.Threading;
 using Google.Protobuf;
 using Grpc.Core;
 
-namespace Labust.Networking
+namespace Marus.Networking
 {
     public class ServerStreamer<T> where T : IMessage
     {

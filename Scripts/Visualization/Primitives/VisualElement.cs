@@ -14,7 +14,7 @@
 
 using System;
 
-namespace Labust.Visualization.Primitives
+namespace Marus.Visualization.Primitives
 {
     /// <summary>
     /// Defines required properties of any visual element object

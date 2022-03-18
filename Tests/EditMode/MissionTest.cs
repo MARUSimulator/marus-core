@@ -14,7 +14,7 @@
 
 using System.Collections.Generic;
 using UnityEngine;
-using Labust.Mission;
+using Marus.Mission;
 using System.Linq;
 using TestUtils;
 using NUnit.Framework;

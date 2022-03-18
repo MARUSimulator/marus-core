@@ -17,13 +17,13 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Labust.Visualization;
-using Labust.Visualization.Primitives;
-using Labust.Logger;
-using Labust.Mission;
+using Marus.Visualization;
+using Marus.Visualization.Primitives;
+using Marus.Logger;
+using Marus.Mission;
 using UnityEngine.SceneManagement;
 
-namespace Labust.StatisticsUI
+namespace Marus.StatisticsUI
 {
     /// <summary>
     /// This class controls Statistics UI view.

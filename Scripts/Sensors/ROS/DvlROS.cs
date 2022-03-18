@@ -13,14 +13,14 @@
 // limitations under the License.
 
 using Geometry;
-using Labust.Core;
-using Labust.Networking;
-using Labust.Sensors.Primitive;
+using Marus.Core;
+using Marus.Networking;
+using Marus.Sensors.Primitive;
 using Sensorstreaming;
 using Std;
 using UnityEngine;
 
-namespace Labust.Sensors.ROS
+namespace Marus.Sensors.ROS
 {
 
     [RequireComponent(typeof(DvlSensor))]

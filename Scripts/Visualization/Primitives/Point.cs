@@ -15,7 +15,7 @@
 using UnityEngine;
 using System;
 
-namespace Labust.Visualization.Primitives
+namespace Marus.Visualization.Primitives
 {
     /// <summary>
     /// Draw point as primitive sphere object

@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections;
-using System.Collections.Generic;
-using Labust.Networking;
-using Labust.Visualization;
+using Marus.Networking;
+using Marus.Visualization;
 using UnityEngine;
 
 public class TestVisualizer : MonoBehaviour

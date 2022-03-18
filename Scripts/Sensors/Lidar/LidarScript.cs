@@ -12,19 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 using Google.Protobuf;
 
-using Gemini.EMRS.Core;
 using Sensorstreaming;
-using Labust.Sensors.Core;
+using Marus.Sensors.Core;
 using System.Linq;
-using Labust.Visualization;
+using Marus.Visualization;
 
-namespace Labust.Sensors {
+namespace Marus.Sensors {
 
     [RequireComponent(typeof(SphericalProjectionFilter))]
     [RequireComponent(typeof(PointCloudManager))]

@@ -13,18 +13,15 @@
 // limitations under the License.
 
 using System.Collections;
-using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine.Rendering;
 using Gemini.EMRS.Core;
 using Sensorstreaming;
-using Grpc.Core;
 using Google.Protobuf;
-using Labust.Sensors.Core;
+using Marus.Sensors.Core;
 
-namespace Labust.Sensors
+namespace Marus.Sensors
 {
     public class RadarScript : Gemini.EMRS.Core.Sensor
     {

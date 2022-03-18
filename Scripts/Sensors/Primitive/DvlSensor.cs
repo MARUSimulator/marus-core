@@ -15,9 +15,9 @@
 using System;
 using Std;
 using UnityEngine;
-using Labust.Utils;
+using Marus.Utils;
 
-namespace Labust.Sensors.Primitive
+namespace Marus.Sensors.Primitive
 {
     public class DvlSensor : SensorBase
     {

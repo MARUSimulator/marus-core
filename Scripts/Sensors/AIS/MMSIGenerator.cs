@@ -14,7 +14,7 @@
 
 using System;
 
-namespace Labust.Sensors.AIS
+namespace Marus.Sensors.AIS
 {
     /// <summary>
     /// This class implements simple MMSIGenerator using Random library.

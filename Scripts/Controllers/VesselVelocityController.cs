@@ -13,12 +13,9 @@
 // limitations under the License.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Labust.Networking;
 using UnityEngine;
 
-namespace Labust.Controllers
+namespace Marus.Controllers
 {
     /// <summary>
     /// Vessel controller that directly controls velocity and orientation to move and rotate towards the Target position

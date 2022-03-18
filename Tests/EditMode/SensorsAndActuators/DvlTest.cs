@@ -14,8 +14,8 @@
 
 using NUnit.Framework;
 using UnityEngine;
-using Labust.Sensors;
-using Labust.Sensors.Primitive;
+using Marus.Sensors;
+using Marus.Sensors.Primitive;
 using TestUtils;
 
 public class DvlTest

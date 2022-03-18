@@ -13,7 +13,7 @@
 // limitations under the License.
 
 
-namespace Labust.Sensors.AIS
+namespace Marus.Sensors.AIS
 {
 	public enum Raim
 	{

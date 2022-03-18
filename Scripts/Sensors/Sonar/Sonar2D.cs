@@ -12,23 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Labust.Networking;
-using Labust.Sensors;
-using Labust.Sensors.Core;
-using Labust.Visualization;
+using Marus.Visualization;
 using Unity.Collections;
-using Unity.Jobs;
 using UnityEngine;
-using Sensorstreaming;
-using System.Threading;
-using Labust.Core;
 
-
-namespace Labust.Sensors
+namespace Marus.Sensors
 {
 
     /// <summary>

@@ -12,15 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Labust.Networking;
+using Marus.Networking;
 using UnityEngine;
-using Labust.Core;
+using Marus.Core;
 using Std;
-using System;
 using Grpc.Core;
 using static Tf.Tf;
 
-namespace Labust.ROS
+namespace Marus.ROS
 {
     /// <summary>
     /// Publish TF ROS messages

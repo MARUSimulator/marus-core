@@ -17,9 +17,8 @@ using System;
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
-using System;
 
-namespace Labust.Utils
+namespace Marus.Utils
 {
     public static class Helpers
     {

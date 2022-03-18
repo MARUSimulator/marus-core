@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Labust.Utils;
+using Marus.Utils;
 using System;
 using UnityEngine;
 
-namespace Labust.Visualization.Primitives
+namespace Marus.Visualization.Primitives
 {
     /// <summary>
     /// Implements visual representation of GameObject's transform.

@@ -13,11 +13,11 @@
 // limitations under the License.
 
 using System;
-using Labust.Utils;
+using Marus.Utils;
 using Std;
 using UnityEngine;
 
-namespace Labust.Sensors.Primitive
+namespace Marus.Sensors.Primitive
 {
     /// <summary>
     /// Imu sensor implementation

@@ -15,7 +15,7 @@
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
-namespace Labust.Core
+namespace Marus.Core
 {
 
     public static class TfExtensions

@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using System;
-using Labust.Core;
-using Labust.Networking;
+using Marus.Core;
+using Marus.Networking;
 using Sensorstreaming;
 using UnityEngine;
 
-namespace Labust.Sensors.Primitive
+namespace Marus.Sensors.Primitive
 {
     [RequireComponent(typeof(Sonar2D))]
     public class Sonar2DROS : SensorStreamer<PointCloudStreamingRequest>

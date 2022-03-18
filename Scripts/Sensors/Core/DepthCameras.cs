@@ -13,11 +13,10 @@
 // limitations under the License.
 
 using UnityEngine;
-using System.Collections;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 
-namespace Labust.Sensors.Core
+namespace Marus.Sensors.Core
 {
     public static class DepthCameras
     {

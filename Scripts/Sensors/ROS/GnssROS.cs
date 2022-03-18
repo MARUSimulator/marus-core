@@ -12,18 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Labust.Core;
-using Labust.Networking;
-using Labust.Sensors.Primitive;
+using Marus.Core;
+using Marus.Networking;
+using Marus.Sensors.Primitive;
 using Sensor;
 using Sensorstreaming;
 using Std;
 using UnityEngine;
 
-namespace Labust.Sensors.ROS
+namespace Marus.Sensors.ROS
 {
     [RequireComponent(typeof(GnssSensor))]
     public class GnssROS : SensorStreamer<GnssStreamingRequest>

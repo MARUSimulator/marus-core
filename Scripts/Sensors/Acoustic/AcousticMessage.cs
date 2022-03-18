@@ -13,7 +13,7 @@
 // limitations under the License.
 
 
-namespace Labust.Sensors.Acoustics
+namespace Marus.Sensors.Acoustics
 {
     public abstract class AcousticMessage
     {

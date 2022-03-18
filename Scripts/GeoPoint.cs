@@ -15,7 +15,7 @@
 using System;
 using UnityEngine;
 
-namespace Labust.Core
+namespace Marus.Core
 {
     //TODO
     [System.Serializable]

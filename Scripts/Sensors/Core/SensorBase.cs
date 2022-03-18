@@ -13,18 +13,15 @@
 // limitations under the License.
 
 using UnityEngine;
-using UnityEngine.Rendering;
 using Sensorstreaming;
 using Google.Protobuf;
 using Grpc.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Labust.Networking;
-using Labust.Logger;
-using Labust.Utils;
+using Marus.Networking;
+using Marus.Logger;
+using Marus.Utils;
 
-namespace Labust.Sensors
+namespace Marus.Sensors
 {
     public abstract class SensorBase : MonoBehaviour
     {

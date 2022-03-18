@@ -13,13 +13,12 @@
 // limitations under the License.
 
 using UnityEngine;
-using Labust.Visualization.Primitives;
 
-namespace Labust.Visualization
+namespace Marus.Visualization
 {
     public class TransformVisualController : MonoBehaviour {
 
-        public Labust.Visualization.Primitives.Transform MyTransform;
+        public Marus.Visualization.Primitives.Transform MyTransform;
 
         void OnDestroy() {
             MyTransform.Destroy();

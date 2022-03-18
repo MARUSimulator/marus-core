@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections;
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
 
-namespace Labust.Actuators
+namespace Marus.Actuators
 {
     public class ThrusterController : MonoBehaviour
     {

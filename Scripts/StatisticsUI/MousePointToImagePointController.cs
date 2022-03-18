@@ -13,9 +13,8 @@
 // limitations under the License.
 
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-namespace Labust.StatisticsUI
+namespace Marus.StatisticsUI
 {
     /// <summary>
     /// This script controls camera view in Statistics panel.

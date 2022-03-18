@@ -12,17 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Labust.Actuators.Datasheets;
-using Labust.Logger;
-using Labust.Utils;
+using Marus.Actuators.Datasheets;
+using Marus.Logger;
+using Marus.Utils;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace Labust.Actuators
+namespace Marus.Actuators
 {
     public class PwmThruster : MonoBehaviour
     {

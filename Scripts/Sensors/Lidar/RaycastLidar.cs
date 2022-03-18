@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Labust.Visualization;
+using Marus.Visualization;
 using Unity.Collections;
 using UnityEngine;
-namespace Labust.Sensors
+
+namespace Marus.Sensors
 {
 
     /// <summary>

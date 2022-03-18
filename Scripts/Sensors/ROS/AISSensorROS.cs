@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections;
-using System.Collections.Generic;
-using Labust.Networking;
-using Labust.Sensors.Primitive;
+using Marus.Networking;
 using Sensorstreaming;
 using UnityEngine;
 using System;
-using Unity;
 
-namespace Labust.Sensors.AIS
+namespace Marus.Sensors.AIS
 {
     [RequireComponent(typeof(AisSensor))]
     [RequireComponent(typeof(AisDevice))]

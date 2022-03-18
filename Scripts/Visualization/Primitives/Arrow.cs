@@ -14,9 +14,9 @@
 
 using UnityEngine;
 using System;
-using Labust.Utils;
+using Marus.Utils;
 
-namespace Labust.Visualization.Primitives
+namespace Marus.Visualization.Primitives
 {
     /// <summary>
     ///

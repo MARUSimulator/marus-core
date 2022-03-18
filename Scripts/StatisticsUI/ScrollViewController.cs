@@ -16,7 +16,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-namespace Labust.StatisticsUI
+namespace Marus.StatisticsUI
 {
 	/// <summary>
 	/// This class disables scrollview when dragging.
