@@ -1,28 +1,33 @@
-# Unity project labust simulations
+# MARUS - MArine Robotic Unity Simulator
 
-Implemented in Unity. 
-Streams sensor readings.
-Has ROS remote control.
+## Introduction
 
-ROS integration is done in the [ros package](https://github.com/labust/unityrossample-ros)
-
-Tested on windows
+gRPC ROS adapter implemented in our [ros package](https://github.com/labust/grpc_ros_adapter)
 
 ## Dependencies
 
-[HDRPSimpleWater](https://github.com/flamacore/UnityHDRPSimpleWater) - download and put it in `/Assets/Environment` folder
+* Unity 2020.3.x LTS
 
-[gRPC](https://github.com/grpc/grpc/tree/master/src/csharp/unitypackage/unitypackage_skeleton/Plugins) - comes preinstalled
 
-## Setup
+## Setup & Usage
 
-Clone the repository
+For usage information, visit our [MarusExample project repository.](https://github.com/labust/MarusExample)
 
-## On windows
+## Documentation
+* [API Documentation]()
 
-Right click on the `setup/setup.ps1` script and click on `Run with PowerShell`
+## Credits & Acknowledgements
 
-## On linux
+* [Gemini Unity simulator](https://github.com/Gemini-team/Gemini)
+* [gRPC](https://github.com/grpc/grpc)
+* [protobuf](https://github.com/protocolbuffers/protobuf)
 
-Run shell script `setup/setup.sh`
-Download HDRPSimpleWater from above link and put it in `/Assets/Environment` folder
+
+## Contact
+Please feel free to provide feedback or ask questions by creating a Github issue. For other inquiries, please email us at labust@fer.hr or visit our web pages below:
+* [Laboratory for Underwater Systems and Technologies - LABUST](https://labust.fer.hr/)
+
+* [University of Zagreb, Faculty of Electrical Engineering and Computing](https://www.fer.unizg.hr/en)
+
+## License
+This project is released under the Apache 2.0 License. Please review the [License](https://github.com/labust/LabustSim/blob/add-license/LICENSE) file for more details.
