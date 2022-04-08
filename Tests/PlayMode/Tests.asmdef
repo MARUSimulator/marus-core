@@ -16,7 +16,8 @@
         "nunit.framework.dll",
         "Grpc.Core.Api.dll",
         "Grpc.Core.dll",
-        "Google.Protobuf.dll"
+        "Google.Protobuf.dll",
+        "Newtonsoft.Json.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [

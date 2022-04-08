@@ -17,6 +17,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEditor;
 
 namespace Marus.Utils
 {
@@ -144,7 +145,6 @@ namespace Marus.Utils
         public static float RandomGaussian(float mean = 0.0f, float sigma = 1.0f)
         {
             float u, v, S;
-
             do
             {
                 u = 2.0f * UnityEngine.Random.value - 1.0f;
@@ -152,10 +152,8 @@ namespace Marus.Utils
                 S = u * u + v * v;
             }
             while (S >= 1.0f);
-
             // Standard Normal Distribution
             float std = u * Mathf.Sqrt(-2.0f * Mathf.Log(S) / S);
-
             // Normal Distribution centered between the min and max value
             // and clamped following the "three-sigma rule"
             var d = 1.5f * sigma;
@@ -174,6 +172,42 @@ namespace Marus.Utils
                 parsed = Int32.TryParse(name.Substring(name.Length - 1), out bytes);
             }
             return bytes / 8;
+        }
+    }
+
+    public static class EditorExtensions
+    {
+        /// <summary>
+        /// Draws all properties like base.OnInspectorGUI() but excludes a field by name.
+        /// </summary>
+        /// <param name="fieldToSkip">The name of the field that should be excluded. Example: "m_Script" will skip the default Script field.</param>
+        public static void DrawInspectorExcept(this SerializedObject serializedObject, string fieldToSkip)
+        {
+            serializedObject.DrawInspectorExcept(new string[1] { fieldToSkip });
+        }
+
+        /// <summary>
+        /// Draws all properties like base.OnInspectorGUI() but excludes the specified fields by name.
+        /// </summary>
+        /// <param name="fieldsToSkip">
+        /// An array of names that should be excluded.
+        /// Example: new string[] { "m_Script" , "myInt" } will skip the default Script field and the Integer field myInt.
+        /// </param>
+        public static void DrawInspectorExcept(this SerializedObject serializedObject, string[] fieldsToSkip)
+        {
+            serializedObject.Update();
+            SerializedProperty prop = serializedObject.GetIterator();
+            if (prop.NextVisible(true))
+            {
+                do
+                {
+                    if (fieldsToSkip.Any(prop.name.Contains))
+                        continue;
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty(prop.name), true);
+                }
+                while (prop.NextVisible(false));
+            }
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }

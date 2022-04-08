@@ -19,6 +19,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.TestTools;
+using System.IO;
+using Newtonsoft.Json;
+using UnityEditor;
 
 public class LidarTest
 {
@@ -30,12 +33,19 @@ public class LidarTest
     {
         _RaycastLidar = GameObject.CreatePrimitive(PrimitiveType.Cube).AddComponent<RaycastLidar>();
         _RaycastLidar.SampleFrequency = 100;
-        _RaycastLidar.WidthRes = 1024;
-        _RaycastLidar.HeightRes = 128;
         _RaycastLidar.transform.position = new Vector3(0, 0.5f, 0);
+        var jsonText = File.ReadAllText(JsonConfigPath());
+        _RaycastLidar.Configs = JsonConvert.DeserializeObject<List<LidarConfig>>(jsonText);
+        _RaycastLidar.ConfigIndex = 3;
         _RaycastLidar.ParticleMaterial = Resources.Load("Material/PointMaterial", typeof(Material)) as Material;
         _target = GameObject.CreatePrimitive(PrimitiveType.Cube);
         _target.transform.position = new Vector3(0, 0, 10);
+    }
+
+    string JsonConfigPath()
+    {
+        var jsonTextFile = Resources.Load<TextAsset>("Configs/lidars");
+        return Path.Combine(Path.GetDirectoryName(Application.dataPath), AssetDatabase.GetAssetPath(jsonTextFile));
     }
 
     [UnityTest]
