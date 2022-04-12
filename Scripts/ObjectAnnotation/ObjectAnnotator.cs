@@ -121,7 +121,6 @@ namespace Marus.ObjectAnnotation
         private string _labelsPath;
 
         private List<Tuple<int, string>> _ratios;
-
         private float _timer;
         private List<Tuple<ObjectRecord, Rect>> _objectsInScene;
 
