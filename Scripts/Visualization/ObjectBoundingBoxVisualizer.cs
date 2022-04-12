@@ -13,76 +13,78 @@
 // limitations under the License.
 
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
-using System.IO;
 using System.Collections.Generic;
+using Marus.ObjectAnnotation;
 
-public class ObjectBoundingBoxVisualizer : MonoBehaviour
+namespace Marus.Visualization
 {
-
-    public List<Camera> Cameras;
-    public List<GameObject> Objects;
-    public GameObject VisualIndicator;
-    public int VertexStep = 20;
-
-    private Dictionary<int, GameObject> canvasMap;
-    private List<GameObject> boundingBoxList;
-
-    void Start()
+	public class ObjectBoundingBoxVisualizer : MonoBehaviour
     {
-        boundingBoxList = new List<GameObject>();
-        canvasMap = new Dictionary<int, GameObject>();
-        foreach (var c in Cameras)
-        {
-            GameObject canvasGO = new GameObject();
-            canvasGO.name = "VisualizationCanvas";
-            canvasGO.AddComponent<Canvas>();
 
-            Canvas myCanvas = canvasGO.GetComponent<Canvas>();
-            myCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvasGO.AddComponent<CanvasScaler>();
-            canvasGO.AddComponent<GraphicRaycaster>();
+        public List<Camera> Cameras;
+        public List<GameObject> Objects;
+        public GameObject VisualIndicator;
+        public int VertexStep = 20;
 
-            myCanvas.targetDisplay = c.targetDisplay;
-            canvasGO.hideFlags = HideFlags.HideInHierarchy;
-            canvasMap.Add(myCanvas.targetDisplay, canvasGO);
-        }
-    }
+        private Dictionary<int, GameObject> canvasMap;
+        private List<GameObject> boundingBoxList;
 
-    void Update()
-    {
-        foreach (GameObject go in boundingBoxList)
+        void Start()
         {
-            Destroy(go);
-        }
-        boundingBoxList.Clear();
-        foreach (GameObject go in Objects)
-        {
-            foreach (Camera c in Cameras)
+            boundingBoxList = new List<GameObject>();
+            canvasMap = new Dictionary<int, GameObject>();
+            foreach (var c in Cameras)
             {
-                Rect boundingBox = new Rect();
-                try
-                {
-                    boundingBox = ObjectAnnotator.GetBoundingBoxFromMesh(go, c);
-                }
-                catch
-                {
-                    continue;
-                }
-                GameObject parent = canvasMap[c.targetDisplay];
-                boundingBoxList.Add(VisualizeObjectBounds(go, boundingBox, c, parent));
+                GameObject canvasGO = new GameObject();
+                canvasGO.name = "VisualizationCanvas";
+                canvasGO.AddComponent<Canvas>();
+
+                Canvas myCanvas = canvasGO.GetComponent<Canvas>();
+                myCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                canvasGO.AddComponent<CanvasScaler>();
+                canvasGO.AddComponent<GraphicRaycaster>();
+
+                myCanvas.targetDisplay = c.targetDisplay;
+                canvasGO.hideFlags = HideFlags.HideInHierarchy;
+                canvasMap.Add(myCanvas.targetDisplay, canvasGO);
             }
         }
-    }
+
+        void Update()
+        {
+            foreach (GameObject go in boundingBoxList)
+            {
+                Destroy(go);
+            }
+            boundingBoxList.Clear();
+            foreach (GameObject go in Objects)
+            {
+                foreach (Camera c in Cameras)
+                {
+                    Rect boundingBox = new Rect();
+                    try
+                    {
+                        boundingBox = ObjectAnnotator.GetBoundingBoxFromMesh(go, c);
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                    GameObject parent = canvasMap[c.targetDisplay];
+                    boundingBoxList.Add(VisualizeObjectBounds(go, boundingBox, c, parent));
+                }
+            }
+        }
 
 
-    private GameObject VisualizeObjectBounds(GameObject obj, Rect bounds, Camera CameraView, GameObject parent)
-    {
-        GameObject rect = Instantiate(VisualIndicator, Vector3.zero, Quaternion.identity, parent.transform);
-        RectTransform rt = rect.transform.Find("SelectionImage").GetComponent<RectTransform>();
-        rt.position = new Vector2(bounds.center.x, bounds.center.y);
-        rt.sizeDelta = new Vector2(bounds.width * 1.1f, bounds.height * 1.1f);
-        return rect;
+        private GameObject VisualizeObjectBounds(GameObject obj, Rect bounds, Camera CameraView, GameObject parent)
+        {
+            GameObject rect = Instantiate(VisualIndicator, Vector3.zero, Quaternion.identity, parent.transform);
+            RectTransform rt = rect.transform.Find("SelectionImage").GetComponent<RectTransform>();
+            rt.position = new Vector2(bounds.center.x, bounds.center.y);
+            rt.sizeDelta = new Vector2(bounds.width * 1.1f, bounds.height * 1.1f);
+            return rect;
+        }
     }
 }
