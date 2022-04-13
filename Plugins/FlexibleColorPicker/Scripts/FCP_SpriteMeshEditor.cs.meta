@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Plugins/FlexibleColorPicker/Scripts/FCP_SpriteMeshEditor.cs.meta
 guid: 7ea7ea40fb6ab6048a5f962e5dab4e5d
+=======
+guid: 258670941bce80acd974ce91ccccea2b
+>>>>>>> Add documentation and fix some bugs:Scripts/Editor/ObjectAnnotatorEditor.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
