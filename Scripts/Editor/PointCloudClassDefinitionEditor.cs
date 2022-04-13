@@ -1,8 +1,26 @@
+// Copyright 2021 Laboratory for Underwater Systems and Technologies (LABUST)
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 using UnityEditor;
 
 namespace Marus.ObjectAnnotation
 {
-	[CustomEditor(typeof(PointCloudClassDefinition))]
+    /// <summary>
+    /// Custom editor for PointCloudClassDefinition component.
+    /// Checks for duplicate names or indices and shows all defined classes in scene.
+    /// </summary>
+    [CustomEditor(typeof(PointCloudClassDefinition))]
     public class PointCloudClassDefinitionEditor : Editor
     {
         PointCloudClassDefinition [] classes;
@@ -30,6 +48,31 @@ namespace Marus.ObjectAnnotation
                     EditorGUILayout.HelpBox($"Class index 0 is reserved for unlabeled objects (class Other).", MessageType.Error);
                 }
             }
+            DrawClasses(classes);
+        }
+
+        void DrawClasses(PointCloudClassDefinition[] classes)
+        {
+            EditorGUILayout.LabelField("Classes defined in this scene:");
+            EditorGUI.BeginDisabledGroup(true);
+            foreach(var c in classes)
+            {
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.PrefixLabel($"Name: ");
+                EditorGUILayout.TextField(c.ClassName);
+                EditorGUILayout.PrefixLabel($"Index: ");
+                EditorGUILayout.IntField(c.Index);
+                EditorGUILayout.EndHorizontal();
+            }
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel($"Name: ");
+            EditorGUILayout.TextField("Other");
+            EditorGUILayout.PrefixLabel($"Index: ");
+            EditorGUILayout.IntField(0);
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUI.EndDisabledGroup();
         }
     }
 }

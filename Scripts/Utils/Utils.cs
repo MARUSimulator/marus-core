@@ -1,4 +1,4 @@
-// Copyright 2022 Laboratory for Underwater Systems and Technologies (LABUST)
+// Copyright 2021 Laboratory for Underwater Systems and Technologies (LABUST)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 using System;
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEditor;
 
 namespace Marus.Utils
 {
-    public static class Helpers
+	public static class Helpers
     {
         /// <summary>
         /// Return RigidBody component in the first ancestor GameObject
@@ -164,4 +164,40 @@ namespace Marus.Utils
             return Mathf.Clamp(std * sigma + mean, minValue, maxValue);
         }
     }
+
+    public static class EditorExtensions
+{
+    /// <summary>
+    /// Draws all properties like base.OnInspectorGUI() but excludes a field by name.
+    /// </summary>
+    /// <param name="fieldToSkip">The name of the field that should be excluded. Example: "m_Script" will skip the default Script field.</param>
+    public static void DrawInspectorExcept(this SerializedObject serializedObject, string fieldToSkip)
+    {
+        serializedObject.DrawInspectorExcept(new string[1] { fieldToSkip });
+    }
+
+    /// <summary>
+    /// Draws all properties like base.OnInspectorGUI() but excludes the specified fields by name.
+    /// </summary>
+    /// <param name="fieldsToSkip">
+    /// An array of names that should be excluded.
+    /// Example: new string[] { "m_Script" , "myInt" } will skip the default Script field and the Integer field myInt.
+    /// </param>
+    public static void DrawInspectorExcept(this SerializedObject serializedObject, string[] fieldsToSkip)
+    {
+        serializedObject.Update();
+        SerializedProperty prop = serializedObject.GetIterator();
+        if (prop.NextVisible(true))
+        {
+            do
+            {
+                if (fieldsToSkip.Any(prop.name.Contains))
+                    continue;
+                EditorGUILayout.PropertyField(serializedObject.FindProperty(prop.name), true);
+            }
+            while (prop.NextVisible(false));
+        }
+        serializedObject.ApplyModifiedProperties();
+    }
+}
 }

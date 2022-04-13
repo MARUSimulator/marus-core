@@ -16,6 +16,11 @@ using UnityEngine;
 
 namespace Marus.ObjectAnnotation
 {
+
+    /// <summary>
+    /// This component enables class definition for segmentation.
+    /// It will attach AnnotationObjectInstance component to every immediate child.
+    /// </summary>
     public class PointCloudClassDefinition : MonoBehaviour
     {
         public string ClassName;

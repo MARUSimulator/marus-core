@@ -21,11 +21,26 @@ using System;
 
 namespace Marus.ObjectAnnotation
 {
+    /// <summary>
+    /// This class serves as configuration place for pointcoud segmentation dataset collection.
+    /// Holds properties like directory, save frequency.
+    /// </summary>
     [RequireComponent(typeof(RaycastLidar))]
     public class PointCloudSemanticSegmentationSaver : MonoBehaviour
     {
-        public float SampleFrequency = 1f;
+        /// <summary>
+        /// Saving frequency in Hz
+        /// </summary>
+        public float SaveFrequencyHz = 1f;
+
+        /// <summary>
+        /// Dataset directory
+        /// </summary>
         public string SavePath;
+
+        /// <summary>
+        /// Namespace prefix to put in pcd and label filenames.
+        /// </summary>
         public string Namespace = "";
         RaycastLidar lidar;
         float _lastSave = 0;
@@ -44,6 +59,13 @@ namespace Marus.ObjectAnnotation
             lidar.OnFinishEvent += Save;
         }
 
+        /// <summary>
+        /// Transforms points to lidar frame, saves them to PCD file
+        /// generates point labels and saves them to file.
+        /// Also writes lidar rotation matrix to poses.txt file.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="readings"></param>
         void Save(NativeArray<Vector3> points, NativeArray<LidarReading> readings)
         {
             if (!transformedPoints.IsCreated)
@@ -51,7 +73,7 @@ namespace Marus.ObjectAnnotation
                 transformedPoints = new NativeArray<Vector3>(points.Length, Allocator.Persistent);
             }
 
-            if ((Time.time - _lastSave) >= (1 / SampleFrequency))
+            if ((Time.time - _lastSave) >= (1 / SaveFrequencyHz))
             {
                 var orientation = lidar.transform.eulerAngles - _lastOrientation;
                 _lastOrientation = lidar.transform.eulerAngles;
@@ -132,7 +154,7 @@ namespace Marus.ObjectAnnotation
             Directory.CreateDirectory(Path.Combine(SavePath, "lidar"));
         }
 
-        public void OnDestroy()
+        void OnDestroy()
         {
             transformedPoints.Dispose();
         }

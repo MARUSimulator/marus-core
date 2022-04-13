@@ -18,29 +18,38 @@ using System.Collections.Generic;
 
 namespace Marus.ObjectAnnotation
 {
+
+    /// <summary>
+    /// Singleton class that holds all object instance ids for pointcloud segmentation.
+    /// </summary>
     public class PointCloudAnnotationHandler : Singleton<PointCloudAnnotationHandler>
-	{
-		Dictionary<int, int> ObjectInstanceIds;
-		int currentIndex;
+    {
+        Dictionary<int, int> ObjectInstanceIds;
+        int currentIndex;
         protected override void Initialize()
         {
             ObjectInstanceIds = new Dictionary<int, int>();
-			currentIndex = 1;
+            currentIndex = 1;
         }
 
-		public int SetUniqueId(GameObject obj)
-		{
-			var id = currentIndex;
-			var ObjectInstanceId = obj.GetInstanceID();
-			if (!ObjectInstanceIds.ContainsKey(ObjectInstanceId))
-			{
-				ObjectInstanceIds.Add(ObjectInstanceId, currentIndex++);
-			}
-			else
-			{
-				id = ObjectInstanceIds[ObjectInstanceId];
-			}
-			return id;
-		}
+        /// <summary>
+        /// Creates and sets unique id for gameObject.
+        /// </summary>
+        /// <param name="obj">game object</param>
+        /// <returns>Instance id</returns>
+        public int SetUniqueId(GameObject obj)
+        {
+            var id = currentIndex;
+            var ObjectInstanceId = obj.GetInstanceID();
+            if (!ObjectInstanceIds.ContainsKey(ObjectInstanceId))
+            {
+                ObjectInstanceIds.Add(ObjectInstanceId, currentIndex++);
+            }
+            else
+            {
+                id = ObjectInstanceIds[ObjectInstanceId];
+            }
+            return id;
+        }
     }
 }

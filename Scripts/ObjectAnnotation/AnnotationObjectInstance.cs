@@ -11,12 +11,21 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using UnityEngine;
 
 namespace Marus.ObjectAnnotation
 {
+    /// <summary>
+    /// This component is automatically attached to all immediate
+    /// child objects with PointCloudClassDefinition component.
+    /// Initializes object with unique id that is used for instance segmentation.
+    /// </summary>
     public class AnnotationObjectInstance : MonoBehaviour
     {
+        /// <summary>
+        /// Unique object instance id
+        /// </summary>
         [ReadOnly] public int InstanceId;
 
         public void Awake()

@@ -22,6 +22,9 @@ using UnityEngine.Rendering;
 
 namespace Marus.ObjectAnnotation
 {
+    /// <summary>
+    /// Class that pairs Unity object and it's class
+    /// </summary>
     [Serializable]
     public class ObjectRecord
     {
@@ -29,20 +32,52 @@ namespace Marus.ObjectAnnotation
         public string Class;
     }
 
+    /// <summary>
+    /// Main component for object annotation in camera images.
+    /// Manages objects and cameras, dataset properties etc.
+    /// </summary>
     public class ObjectAnnotator : MonoBehaviour
     {
+        /// <summary>
+        /// Enable/Disable switch. Usefull for starting annotation during runtime.
+        /// </summary>
         public bool Enable = false;
+
+
+        /// <summary>
+        /// Holds list of objects to track and annotate.
+        /// </summary>
         [Header("Objects & Cameras Setup", order=0)]
         [Space(10, order=1)]
         public List<ObjectRecord> ObjectsToTrack;
 
+        /// <summary>
+        /// Holds list of cameras to annotate objects from.
+        /// </summary>
         public List<Camera> CameraViews;
+
+        /// <summary>
+        /// Annotation frequency in Hz.
+        /// </summary>
         public float SampleRateHz = 1f;
+
+        /// <summary>
+        /// Area threshold for object to be annotated.
+        /// In pixes squared.
+        /// </summary>
         [Tooltip("Minimum area of object bounding box to be logged (in pixels)")]
         public float MinimumObjectArea = 256f;
 
+        /// <summary>
+        /// Use raycasting for more precise results.
+        /// </summary>
         [Tooltip("Use Raycasting for more precise results. If enabled, objects must have mesh collider.")]
         public bool RaycastCheck = true;
+
+        /// <summary>
+        /// Step used when iterating over object vertices.
+        /// Bigger step means less precision but better performance.
+        /// </summary>
         [Tooltip("For optimization. Higher number is faster but less precise.")]
         public int VertexStep = 20;
 
@@ -50,15 +85,32 @@ namespace Marus.ObjectAnnotation
 
         [Header("Dataset setup", order=2)]
         [Space(10, order=3)]
+        /// <summary>
+        /// Directory for saving the dataset
+        /// </summary>
         public string DatasetFolder;
-        public int ImageWidth = 1920;
-        public int ImageHeight = 1080;
-        public bool SplitTrainValTest;
 
-        [Range(50,99)]
-        [ConditionalHide("SplitTrainValTest", false)]
+        /// <summary>
+        /// Image width
+        /// It should correspond to display resolution in Game Mode.
+        /// </summary>
+        public int ImageWidth = 1920;
+        /// <summary>
+        /// Image height
+        /// It should correspond to display resolution in Game Mode.
+        /// </summary>
+        public int ImageHeight = 1080;
+
+        /// <summary>
+        /// If enabled, creates test subset besides train and validation.
+        /// </summary>
+        public bool SplitTrainValTest = true;
+
+        [Range(0, 100)]
         public int TrainSize = 75;
-        [Range(1,49)]
+        [Range(0, 100)]
+        public int ValSize = 10;
+        [Range(0, 100)]
         [ConditionalHide("SplitTrainValTest", false)]
         public int TestSize = 15;
         private GameObject _parent;
@@ -69,7 +121,7 @@ namespace Marus.ObjectAnnotation
         private string _labelsPath;
 
         private List<Tuple<int, string>> _ratios;
-        private int _valSize;
+
         private float _timer;
         private List<Tuple<ObjectRecord, Rect>> _objectsInScene;
 
@@ -93,12 +145,11 @@ namespace Marus.ObjectAnnotation
                 CreateDatasetFolderStructure();
             }
 
-            _valSize = 100 - TrainSize - TestSize;
             _ratios = new List<Tuple<int, string>>()
             {
                 new Tuple<int, string>(TrainSize, "train"),
                 new Tuple<int, string>(TestSize, "test"),
-                new Tuple<int, string>(_valSize, "val")
+                new Tuple<int, string>(ValSize, "val")
             };
             _ratios.Sort(Comparer<Tuple<int, string>>.Default);
             _ratios.Reverse();
@@ -243,14 +294,24 @@ namespace Marus.ObjectAnnotation
             return (prefix, idx);
         }
 
-        public static Rect GetBoundingBoxFromMesh(GameObject go, Camera CameraView, int VertexStep = 50, int VerticalPositionLimit = 0, bool RaycastCheck = false)
+
+        /// <summary>
+        /// Calculates bounding box of object in camera view based on mesh vertices.
+        /// </summary>
+        /// <param name="gameObject">Game object</param>
+        /// <param name="CameraView">Camera object</param>
+        /// <param name="VertexStep">Vertex Step</param>
+        /// <param name="VerticalPositionLimit">Vertical position limit. Vertices below will be ignored</param>
+        /// <param name="RaycastCheck">Use raycast checking for more precise bounding boxes.</param>
+        /// <returns>Bounding box of object in camera.</returns>
+        public static Rect GetBoundingBoxFromMesh(GameObject gameObject, Camera CameraView, int VertexStep = 50, int VerticalPositionLimit = 0, bool RaycastCheck = false)
         {
             List<Vector3> vertices;
             Rect retVal = Rect.MinMaxRect(float.MaxValue, float.MaxValue, float.MinValue, float.MinValue);
 
             bool visible = false;
-            var meshes = go.GetComponentsInChildren<MeshFilter>().ToList();
-            var originmesh = go.GetComponent<MeshFilter>();
+            var meshes = gameObject.GetComponentsInChildren<MeshFilter>().ToList();
+            var originmesh = gameObject.GetComponent<MeshFilter>();
             if (originmesh != null)
             {
                 meshes.Add(originmesh);
