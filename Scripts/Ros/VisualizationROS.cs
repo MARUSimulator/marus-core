@@ -15,15 +15,15 @@
 using static Visualization.Visualization;
 using Visualization;
 using UnityEngine;
-using Labust.Visualization.Primitives;
-using Labust.Core;
-using Labust.Visualization;
+using Marus.Visualization.Primitives;
+using Marus.Core;
+using Marus.Visualization;
 using System.Collections.Generic;
-using Labust.Utils;
+using Marus.Utils;
 using Grpc.Core;
 using System;
 
-namespace Labust.Networking
+namespace Marus.Networking
 {
     public class VisualizationROS : Singleton<VisualizationROS>
     {

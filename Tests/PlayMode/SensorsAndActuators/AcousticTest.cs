@@ -13,11 +13,12 @@
 // limitations under the License.
 
 using NUnit.Framework;
-using UnityEngine;
-using Labust.Sensors.Acoustics;
+using Marus.Sensors.Acoustics;
 using TestUtils;
 using UnityEngine.TestTools;
 using System.Collections;
+using UnityEngine;
+
 public class AcousticTest
 {
   Nanomodem _nanomodem1;

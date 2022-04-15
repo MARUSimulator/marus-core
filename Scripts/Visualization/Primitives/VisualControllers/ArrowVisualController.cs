@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 using UnityEngine;
-using Labust.Visualization.Primitives;
+using Marus.Visualization.Primitives;
 
-namespace Labust.Visualization
+namespace Marus.Visualization
 {
     /// <summary>
     /// Used for line appearance customization

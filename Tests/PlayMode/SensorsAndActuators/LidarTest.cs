@@ -14,7 +14,7 @@
 
 using NUnit.Framework;
 using UnityEngine;
-using Labust.Sensors;
+using Marus.Sensors;
 using System;
 using System.Collections;
 using System.Collections.Generic;

@@ -14,7 +14,7 @@
 
 using NUnit.Framework;
 using UnityEngine;
-using Labust.Sensors.Primitive;
+using Marus.Sensors.Primitive;
 using TestUtils;
 
 public class RangeTest
