@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-// Copyright 2021 Laboratory for Underwater Systems and Technologies (LABUST)
-=======
-﻿// Copyright 2022 Laboratory for Underwater Systems and Technologies (LABUST)
->>>>>>> Feature/communications (#45)
+//
+// Copyright 2022 Laboratory for Underwater Systems and Technologies (LABUST)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +18,7 @@ using UnityEngine;
 
 namespace Marus.Communications.Acoustics
 {
-    public class Nanomodem : AcousticDevice<NanomodemMessage>
+	public class Nanomodem : AcousticDevice<NanomodemMessage>
     {
         /// <summary>
         /// Unique identifier of nanomodem
