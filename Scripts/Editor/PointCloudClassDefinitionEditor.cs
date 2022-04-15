@@ -16,11 +16,11 @@ using UnityEditor;
 
 namespace Marus.ObjectAnnotation
 {
-    /// <summary>
-    /// Custom editor for PointCloudClassDefinition component.
-    /// Checks for duplicate names or indices and shows all defined classes in scene.
-    /// </summary>
-    [CustomEditor(typeof(PointCloudClassDefinition))]
+	/// <summary>
+	/// Custom editor for PointCloudClassDefinition component.
+	/// Checks for duplicate names or indices and shows all defined classes in scene.
+	/// </summary>
+	[CustomEditor(typeof(PointCloudClassDefinition))]
     public class PointCloudClassDefinitionEditor : Editor
     {
         PointCloudClassDefinition [] classes;
