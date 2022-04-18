@@ -43,7 +43,7 @@ namespace Marus.Utils
 						}
 						// call initialize
 						var init = typeof(T).GetMethod("Initialize", BindingFlags.NonPublic | BindingFlags.Instance);
-						init.Invoke(instance, null);
+						init?.Invoke(instance, null);
                     }
                 }
                 return instance;
@@ -52,7 +52,7 @@ namespace Marus.Utils
 
         protected virtual void Initialize()
         {
-
+            var a = 5;
         }
     }
 }

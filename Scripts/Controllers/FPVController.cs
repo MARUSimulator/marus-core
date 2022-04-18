@@ -25,7 +25,6 @@ public class FPVController : MonoBehaviour
     public float runningSpeed = 2000.0f;
     public float lookSpeed = 20.0f;
     
-    AgentManager agentManager;
     Transform _targetTransform;
     Rigidbody _rigidBody;
     
@@ -52,14 +51,13 @@ public class FPVController : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-
-        agentManager = GameObject.FindObjectOfType<AgentManager>();
+        AgentManager.Instance.Register(gameObject);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (agentManager.activeAgent != gameObject)
+        if (AgentManager.Instance.activeAgent != gameObject)
             return;
         float dt = Time.fixedDeltaTime;
         UpdateMovement(dt);

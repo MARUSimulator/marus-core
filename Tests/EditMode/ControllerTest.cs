@@ -35,7 +35,8 @@ public class ControllerTest
         var camera = cameraObj.AddComponent<Camera>();
 
         agentManager = Utils.CreateAndInitializeObject<AgentManager>("agentManager");
-        agentManager.agents = new List<GameObject>(){agent1, agent2};
+        agentManager.Register(agent1);
+        agentManager.Register(agent2);
         Utils.CallStart<AgentManager>(agentManager);
     }
 

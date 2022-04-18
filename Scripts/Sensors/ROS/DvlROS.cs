@@ -32,7 +32,7 @@ namespace Marus.Sensors.ROS
             sensor = GetComponent<DvlSensor>();
             if (string.IsNullOrEmpty(address))
                 address = sensor.vehicle.name + "/dvl";
-            StreamSensor(streamingClient?.StreamDvlSensor(cancellationToken:RosConnection.Instance.cancellationToken));
+            StreamSensor(streamingClient?.StreamDvlSensor(cancellationToken:RosConnection.Instance.CancellationToken));
         }
 
         new void Update()

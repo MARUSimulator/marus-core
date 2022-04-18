@@ -90,7 +90,7 @@ namespace Marus.Networking
             // invoke rpc call
             var stream = _streamHandle.ResponseStream;
 
-            while (await stream.MoveNext(RosConnection.Instance.cancellationToken))
+            while (await stream.MoveNext(RosConnection.Instance.CancellationToken))
             {
                 var current = stream.Current;
                 _responseBuffer.Enqueue(current);

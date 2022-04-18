@@ -33,7 +33,7 @@ namespace Marus.Sensors.ROS
             {
                 address = $"{sensor.vehicle?.name}/gps";
             }
-            StreamSensor(streamingClient?.StreamGnssSensor(cancellationToken:RosConnection.Instance.cancellationToken));
+            StreamSensor(streamingClient?.StreamGnssSensor(cancellationToken:RosConnection.Instance.CancellationToken));
         }
 
         new void Update()

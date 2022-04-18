@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using NUnit.Framework;
-using Marus.Sensors.Acoustics;
+using Marus.Communications.Acoustics;
 using TestUtils;
 using UnityEngine.TestTools;
 using System.Collections;

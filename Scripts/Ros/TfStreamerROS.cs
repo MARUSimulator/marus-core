@@ -89,7 +89,7 @@ namespace Marus.ROS
                 ParentFrameId = "map";
             }
 
-            streamHandle = streamingClient?.PublishFrame(cancellationToken:RosConnection.Instance.cancellationToken);
+            streamHandle = streamingClient?.PublishFrame(cancellationToken:RosConnection.Instance.CancellationToken);
 
         }
 

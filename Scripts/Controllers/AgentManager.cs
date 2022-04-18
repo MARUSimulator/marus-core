@@ -15,32 +15,34 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Marus.Utils;
 using UnityEngine;
 
 /// <summary>
 /// Sets active agent that listens to the keyboard input
 /// Press C to switch active agent
 /// </summary>
-public class AgentManager : MonoBehaviour
+public class AgentManager : Singleton<AgentManager>
 {
-    [SerializeField]
-    public List<GameObject> agents;
+    List<GameObject> agents;
 
     [NonSerialized]
     public GameObject activeAgent;
 
     int _index;
-    void Start()
+    private void Awake()
     {
-        _index = 0;
-        if (agents != null)
+        agents ??= new List<GameObject>();
+        if (agents.Count > 0)
+        {
             activeAgent = agents[0];
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (agents == null)
+        if (agents.Count == 0)
             return;
         if (Input.GetKeyDown(KeyCode.C))
         {
@@ -55,8 +57,17 @@ public class AgentManager : MonoBehaviour
         Debug.Log($"Selected agent: {agents[_index].name}");
     }
 
-    public void Register(GameObject obj)
+    public void Register(GameObject newObj)
     {
-        agents.Add(obj);
+        agents ??= new List<GameObject>();
+        if (!agents.Contains(newObj))
+        {
+            agents.Add(newObj);
+        }
+    }
+
+    public void Unregister(GameObject objToRemove)
+    {
+        agents.Remove(objToRemove);
     }
 }

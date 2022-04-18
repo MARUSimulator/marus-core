@@ -15,7 +15,7 @@
 using UnityEngine;
 using System;
 
-namespace Marus.Sensors.Acoustics
+namespace Marus.Communications.Acoustics
 {
     /// <summary>
     /// This class serves as base for a medium for sending/receiving messages.

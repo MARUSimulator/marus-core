@@ -31,7 +31,7 @@ namespace Marus.Sensors.AIS
             device = GetComponent<AisDevice>();
             if (string.IsNullOrEmpty(address))
                 address = transform.name + "/ais";
-            StreamSensor(streamingClient?.StreamAisSensor(cancellationToken:RosConnection.Instance.cancellationToken));
+            StreamSensor(streamingClient?.StreamAisSensor(cancellationToken:RosConnection.Instance.CancellationToken));
             UpdateFrequency = 1 / TimeIntervals.getInterval(device.ClassType, sensor.SOG);
         }
 

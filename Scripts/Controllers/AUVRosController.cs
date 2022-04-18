@@ -49,7 +49,7 @@ namespace Marus.Actuators
             var address = Helpers.GetVehicle(transform)?.name ?? name;
             _streamer.StartStream(client.ApplyForce(
                 new ForceRequest { Address = $"{address}/pwm_out" },
-                cancellationToken: RosConnection.Instance.cancellationToken)
+                cancellationToken: RosConnection.Instance.CancellationToken)
             );
         }
 

@@ -51,7 +51,7 @@ namespace Marus.Networking
             RosConnection.Instance.OnConnected += OnConnected;
         }
 
-        public void OnConnected(Channel channel)
+        public void OnConnected(ChannelBase channel)
         {
             SetGeoOriginAndMap();
         }
@@ -104,7 +104,7 @@ namespace Marus.Networking
                 {
                     var frameClient = rosConn.GetClient<TfClient>();
                     var frameStream = frameClient.StreamAllFrames(new Std.Empty(), 
-                            cancellationToken:rosConn.cancellationToken);
+                            cancellationToken:rosConn.CancellationToken);
                     _serverStreamer.StartStream(frameStream);
                 }
                 _serverStreamer.HandleNewMessages();
