@@ -115,12 +115,12 @@ namespace Marus.Networking
 
         private void Awake()
         {
-            _cancellationToken = _streamingChannel.ShutdownToken;
             CreateSingletons();
 
             var options = new List<ChannelOption>();
             options.Add(new ChannelOption(ChannelOptions.MaxSendMessageLength, 1024*1024*100));
             _streamingChannel = new Channel(serverIP, serverPort, ChannelCredentials.Insecure, options);
+            _cancellationToken = _streamingChannel.ShutdownToken;
             InitializeClients();
 
             Connect();
