@@ -107,8 +107,6 @@ namespace Marus.Sensors
         {
             get
             {
-                if (!RosConnection.Instance.IsConnected)
-                    return null;
                 return RosConnection.Instance.GetClient<SensorStreaming.SensorStreamingClient>();
             }
         }
