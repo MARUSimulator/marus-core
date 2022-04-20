@@ -82,7 +82,7 @@ namespace Marus.Networking
         private SimulationControlClient _simulationController;
 
 
-        public event Action<ChannelBase> OnConnected;
+        public event Action<Channel> OnConnected;
 
         /// <summary>
         /// Adds new client of type if it does not currently exists.

@@ -38,7 +38,7 @@ namespace Marus.Networking
             RosConnection.Instance.OnConnected += OnConnected;
         }
 
-        public void OnConnected(ChannelBase channel)
+        public void OnConnected(Channel channel)
         {
             _parameterServerClient = new ParameterServerClient(channel);
         }

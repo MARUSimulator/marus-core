@@ -59,7 +59,7 @@ namespace Marus.Networking
             CallPrimitivePointerService();
         }
 
-        public void OnConnected(ChannelBase channel)
+        public void OnConnected(Channel channel)
         {
             _client = new CommanderClient(channel);
         }
