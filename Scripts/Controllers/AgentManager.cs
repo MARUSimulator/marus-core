@@ -54,4 +54,9 @@ public class AgentManager : MonoBehaviour
         activeAgent = agents[_index];
         Debug.Log($"Selected agent: {agents[_index].name}");
     }
+
+    public void Register(GameObject obj)
+    {
+        agents.Add(obj);
+    }
 }

@@ -129,7 +129,7 @@ public class CameraController : MonoBehaviour
             return;
 
         if (!Input.GetMouseButton(0) && _requireRMBToMove) return;
-        
+
         if (Input.GetKey(KeyCode.R)) // if reset view
         {
             var parent = gameObject.transform.parent;
