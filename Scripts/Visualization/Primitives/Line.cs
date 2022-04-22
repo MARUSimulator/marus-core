@@ -84,8 +84,12 @@ namespace Marus.Visualization.Primitives
                 Material newMat = new Material(Shader.Find("HDRP/Unlit"));
                 line.GetComponent<Renderer>().material = newMat;
                 line.hideFlags = HideFlags.HideInHierarchy;
-                line.layer = LayerMask.NameToLayer("Visualization");
-                line.GetComponent<Renderer>().sortingLayerID = SortingLayer.NameToID("Lines");
+                try
+                {
+                    line.layer = LayerMask.NameToLayer("Visualization");
+                    line.GetComponent<Renderer>().sortingLayerID = SortingLayer.NameToID("Lines");
+                }
+                catch {}
                 line.isStatic = true;
             }
             if (parent != null)

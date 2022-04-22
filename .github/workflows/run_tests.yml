@@ -1,8 +1,8 @@
 name: Run unit tests
 
-on: 
+on:
     push:
-      branches: 
+      branches:
         - 'dev'
     pull_request:
       types: [opened, synchronize]
@@ -21,12 +21,17 @@ jobs:
           submodules: recursive
           path: ./MarusExample
           token: ${{ secrets.REPOACCESS_RO }}
-          run: cd MarusExample/Assets/LabustSim && git checkout ${{ github.sha }}
-          
+
+      - name: Checkout commit
+  	      run: cd MarusExample/Assets/LabustSim && git checkout ${{ github.sha }}
+
       - name: Run all tests
         uses: game-ci/unity-test-runner@v2
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_VERSION: 2021.3.0f1
         with:
           projectPath: MarusExample
           githubToken: ${{ secrets.GITHUB_TOKEN }}
