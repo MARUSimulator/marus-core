@@ -27,7 +27,7 @@ jobs:
         if: ${{ github.event.action }} == 'pull_request'
         run: cd MarusExample/Assets/LabustSim && git fetch && git checkout ${GITHUB_HEAD_REF} && git checkout ${{ github.event.pull_request.head.sha }}
       - name: Checkout commit from push
-        if: ${GITHUB_REF} == 'dev'
+        if: ${{ GITHUB_REF }} == 'dev'
         run: cd MarusExample/Assets/LabustSim && git checkout ${{ github.sha }}
 
       - name: Run all tests
