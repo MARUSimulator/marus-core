@@ -27,16 +27,16 @@ jobs:
         if: ${{ github.event.action }} == 'pull_request'
         run: cd MarusExample/Assets/LabustSim && git fetch && git checkout ${GITHUB_HEAD_REF} && git checkout ${{ github.event.pull_request.head.sha }}
       - name: Checkout commit from push
-        if: ${{ github.event.action }} == 'push'
+        if: ${GITHUB_REF} == 'dev'
         run: cd MarusExample/Assets/LabustSim && git checkout ${{ github.sha }}
 
-      #- name: Run all tests
-      #  uses: game-ci/unity-test-runner@v2
-      #   env:
-      #    UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-      #    UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-      #    UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-      #    UNITY_VERSION: 2021.3.0f1
-      #  with:
-      #    projectPath: MarusExample
-      #    githubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run all tests
+        uses: game-ci/unity-test-runner@v2
+         env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_VERSION: 2021.3.0f1
+        with:
+          projectPath: MarusExample
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
