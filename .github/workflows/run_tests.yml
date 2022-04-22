@@ -21,11 +21,11 @@ jobs:
           submodules: recursive
           path: ./MarusExample
           token: ${{ secrets.REPOACCESS_RO }}
+          fetch-depth: 0
 
       - name: Checkout commit from PR
         if: ${{ github.event.action }} == 'pull_request'
-        run: cd MarusExample/Assets/LabustSim && git checkout ${{ github.event.pull_request.head.sha }}
-        #&& git fetch && git checkout origin ${GITHUB_HEAD_REF}
+        run: cd MarusExample/Assets/LabustSim && git fetch && git checkout ${GITHUB_HEAD_REF} && git checkout ${{ github.event.pull_request.head.sha }}
       - name: Checkout commit from push
         if: ${{ github.event.action }} == 'push'
         run: cd MarusExample/Assets/LabustSim && git checkout ${{ github.sha }}
