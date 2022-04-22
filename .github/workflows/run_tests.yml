@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    name: Run unit tests
+    name: Run unit tests for MarusCore
     runs-on: ubuntu-latest
     steps:
       - name: Checkout MarusExample
