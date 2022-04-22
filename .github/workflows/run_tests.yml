@@ -22,9 +22,12 @@ jobs:
           path: ./MarusExample
           token: ${{ secrets.REPOACCESS_RO }}
 
-      - name: Checkout commit
-        run: cd MarusExample/Assets/LabustSim && git switch ${GITHUB_REF##*/} && git checkout "$GITHUB_SHA"
-        #git pull --ff-only && git checkout "$GITHUB_SHA"
+      - name: Checkout commit from PR
+        if: ${{ github.event.action }} == 'pull_request'
+        run: cd MarusExample/Assets/LabustSim && git switch ${GITHUB_REF##*/} && git checkout ${{ github.event.pull_request.head.sha }}
+      - name: Checkout commit from push
+        if: ${{ github.event.action }} == 'push'
+        run: cd MarusExample/Assets/LabustSim && git checkout ${{ github.sha }}
 
       #- name: Run all tests
       #  uses: game-ci/unity-test-runner@v2
