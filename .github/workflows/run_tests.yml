@@ -24,11 +24,9 @@ jobs:
           fetch-depth: 0
 
       - name: Checkout commit from PR
-        if: ${{ github.event.action }} == 'pull_request'
-        run: cd MarusExample/Assets/LabustSim && git fetch && git checkout ${GITHUB_HEAD_REF} && git checkout ${{ github.event.pull_request.head.sha }}
+        run: if [ ${{ github.event.action }} == 'pull_request' ]; then echo pr && cd MarusExample/Assets/LabustSim && git fetch && git checkout ${GITHUB_HEAD_REF} && git checkout ${{ github.event.pull_request.head.sha }}
       - name: Checkout commit from push
-        if: ${{ github.ref }} == 'dev'
-        run: cd MarusExample/Assets/LabustSim && git checkout ${{ github.sha }}
+        run: if [ "${{ github.ref }}" = "dev" ]; then echo push && cd MarusExample/Assets/LabustSim && git checkout ${{ github.sha }}
 
       - name: Run all tests
         uses: game-ci/unity-test-runner@v2
