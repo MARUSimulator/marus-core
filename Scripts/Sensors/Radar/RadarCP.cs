@@ -63,7 +63,7 @@ protected override void Execute(ScriptableRenderContext renderContext, CommandBu
             cmd.SetGlobalVector("_WorldSpaceCameraPos", Vector3.zero);
 
             CoreUtils.SetRenderTarget(cmd, targetTexture, ClearFlag.Depth);
-            HDUtils.DrawRendererList(renderContext, cmd, RendererList.Create(result));
+            //HDUtils.DrawRendererList(renderContext, cmd, RendererList.Create(result));
         }
     }
 }
