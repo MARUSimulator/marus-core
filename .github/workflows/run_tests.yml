@@ -1,0 +1,32 @@
+name: Run unit tests
+
+on: 
+    push:
+      branches: 
+        - 'dev'
+    pull_request:
+      types: [opened, synchronize]
+    workflow_dispatch:
+
+jobs:
+  build:
+    name: Run unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout MarusExample
+        uses: actions/checkout@v2
+        with:
+          repository: labust/MarusExample
+          lfs: true
+          submodules: recursive
+          path: ./MarusExample
+          token: ${{ secrets.REPOACCESS_RO }}
+          run: cd MarusExample/Assets/LabustSim && git checkout ${{ github.sha }}
+          
+      - name: Run all tests
+        uses: game-ci/unity-test-runner@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          projectPath: MarusExample
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
