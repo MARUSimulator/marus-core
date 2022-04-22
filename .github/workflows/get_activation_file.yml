@@ -1,6 +1,9 @@
 name: Get Unity license activation file
 
-on: workflow_dispatch
+on: 
+	workflow_dispatch:
+	pull_request:
+		types: [opened, synchronize]
 
 jobs:
   requestManualActivationFile:
