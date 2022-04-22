@@ -23,7 +23,7 @@ jobs:
           token: ${{ secrets.REPOACCESS_RO }}
 
       - name: Checkout commit
-        run: echo ${{ github.event.head_commit.sha }} && cd MarusExample/Assets/LabustSim && git checkout ${{ github.event.head_commit.sha }}
+        run: echo ${{ github.sha }} && cd MarusExample/Assets/LabustSim && git checkout ${{ github.sha }}
 
       - name: Run all tests
         uses: game-ci/unity-test-runner@v2
