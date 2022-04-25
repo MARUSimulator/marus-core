@@ -9,7 +9,7 @@ on:
     workflow_dispatch:
 
 jobs:
-  build:
+  test:
     name: Run unit tests for MarusCore
     runs-on: ubuntu-latest
     steps:
@@ -22,13 +22,6 @@ jobs:
           path: ./MarusExample
           token: ${{ secrets.REPOACCESS_RO }}
           fetch-depth: 0
-          
-      - uses: actions/cache@v2
-        with:
-          path: ./MarusExample/Library
-          key: Library-MarusExample
-          restore-keys: |
-            Library-MarusExample
 
       - name: Checkout commit from PR
         run: if [ "${{ github.event.action }}" == "synchronize" ] || [ "${{ github.event.action }}" == "opened"]; then echo pr; cd MarusExample/Assets/LabustSim; git fetch && git checkout ${GITHUB_HEAD_REF}; git checkout ${{ github.event.pull_request.head.sha }}; fi
@@ -43,7 +36,8 @@ jobs:
         with:
           projectPath: MarusExample
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          testMode: EditMode
+          testMode: All
+          customParameters: -nographics
 
       - uses: actions/upload-artifact@v2
         if: always()
