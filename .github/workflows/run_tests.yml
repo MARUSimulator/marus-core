@@ -22,6 +22,13 @@ jobs:
           path: ./MarusExample
           token: ${{ secrets.REPOACCESS_RO }}
           fetch-depth: 0
+          
+      - uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-
 
       - name: Checkout commit from PR
         run: if [ "${{ github.event.action }}" == "synchronize" ] || [ "${{ github.event.action }}" == "opened"]; then echo pr; cd MarusExample/Assets/LabustSim; git fetch && git checkout ${GITHUB_HEAD_REF}; git checkout ${{ github.event.pull_request.head.sha }}; fi
