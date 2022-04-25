@@ -35,7 +35,7 @@ jobs:
       - name: Checkout commit from push
         run: if [ "${{ github.ref }}" = "refs/heads/dev" ]; then echo push; cd MarusExample/Assets/LabustSim; git checkout ${{ github.sha }}; fi
 
-      - name: Run all tests
+      - name: Run tests
         uses: game-ci/unity-test-runner@v2
         id: tests
         env:
@@ -43,6 +43,7 @@ jobs:
         with:
           projectPath: MarusExample
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+          tetsMode: EditMode
       - uses: actions/upload-artifact@v2
         if: always()
         with:
