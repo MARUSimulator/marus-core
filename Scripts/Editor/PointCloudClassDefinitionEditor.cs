@@ -17,18 +17,18 @@ using UnityEditor;
 namespace Marus.ObjectAnnotation
 {
 	/// <summary>
-	/// Custom editor for PointCloudClassDefinition component.
+	/// Custom editor for AnnotationClassDefinition component.
 	/// Checks for duplicate names or indices and shows all defined classes in scene.
 	/// </summary>
-	[CustomEditor(typeof(PointCloudClassDefinition))]
+	[CustomEditor(typeof(AnnotationClassDefinition))]
     public class PointCloudClassDefinitionEditor : Editor
     {
-        PointCloudClassDefinition [] classes;
+        AnnotationClassDefinition [] classes;
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
-            var PCCD = target as PointCloudClassDefinition;
-            classes = FindObjectsOfType<PointCloudClassDefinition>();
+            var PCCD = target as AnnotationClassDefinition;
+            classes = FindObjectsOfType<AnnotationClassDefinition>();
             foreach (var c in classes)
             {
                 if (c.GetInstanceID() != target.GetInstanceID())
@@ -51,7 +51,7 @@ namespace Marus.ObjectAnnotation
             DrawClasses(classes);
         }
 
-        void DrawClasses(PointCloudClassDefinition[] classes)
+        void DrawClasses(AnnotationClassDefinition[] classes)
         {
             EditorGUILayout.LabelField("Classes defined in this scene:");
             EditorGUI.BeginDisabledGroup(true);

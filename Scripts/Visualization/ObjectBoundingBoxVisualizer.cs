@@ -65,7 +65,7 @@ namespace Marus.Visualization
                     Rect boundingBox = new Rect();
                     try
                     {
-                        boundingBox = ObjectAnnotator.GetBoundingBoxFromMesh(go, c);
+                        boundingBox = CameraObjectDetectionSaver.GetBoundingBoxFromMesh(go, c);
                     }
                     catch
                     {

@@ -20,9 +20,9 @@ namespace Marus.ObjectAnnotation
 {
 
     /// <summary>
-    /// Singleton class that holds all object instance ids for pointcloud segmentation.
+    /// Singleton class that holds all object instance ids for object segmentation.
     /// </summary>
-    public class PointCloudAnnotationHandler : Singleton<PointCloudAnnotationHandler>
+    public class AnnotationHandler : Singleton<AnnotationHandler>
     {
         Dictionary<int, int> ObjectInstanceIds;
         int currentIndex;

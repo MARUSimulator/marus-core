@@ -21,7 +21,7 @@ namespace Marus.ObjectAnnotation
     /// This component enables class definition for segmentation.
     /// It will attach AnnotationObjectInstance component to every immediate child.
     /// </summary>
-    public class PointCloudClassDefinition : MonoBehaviour
+    public class AnnotationClassDefinition : MonoBehaviour
     {
         public string ClassName;
         public int Index;

@@ -113,7 +113,7 @@ namespace Marus.ObjectAnnotation
                     var hit = r.hit;
                     if (hit.collider != null)
                     {
-                        var classDef = hit.collider.gameObject.GetComponentInParent<PointCloudClassDefinition>();
+                        var classDef = hit.collider.gameObject.GetComponentInParent<AnnotationClassDefinition>();
                         if (classDef == null)
                         {
                             // treat unlabeled objects as same instance and same class (other)

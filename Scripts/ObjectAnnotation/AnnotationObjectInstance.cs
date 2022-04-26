@@ -30,7 +30,7 @@ namespace Marus.ObjectAnnotation
 
         public void Awake()
         {
-            InstanceId = PointCloudAnnotationHandler.Instance.SetUniqueId(gameObject);
+            InstanceId = AnnotationHandler.Instance.SetUniqueId(gameObject);
         }
     }
 }

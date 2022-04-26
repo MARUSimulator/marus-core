@@ -21,13 +21,13 @@ namespace Marus.ObjectAnnotation
     /// <summary>
     /// Custom editor for ObjectAnnotator component
     /// </summary>
-    [CustomEditor(typeof(ObjectAnnotator))]
-    public class ObjectAnnotatorEditor : Editor
+    [CustomEditor(typeof(CameraObjectDetectionSaver))]
+    public class CameraObjectDetectionSaverEditor : Editor
     {
-        ObjectAnnotator script;
+        CameraObjectDetectionSaver script;
         void OnEnable()
         {
-            script = (ObjectAnnotator) target;
+            script = (CameraObjectDetectionSaver) target;
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Marus.ObjectAnnotation
         /// </summary>
         public override void OnInspectorGUI()
         {
-            var t = target as ObjectAnnotator;
+            var t = target as CameraObjectDetectionSaver;
             if (t.RaycastCheck)
             {
                 EditorGUILayout.HelpBox("Objects with Mesh must have MeshCollider when RaycastCheck is enable.", MessageType.Info);

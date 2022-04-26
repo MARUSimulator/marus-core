@@ -29,14 +29,14 @@ namespace Marus.ObjectAnnotation
     public class ObjectRecord
     {
         public GameObject Object;
-        public string Class;
+        public int ClassIndex;
     }
 
     /// <summary>
     /// Main component for object annotation in camera images.
     /// Manages objects and cameras, dataset properties etc.
     /// </summary>
-    public class ObjectAnnotator : MonoBehaviour
+    public class CameraObjectDetectionSaver : MonoBehaviour
     {
         /// <summary>
         /// Enable/Disable switch. Usefull for starting annotation during runtime.
@@ -47,10 +47,7 @@ namespace Marus.ObjectAnnotation
         /// <summary>
         /// Holds list of objects to track and annotate.
         /// </summary>
-        [Header("Objects & Cameras Setup", order=0)]
-        [Space(10, order=1)]
-        public List<ObjectRecord> ObjectsToTrack;
-
+        [Header("Cameras Setup", order=0)]
         /// <summary>
         /// Holds list of cameras to annotate objects from.
         /// </summary>
@@ -115,7 +112,7 @@ namespace Marus.ObjectAnnotation
         public int TestSize = 15;
         private GameObject _parent;
         private List<GameObject> _objList;
-        private List<string> _classList;
+        private List<(int, string)> _classList;
 
         private string _imagesPath;
         private string _labelsPath;
@@ -123,6 +120,7 @@ namespace Marus.ObjectAnnotation
         private List<Tuple<int, string>> _ratios;
         private float _timer;
         private List<Tuple<ObjectRecord, Rect>> _objectsInScene;
+        public List<ObjectRecord> ObjectsToTrack;
 
         void Start()
         {
@@ -130,12 +128,19 @@ namespace Marus.ObjectAnnotation
             _timer = 0f;
             _parent = GameObject.Find("SelectionCanvas");
             _objList = new List<GameObject>();
-            _classList = new List<string>();
-            foreach (ObjectRecord o in ObjectsToTrack)
+            _classList = new List<(int, string)>();
+            var classes = FindObjectsOfType<AnnotationClassDefinition>();
+            foreach(var c in classes)
             {
-                if (!_classList.Contains(o.Class))
+                if (c.Index == 0) continue;
+                _classList.Add((c.Index, c.ClassName));
+                foreach(Transform t in c.gameObject.transform)
                 {
-                    _classList.Add(o.Class);
+                    ObjectsToTrack.Add(new ObjectRecord()
+                    {
+                        ClassIndex = c.Index,
+                        Object = t.gameObject
+                    });
                 }
             }
 
@@ -239,14 +244,13 @@ namespace Marus.ObjectAnnotation
             var path = Path.Combine(_labelsPath, folder, index + ".txt");
             foreach(var o in objects)
             {
-                int classIdx = _classList.IndexOf(o.Item1.Class);
                 float x_center = o.Item2.center.x / (float) ImageWidth;
                 float y_center = 1 - (o.Item2.center.y / (float) ImageHeight);
                 float width = o.Item2.width / (float) ImageWidth;
                 float height = o.Item2.height / (float) ImageHeight;
                 using (StreamWriter sw = File.AppendText(path))
                 {
-                    sw.WriteLine($"{classIdx} {x_center} {y_center} {width} {height}");
+                    sw.WriteLine($"{o.Item1.ClassIndex} {x_center} {y_center} {width} {height}");
                 }
             }
         }
@@ -417,7 +421,8 @@ namespace Marus.ObjectAnnotation
                     tw.WriteLine($"test: {Path.Combine(_imagesPath, "test")}");
                 }
                 tw.WriteLine($"nc: {_classList.Count}");
-                string _classListRepr = string.Join(",", _classList.Select(x => $"'{x}'"));
+                _classList.Sort(Comparer<(int, string)>.Default);
+                string _classListRepr = string.Join(",", _classList.Select(x => $"'{x.Item2}'"));
                 tw.WriteLine($"classes: [{_classListRepr}]");
             }
         }

@@ -10,12 +10,12 @@ namespace Marus.ObjectAnnotation
     [CustomEditor(typeof(PointCloudSemanticSegmentationSaver))]
     public class PCSegSaver : Editor
     {
-        PointCloudClassDefinition [] classes;
+        AnnotationClassDefinition [] classes;
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
-            var PCCD = target as PointCloudClassDefinition;
-            classes = FindObjectsOfType<PointCloudClassDefinition>();
+            var PCCD = target as AnnotationClassDefinition;
+            classes = FindObjectsOfType<AnnotationClassDefinition>();
             EditorGUILayout.LabelField("Classes defined in this scene:");
             EditorGUI.BeginDisabledGroup(true);
             foreach(var c in classes)
