@@ -1,8 +1,9 @@
 # MARUS - MArine Robotic Unity Simulator
 
-## Introduction
-
 ![test status](https://github.com/labust/LabustSim/actions/workflows/run_tests.yml/badge.svg?branch=dev)
+
+
+## Introduction
 
 gRPC ROS adapter implemented in our [ros package](https://github.com/labust/grpc_ros_adapter)
 
