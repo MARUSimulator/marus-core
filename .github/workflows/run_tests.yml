@@ -1,4 +1,4 @@
-name: Run unit tests
+name: Unit tests
 
 on:
     push:
@@ -10,10 +10,10 @@ on:
 
 jobs:
   test:
-    name: Run unit tests for MarusCore
+    name: Test MarusCore
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout MarusExample
+      - name: Checkout MarusExample project
         uses: actions/checkout@v2
         with:
           repository: labust/MarusExample
@@ -28,7 +28,7 @@ jobs:
       - name: Checkout commit from push
         run: if [ "${{ github.ref }}" = "refs/heads/dev" ]; then echo push; cd MarusExample/Assets/LabustSim; git checkout ${{ github.sha }}; fi
 
-      - name: Run tests
+      - name: Run EditMode tests
         uses: game-ci/unity-test-runner@v2
         id: tests
         env:
@@ -36,10 +36,10 @@ jobs:
         with:
           projectPath: MarusExample
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          testMode: All
-          customParameters: -nographics
-
-      - uses: actions/upload-artifact@v2
+          testMode: EditMode
+ 
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
         if: always()
         with:
           name: Test results
