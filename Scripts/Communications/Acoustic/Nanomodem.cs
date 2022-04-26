@@ -18,7 +18,7 @@ using UnityEngine;
 
 namespace Marus.Communications.Acoustics
 {
-	public class Nanomodem : AcousticDevice<NanomodemMessage>
+    public class Nanomodem : AcousticDevice<NanomodemMessage>
     {
         /// <summary>
         /// Unique identifier of nanomodem
