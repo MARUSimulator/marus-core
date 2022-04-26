@@ -20,7 +20,7 @@ using UnityEditor;
 
 namespace Marus.Utils
 {
-	public static class Helpers
+    public static class Helpers
     {
         /// <summary>
         /// Return RigidBody component in the first ancestor GameObject

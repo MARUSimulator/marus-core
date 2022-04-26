@@ -20,12 +20,12 @@ using System;
 namespace Marus.Sensors
 {
 
-	/// <summary>
-	/// Lidar that cast N rays evenly distributed in configured field of view.
-	/// Implemented using IJobParallelFor on CPU
-	/// Can drop performance
-	/// </summary>
-	public class RaycastLidar : SensorBase
+    /// <summary>
+    /// Lidar that cast N rays evenly distributed in configured field of view.
+    /// Implemented using IJobParallelFor on CPU
+    /// Can drop performance
+    /// </summary>
+    public class RaycastLidar : SensorBase
     {
 
         /// Instantiates 3 Jobs:
@@ -91,29 +91,6 @@ namespace Marus.Sensors
             return reading;
         }
 
-        private void test()
-        {
-            // if (hit.collider != null)
-            // {
-            
-            //    var classDef = hit.collider.gameObject.GetComponentInParent<PointCloudClassDefinition>();
-            //    if (classDef == null)
-            //    {
-            //        // treat unlabeled objects as same instance and same class (other)
-            //        reading.ClassId = 0;
-            //        reading.InstanceId = 0;
-            //    }
-            //    else
-            //    {
-            //        reading.ClassId = classDef.Index;
-            //        reading.InstanceId = hit.collider.gameObject.GetComponentInParent<AnnotationObjectInstance>().InstanceId;
-            //    }
-            // }
-            // else
-            // {
-            //     reading.Valid = false;
-            // }
-        }
         void OnDestroy()
         {
             _raycastHelper?.Dispose();

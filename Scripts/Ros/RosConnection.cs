@@ -32,11 +32,11 @@ using static Acoustictransmission.AcousticTransmission;
 
 namespace Marus.Networking
 {
-	/// <summary>
-	/// Singleton class for configuring and connecting to 
-	/// ROS server
-	/// </summary>
-	[DefaultExecutionOrder(-1)]
+    /// <summary>
+    /// Singleton class for configuring and connecting to 
+    /// ROS server
+    /// </summary>
+    [DefaultExecutionOrder(-1)]
     public class RosConnection : Singleton<RosConnection>
     {
         [Header("Server info")]

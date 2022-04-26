@@ -20,7 +20,7 @@ public class ConditionalHideAttribute : PropertyAttribute
     public bool InverseCondition2 = false;
 
 
-	// Use this for initialization
+    // Use this for initialization
     public ConditionalHideAttribute(string conditionalSourceField)
     {
         this.ConditionalSourceField = conditionalSourceField;

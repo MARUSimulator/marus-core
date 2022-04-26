@@ -37,10 +37,10 @@ namespace Marus.Utils
                         GameObject obj = new GameObject();
                         obj.name = typeof(T).Name;
                         instance = obj.AddComponent<T>();
-						if (Application.isPlaying) // DontDestroyOnLoad does not work outside PlayMode
-						{
-							DontDestroyOnLoad(instance.gameObject);
-						}
+                        if (Application.isPlaying) // DontDestroyOnLoad does not work outside PlayMode
+                        {
+                            DontDestroyOnLoad(instance.gameObject);
+                        }
                     }
                     var init = typeof(T).GetMethod("Initialize", BindingFlags.NonPublic | BindingFlags.Instance);
                     init.Invoke(instance, null);
