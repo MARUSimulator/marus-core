@@ -75,3 +75,6 @@ crashlytics-build.properties
 API/Protobuf
 .idea
 HDRPDefaultResources/HDRPDefaultSettings.asset.meta
+README.md.meta
+LICENSE.meta
+
