@@ -140,8 +140,12 @@ namespace Marus.Visualization.Primitives
                 sphere.transform.localScale = new Vector3(PointSize, PointSize, PointSize);
                 sphere.transform.position = Position;
                 sphere.GetComponent<Renderer>().material.color = PointColor;
-                sphere.layer = LayerMask.NameToLayer("Visualization");
-                sphere.GetComponent<Renderer>().sortingLayerID = SortingLayer.NameToID("Points");
+                try
+                {
+                    sphere.layer = LayerMask.NameToLayer("Visualization");
+                    sphere.GetComponent<Renderer>().sortingLayerID = SortingLayer.NameToID("Points");
+                }
+                catch {}
                 Material newMat = new Material(Shader.Find("HDRP/Unlit"));
                 sphere.GetComponent<Renderer>().material = newMat;
                 sphere.GetComponent<Renderer>().material.color = PointColor;

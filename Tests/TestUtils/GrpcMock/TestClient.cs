@@ -24,7 +24,7 @@ namespace TestUtils
 
       /// <summary>Creates a new client for TestClient</summary>
       /// <param name="channel">The channel to use to make remote calls.</param>
-      public TestClient(grpc::Channel channel) : base(channel)
+      public TestClient(grpc::ChannelBase channel) : base(channel)
       {
       }
       /// <summary>Creates a new client for TestClient that uses a custom <c>CallInvoker</c>.</summary>

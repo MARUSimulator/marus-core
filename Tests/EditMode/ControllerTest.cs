@@ -21,8 +21,9 @@ public class ControllerTest
 {
     GameObject agent1;
     GameObject agent2;
-    AgentManager agentManager;
     GameObject cameraObj;
+
+    AgentManager agentManager;
 
     [OneTimeSetUp]
     public void SetUp()
@@ -34,7 +35,8 @@ public class ControllerTest
         var camera = cameraObj.AddComponent<Camera>();
 
         agentManager = Utils.CreateAndInitializeObject<AgentManager>("agentManager");
-        agentManager.agents = new List<GameObject>(){agent1, agent2};
+        agentManager.Register(agent1);
+        agentManager.Register(agent2);
         Utils.CallStart<AgentManager>(agentManager);
     }
 
@@ -50,7 +52,6 @@ public class ControllerTest
     {
         var agent1Controller = agent1.AddComponent<AUVPrimitiveController>();
         Utils.CallAwake<AUVPrimitiveController>(agent1Controller);
-
         //Test translation.
         Utils.CallNonpublicMethod<AUVPrimitiveController>(agent1Controller, "UpdateMovement", new object[]{1, KeyCode.W, 1});
         Assert.AreEqual(1, agent1.transform.position.z, "AUV primitive controller translation doesn't work as expected");
@@ -68,12 +69,12 @@ public class ControllerTest
         var cameraController = cameraObj.AddComponent<CameraController>();
         Utils.CallAwake<CameraController>(cameraController);
 
-        agentManager.agents = new List<GameObject>(){cameraObj};
-        Utils.CallStart<AgentManager>(agentManager);
-
+        agentManager.Register(cameraObj);
+        Utils.CallAwake<AgentManager>(agentManager);
+        agentManager.activeAgent = cameraObj;
         //Test translation
         Utils.CallNonpublicMethod<CameraController>(cameraController, "UpdateMovement", new object[]{1, KeyCode.W, 1});
-        Assert.AreEqual(1, cameraObj.transform.position.z,"Camera controller translation doesn't work as expected");
+        Assert.AreEqual(1, cameraObj.transform.position.z, "Camera controller translation doesn't work as expected");
 
         //Test rotation
         cameraController.rotSpeed = 1000f;

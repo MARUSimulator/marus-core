@@ -33,7 +33,7 @@ namespace Marus.Sensors.Primitive
             sensor = GetComponent<ImuSensor>();
             if (string.IsNullOrEmpty(address))
                 address = $"{sensor.vehicle.name}/imu";
-            StreamSensor(streamingClient?.StreamImuSensor(cancellationToken:RosConnection.Instance.cancellationToken));
+            StreamSensor(streamingClient?.StreamImuSensor(cancellationToken:RosConnection.Instance.CancellationToken));
         }
 
         new void Update()

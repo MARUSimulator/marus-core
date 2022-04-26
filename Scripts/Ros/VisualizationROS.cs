@@ -49,7 +49,7 @@ namespace Marus.Networking
             namespaces = new HashSet<string>();
         }
 
-        public void OnConnected(Channel channel)
+        public void OnConnected(ChannelBase channel)
         {
             string address = "/unity/marker";
             string address2 = "/unity/markerArray";
@@ -57,10 +57,10 @@ namespace Marus.Networking
 
             streamer1.StartStream(client.SetMarker(
                 new MarkerRequest {Address = address},
-                cancellationToken: RosConnection.Instance.cancellationToken));
+                cancellationToken: RosConnection.Instance.CancellationToken));
             streamer2.StartStream(client.SetMarkerArray(
                 new MarkerRequest {Address = address2},
-                cancellationToken: RosConnection.Instance.cancellationToken));
+                cancellationToken: RosConnection.Instance.CancellationToken));
         }
 
         void Update()

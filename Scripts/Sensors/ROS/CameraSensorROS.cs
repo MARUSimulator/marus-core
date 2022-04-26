@@ -32,7 +32,7 @@ namespace Marus.Sensors
             sensor = GetComponent<CameraSensor>();
             if (string.IsNullOrEmpty(address))
                 address = sensor.vehicle.name + "/camera";
-            StreamSensor(streamingClient?.StreamCameraSensor(cancellationToken:RosConnection.Instance.cancellationToken));
+            StreamSensor(streamingClient?.StreamCameraSensor(cancellationToken:RosConnection.Instance.CancellationToken));
         }
 
         new void Update()

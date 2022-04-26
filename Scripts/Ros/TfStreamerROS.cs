@@ -57,8 +57,6 @@ namespace Marus.ROS
         {
             get
             {
-                if (!RosConnection.Instance.IsConnected)
-                    return null;
                 return RosConnection.Instance.GetClient<TfClient>();
             }
         }
@@ -80,16 +78,17 @@ namespace Marus.ROS
             }
         }
 
+
+
         public void Start()
         {
-            //var r = RosConnection.Instance;
             address = "/tf";
             if (ParentFrameId == "")
             {
                 ParentFrameId = "map";
             }
 
-            streamHandle = streamingClient?.PublishFrame(cancellationToken:RosConnection.Instance.cancellationToken);
+            streamHandle = streamingClient?.PublishFrame(cancellationToken:RosConnection.Instance.CancellationToken);
 
         }
 

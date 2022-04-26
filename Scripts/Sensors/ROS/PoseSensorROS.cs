@@ -35,7 +35,7 @@ namespace Marus.Sensors.Primitive
             sensor = GetComponent<PoseSensor>();
             if (string.IsNullOrEmpty(address))
                 address = sensor.vehicle.name + "/pose";
-            StreamSensor(streamingClient?.StreamPoseSensor(cancellationToken:RosConnection.Instance.cancellationToken));
+            StreamSensor(streamingClient?.StreamPoseSensor(cancellationToken:RosConnection.Instance.CancellationToken));
         }
 
         new void Update()

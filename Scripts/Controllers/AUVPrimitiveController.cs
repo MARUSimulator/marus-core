@@ -29,20 +29,19 @@ public class AUVPrimitiveController : MonoBehaviour
     private readonly List<KeyCode> keycodes = new List<KeyCode>{KeyCode.W, KeyCode.S, KeyCode.E, KeyCode.Q, KeyCode.A, KeyCode.D, KeyCode.X, KeyCode.Y};
 
     Transform _targetTransform;
-    AgentManager agentManager;
 
 
     // Start is called before the first frame update
     void Awake()
     {
         _targetTransform = transform;
-        agentManager = GameObject.FindObjectOfType<AgentManager>();
+        AgentManager.Instance.Register(gameObject);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (agentManager.activeAgent != gameObject)
+        if (AgentManager.Instance.activeAgent != gameObject)
             return;
 
         var speed = linSpeed;

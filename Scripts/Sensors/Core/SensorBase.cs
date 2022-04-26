@@ -28,7 +28,6 @@ namespace Marus.Sensors
         protected void Awake()
         {
             SensorSampler.Instance.AddSensorCallback(this, SampleSensor);
-            var r = RosConnection.Instance;
         }
 
         //public bool RunRecording = false;
@@ -107,8 +106,6 @@ namespace Marus.Sensors
         {
             get
             {
-                if (!RosConnection.Instance.IsConnected)
-                    return null;
                 return RosConnection.Instance.GetClient<SensorStreaming.SensorStreamingClient>();
             }
         }

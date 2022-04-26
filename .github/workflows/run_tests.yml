@@ -1,0 +1,46 @@
+name: Unit tests
+
+on:
+    push:
+      branches:
+        - 'dev'
+    pull_request:
+      types: [opened, synchronize]
+    workflow_dispatch:
+
+jobs:
+  test:
+    name: Test MarusCore
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout MarusExample project
+        uses: actions/checkout@v2
+        with:
+          repository: labust/MarusExample
+          lfs: true
+          submodules: recursive
+          path: ./MarusExample
+          token: ${{ secrets.REPOACCESS_RO }}
+          fetch-depth: 0
+
+      - name: Checkout commit from PR
+        run: if [ "${{ github.event.action }}" == "synchronize" ] || [ "${{ github.event.action }}" == "opened"]; then echo pr; cd MarusExample/Assets/LabustSim; git fetch && git checkout ${GITHUB_HEAD_REF}; git checkout ${{ github.event.pull_request.head.sha }}; fi
+      - name: Checkout commit from push
+        run: if [ "${{ github.ref }}" = "refs/heads/dev" ]; then echo push; cd MarusExample/Assets/LabustSim; git checkout ${{ github.sha }}; fi
+
+      - name: Run EditMode tests
+        uses: game-ci/unity-test-runner@v2
+        id: tests
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          projectPath: MarusExample
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          testMode: EditMode
+ 
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: Test results
+          path: ${{ steps.tests.outputs.artifactsPath }}

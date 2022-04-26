@@ -35,7 +35,7 @@ namespace Marus.Sensors.ROS
             var sensor = GetComponent<DepthSensor>();
             if (string.IsNullOrEmpty(address))
                 address = sensor.vehicle.name + "/depth";
-            StreamSensor(streamingClient?.StreamDepthSensor(cancellationToken:RosConnection.Instance.cancellationToken));
+            StreamSensor(streamingClient?.StreamDepthSensor(cancellationToken:RosConnection.Instance.CancellationToken));
         }
 
         new void Update()

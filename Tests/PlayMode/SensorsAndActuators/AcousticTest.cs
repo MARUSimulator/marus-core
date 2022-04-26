@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using NUnit.Framework;
-using Marus.Sensors.Acoustics;
+using Marus.Communications.Acoustics;
 using TestUtils;
 using UnityEngine.TestTools;
 using System.Collections;
@@ -35,10 +35,12 @@ public class AcousticTest
         _nanomodem1 = Utils.CreateAndInitializeObject<Nanomodem>("nanomodem1", PrimitiveType.Cube);
         _nanomodem1.Range = 600;
         _nanomodem1.ChangeId(1);
+        Utils.CallAwake<Nanomodem>(_nanomodem1);
 
         _nanomodem2 = Utils.CreateAndInitializeObject<Nanomodem>("nanomodem2", PrimitiveType.Cube);
         _nanomodem2.transform.position = new Vector3(100, 0, 0);
         _nanomodem2.ChangeId(2);
+        Utils.CallAwake<Nanomodem>(_nanomodem2);
     }
 
     [Test]
@@ -54,7 +56,7 @@ public class AcousticTest
         {
             Message = "$P002",
             ReceiverId = 2,
-            TransmitionType = TransmitionType.Unicast
+            TransmitionType = TransmitionType.Unicast,
         };
         var ack = false;
         _nanomodem2.OnReceiveEvent += (msg) => ack = true;

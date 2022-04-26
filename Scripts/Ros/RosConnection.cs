@@ -29,6 +29,8 @@ using System.Collections;
 using Simulationcontrol;
 using Marus.Utils;
 using static Acoustictransmission.AcousticTransmission;
+using Grpc.Core;
+using Grpc.Core.Api;
 
 namespace Marus.Networking
 {
@@ -70,7 +72,12 @@ namespace Marus.Networking
         Dictionary<Type, ClientBase> _grpcClients;
         volatile bool _connected;
         public bool IsConnected => _connected;
-        public CancellationToken cancellationToken => _streamingChannel.ShutdownToken;
+
+        volatile bool _isConnecting;
+        public bool IsConnecting => _isConnecting;
+
+        CancellationToken _cancellationToken;
+        public CancellationToken CancellationToken => _cancellationToken;
 
         private SimulationControlClient _simulationController;
 
@@ -106,24 +113,38 @@ namespace Marus.Networking
             throw new Exception($"Client of type {typeof(T).Name} does not exist.");
         }
 
-        protected override void Initialize()
+        private void Awake()
         {
             CreateSingletons();
-            // init channel and streaming clients
+
             var options = new List<ChannelOption>();
             options.Add(new ChannelOption(ChannelOptions.MaxSendMessageLength, 1024*1024*100));
             _streamingChannel = new Channel(serverIP, serverPort, ChannelCredentials.Insecure, options);
+            _cancellationToken = _streamingChannel.ShutdownToken;
             InitializeClients();
-            var t = new Thread(() =>
-            {
-                _connected = TryConnect();
-                // maybe add what to do after failed connection
-                // maybe ping server repeatedly 
-            });
-            t.Start();
+
+            Connect();
 
             StartCoroutine(WhileConnectionAwait());
         }
+
+
+        public void Connect()
+        {
+            if (!_connected && !_isConnecting)
+            {
+                _isConnecting = true;
+                var t = new Thread(() =>
+                {
+                    _connected = TryConnect();
+                    _isConnecting = false;
+                    // maybe add what to do after failed connection
+                    // maybe ping server repeatedly 
+                });
+                t.Start();
+            }
+        }
+
         void CreateSingletons()
         {
             var paramServer = ParamServerHandler.Instance;
@@ -177,8 +198,6 @@ namespace Marus.Networking
                 );
             }
         }
-
-
 
         private void GetSimulationController()
         {

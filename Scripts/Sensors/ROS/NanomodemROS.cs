@@ -20,7 +20,7 @@ using static Acoustictransmission.AcousticTransmission;
 using Marus.Core;
 using Labust;
 
-namespace Marus.Sensors.Acoustics
+namespace Marus.Communications.Acoustics
 {
 
     /// <summary>
@@ -53,7 +53,7 @@ namespace Marus.Sensors.Acoustics
             // Server to Unity stream
             streamer.StartStream(client.StreamAcousticRequests(
                 new CommandRequest { Address = requestAddress},
-                cancellationToken: RosConnection.Instance.cancellationToken));
+                cancellationToken: RosConnection.Instance.CancellationToken));
             
         }
 
@@ -334,7 +334,7 @@ namespace Marus.Sensors.Acoustics
         {
             client.ReturnAcousticPayload(
                 payload,
-                cancellationToken: RosConnection.Instance.cancellationToken);
+                cancellationToken: RosConnection.Instance.CancellationToken);
         }
 
         private NanomodemPayload GetEmptyNanomodemPayload()

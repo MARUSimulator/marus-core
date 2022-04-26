@@ -36,7 +36,6 @@ public class CameraController : MonoBehaviour
     private readonly List<KeyCode> keycodes = new List<KeyCode>{KeyCode.W, KeyCode.S, KeyCode.E, KeyCode.Q, KeyCode.A, KeyCode.D, KeyCode.X, KeyCode.Y};
 
     Transform _targetTransform;
-    AgentManager agentManager;
 
     [System.Serializable]
     class DebugFields
@@ -54,8 +53,7 @@ public class CameraController : MonoBehaviour
     {
         _targetTransform = transform;
         _camera = gameObject.GetComponent<Camera>();
-        agentManager = GameObject.FindObjectOfType<AgentManager>();
-
+        AgentManager.Instance.Register(gameObject);
         // We cannot change the Camera's transform when XR is enabled. This is not an issue with the new XR plugin.
         if (XRSettings.enabled)
         {
@@ -125,11 +123,11 @@ public class CameraController : MonoBehaviour
     void UpdateMovement(float dt, KeyCode key, float speed)
     {
 
-        if (agentManager.activeAgent != gameObject)
+        if (AgentManager.Instance.activeAgent != gameObject)
             return;
 
         if (!Input.GetMouseButton(0) && _requireRMBToMove) return;
-        
+
         if (Input.GetKey(KeyCode.R)) // if reset view
         {
             var parent = gameObject.transform.parent;

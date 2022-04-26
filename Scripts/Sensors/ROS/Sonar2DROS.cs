@@ -29,7 +29,7 @@ namespace Marus.Sensors.Primitive
             sensor = GetComponent<Sonar2D>();
             if (string.IsNullOrEmpty(address))
                 address = transform.name + "/sonar3d";
-            StreamSensor(streamingClient?.StreamPointCloud(cancellationToken: RosConnection.Instance.cancellationToken));
+            StreamSensor(streamingClient?.StreamPointCloud(cancellationToken: RosConnection.Instance.CancellationToken));
         }
 
         new void Update()

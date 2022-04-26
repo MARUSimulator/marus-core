@@ -39,7 +39,7 @@ namespace Marus.Sensors
             UpdateFrequency = Mathf.Min(UpdateFrequency, sensor.SampleFrequency);
             if (string.IsNullOrEmpty(address))
                 address = transform.name + "/lidar2";
-            StreamSensor(streamingClient?.StreamPointCloud2(cancellationToken: RosConnection.Instance.cancellationToken));
+            StreamSensor(streamingClient?.StreamPointCloud2(cancellationToken: RosConnection.Instance.CancellationToken));
         }
 
         new void Update()
