@@ -19,7 +19,7 @@ using System;
 namespace Marus.Communications.Acoustics
 {
 
-	public abstract class AcousticDevice<T> : AcousticDevice where T : AcousticMessage
+    public abstract class AcousticDevice<T> : AcousticDevice where T : AcousticMessage
     {
         public abstract void OnReceive(T message);
         public abstract void Send(T message, 

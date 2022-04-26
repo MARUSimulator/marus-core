@@ -38,7 +38,7 @@ namespace Marus.Networking
     /// Singleton class for configuring and connecting to 
     /// ROS server
     /// </summary>
-    [DefaultExecutionOrder(-10)]
+    [DefaultExecutionOrder(-1)]
     public class RosConnection : Singleton<RosConnection>
     {
         [Header("Server info")]
