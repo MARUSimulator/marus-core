@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Environment.meta
 guid: b74d4a4c1fca0e648b055e945642f55d
+=======
+guid: 2830fe310a156c3e18a4d8be641325ce
+>>>>>>> Add missing license headers:Scripts/PcdUtils.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
