@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System;
-using System.Collections;
 
 //Original version of the ConditionalHideAttribute created by Brecht Lecluyse (www.brechtos.com)
 //Modified by: -
@@ -60,12 +59,9 @@ public class ConditionalHideAttribute : PropertyAttribute
 
     public ConditionalHideAttribute(string[] conditionalSourceFields, bool hideInInspector, bool inverse)
     {
-        this.ConditionalSourceFields = conditionalSourceFields;        
+        this.ConditionalSourceFields = conditionalSourceFields;
         this.HideInInspector = hideInInspector;
         this.Inverse = inverse;
     }
 
 }
-
-
-

@@ -118,7 +118,7 @@ namespace Marus.Networking
             {
                 if (frame.ChildFrameId == rosConn.OriginFrameName) 
                     continue;
-                
+
                 var frameObj = GetOrCreateGameObjectForFrame(frame);
 
                 // set parent if it is not already set
@@ -175,6 +175,5 @@ namespace Marus.Networking
             }
             return obj;
         }
-
     }
 }

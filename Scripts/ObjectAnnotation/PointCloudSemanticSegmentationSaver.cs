@@ -15,7 +15,7 @@
 using UnityEngine;
 using Marus.Sensors;
 using Unity.Collections;
-using Marus.Pcd;
+using Marus.PcdUtils;
 using System.IO;
 using System;
 
@@ -85,7 +85,7 @@ namespace Marus.ObjectAnnotation
                 var fileName = Namespace + $"_{c}";
                 var pcdFile = Path.Combine(SavePath, "lidar", fileName + ".pcd");
                 TransformPoints(points, lidar.transform);
-                PCDSaver.WriteToPcdFile(pcdFile, transformedPoints, "binary");
+                PCDUtils.WriteToPcdFile(pcdFile, transformedPoints, "binary");
                 WriteLabels(fileName, readings);
                 WritePose(orientationMatrix, translation);
                 _lastSave = Time.time;

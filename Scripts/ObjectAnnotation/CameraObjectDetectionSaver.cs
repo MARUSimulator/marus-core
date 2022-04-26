@@ -120,7 +120,7 @@ namespace Marus.ObjectAnnotation
         private List<Tuple<int, string>> _ratios;
         private float _timer;
         private List<Tuple<ObjectRecord, Rect>> _objectsInScene;
-        public List<ObjectRecord> ObjectsToTrack;
+        private List<ObjectRecord> ObjectsToTrack;
 
         void Start()
         {

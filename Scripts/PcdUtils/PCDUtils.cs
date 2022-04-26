@@ -19,9 +19,9 @@ using System.Text;
 using System;
 using System.Linq;
 
-namespace Marus.Pcd
+namespace Marus.PcdUtils
 {
-    public static class PCDSaver
+    public static class PCDUtils
     {
 
         private static string GenerateMetadata(int numOfPoints, string format)

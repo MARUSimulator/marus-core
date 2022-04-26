@@ -22,8 +22,8 @@ namespace Marus.Core
 {
     public class TimeHandler : Singleton<TimeHandler>
     {
-        const uint SEC2NSEC = 1000000000; 
-        const uint SEC2TICKS = 10000000; 
+        const uint SEC2NSEC = 1000000000;
+        const uint SEC2TICKS = 10000000;
 
         uint _startTimeSecs;
         uint _startTimeNsecs;
@@ -32,7 +32,7 @@ namespace Marus.Core
 
         [HideInInspector]
         public bool _isRealTime;
-        
+
         [ConditionalHideInInspector("_isRealTime", true)]
         public float SimulationSpeed;
         public uint CurrentTime { get; private set;}
@@ -91,6 +91,5 @@ namespace Marus.Core
             _totalTimeSecs = _startTimeSecs;
             _totalTimeNsecs = _startTimeNsecs;
         }
-
     }
 }

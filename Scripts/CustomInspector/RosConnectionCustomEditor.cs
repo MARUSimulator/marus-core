@@ -23,7 +23,7 @@ public class RosConnectionCustomEditor : Editor
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
-        
+
         var conn = (RosConnection)target;
         if (EditorApplication.isPlaying &&
             !conn.IsConnected && !conn.IsConnecting)
