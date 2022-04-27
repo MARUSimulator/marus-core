@@ -40,7 +40,7 @@ public class AISTest
     [Test]
     public void TestAisSample()
     {
-        Utils.CallFixedUpdate(SensorSampler.Instance);
+        Utils.CallNonpublicMethod(_ais, "SampleSensor");
         Assert.AreEqual(0, _ais.SOG);
         Assert.AreEqual(0, _ais.COG);
         Assert.AreEqual(0, _ais.TrueHeading);
@@ -48,7 +48,7 @@ public class AISTest
         _ais.transform.eulerAngles = new Vector3(0, 90, 0);
         _ais.transform.position = new Vector3(-1, 0, 0);
         _rigidbody.velocity = new Vector3(-3f, 0, 0);
-        Utils.CallFixedUpdate(SensorSampler.Instance);
+        Utils.CallNonpublicMethod(_ais, "SampleSensor");
         Assert.AreEqual(58, _ais.SOG);
         Assert.AreEqual(2700, _ais.COG);
         Assert.AreEqual(90, _ais.TrueHeading);

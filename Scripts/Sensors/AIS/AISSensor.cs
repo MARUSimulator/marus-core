@@ -49,7 +49,6 @@ namespace Marus.Sensors.AIS
             SetCOG();
             SetSOG();
             SetTrueHeading();
-            hasData = true;
             lastPosition = transform.position;
         }
 

@@ -15,7 +15,8 @@
     "precompiledReferences": [
         "nunit.framework.dll",
         "Grpc.Core.Api.dll",
-        "Grpc.Core.dll"
+        "Grpc.Core.dll",
+        "Google.Protobuf.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [

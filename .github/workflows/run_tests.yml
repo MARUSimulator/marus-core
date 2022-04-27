@@ -24,9 +24,9 @@ jobs:
           fetch-depth: 0
 
       - name: Checkout commit from PR
-        run: if [ "${{ github.event.action }}" == "synchronize" ] || [ "${{ github.event.action }}" == "opened"]; then echo pr; cd MarusExample/Assets/LabustSim; git fetch && git checkout ${GITHUB_HEAD_REF}; git checkout ${{ github.event.pull_request.head.sha }}; fi
+        run: if [ "${{ github.event.action }}" == "synchronize" ] || [ "${{ github.event.action }}" == "opened"]; then echo pr; cd MarusExample/Assets/LabustSim; git fetch && git checkout ${GITHUB_HEAD_REF}; git checkout ${{ github.event.pull_request.head.sha }}; git submodule update --recursive; fi
       - name: Checkout commit from push
-        run: if [ "${{ github.ref }}" = "refs/heads/dev" ]; then echo push; cd MarusExample/Assets/LabustSim; git checkout ${{ github.sha }}; fi
+        run: if [ "${{ github.ref }}" = "refs/heads/dev" ]; then echo push; cd MarusExample/Assets/LabustSim; git checkout ${{ github.sha }}; git submodule update --recursive; fi
 
       - name: Run EditMode tests
         uses: game-ci/unity-test-runner@v2

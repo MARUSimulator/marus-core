@@ -19,11 +19,12 @@ using Sensor;
 using Sensorstreaming;
 using Std;
 using UnityEngine;
+using static Sensorstreaming.SensorStreaming;
 
 namespace Marus.Sensors.ROS
 {
     [RequireComponent(typeof(GnssSensor))]
-    public class GnssROS : SensorStreamer<GnssStreamingRequest>
+    public class GnssROS : SensorStreamer<SensorStreamingClient, GnssStreamingRequest>
     {
         GnssSensor sensor;
         void Start()
@@ -33,13 +34,8 @@ namespace Marus.Sensors.ROS
             {
                 address = $"{sensor.vehicle?.name}/gps";
             }
-            StreamSensor(streamingClient?.StreamGnssSensor(cancellationToken:RosConnection.Instance.CancellationToken));
-        }
-
-        new void Update()
-        {
-            hasData = sensor.hasData;
-            base.Update();
+            StreamSensor(sensor, 
+                streamingClient.StreamGnssSensor);
         }
 
         protected override async void SendMessage()
@@ -66,7 +62,6 @@ namespace Marus.Sensors.ROS
             };
             if (transform.position.y > -sensor.maximumOperatingDepth) 
                 await _streamWriter.WriteAsync(msg);
-            hasData = false;
         }
     }
 }

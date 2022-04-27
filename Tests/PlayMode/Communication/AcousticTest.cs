@@ -62,20 +62,16 @@ public class AcousticTest
         _nanomodem2.OnReceiveEvent += (msg) => ack = true;
 
         _nanomodem1.Send(msg);
-        for (int i = 0; i < 200; i++)
-        {
+        for (var i = 0; i < 200; i++)
             yield return null;
-        }
         Assert.AreEqual(true, ack);
 
         // test when not in range
         ack = false;
         _nanomodem2.transform.position = new Vector3(700, 0, 0);
         _nanomodem1.Send(msg);
-        for (int i = 0; i < 200; i++)
-        {
+        for (var i = 0; i < 200; i++)
             yield return null;
-        }
         Assert.AreEqual(false, ack);
     }
 }

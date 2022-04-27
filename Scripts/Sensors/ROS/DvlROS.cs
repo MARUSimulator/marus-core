@@ -19,12 +19,13 @@ using Marus.Sensors.Primitive;
 using Sensorstreaming;
 using Std;
 using UnityEngine;
+using static Sensorstreaming.SensorStreaming;
 
 namespace Marus.Sensors.ROS
 {
 
     [RequireComponent(typeof(DvlSensor))]
-    public class DvlROS : SensorStreamer<DvlStreamingRequest>
+    public class DvlROS : SensorStreamer<SensorStreamingClient, DvlStreamingRequest>
     {
         DvlSensor sensor;
         void Start()
@@ -32,13 +33,8 @@ namespace Marus.Sensors.ROS
             sensor = GetComponent<DvlSensor>();
             if (string.IsNullOrEmpty(address))
                 address = sensor.vehicle.name + "/dvl";
-            StreamSensor(streamingClient?.StreamDvlSensor(cancellationToken:RosConnection.Instance.CancellationToken));
-        }
-
-        new void Update()
-        {
-            hasData = sensor.hasData;
-            base.Update();
+            StreamSensor(sensor, 
+                streamingClient.StreamDvlSensor);
         }
 
         protected async override void SendMessage()
@@ -66,7 +62,6 @@ namespace Marus.Sensors.ROS
                 Data = dvlOut
             };
             await _streamWriter.WriteAsync(request);
-            hasData = false;
         }
     }
 }

@@ -19,12 +19,13 @@ using Marus.Sensors.Primitive;
 using Sensorstreaming;
 using Std;
 using UnityEngine;
+using static Sensorstreaming.SensorStreaming;
 using Quaternion = Geometry.Quaternion;
 
 namespace Marus.Sensors.ROS
 {
     [RequireComponent(typeof(DepthSensor))]
-    public class DepthSensorROS : SensorStreamer<DepthStreamingRequest>
+    public class DepthSensorROS : SensorStreamer<SensorStreamingClient, DepthStreamingRequest>
     {
         double depth;
         public double covariance;
@@ -35,14 +36,10 @@ namespace Marus.Sensors.ROS
             var sensor = GetComponent<DepthSensor>();
             if (string.IsNullOrEmpty(address))
                 address = sensor.vehicle.name + "/depth";
-            StreamSensor(streamingClient?.StreamDepthSensor(cancellationToken:RosConnection.Instance.CancellationToken));
+            StreamSensor(sensor,
+                streamingClient.StreamDepthSensor);
         }
 
-        new void Update()
-        {
-            hasData = sensor.hasData;
-            base.Update();
-        }
 
         protected async override void SendMessage()
         {

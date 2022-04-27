@@ -16,12 +16,13 @@ using Marus.Networking;
 using Sensorstreaming;
 using UnityEngine;
 using System;
+using static Sensorstreaming.SensorStreaming;
 
 namespace Marus.Sensors.AIS
 {
     [RequireComponent(typeof(AisSensor))]
     [RequireComponent(typeof(AisDevice))]
-    public class AisSensorROS : SensorStreamer<AISStreamingRequest>
+    public class AisSensorROS : SensorStreamer<SensorStreamingClient, AISStreamingRequest>
     {
         AisSensor sensor;
         AisDevice device;
@@ -31,14 +32,9 @@ namespace Marus.Sensors.AIS
             device = GetComponent<AisDevice>();
             if (string.IsNullOrEmpty(address))
                 address = transform.name + "/ais";
-            StreamSensor(streamingClient?.StreamAisSensor(cancellationToken:RosConnection.Instance.CancellationToken));
+            StreamSensor(sensor, 
+                streamingClient.StreamAisSensor);
             UpdateFrequency = 1 / TimeIntervals.getInterval(device.ClassType, sensor.SOG);
-        }
-
-        new void Update()
-        {
-            hasData = sensor.hasData;
-            base.Update();
         }
 
         protected async override void SendMessage()
@@ -62,7 +58,6 @@ namespace Marus.Sensors.AIS
                 }
             };
             await _streamWriter.WriteAsync(msg);
-            hasData = false;
         }
     }
 }

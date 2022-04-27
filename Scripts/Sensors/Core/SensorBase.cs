@@ -38,8 +38,7 @@ namespace Marus.Sensors
         public float SampleFrequency = 20;
 
         protected Transform _vehicle;
-
-
+        [NonSerialized] public bool hasData;
 
         public Transform vehicle
         {
@@ -56,10 +55,6 @@ namespace Marus.Sensors
             }
         }
 
-        /// <summary>
-        /// Set this when there is new data sampled
-        /// </summary>
-        [NonSerialized] public volatile bool hasData = false;
         protected abstract void SampleSensor();
 
         protected GameObjectLogger Logger;
@@ -89,39 +84,38 @@ namespace Marus.Sensors
     /// Sensor streams readings to the server defined in RosConnection singleton instance
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class SensorStreamer<T> : MonoBehaviour where T : IMessage
+    public abstract class SensorStreamer<TClient, TMsg> : MonoBehaviour 
+        where TClient : ClientBase
+        where TMsg : IMessage
     {
 
         [Space]
         [Header("Streaming Parameters")]
         public float UpdateFrequency = 1;
         public string address;
-        [NonSerialized] public bool hasData;
+
+        SensorBase _sensor;
 
         /// <summary>
         /// A client instance used for streaming sensor readings
         /// </summary>
         /// <value></value>
-        protected SensorStreaming.SensorStreamingClient streamingClient
+        protected TClient streamingClient
         {
             get
             {
-                return RosConnection.Instance.GetClient<SensorStreaming.SensorStreamingClient>();
+                return RosConnection.Instance.GetClient<TClient>();
             }
         }
 
-        /// <summary>
-        /// Set this in the Awake() method of the sensor script.
-        /// Instantiate appropriate client service
-        /// </summary>
-        AsyncClientStreamingCall<T, StreamingResponse> streamHandle;
+        AsyncClientStreamingCall<TMsg, Std.Empty> streamHandle;
 
 
         /// <summary>
         /// Used to write sensor reading messages
         /// </summary>
         /// <value></value>
-        protected IClientStreamWriter<T> _streamWriter
+        protected IClientStreamWriter<TMsg> _streamWriter
         {
             get
             {
@@ -134,20 +128,25 @@ namespace Marus.Sensors
         double cumulativeTime = 0;
         protected void Update()
         {
+            
             cumulativeTime += Time.deltaTime;
             if (cumulativeTime > (1 / UpdateFrequency))
             {
                 cumulativeTime = 0;
-                if (hasData && RosConnection.Instance.IsConnected)
+                if (_sensor.hasData)
                 {
                     SendMessage();
+                    _sensor.hasData = false;
                 }
             }
         }
 
-        protected void StreamSensor(AsyncClientStreamingCall<T, StreamingResponse> streamingCall)
+        protected void StreamSensor(SensorBase sensor, 
+            // AsyncClientStreamingCall<TMsg, Std.Empty> streamingCall
+            Func<Grpc.Core.Metadata, System.DateTime?, System.Threading.CancellationToken, AsyncClientStreamingCall<TMsg, Std.Empty>> streamingFn)
         {
-            streamHandle = streamingCall;
+            streamHandle = streamingFn(null, null, RosConnection.Instance.CancellationToken);
+            _sensor = sensor;
         }
 
         protected abstract void SendMessage();

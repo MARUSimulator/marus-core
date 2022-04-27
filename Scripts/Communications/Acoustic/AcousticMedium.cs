@@ -1,3 +1,17 @@
+// Copyright 2022 Laboratory for Underwater Systems and Technologies (LABUST)
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 using System.Collections;
 using UnityEngine;
 
@@ -72,8 +86,7 @@ namespace Marus.Communications.Acoustics
         bool _Transmit<T>(T msg, AcousticReceiver receiver) where T : AcousticMessage
         {
             // IMPLEMENT COMPLEX PHYSICS
-            float distance = Vector3.Distance(msg.TransmiterParams.SourceLocation, receiver.Location);
-            if (msg.TransmiterParams.MaxRange >= distance)
+            if (CheckRange(msg, receiver))
             {
                 receiver.OnReceive(msg);
                 return true;
@@ -81,5 +94,11 @@ namespace Marus.Communications.Acoustics
             return false;
         }
 
+        private static bool CheckRange<T>(T msg, AcousticReceiver receiver) where T : AcousticMessage
+        {
+            if (msg.TransmiterParams.MaxRange <= 0 ) return true;
+            float distance = Vector3.Distance(msg.TransmiterParams.SourceLocation, receiver.Location);
+            return distance < msg.TransmiterParams.MaxRange;
+        }
     }
 }
