@@ -39,6 +39,7 @@ namespace Marus.Sensors
                         || EnoughTimePassed(time, callback.sensor))
                     {
                         callback.callback();
+                        callback.sensor.hasData = true;
                         _timeSinceLastCallback[kvp.Key] = 0;
                     }
                     _timeSinceLastCallback[kvp.Key] += Time.fixedDeltaTime;

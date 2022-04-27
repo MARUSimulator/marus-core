@@ -86,8 +86,7 @@ namespace Marus.Communications.Acoustics
         bool _Transmit<T>(T msg, AcousticReceiver receiver) where T : AcousticMessage
         {
             // IMPLEMENT COMPLEX PHYSICS
-            float distance = Vector3.Distance(msg.TransmiterParams.SourceLocation, receiver.Location);
-            if (msg.TransmiterParams.MaxRange >= distance)
+            if (CheckRange(msg, receiver))
             {
                 receiver.OnReceive(msg);
                 return true;
@@ -95,5 +94,11 @@ namespace Marus.Communications.Acoustics
             return false;
         }
 
+        private static bool CheckRange<T>(T msg, AcousticReceiver receiver) where T : AcousticMessage
+        {
+            if (msg.TransmiterParams.MaxRange <= 0 ) return true;
+            float distance = Vector3.Distance(msg.TransmiterParams.SourceLocation, receiver.Location);
+            return distance < msg.TransmiterParams.MaxRange;
+        }
     }
 }

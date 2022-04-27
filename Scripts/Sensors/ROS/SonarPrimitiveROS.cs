@@ -14,11 +14,12 @@
 
 using Sensorstreaming;
 using UnityEngine;
+using static Sensorstreaming.SensorStreaming;
 
 namespace Marus.Sensors.Primitive
 {
     [RequireComponent(typeof(SonarPrimitive))]
-    public class SonarPrimitiveROS : SensorStreamer<SonarStreamingRequest>
+    public class SonarPrimitiveROS : SensorStreamer<SensorStreamingClient, SonarStreamingRequest>
     {
         protected override void SendMessage()
         {

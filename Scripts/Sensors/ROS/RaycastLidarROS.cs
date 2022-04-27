@@ -18,6 +18,7 @@ using Sensorstreaming;
 using Marus.Core;
 using Sensor;
 using Unity.Collections;
+using static Sensorstreaming.SensorStreaming;
 
 namespace Marus.Sensors
 {
@@ -28,7 +29,7 @@ namespace Marus.Sensors
     /// Can drop performance
     /// </summary>
     [RequireComponent(typeof(RaycastLidar))]
-    public class RaycastLidarROS : SensorStreamer<PointCloudStreamingRequest>
+    public class RaycastLidarROS : SensorStreamer<SensorStreamingClient, PointCloudStreamingRequest>
     {
         RaycastLidar sensor;
 
@@ -38,14 +39,10 @@ namespace Marus.Sensors
             UpdateFrequency = Mathf.Min(UpdateFrequency, sensor.SampleFrequency);
             if (string.IsNullOrEmpty(address))
                 address = transform.name + "/lidar";
-            StreamSensor(streamingClient?.StreamLidarSensor(cancellationToken: RosConnection.Instance.CancellationToken));
+            StreamSensor(sensor, 
+                streamingClient.StreamLidarSensor);
         }
 
-        new void Update()
-        {
-            hasData = sensor.hasData;
-            base.Update();
-        }
 
         private static PointCloud GeneratePointCloud(NativeArray<Vector3> pointcloud)
         {
@@ -80,7 +77,6 @@ namespace Marus.Sensors
                 Address = address
             };
             await _streamWriter.WriteAsync(msg);
-            hasData = false;
         }
     }
 }

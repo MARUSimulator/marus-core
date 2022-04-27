@@ -34,9 +34,9 @@ public class GnssTest
     [Test]
     public void TestGnssSample()
     {
-        Utils.CallFixedUpdate(SensorSampler.Instance);
+        Utils.CallNonpublicMethod(_gnss, "SampleSensor");
         var delta = 0.000001;
-        Utils.CallFixedUpdate(SensorSampler.Instance);
+        Utils.CallNonpublicMethod(_gnss, "SampleSensor");
         var point = _gnss.point;
         Assert.AreEqual(45.000899, point.latitude, delta, "Latitude is wrong");
         Assert.AreEqual(15.0025366, point.longitude, delta, "Longitude is wrong");

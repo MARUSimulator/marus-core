@@ -1,4 +1,8 @@
-﻿// Copyright 2021 Laboratory for Underwater Systems and Technologies (LABUST)
+<<<<<<< HEAD
+// Copyright 2021 Laboratory for Underwater Systems and Technologies (LABUST)
+=======
+﻿// Copyright 2022 Laboratory for Underwater Systems and Technologies (LABUST)
+>>>>>>> Feature/communications (#45)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.

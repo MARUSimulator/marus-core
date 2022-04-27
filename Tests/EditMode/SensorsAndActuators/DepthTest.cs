@@ -34,11 +34,11 @@ public class DepthTest
     [Test]
     public void TestDepthSample()
     {
-        Utils.CallFixedUpdate(SensorSampler.Instance);
+        Utils.CallNonpublicMethod(_depthSensor, "SampleSensor");
         Assert.AreEqual(0, _depthSensor.depth);
 
         _depthSensor.transform.position = new Vector3(0, -3, 0);
-        Utils.CallFixedUpdate(SensorSampler.Instance);
+        Utils.CallNonpublicMethod(_depthSensor, "SampleSensor");
         Assert.AreEqual(3, _depthSensor.depth);
     }
 }

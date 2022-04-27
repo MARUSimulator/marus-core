@@ -29,6 +29,8 @@ using System.Collections;
 using Simulationcontrol;
 using Marus.Utils;
 using static Acoustictransmission.AcousticTransmission;
+using static Rfcommunication.LoraTransmission;
+using Ping;
 
 namespace Marus.Networking
 {
@@ -36,7 +38,7 @@ namespace Marus.Networking
     /// Singleton class for configuring and connecting to 
     /// ROS server
     /// </summary>
-    [DefaultExecutionOrder(-1)]
+    [DefaultExecutionOrder(-10)]
     public class RosConnection : Singleton<RosConnection>
     {
         [Header("Server info")]
@@ -112,14 +114,14 @@ namespace Marus.Networking
 
         private void Awake()
         {
-            CreateSingletons();
-
             var options = new List<ChannelOption>();
             options.Add(new ChannelOption(ChannelOptions.MaxSendMessageLength, 1024*1024*100));
             _streamingChannel = new Channel(serverIP, serverPort, ChannelCredentials.Insecure, options);
-            _cancellationToken = _streamingChannel.ShutdownToken;
-            InitializeClients();
 
+            InitializeClients();
+            _cancellationToken = _streamingChannel.ShutdownToken;
+
+            CreateSingletons();
             Connect();
 
             StartCoroutine(WhileConnectionAwait());
@@ -238,6 +240,10 @@ namespace Marus.Networking
                 {
                     typeof(VisualizationClient),
                     new VisualizationClient(_streamingChannel)
+                },
+                {
+                    typeof(LoraTransmissionClient),
+                    new LoraTransmissionClient(_streamingChannel)
                 }
             };
         }
@@ -250,10 +256,10 @@ namespace Marus.Networking
         {
             // sleep until connected
             Debug.Log("Awaiting connection with ROS Server...");
-            var pingClinent = GetClient<Ping.Ping.PingClient>();
+            var pingClinent = GetClient<PingClient>();
             try
             {
-                var response = pingClinent.Ping(new Ping.PingMsg(), deadline: DateTime.UtcNow.AddSeconds(connectionTimeout));
+                var response = pingClinent.Ping(new PingMsg(), deadline: DateTime.UtcNow.AddSeconds(connectionTimeout));
                 if (response.Value == 1)
                 {
                     Debug.Log("Connected to the ROS Server");
