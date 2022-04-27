@@ -46,11 +46,11 @@ public class DvlTest
     [Test]
     public void TestDvlSample()
     {
-        Utils.CallFixedUpdate(SensorSampler.Instance);
+        Utils.CallNonpublicMethod(_dvlSensor, "SampleSensor");
         Utils.CallPhysicsUpdate();
         Assert.AreEqual(0f, _dvlSensor.groundVelocity.z);
         _dvlSensor.transform.position = new Vector3(0, 0, 2);
-        Utils.CallFixedUpdate(SensorSampler.Instance);
+        Utils.CallNonpublicMethod(_dvlSensor, "SampleSensor");
         Assert.AreEqual(100, _dvlSensor.groundVelocity.z);
         Assert.AreEqual(19.5f, _dvlSensor.altitude);
     }

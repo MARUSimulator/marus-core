@@ -40,10 +40,10 @@ public class ImuTest
         _rigidBody.velocity = new Vector3(0.2f, 0, 0);
         _rigidBody.rotation = new Quaternion(0.6f, 0, 0, 0.8f).normalized;
         _rigidBody.angularVelocity = new Vector3(0.3f, 0, 0);
-        Utils.CallFixedUpdate(SensorSampler.Instance);
+        Utils.CallNonpublicMethod(_imu, "SampleSensor");
         _rigidBody.velocity = new Vector3(0.25f, 0, 0);
         _rigidBody.angularVelocity = new Vector3(0.35f, 0, 0);
-        Utils.CallFixedUpdate(SensorSampler.Instance);
+        Utils.CallNonpublicMethod(_imu, "SampleSensor");
         Assert.AreEqual(2.5f, _imu.linearAcceleration.x, "Linear acceleration in z should be 2.5f");
         Assert.AreEqual(_imu.orientation.x, 0.6f, "Orientation in x should be 0.6f");
         Assert.AreEqual(_imu.angularVelocity.x, 0.35f, "Angular velocity in x should be 0.35f");

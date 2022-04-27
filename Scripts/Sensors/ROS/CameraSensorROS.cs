@@ -17,6 +17,7 @@ using Google.Protobuf;
 using Sensorstreaming;
 using System;
 using Marus.Networking;
+using static Sensorstreaming.SensorStreaming;
 
 namespace Marus.Sensors
 {
@@ -24,7 +25,7 @@ namespace Marus.Sensors
     /// Camera sensor implementation
     /// </summary>
     [RequireComponent(typeof(CameraSensor))]
-    public class CameraSensorROS : SensorStreamer<CameraStreamingRequest>
+    public class CameraSensorROS : SensorStreamer<SensorStreamingClient, CameraStreamingRequest>
     {
         CameraSensor sensor;
         void Start()
@@ -32,13 +33,8 @@ namespace Marus.Sensors
             sensor = GetComponent<CameraSensor>();
             if (string.IsNullOrEmpty(address))
                 address = sensor.vehicle.name + "/camera";
-            StreamSensor(streamingClient?.StreamCameraSensor(cancellationToken:RosConnection.Instance.CancellationToken));
-        }
-
-        new void Update()
-        {
-            hasData = sensor.hasData;
-            base.Update();
+            StreamSensor(sensor, 
+                streamingClient.StreamCameraSensor);
         }
 
         protected async override void SendMessage()
@@ -53,7 +49,6 @@ namespace Marus.Sensors
                     Height = (uint)(sensor.PixelHeight / sensor.ImageCrop),
                     Width = (uint)(sensor.PixelWidth / sensor.ImageCrop)
                 });
-                hasData = false;
             }
             catch (Exception e)
             {

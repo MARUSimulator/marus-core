@@ -18,6 +18,7 @@ using Sensor;
 using Sensorstreaming;
 using Std;
 using UnityEngine;
+using static Sensorstreaming.SensorStreaming;
 
 namespace Marus.Sensors.Primitive
 {
@@ -25,7 +26,7 @@ namespace Marus.Sensors.Primitive
     /// Imu sensor implementation
     /// </summary>
     [RequireComponent(typeof(ImuSensor))]
-    public class ImuROS : SensorStreamer<ImuStreamingRequest>
+    public class ImuROS : SensorStreamer<SensorStreamingClient, ImuStreamingRequest>
     {
         ImuSensor sensor;
         void Start()
@@ -33,13 +34,8 @@ namespace Marus.Sensors.Primitive
             sensor = GetComponent<ImuSensor>();
             if (string.IsNullOrEmpty(address))
                 address = $"{sensor.vehicle.name}/imu";
-            StreamSensor(streamingClient?.StreamImuSensor(cancellationToken:RosConnection.Instance.CancellationToken));
-        }
-
-        new void Update()
-        {
-            hasData = sensor.hasData;
-            base.Update();
+            StreamSensor(sensor, 
+                streamingClient.StreamImuSensor);
         }
 
         protected override async void SendMessage()
@@ -64,7 +60,6 @@ namespace Marus.Sensors.Primitive
                 Data = imuOut,
                 Address = address
             });
-            hasData = false;
         }
     }
 }

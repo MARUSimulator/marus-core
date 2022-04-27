@@ -19,6 +19,7 @@ using Sensorstreaming;
 using UnityEngine;
 using Marus.Core;
 using Std;
+using static Sensorstreaming.SensorStreaming;
 
 namespace Marus.Sensors.Primitive
 {
@@ -26,7 +27,7 @@ namespace Marus.Sensors.Primitive
     /// Pose sensor implementation
     /// </summary>
     [RequireComponent(typeof(PoseSensor))]
-    public class PoseSensorROS : SensorStreamer<PoseStreamingRequest>
+    public class PoseSensorROS : SensorStreamer<SensorStreamingClient, PoseStreamingRequest>
     {
         PoseSensor sensor;
 
@@ -35,13 +36,8 @@ namespace Marus.Sensors.Primitive
             sensor = GetComponent<PoseSensor>();
             if (string.IsNullOrEmpty(address))
                 address = sensor.vehicle.name + "/pose";
-            StreamSensor(streamingClient?.StreamPoseSensor(cancellationToken:RosConnection.Instance.CancellationToken));
-        }
-
-        new void Update()
-        {
-            hasData = sensor.hasData;
-            base.Update();
+            StreamSensor(sensor, 
+                streamingClient.StreamPoseSensor);
         }
 
         protected async override void SendMessage()
@@ -67,7 +63,6 @@ namespace Marus.Sensors.Primitive
                     Orientation = toRad.Unity2Map().AsMsg()
                 }
             });
-            hasData = false;
         }
     }
 }

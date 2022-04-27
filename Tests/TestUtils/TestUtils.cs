@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
@@ -100,7 +101,15 @@ namespace TestUtils
             return null;
         }
 
-        public static T CreateAndInitializeObject<T>(string name, PrimitiveType? primitive=null) where T : MonoBehaviour
+        public static T CreateAndInitializeObject<T>(string name, PrimitiveType? primitive=null,
+                Dictionary<string, object> initWith = null) where T : MonoBehaviour
+        {
+            var obj = CreateObject<T>(name, primitive, initWith);
+            return InitializeScript<T>(obj);
+        }
+
+        public static T CreateObject<T>(string name, PrimitiveType? primitive=null,
+                Dictionary<string, object> initWith = null) where T : MonoBehaviour
         {
             GameObject gameObject;
             if (primitive == null)
@@ -112,14 +121,33 @@ namespace TestUtils
                 gameObject = GameObject.CreatePrimitive(primitive.Value);
             }
             gameObject.name = name;
-            return InitializeWithScript<T>(gameObject);
+            return AddScript<T>(gameObject, initWith);
         }
 
-        public static T InitializeWithScript<T>(GameObject obj) where T : MonoBehaviour
+
+        public static T InitializeScript<T>(T script) where T : MonoBehaviour
         {
-            var script = obj.AddComponent<T>();
             CallAwake(script);
             CallStart(script);
+            return script;
+        }
+
+        private static T AddScript<T>(GameObject obj,
+                Dictionary<string, object> initWith = null) where T : MonoBehaviour
+        {
+            var script = obj.AddComponent<T>();
+            if (initWith != null)
+            {
+                foreach (var kvp in initWith)
+                {
+                    var f = script.GetType().GetField(kvp.Key, 
+                        BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                    if (f != null)
+                    {
+                        f.SetValue(script, kvp.Value);
+                    }
+                }
+            }
             return script;
         }
 

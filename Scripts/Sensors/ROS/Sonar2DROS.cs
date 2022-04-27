@@ -17,11 +17,12 @@ using Marus.Core;
 using Marus.Networking;
 using Sensorstreaming;
 using UnityEngine;
+using static Sensorstreaming.SensorStreaming;
 
 namespace Marus.Sensors.Primitive
 {
     [RequireComponent(typeof(Sonar2D))]
-    public class Sonar2DROS : SensorStreamer<PointCloudStreamingRequest>
+    public class Sonar2DROS : SensorStreamer<SensorStreamingClient, PointCloudStreamingRequest>
     {
         Sonar2D sensor;
         void Start()
@@ -29,13 +30,8 @@ namespace Marus.Sensors.Primitive
             sensor = GetComponent<Sonar2D>();
             if (string.IsNullOrEmpty(address))
                 address = transform.name + "/sonar3d";
-            StreamSensor(streamingClient?.StreamPointCloud(cancellationToken: RosConnection.Instance.CancellationToken));
-        }
-
-        new void Update()
-        {
-            hasData = sensor.hasData;
-            base.Update();
+            StreamSensor(sensor, 
+                streamingClient.StreamPointCloud);
         }
 
         protected async override void SendMessage()
@@ -65,7 +61,6 @@ namespace Marus.Sensors.Primitive
                 Address = address
             };
             await _streamWriter.WriteAsync(msg);
-            hasData = false;
         }
     }
 }

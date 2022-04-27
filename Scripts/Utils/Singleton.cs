@@ -52,7 +52,6 @@ namespace Marus.Utils
 
         protected virtual void Initialize()
         {
-            var a = 5;
         }
     }
 }

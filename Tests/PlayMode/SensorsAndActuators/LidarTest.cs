@@ -42,7 +42,7 @@ public class LidarTest
     public IEnumerator TestLidarSample()
     {
         // skip a few frames
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 8; i++)
         {
             yield return null;
         }
