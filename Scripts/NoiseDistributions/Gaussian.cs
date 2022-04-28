@@ -12,22 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Marus.Communications.Rf
+namespace Marus.NoiseDistributions
 {
     /// <summary>
-    /// Base RF message definition
+    /// Gaussian distribution noise 
     /// </summary>
-    public abstract class RfMessage
+    public class Gaussian : INoise
     {
-        public int SenderId;
-        public string Protocol;
-        public TransmitionType TransmitionType { get; set; }
 
-        public RfTransmitterParams TransmiterParams;
-    }
-    public enum TransmitionType
-    {
-        Unicast,
-        Broadcast
+        public float Bias;
+        public float Std;
+
+        public float Sample()
+        {
+            return Utils.Helpers.RandomGaussian(Bias, Std);
+        }
     }
 }

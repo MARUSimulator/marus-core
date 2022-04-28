@@ -19,6 +19,9 @@ using UnityEngine;
 
 namespace Marus.Communications.Rf
 {
+    /// <summary>
+    /// Static class with methods that are usefull for RF communication 
+    /// </summary>
     public static class RfMediumHelper
     {
         static Dictionary<int, (int, List<int>)> _mediumDevicesCache = new Dictionary<int, (int, List<int>)>();

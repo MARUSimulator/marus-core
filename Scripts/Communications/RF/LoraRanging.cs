@@ -21,6 +21,14 @@ using UnityEngine;
 
 namespace Marus.Communications.Rf
 {
+    /// <summary>
+    /// Sensor script that uses a set of Lora devices for ranging 
+    ///
+    /// Put a list of advanced Lora nodes in the children of object
+    /// with this script
+    /// 
+    /// Lora devices in Targers field will be ranged
+    /// </summary>
     public class LoraRanging : SensorBase
     {
         public LoraDevice Master;

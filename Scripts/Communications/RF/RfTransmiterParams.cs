@@ -16,7 +16,10 @@ using UnityEngine;
 
 namespace Marus.Communications.Rf
 {
-    public class RfTransmiterParams
+    /// <summary>
+    /// Transmitter parameters for TF device
+    /// </summary>
+    public class RfTransmitterParams
     {
         public bool IgnorePhysics;
         public Vector3 SourceLocation;

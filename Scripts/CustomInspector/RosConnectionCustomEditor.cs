@@ -16,21 +16,24 @@ using UnityEngine;
 using UnityEditor;
 using Marus.Networking;
 
-[CustomEditor(typeof(RosConnection))]
-public class RosConnectionCustomEditor : Editor
+namespace Marus.Networking
 {
-
-    public override void OnInspectorGUI()
+    [CustomEditor(typeof(RosConnection))]
+    public class RosConnectionCustomEditor : Editor
     {
-        DrawDefaultInspector();
-        
-        var conn = (RosConnection)target;
-        if (EditorApplication.isPlaying &&
-            !conn.IsConnected && !conn.IsConnecting)
+
+        public override void OnInspectorGUI()
         {
-            if (GUILayout.Button("Try reconnect"))
+            DrawDefaultInspector();
+            
+            var conn = (RosConnection)target;
+            if (EditorApplication.isPlaying &&
+                !conn.IsConnected && !conn.IsConnecting)
             {
-                conn.Connect();
+                if (GUILayout.Button("Try reconnect"))
+                {
+                    conn.Connect();
+                }
             }
         }
     }

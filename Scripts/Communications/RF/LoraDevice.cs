@@ -1,4 +1,4 @@
-﻿// Copyright 2022 Laboratory for Underwater Systems and Technologies (LABUST)
+// Copyright 2022 Laboratory for Underwater Systems and Technologies (LABUST)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,9 @@ using Marus.Logger;
 
 namespace Marus.Communications.Rf
 {
+    /// <summary>
+    /// Implements lora device capabilities
+    /// </summary>
     public class LoraDevice : RfDevice<LoraMessage>
     {
         /// <summary>
@@ -43,14 +46,14 @@ namespace Marus.Communications.Rf
         {
             Id = id;   
         }
-        public override void OnReceive(LoraMessage msg)
+        protected override void OnReceive(LoraMessage msg)
         {
             OnReceiveEvent?.Invoke(this, msg);
             // Debug.Log($"Lora id: {Id}\nReceived message from lora id: {msg.SenderId}:\n{msg.Message}");
         }
 
-        public override RfTransmiterParams GetTransmiterParams()
-            => new RfTransmiterParams
+        public override RfTransmitterParams GetTransmiterParams()
+            => new RfTransmitterParams
             {
                 SourceLocation = transform.position,
                 MaxRange = Range

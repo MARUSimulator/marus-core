@@ -24,8 +24,12 @@ using System.Collections;
 
 namespace Marus.Communications.Rf
 {
+    /// <summary>
+    /// Dummy transmitter that every n seconds sends a Lora message
+    /// to the targer lora device
+    /// </summary>
     [RequireComponent(typeof(LoraDevice))]
-    public class LoraDummyTransmiter : MonoBehaviour
+    public class LoraDummyTransmitter : MonoBehaviour
     {
 
         LoraDevice _transmiter;
@@ -68,8 +72,6 @@ namespace Marus.Communications.Rf
             _transmiter.Send(new LoraMessage
             {
                 Message = $"THIS IS MESSAGE {msgCount}",
-                Protocol = _transmiter.Protocol,
-                TransmiterParams = _transmiter.GetTransmiterParams(),
                 ReceiverId = Target.DeviceId,
                 TransmitionType = TransmitionType.Unicast
             });
