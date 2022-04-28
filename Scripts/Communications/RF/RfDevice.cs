@@ -20,10 +20,28 @@ using System;
 namespace Marus.Communications.Rf
 {
 
+
+    /// <summary>
+    /// Base class for Rf devices
+    ///
+    /// Implement this class to be able to communicate with other Rf devices
+    /// </summary>
     public abstract class RfDevice<T> : RfDevice where T : RfMessage
     {
 
-        public abstract void OnReceive(T message);
+        /// <summary>
+        /// Callback function called on the message arival
+        /// </summary>
+        /// <param name="message"></param>
+        protected abstract void OnReceive(T message);
+
+        /// <summary>
+        /// Implement this to send a message dependent on 
+        /// the message parameters 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="onAcknowledgeCallback"></param>
+        /// <param name="onTimeoutCallback"></param>
         protected abstract void Send(T message, 
                 Action<T> onAcknowledgeCallback=null,
                 Action<T> onTimeoutCallback=null);
@@ -46,6 +64,7 @@ namespace Marus.Communications.Rf
 
     }
 
+
     public abstract class RfDevice : MonoBehaviour, RfTransmiter, RfReceiver
     {
         /// <summary>
@@ -66,10 +85,13 @@ namespace Marus.Communications.Rf
             (Logger as GameObjectLogger<W>).Log(data);
         }
 
+        /// <summary>
+        /// World position of the Rf device
+        /// </summary>
         public Vector3 Location => transform.position;
 
 
-        public abstract RfTransmiterParams GetTransmiterParams();
+        public abstract RfTransmitterParams GetTransmiterParams();
 
         /// <summary>
         /// Returns RfDevice object based on id.
@@ -86,7 +108,7 @@ namespace Marus.Communications.Rf
             }
             return null;
         }
-
+        
         public abstract void OnReceive(RfMessage message);
         public abstract void Send(RfMessage message, 
             Action<RfMessage> onAcknowledgeCallback=null,

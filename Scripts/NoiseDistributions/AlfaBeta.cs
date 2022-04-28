@@ -12,22 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Marus.Communications.Rf
+namespace Marus.NoiseDistributions
 {
-    /// <summary>
-    /// Base RF message definition
-    /// </summary>
-    public abstract class RfMessage
-    {
-        public int SenderId;
-        public string Protocol;
-        public TransmitionType TransmitionType { get; set; }
 
-        public RfTransmitterParams TransmiterParams;
-    }
-    public enum TransmitionType
+    /// <summary>
+    /// Alpha-beta distribution noise 
+    /// </summary>
+    public class AlfaBeta : INoise
     {
-        Unicast,
-        Broadcast
+
+        public float Alpha;
+        public float Beta;
+
+        public float Sample()
+        {
+            return Alpha + Beta;
+        }
     }
 }

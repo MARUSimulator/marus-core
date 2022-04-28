@@ -12,22 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Marus.Communications.Rf
+using System;
+using System.Collections.Generic;
+
+namespace Marus.NoiseDistributions
 {
     /// <summary>
-    /// Base RF message definition
+    /// Struct holding noise parameters
     /// </summary>
-    public abstract class RfMessage
+    [Serializable]
+    public struct NoiseParameters
     {
-        public int SenderId;
-        public string Protocol;
-        public TransmitionType TransmitionType { get; set; }
-
-        public RfTransmitterParams TransmiterParams;
-    }
-    public enum TransmitionType
-    {
-        Unicast,
-        Broadcast
+        // Unity cannot serialize standard dictionary
+        public List<string> ParameterKeys;
+        public List<string> ParameterValues;
+        public string NoiseTypeFullName;
     }
 }

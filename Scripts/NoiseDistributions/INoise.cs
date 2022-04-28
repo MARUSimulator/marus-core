@@ -12,22 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Marus.Communications.Rf
+namespace Marus.NoiseDistributions
 {
     /// <summary>
-    /// Base RF message definition
+    /// Interface that all noise classes have to derive from
     /// </summary>
-    public abstract class RfMessage
+    public interface INoise
     {
-        public int SenderId;
-        public string Protocol;
-        public TransmitionType TransmitionType { get; set; }
-
-        public RfTransmitterParams TransmiterParams;
-    }
-    public enum TransmitionType
-    {
-        Unicast,
-        Broadcast
+        float Sample();
     }
 }

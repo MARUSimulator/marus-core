@@ -16,6 +16,9 @@ using System;
 
 namespace Marus.Communications.Rf
 {
+    /// <summary>
+    /// Lora message gefinition
+    /// </summary>
     public class LoraMessage : RfMessage
     {
         public string Message { get; set; }

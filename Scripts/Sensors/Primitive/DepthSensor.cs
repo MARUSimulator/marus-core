@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Marus.NoiseDistributions;
 
 namespace Marus.Sensors.Primitive
 {
@@ -22,6 +23,7 @@ namespace Marus.Sensors.Primitive
     public class DepthSensor : SensorBase
     {
         public bool debug = true;
+        public NoiseParameters NoiseParameters;
         [NonSerialized] public double depth;
         [NonSerialized] public double covariance;
 
