@@ -105,10 +105,7 @@ namespace Marus.Visualization
         /// <param name="key">String key tag</param>
         public Point AddPoint(Vector3 pointInWorld, string key)
         {
-            if (!_visualElements.ContainsKey(key))
-            {
-                _visualElements[key] = new List<VisualElement>();
-            }
+            CheckKeyExists(key);
             VisualElement p = (VisualElement) new Point(pointInWorld);
             bool created = AddVisual(key, p);
             if (created)
@@ -126,10 +123,7 @@ namespace Marus.Visualization
         /// <param name="pointSize">Point size</param>
         public Point AddPoint(Vector3 pointInWorld, string key, float pointSize)
         {
-            if (!_visualElements.ContainsKey(key))
-            {
-                _visualElements[key] = new List<VisualElement>();
-            }
+            CheckKeyExists(key);
             VisualElement p = (VisualElement) new Point(pointInWorld, pointSize);
             bool created = AddVisual(key, p);
             if (created)
@@ -148,10 +142,7 @@ namespace Marus.Visualization
         /// <param name="pointColor">Point color</param>
         public Point AddPoint(Vector3 pointInWorld, string key, float pointSize, Color pointColor)
         {
-            if (!_visualElements.ContainsKey(key))
-            {
-                _visualElements[key] = new List<VisualElement>();
-            }
+            CheckKeyExists(key);
             VisualElement p = (VisualElement) new Point(pointInWorld, pointSize, pointColor);
             bool created = AddVisual(key, p);
             if (created)
@@ -166,10 +157,7 @@ namespace Marus.Visualization
         /// <param name="point">Point object to add</param>
         public void AddPoint(Point point, string key)
         {
-            if (!_visualElements.ContainsKey(key))
-            {
-                _visualElements[key] = new List<VisualElement>();
-            }
+            CheckKeyExists(key);
             bool created = AddVisual(key, (VisualElement) point);
             if (created)
             {
@@ -184,10 +172,7 @@ namespace Marus.Visualization
         /// <param name="key">String key tag</param>
         public Path AddPath(List<Vector3> pointsInWorld, string key)
         {
-            if (!_visualElements.ContainsKey(key))
-            {
-                _visualElements[key] = new List<VisualElement>();
-            }
+            CheckKeyExists(key);
             VisualElement p = (VisualElement) new Path(pointsInWorld, pointSize, pointColor, lineThickness, lineColor);
             bool created = AddVisual(key, p);
             if (created)
@@ -205,10 +190,7 @@ namespace Marus.Visualization
         /// <param name="_pointColor">Point color</param>
         public Path AddPath(List<Vector3> pointsInWorld, string key, Color _pointColor)
         {
-            if (!_visualElements.ContainsKey(key))
-            {
-                _visualElements[key] = new List<VisualElement>();
-            }
+            CheckKeyExists(key);
             VisualElement p = (VisualElement) new Path(pointsInWorld, pointSize, _pointColor, lineThickness, lineColor);
             bool created = AddVisual(key, p);
             if (created)
@@ -225,10 +207,7 @@ namespace Marus.Visualization
         /// <param name="key">String key tag</param>
         public void AddPath(Path path, string key)
         {
-            if (!_visualElements.ContainsKey(key))
-            {
-                _visualElements[key] = new List<VisualElement>();
-            }
+            CheckKeyExists(key);
             bool created = AddVisual(key, (VisualElement) path);
             if (created)
             {
@@ -244,10 +223,7 @@ namespace Marus.Visualization
         /// <param name="key"></param>
         public Primitives.Transform AddTransform(UnityEngine.Transform transform, string key)
         {
-            if (!_visualElements.ContainsKey(key))
-            {
-                _visualElements[key] = new List<VisualElement>();
-            }
+            CheckKeyExists(key);
             var _transform = new Primitives.Transform(transform);
             bool created = AddVisual(key, _transform);
             if (created)
@@ -259,10 +235,7 @@ namespace Marus.Visualization
 
         public Line AddLine(Vector3 startPoint, Vector3 endPoint, string key)
         {
-            if (!_visualElements.ContainsKey(key))
-            {
-                _visualElements[key] = new List<VisualElement>();
-            }
+            CheckKeyExists(key);
             VisualElement _line3d = (VisualElement) new Line(startPoint, endPoint, lineThickness, lineColor);
             bool created = AddVisual(key, _line3d);
             if (created)
@@ -274,10 +247,7 @@ namespace Marus.Visualization
 
         public Line AddLine(Vector3 startPoint, Vector3 endPoint, string key, float thickness)
         {
-            if (!_visualElements.ContainsKey(key))
-            {
-                _visualElements[key] = new List<VisualElement>();
-            }
+            CheckKeyExists(key);
             VisualElement _line3d = (VisualElement) new Line(startPoint, endPoint, thickness, lineColor);
             bool created = AddVisual(key, _line3d);
             if (created)
@@ -289,10 +259,7 @@ namespace Marus.Visualization
 
         public Line AddLine(Vector3 startPoint, Vector3 endPoint, string key, float thickness, Color color)
         {
-            if (!_visualElements.ContainsKey(key))
-            {
-                _visualElements[key] = new List<VisualElement>();
-            }
+            CheckKeyExists(key);
             VisualElement _line3d = (VisualElement) new Line(startPoint, endPoint, thickness, color);
             bool created = AddVisual(key, _line3d);
             if (created)
@@ -304,10 +271,7 @@ namespace Marus.Visualization
 
         public Arrow AddArrow(Vector3 startPoint, Vector3 endPoint, string key, float radius, Color color)
         {
-            if (!_visualElements.ContainsKey(key))
-            {
-                _visualElements[key] = new List<VisualElement>();
-            }
+            CheckKeyExists(key);
             VisualElement _arrow = (VisualElement) new Arrow(startPoint, endPoint, radius, color);
             bool created = AddVisual(key, _arrow);
             if (created)
@@ -316,13 +280,9 @@ namespace Marus.Visualization
             }
             return (Arrow) _arrow;
         }
-
         public Arrow AddArrow(Vector3 startPoint, Vector3 endPoint, string key, float radius, Color color, float headRadius, Color headColor)
         {
-            if (!_visualElements.ContainsKey(key))
-            {
-                _visualElements[key] = new List<VisualElement>();
-            }
+            CheckKeyExists(key);
             VisualElement _arrow = (VisualElement) new Arrow(startPoint, endPoint, radius, color, headRadius, headColor);
             bool created = AddVisual(key, _arrow);
             if (created)
@@ -334,15 +294,20 @@ namespace Marus.Visualization
 
         public void AddArrow(Arrow arrow, string key)
         {
-            if (!_visualElements.ContainsKey(key))
-            {
-                _visualElements[key] = new List<VisualElement>();
-            }
+            CheckKeyExists(key);
             bool created = AddVisual(key, (VisualElement) arrow);
             if (created)
             {
                 CreateAndAttachArrowGameObject(arrow, key);
             }
+        }
+
+        public PointcloudMesh AddPointCloud(PointCloud pc, string key)
+        {
+            CheckKeyExists(key);
+            VisualElement _pc = (VisualElement) new PointcloudMesh(pc, key);
+            _visualElements[key].Add(_pc);
+            return (PointcloudMesh) _pc;
         }
 
         /// <summary>
@@ -351,6 +316,11 @@ namespace Marus.Visualization
         /// <param name="key">String key tag</param>
         public void FlushKey(string key)
         {
+            if (!_visualElements.ContainsKey(key))
+            {
+                return;
+            }
+
             foreach (VisualElement visual in _visualElements[key])
             {
                 visual.Destroy();
@@ -384,6 +354,27 @@ namespace Marus.Visualization
         }
 
         /// <summary>
+        /// Return visual element by it's Id
+        /// </summary>
+        /// <param name="string">String id of visual element</param>
+        public VisualElement GetElementById(string id)
+        {
+            foreach (var kvp in _visualElements)
+            {
+                foreach (var visual in kvp.Value)
+                {
+                    if (visual.Id != null && visual.Id == id)
+                    {
+                        return visual;
+                    }
+                }
+            }
+            return null;
+        }
+
+
+
+        /// <summary>
         /// Removes all objects stored under given key.
         /// </summary>
         /// <param name="key">String key tag</param>
@@ -393,6 +384,22 @@ namespace Marus.Visualization
             {
                 FlushKey(key);
             }
+        }
+
+        public bool CheckKeyExists(string key)
+        {
+            if (!_visualElements.ContainsKey(key))
+            {
+                _visualElements[key] = new List<VisualElement>();
+                return true;
+            }
+            return false;
+        }
+
+        private void CreateAndAttachPointCloudGameObject(VisualElement p, string name)
+        {
+            GameObject pc = new GameObject(name);
+            pc.transform.SetParent(transform);
         }
 
         private void CreateAndAttachPathGameObject(VisualElement p, string name)

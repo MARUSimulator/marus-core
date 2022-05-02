@@ -70,7 +70,7 @@ namespace Marus.Networking
                 }
                 outValue = (T)value;
             }
-            catch (Exception e)
+            catch
             {
                 outValue = default(T);
                 return false;
@@ -113,7 +113,5 @@ namespace Marus.Networking
             }
             return true;
         }
-
     }
-
 }

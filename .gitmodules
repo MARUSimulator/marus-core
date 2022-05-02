@@ -3,5 +3,5 @@
 	url = https://github.com/flamacore/UnityHDRPSimpleWater
 [submodule "Assets/Scripts/protobuf"]
 	path = Scripts/protobuf
-	url = git@github.com:labust/labustsim-proto.git
+	url = git@github.com:MARUSimulator/marus-proto.git
 	branch = csharp

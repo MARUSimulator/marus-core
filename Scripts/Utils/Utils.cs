@@ -144,7 +144,7 @@ namespace Marus.Utils
         public static float RandomGaussian(float mean = 0.0f, float sigma = 1.0f)
         {
             float u, v, S;
-        
+
             do
             {
                 u = 2.0f * UnityEngine.Random.value - 1.0f;
@@ -152,16 +152,28 @@ namespace Marus.Utils
                 S = u * u + v * v;
             }
             while (S >= 1.0f);
-        
+
             // Standard Normal Distribution
             float std = u * Mathf.Sqrt(-2.0f * Mathf.Log(S) / S);
-        
+
             // Normal Distribution centered between the min and max value
             // and clamped following the "three-sigma rule"
             var d = 1.5f * sigma;
             float maxValue = mean + d;
             float minValue = mean - d;
             return Mathf.Clamp(std * sigma + mean, minValue, maxValue);
+        }
+
+        public static int PointFieldDataTypeToBytes(Sensor.PointField.Types.DataType type)
+        {
+            string name = Enum.GetName(typeof(Sensor.PointField.Types.DataType), type);
+            int bytes = 0;
+            var parsed = Int32.TryParse(name.Substring(name.Length - 2), out bytes);
+            if (!parsed)
+            {
+                parsed = Int32.TryParse(name.Substring(name.Length - 1), out bytes);
+            }
+            return bytes / 8;
         }
     }
 }

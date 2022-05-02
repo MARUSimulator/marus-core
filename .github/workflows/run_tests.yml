@@ -13,15 +13,16 @@ jobs:
     name: Test MarusCore
     runs-on: ubuntu-latest
     steps:
+      
       - name: Checkout MarusExample project
         uses: actions/checkout@v2
         with:
-          repository: labust/MarusExample
+          repository: MARUSimulator/marus-example
           lfs: true
           submodules: recursive
           path: ./MarusExample
-          token: ${{ secrets.REPOACCESS_RO }}
           fetch-depth: 0
+          ssh-key: ${{ secrets.REPOACCESS_RO }}
 
       - name: Checkout commit from PR
         run: if [ "${{ github.event_name }}" == "pull_request" ]; then echo pr; cd MarusExample/Assets/LabustSim; git fetch && git checkout ${GITHUB_HEAD_REF}; git checkout ${{ github.event.pull_request.head.sha }}; git submodule update --recursive; fi
