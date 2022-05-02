@@ -15,57 +15,78 @@
 using Marus.Visualization;
 using Unity.Collections;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Marus.Sensors
 {
 
     /// <summary>
-    /// Lidar that cast N rays evenly distributed in configured field of view.
+    /// Lidar implemented using rays
     /// Implemented using IJobParallelFor on CPU
     /// Can drop performance
     /// </summary>
     public class RaycastLidar : SensorBase
     {
-
-        /// Instantiates 3 Jobs:
-        /// 1) RaycastCommand creation - create raycast commands <see cref="RaycastCommand"> for lidar FoV
-        /// 2) RaycastCommand execution
-        /// 3) RaycastHit data interpretation - extract points, distances etc.
-
-
-
         /// <summary>
         /// Material set for point cloud display
         /// </summary>
         public Material ParticleMaterial;
 
+        /// <summary>
+        /// Number of horizontal rays
+        /// </summary>
         public int WidthRes = 1024;
 
+        /// <summary>
+        /// Number of vertical rays
+        /// </summary>
         public int HeightRes = 16;
-        public float MaxDistance = 100;
-        public float MinDistance = 0.2f;
-        public float FieldOfView = 30;
 
+        /// <summary>
+        /// Maximum range in meters
+        /// </summary>
+        public float MaxDistance = 100;
+
+        /// <summary>
+        /// Minimum range in meters
+        /// </summary>
+        public float MinDistance = 0.2f;
+
+        public float VerticalFieldOfView = 30;
+        public float HorizontalFieldOfView = 360;
+
+        /// <summary>
+        /// PointCloud compute shader
+        /// </summary>
         public ComputeShader pointCloudShader;
 
+        /// <summary>
+        /// NativeArray that holds points
+        /// </summary>
         public NativeArray<Vector3> pointsCopy;
 
         PointCloudManager _pointCloudManager;
         RaycastJobHelper<LidarReading> _raycastHelper;
         Coroutine _coroutine;
+        [HideInInspector] public List<LidarConfig> Configs;
+        [HideInInspector]  public int ConfigIndex = 0;
+        [SerializeField] [HideInInspector] public NativeArray<(float, float)> _rayAngles;
+        public List<RayInterval> _rayIntervals;
+        public RayDefinitionType _rayType;
 
         void Start()
         {
             int totalRays = WidthRes * HeightRes;
-
+            InitializeRayArray();
             pointsCopy = new NativeArray<Vector3>(WidthRes * HeightRes, Allocator.Persistent);
 
-            var directionsLocal = RaycastJobHelper.EvenlyDistributeRays(WidthRes, HeightRes, 360, FieldOfView);
-
+            var directionsLocal = RaycastJobHelper.CalculateRayDirections(_rayAngles);
             _raycastHelper = new RaycastJobHelper<LidarReading>(gameObject, directionsLocal, OnLidarHit, OnFinish);
 
             _pointCloudManager = PointCloudManager.CreatePointCloud(name + "_PointCloud", totalRays, ParticleMaterial, pointCloudShader);
             _coroutine = StartCoroutine(_raycastHelper.RaycastInLoop());
+
         }
 
         protected override void SampleSensor()
@@ -73,7 +94,7 @@ namespace Marus.Sensors
             _pointCloudManager.UpdatePointCloud(pointsCopy);
         }
 
-        private void OnFinish(NativeArray<Vector3> points, NativeArray<LidarReading> reading)
+        private void OnFinish(NativeArray<Vector3> points, NativeArray<LidarReading> readings)
         {
             points.CopyTo(pointsCopy);
             Log(new {points});
@@ -85,15 +106,115 @@ namespace Marus.Sensors
             return new LidarReading();
         }
 
+        /// <summary>
+        /// This method applies parameters and configuration
+        /// Active configuration is selected using dropdown from inspector
+        /// </summary>
+        public void ApplyLidarConfig()
+        {
+            if (_rayAngles.IsCreated)
+            {
+                _rayAngles.Dispose();
+            }
+            var cfg = Configs[ConfigIndex];
+            MaxDistance = cfg.MaxRange;
+            MinDistance = cfg.MinRange;
+            frameId = cfg.FrameId;
+            WidthRes = cfg.HorizontalResolution;
+            HeightRes = cfg.VerticalResolution;
+            HorizontalFieldOfView = cfg.HorizontalFieldOfView;
+            VerticalFieldOfView = cfg.VerticalFieldOfView;
+            SampleFrequency = cfg.Frequency;
+            _rayType = cfg.Type;
+            if (cfg.Type == RayDefinitionType.Angles)
+            {
+                HeightRes = cfg.ChannelAngles.Count;
+            }
+            else if (cfg.Type == RayDefinitionType.Intervals)
+            {
+                HeightRes = cfg.RayIntervals.Sum(x => x.NumberOfRays);
+            }
+        }
+
+        /// <summary>
+        /// Initializes ray directions from ray angles, custom ray intervals or uniform distribution.
+        /// These directions emulate lidar vertical array rotating to get the surrounding pointcloud
+        /// </summary>
+        public void InitializeRayArray()
+        {
+            var cfg = Configs[ConfigIndex];
+            if (cfg.Type == RayDefinitionType.Intervals)
+            {
+                var angles = RaycastJobHelper.InitVerticalAnglesFromIntervals(_rayIntervals, WidthRes, HorizontalFieldOfView);
+                _rayAngles = RaycastJobHelper.InitCustomRays(cfg.ChannelAngles, cfg.HorizontalResolution, HorizontalFieldOfView);
+            }
+            else if (cfg.Type == RayDefinitionType.Uniform)
+            {
+                _rayAngles = RaycastJobHelper.InitUniformRays(WidthRes, HeightRes, HorizontalFieldOfView, VerticalFieldOfView);
+            }
+            else if (cfg.Type == RayDefinitionType.Angles)
+            {
+                HeightRes = cfg.ChannelAngles.Count;
+                _rayAngles = RaycastJobHelper.InitCustomRays(cfg.ChannelAngles, cfg.HorizontalResolution, HorizontalFieldOfView);
+            }
+        }
+
         void OnDestroy()
         {
             _raycastHelper?.Dispose();
             pointsCopy.Dispose();
+            _rayAngles.Dispose();
         }
-
     }
 
+    /// <summary>
+    /// Struct containing any relevant information about point reading and raycast hit
+    /// </summary>
     internal struct LidarReading
     {
+        public int Class;
     }
+
+    /// <summary>
+    /// Class containing all needed lidar properties.
+    /// </summary>
+    [System.Serializable]
+    public class LidarConfig
+    {
+        public string Name;
+        public RayDefinitionType Type;
+        public float Frequency;
+        public string FrameId;
+        public float MaxRange;
+        public float MinRange;
+        public int HorizontalResolution;
+        public int VerticalResolution;
+        public float HorizontalFieldOfView;
+        public float VerticalFieldOfView;
+        public List<float> ChannelAngles;
+        public List<RayInterval> RayIntervals;
+    }
+
+    /// <summary>
+    /// Uniform - rays are distributed uniformly
+    /// Intervals - rays are distributed based on given angle intervals with number of rays
+    /// Angles - rays are distributed based on given angles of vertical rays
+    /// </summary>
+    public enum RayDefinitionType
+    {
+        Uniform,
+        Intervals,
+        Angles
+    }
+
+    /// <summary>
+    /// Ray interval definition
+    /// </summary>
+    [System.Serializable]
+	public class RayInterval
+	{
+		public float StartingAngle;
+		public float EndingAngle;
+		public int NumberOfRays;
+	}
 }

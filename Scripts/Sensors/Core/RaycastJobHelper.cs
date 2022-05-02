@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,9 +24,8 @@ namespace Marus.Sensors
 
     public abstract class RaycastJobHelper
     {
-
         /// <summary>
-        /// Set evenly distributed array of ray directions for configured field of view and resolution 
+        /// Set evenly distributed array of ray directions for configured field of view and resolution
         /// </summary>
         public static NativeArray<Vector3> EvenlyDistributeRays(int widthRes, int heightRes, float horizontalFieldOfView, float verticalFieldOfView)
         {
@@ -55,11 +52,108 @@ namespace Marus.Sensors
                     directionsLocal[i * heightRes + j] = new Vector3(cosver * sinhor, sinver, cosver * coshor); // y is up; y angle is (90 - theta) in spherical 
                 }
             }
-             
             return directionsLocal;
         }
-    }
 
+
+        /// <summary>
+        /// Calculates direction vectors from angles
+        /// </summary>
+        /// <param name="rayAngles">Array of tuples defining the direction with angles: (horizontalAngle, verticalAngle)</param>
+        /// <returns>Array of direction vectors</returns>
+        public static NativeArray<Vector3> CalculateRayDirections(NativeArray<(float, float)> rayAngles)
+        {
+            NativeArray<Vector3> directionsLocal = new NativeArray<Vector3>(rayAngles.Length, Allocator.Persistent);
+            int i = 0;
+            foreach (var (horizontalAngle, verticalAngle) in rayAngles)
+            {
+                var sinhor = Mathf.Sin(horizontalAngle);
+                var coshor = Mathf.Cos(horizontalAngle);
+                var sinver = Mathf.Sin(verticalAngle);
+                var cosver = Mathf.Cos(verticalAngle);
+
+
+                directionsLocal[i++] = new Vector3(cosver * sinhor, sinver, cosver * coshor); // y is up; y angle is (90 - theta) in spherical 
+            }
+            return directionsLocal;
+        }
+
+        /// <summary>
+        /// Creates uniform rays defined by horizontal and vertical angles.
+        /// </summary>
+        /// <param name="widthRes">Number of horizontal rays.</param>
+        /// <param name="heightRes">Number of vertical rays.</param>
+        /// <param name="horizontalFieldOfView">Horizontal field of view</param>
+        /// <param name="verticalFieldOfView">Vertical field of view. Will span from -fov/2 to +fov/2</param>
+        public static NativeArray<(float, float)> InitUniformRays(int widthRes, int heightRes, float horizontalFieldOfView, float verticalFieldOfView)
+        {
+            NativeArray<(float, float)> rays = new NativeArray<(float, float)>(widthRes * heightRes, Allocator.Persistent);
+            var hfov = horizontalFieldOfView * Mathf.Deg2Rad;
+            var vfov = verticalFieldOfView * Mathf.Deg2Rad;
+            var hfovOverTwo = hfov / 2;
+            var vfovOverTwo = vfov / 2;
+            for (var i = 0; i < widthRes; i++)
+            {
+                var horizontalAngle = (widthRes == 1) ? 0
+                    : i * hfov / (widthRes - 1) - hfovOverTwo;
+                for (var j = 0; j < heightRes; j++)
+                {
+                    var verticalAngle = (heightRes == 1) ? 0
+                        : j * vfov / (heightRes - 1) - vfovOverTwo;
+
+                    rays[i * heightRes + j] =  (horizontalAngle, verticalAngle);
+                }
+            }
+            return rays;
+        }
+
+        /// <summary>
+        /// Creates rays from vertical ray angles.
+        /// </summary>
+        /// <param name="verticalAngles">Angles of vertical rays, often found in lidar specification sheets. This also defines vertical field of view.</param>
+        /// <param name="widthRes">Number of horizontal rays.</param>
+        /// <param name="horizontalFieldOfView">Horizontal field of view.</param>
+        public static NativeArray<(float, float)> InitCustomRays(List<float> verticalAngles, int widthRes, float horizontalFieldOfView)
+        {
+            var heightRes = verticalAngles.Count;
+            NativeArray<(float, float)> rays = new NativeArray<(float, float)>(widthRes * heightRes, Allocator.Persistent);
+            var hfov = horizontalFieldOfView * Mathf.Deg2Rad;
+            var hfovOverTwo = hfov / 2;
+            var idx = 0;
+            for (var i = 0; i < widthRes; i++)
+            {
+                var horizontalAngle = (widthRes == 1) ? 0
+                    : i * (hfov / widthRes);
+                for (var j = 0; j < heightRes; j++)
+                {
+                    var verticalAngle = verticalAngles[j] * Mathf.Deg2Rad;
+
+                    rays[idx++] =  (horizontalAngle, verticalAngle);
+                }
+            }
+            return rays;
+        }
+
+        /// <summary>
+        /// Creates rays from predefined vertical intervals with corresponding number of rays.
+        /// </summary>
+        /// <param name="intervals">List of ray intervals containing starting angle, ending angle and number of rays in given interval.</param>
+        /// <param name="widthRes">Number of horizontal rays.</param>
+        /// <param name="horizontalFieldOfView">Horizontal field of view.</param>
+        public static List<float> InitVerticalAnglesFromIntervals(List<RayInterval> intervals, int widthRes, float horizontalFieldOfView)
+        {
+            List<float> verticalRays = new List<float>();
+            foreach (var interval in intervals)
+            {
+                for (var i = 0; i < interval.NumberOfRays; i++)
+                {
+                    float res = (interval.EndingAngle - interval.StartingAngle) / interval.NumberOfRays;
+                    verticalRays.Add(interval.StartingAngle + i*res);
+                }
+            }
+            return verticalRays;
+        }
+    }
 
     public class RaycastJobHelper<T> : RaycastJobHelper where T: struct
     {
@@ -76,16 +170,16 @@ namespace Marus.Sensors
         bool _hasData;
         GameObject _obj;
         private float _maxDistance;
-        
+
         Action<NativeArray<Vector3>, NativeArray<T>> _onFinishCallback;
         static Dictionary<int, Func<RaycastHit, Vector3, int, T>> _getResultFromHit;
-        
+
 
         public RaycastJobHelper(GameObject obj, NativeArray<Vector3> directions, 
                 Func<RaycastHit, Vector3, int, T> getResultFromHit,
                 Action<NativeArray<Vector3>, NativeArray<T>> onFinish,
                 float maxDistance=float.MaxValue)
-                
+
         {
             var totalRays = directions.Length;
             _obj = obj;
@@ -144,7 +238,7 @@ namespace Marus.Sensors
                 if (_readbackHandle.IsCompleted)
                 {
                     _readbackHandle.Complete();
-                    
+
                     _readbackInProgress = false;
                     _onFinishCallback(_points, _results);
                     _hasData = true;
@@ -158,7 +252,7 @@ namespace Marus.Sensors
             _raycastHandle.Complete();
             _readbackHandle.Complete();
 
-            // dispse allocated buffers
+            // dispose allocated buffers
             _commands.Dispose();
             _hits.Dispose();
             _directionsLocal.Dispose();
@@ -181,7 +275,6 @@ namespace Marus.Sensors
         private JobHandle ScheduleNewRaycastJob()
         {
             var transform = _obj.transform;
-            // var inverseRotation = Matrix4x4.TRS(Vector3.zero, transform.rotation, Vector3.one).inverse;
 
             for (int i=0; i<_directionsLocal.Length; i++)
             {
@@ -198,7 +291,7 @@ namespace Marus.Sensors
             return RaycastCommand.ScheduleBatch(_commands, _hits, 10, commandsJobHandle);
         }
 
-        // Job cannot have reference type fields, so it calles one global static method to get result
+        // Job cannot have reference type fields, so it calls one global static method to get result
         // This method then decides what Func to call
         public static T GetResultFromHit(int objId, RaycastHit hit, Vector3 direction, int index)
         {
