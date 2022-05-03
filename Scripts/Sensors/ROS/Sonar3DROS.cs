@@ -16,47 +16,38 @@ using System;
 using Marus.Core;
 using Marus.Networking;
 using Sensorstreaming;
+using Google.Protobuf;
 using UnityEngine;
 using static Sensorstreaming.SensorStreaming;
 
 namespace Marus.Sensors.Primitive
 {
     [RequireComponent(typeof(Sonar3D))]
-    public class Sonar3DROS : SensorStreamer<SensorStreamingClient, PointCloudStreamingRequest>
+    public class Sonar3DROS : SensorStreamer<SensorStreamingClient, CompressedImageStreamingRequest>
     {
         Sonar3D sensor;
         new void Start()
         {
             sensor = GetComponent<Sonar3D>();
             StreamSensor(sensor,
-                streamingClient.StreamSonarSensor);
+                streamingClient.StreamSonarImage);
             base.Start();
         }
 
-        protected override PointCloudStreamingRequest ComposeMessage()
+        protected override CompressedImageStreamingRequest ComposeMessage()
         {
-            Sensor.PointCloud _pointCloud = new Sensor.PointCloud();
-            foreach (Vector3 point in sensor.pointsCopy)
+            return new CompressedImageStreamingRequest
             {
-                var tmp = TfExtensions.Unity2Map(point);
-                Geometry.Point p = new Geometry.Point()
+                Data = new Sensor.CompressedImage
                 {
-                    X = tmp.x,
-                    Y = tmp.y,
-                    Z = tmp.z
-                };
-                _pointCloud.Points.Add(p);
-            }
-
-            _pointCloud.Header = new Std.Header()
-            {
-                FrameId = sensor.frameId,
-                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
-            };
-
-            return new PointCloudStreamingRequest()
-            {
-                Data = _pointCloud,
+                    Header = new Std.Header
+                    {
+                        FrameId = sensor.frameId,
+                        Timestamp = TimeHandler.Instance.TimeDouble
+                    },
+                    Data = ByteString.CopyFrom((byte []) sensor.sonarCartesianImage.EncodeToPNG()),
+                    Format = "png"
+                },
                 Address = address
             };
         }

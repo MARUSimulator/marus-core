@@ -41,7 +41,7 @@ namespace Marus.Sensors
                     : i * hfov / (widthRes - 1) - hfovOverTwo;
                 for (var j = 0; j < heightRes; j++)
                 {
-                    var verticalAngle = (heightRes == 1) ? 0  
+                    var verticalAngle = (heightRes == 1) ? 0
                         : j * vfov / (heightRes - 1) - vfovOverTwo;
 
                     var sinhor = Mathf.Sin(horizontalAngle);
@@ -53,9 +53,60 @@ namespace Marus.Sensors
                     directionsLocal[i * heightRes + j] = new Vector3(cosver * sinhor, sinver, cosver * coshor); // y is up; y angle is (90 - theta) in spherical 
                 }
             }
+
             return directionsLocal;
         }
 
+        /*Funtion for beams that are equally distributed across the swath.  
+        The sonar takes the nadir range and then computes the necessary beam angle to distribute the beams equally spaced across the swath.  
+        Equidistant mode assumes a more or less flat bottom and a swath angle of no more than 130 degrees */
+        public static NativeArray<Vector3> EquidistantRays(int widthRes, int heightRes, float horizontalFieldOfView, float verticalFieldOfView, double altitude, double pitchAngle)
+        {
+            NativeArray<Vector3> directionsLocal = new NativeArray<Vector3>(widthRes * heightRes, Allocator.Persistent);
+
+            var hfov = horizontalFieldOfView * Mathf.Deg2Rad;
+            var vfov = verticalFieldOfView * Mathf.Deg2Rad;
+            var hfovOverTwo = hfov / 2;
+            var vfovOverTwo = vfov / 2;
+            var pitch = pitchAngle * Mathf.Deg2Rad;
+
+            // calculate the "lowest" angle
+            var alpha0 = Math.PI / 2 - pitch - vfovOverTwo;
+    
+            // calculate the "highest" angle
+            var alphaN = Math.PI / 2 - pitch + vfovOverTwo;
+
+            //calculate the "visible" distance on a horizontal surface
+            var distanceMin = altitude * Math.Tan(alpha0);
+            var distanceMax = altitude * Math.Tan(alphaN);
+            var distance = distanceMax - distanceMin;
+
+            //calculate equidistant points
+            var x = distance / (heightRes - 1);
+
+            for (var i = 0; i < widthRes; i++)
+            {
+                var horizontalAngle = (widthRes == 1) ? 0
+                    : i * hfov / (widthRes - 1) - hfovOverTwo;
+                for (var j = 0; j < heightRes; j++)
+                {
+                    var verticalAngle = (heightRes == 1) ? 0
+                        : (float) Math.Atan((distanceMin + j * x)/ altitude);
+
+                    if(j==0) Debug.Log("vert angle 0 = " + ((Math.PI / 2 - verticalAngle)/Mathf.Deg2Rad));
+                    if(j==(heightRes-1)) Debug.Log("alpha n = " + ((Math.PI / 2 - verticalAngle)/Mathf.Deg2Rad));
+
+                    var sinhor = Mathf.Sin(horizontalAngle);
+                    var coshor = Mathf.Cos(horizontalAngle);
+                    var sinver = Mathf.Sin((float)(verticalAngle - (Math.PI / 2-pitch)));
+                    var cosver = Mathf.Cos((float)(verticalAngle - (Math.PI / 2-pitch)));
+
+
+                    directionsLocal[i * heightRes + j] = new Vector3(cosver * sinhor, sinver, cosver * coshor); // y is up; y angle is (90 - theta) in spherical 
+                }
+            }
+            return directionsLocal;
+        }
 
         /// <summary>
         /// Calculates direction vectors from angles
@@ -180,7 +231,7 @@ namespace Marus.Sensors
         static Dictionary<int, Func<RaycastHit, Vector3, int, T>> _getResultFromHit;
 
 
-        public RaycastJobHelper(GameObject obj, NativeArray<Vector3> directions, 
+        public RaycastJobHelper(GameObject obj, NativeArray<Vector3> directions,
                 Func<RaycastHit, Vector3, int, T> getResultFromHit,
                 Action<NativeArray<Vector3>, NativeArray<T>> onFinish,
                 float maxDistance=float.MaxValue, float minDistance=0, float sampleFrequency = 10)
@@ -303,6 +354,7 @@ namespace Marus.Sensors
         {
             var transform = _obj.transform;
 
+            
             var commandsJob = new CreateRaycastCommandsJob();
             commandsJob.commands = _commands;
             commandsJob.maxDistance = _maxDistance;

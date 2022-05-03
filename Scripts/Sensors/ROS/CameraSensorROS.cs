@@ -55,6 +55,5 @@ namespace Marus.Sensors
                 Address = address,
             };
         }
-
     }
 }
