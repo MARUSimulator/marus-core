@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using Labust.Networking;
 using Labust.Sensors;
 using Labust.Sensors.Core;
@@ -41,7 +42,7 @@ namespace Labust.Sensors
         public int WidthRes = 30;
 
         public int HeightRes = 10;
-        public float MaxDistance = float.MaxValue;
+        public float MaxDistance = 50;
         public float MinDistance = 0;
         public float HorizontalFieldOfView = 120;
         public float VerticalFieldOfView = 15;
@@ -68,6 +69,7 @@ namespace Labust.Sensors
         const float TWOPI = Mathf.PI * 2;
         const float WATER_LEVEL = 0;
         //public Image sonarImage;
+        float altitude, pitch;
         public RawImage sonarDisplay;
         public RawImage sonarPhotoDisplay;
         public RawImage sonarCartesianDisplay;
@@ -89,7 +91,19 @@ namespace Labust.Sensors
             pointsCopy = new NativeArray<Vector3>(totalRays, Allocator.Persistent);
             sonarData = new NativeArray<SonarReading>(totalRays, Allocator.Persistent);
 
-            var directionsLocal = RaycastJobHelper.EvenlyDistributeRays(WidthRes, HeightRes, HorizontalFieldOfView, VerticalFieldOfView);
+            //sampling the depth under the sonar for equidistant ray projection
+            RaycastHit hit;
+            if (UnityEngine.Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity))
+            {
+                 altitude = hit.distance;
+            }
+
+            //getting the pitch angle from the sonar frame
+            pitch = transform.eulerAngles.x;
+            //Debug.Log(pitch);
+            
+            //var directionsLocal = RaycastJobHelper.EvenlyDistributeRays(WidthRes, HeightRes, HorizontalFieldOfView, VerticalFieldOfView);
+            var directionsLocal = RaycastJobHelper.EquidistantRays(WidthRes, HeightRes, HorizontalFieldOfView, VerticalFieldOfView, altitude, pitch);
             _raycastHelper = new RaycastJobHelper<SonarReading>(gameObject, directionsLocal, OnSonarHit, OnFinish, MaxDistance);
 
             _pointCloudManager = PointCloudManager.CreatePointCloud(name + "_PointClout", totalRays, ParticleMaterial, pointCloudShader);
@@ -111,29 +125,35 @@ namespace Labust.Sensors
             //Debug.Log(reading[1].Intensity);
             Color pixel;
             reading.CopyTo(sonarData);
-            Texture2D sonarPhotoImage = new Texture2D(WidthRes, HeightRes); //new Texture2D(WidthRes,imageHeight);
-            Texture2D sonarImage = new Texture2D(WidthRes, imageHeight); //new Texture2D(WidthRes,imageHeight);
+            Texture2D sonarPhotoImage = new Texture2D(WidthRes, HeightRes); 
+            Texture2D sonarImage = new Texture2D(WidthRes, imageHeight); 
             Texture2D sonarCartesianImage = new Texture2D(CartesianXRes, CartesianYRes);
 
             float[] yIntensity = new float[imageHeight];
             int xCoordinate,yCoordinate;
 
-
             //composing a "photographic" x-y image
-            for (var y = 0; y < HeightRes; y++)
+            for (var x = 0; x < WidthRes; x++)
             {
-                for (var x = 0; x < WidthRes; x++)
+                for (var y = 0; y < HeightRes; y++)
                 {
-                    pixel = new Color(reading[y * WidthRes + x].Intensity, reading[y * WidthRes + x].Intensity, reading[y * WidthRes + x].Intensity, 1);
+                    if (reading[x * HeightRes + y].Valid)
+                    {
+                        pixel = new Color(reading[x * HeightRes + y].Intensity, reading[x * HeightRes + y].Intensity, reading[x * HeightRes + y].Intensity, 1);
+                    }
+                    else{
+                        pixel = new Color(0, 0, 0, 1);
+                    }
                     //normalizing the intensity to 0-255
                     //pixel = pixel / reading.Intensity.* 256;
-                    sonarPhotoImage.SetPixel(y, x, pixel);
+                    sonarPhotoImage.SetPixel(x, y, pixel);
                 }
             }
 
             sonarPhotoImage.Apply();
             sonarPhotoImage.EncodeToJPG();
             sonarPhotoDisplay.texture = sonarPhotoImage;
+
 
           //composing a sonar polar image
             for (var x = 0; x < WidthRes; x++)
@@ -142,6 +162,8 @@ namespace Labust.Sensors
                 for (var y = 0; y < HeightRes; y++)
                 {
                     yCoordinate = DistanceToImageY(reading[x * HeightRes + y].Distance);
+                    if (yCoordinate >= imageHeight)
+                        Debug.Log("y coordinate = " + yCoordinate);
                     yIntensity[yCoordinate] += reading[x * HeightRes + y].Intensity;
                 }
 
@@ -156,7 +178,12 @@ namespace Labust.Sensors
             }
 
             sonarImage.Apply();
-            sonarImage.EncodeToJPG();
+            byte[] bytes = sonarImage.EncodeToPNG();
+            var dirPath = Application.dataPath + "/../SaveImages/";
+                  if(!Directory.Exists(dirPath)) {
+                      Directory.CreateDirectory(dirPath);
+                  }
+                  File.WriteAllBytes(dirPath + "ImagePolar" + ".png", bytes);
             sonarDisplay.texture = sonarImage;
 
             //composing a sonar cartesian image
@@ -212,7 +239,8 @@ namespace Labust.Sensors
             }
 
             sonarCartesianImage.Apply();
-            sonarCartesianImage.EncodeToJPG();
+            bytes = sonarCartesianImage.EncodeToPNG();
+            File.WriteAllBytes(dirPath + "Image" + ".png", bytes);
             sonarCartesianDisplay.texture = sonarCartesianImage;
 
             //Debug.Log("Sonar frame recorded!");
@@ -220,9 +248,9 @@ namespace Labust.Sensors
 
         private int DistanceToImageY(float distance)
         {
-            if (distance < MaxDistance && distance > MinDistance)
+            if (distance < MaxDistance && distance >= MinDistance)
             {
-                int y = (int)Math.Round((distance - MinDistance) / (MaxDistance - MinDistance) * imageHeight);
+                int y = (int)Math.Floor(((distance - MinDistance) / (MaxDistance - MinDistance)) * imageHeight);
                 return y;
             }
             else
@@ -243,7 +271,7 @@ namespace Labust.Sensors
         {
             var distance = hit.distance;
             var sonarReading = new SonarReading();
-            if (distance < MinDistance || hit.point.y > WATER_LEVEL) // if above water, it is not hit!
+            if (distance < MinDistance || hit.point.y > WATER_LEVEL || hit.point == Vector3.zero) // if above water, it is not hit!
             {
                 sonarReading.Valid = false;
             }
@@ -252,7 +280,7 @@ namespace Labust.Sensors
                 sonarReading.Valid = true;
                 sonarReading.Distance = hit.distance;
 
-                sonarReading.Intensity = RayIntensity * (Math.Abs(Vector3.Dot(direction, hit.normal)) / hit.distance);
+                sonarReading.Intensity = RayIntensity * (float)(Math.Acos(Math.Abs(Vector3.Dot(direction, hit.normal)))) ;
                 //sonarReading.Intensity = RayIntensity * (Vector3.Dot(direction, hit.normal)) / Mathf.Pow(hit.distance, 4);
                 //Debug.Log("Target hit");
                 //Debug.DrawRay(sonarPosition, direction*hit.distance, Color.white, 5.0f);

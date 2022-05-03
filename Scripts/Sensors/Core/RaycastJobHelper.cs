@@ -30,7 +30,7 @@ namespace Labust.Sensors
                     : i * hfov / (widthRes - 1) - hfovOverTwo;
                 for (var j = 0; j < heightRes; j++)
                 {
-                    var verticalAngle = (heightRes == 1) ? 0  
+                    var verticalAngle = (heightRes == 1) ? 0
                         : j * vfov / (heightRes - 1) - vfovOverTwo;
 
                     var sinhor = Mathf.Sin(horizontalAngle);
@@ -42,13 +42,64 @@ namespace Labust.Sensors
                     directionsLocal[i * heightRes + j] = new Vector3(cosver * sinhor, sinver, cosver * coshor); // y is up; y angle is (90 - theta) in spherical 
                 }
             }
-             
+
             return directionsLocal;
         }
+
+        /*Funtion for beams that are equally distributed across the swath.  
+        The sonar takes the nadir range and then computes the necessary beam angle to distribute the beams equally spaced across the swath.  
+        Equidistant mode assumes a more or less flat bottom and a swath angle of no more than 130 degrees */
+        public static NativeArray<Vector3> EquidistantRays(int widthRes, int heightRes, float horizontalFieldOfView, float verticalFieldOfView, double altitude, double pitchAngle)
+        {
+            NativeArray<Vector3> directionsLocal = new NativeArray<Vector3>(widthRes * heightRes, Allocator.Persistent);
+
+            var hfov = horizontalFieldOfView * Mathf.Deg2Rad;
+            var vfov = verticalFieldOfView * Mathf.Deg2Rad;
+            var hfovOverTwo = hfov / 2;
+            var vfovOverTwo = vfov / 2;
+            var pitch = pitchAngle * Mathf.Deg2Rad;
+
+            // calculate the "lowest" angle
+            var alpha0 = Math.PI / 2 - pitch - vfovOverTwo;
+    
+            // calculate the "highest" angle
+            var alphaN = Math.PI / 2 - pitch + vfovOverTwo;
+
+            //calculate the "visible" distance on a horizontal surface
+            var distanceMin = altitude * Math.Tan(alpha0);
+            var distanceMax = altitude * Math.Tan(alphaN);
+            var distance = distanceMax - distanceMin;
+
+            //calculate equidistant points
+            var x = distance / (heightRes - 1);
+
+            for (var i = 0; i < widthRes; i++)
+            {
+                var horizontalAngle = (widthRes == 1) ? 0
+                    : i * hfov / (widthRes - 1) - hfovOverTwo;
+                for (var j = 0; j < heightRes; j++)
+                {
+                    var verticalAngle = (heightRes == 1) ? 0
+                        : (float) Math.Atan((distanceMin + j * x)/ altitude);
+
+                    if(j==0) Debug.Log("vert angle 0 = " + ((Math.PI / 2 - verticalAngle)/Mathf.Deg2Rad));
+                    if(j==(heightRes-1)) Debug.Log("alpha n = " + ((Math.PI / 2 - verticalAngle)/Mathf.Deg2Rad));
+
+                    var sinhor = Mathf.Sin(horizontalAngle);
+                    var coshor = Mathf.Cos(horizontalAngle);
+                    var sinver = Mathf.Sin((float)(verticalAngle - (Math.PI / 2-pitch)));
+                    var cosver = Mathf.Cos((float)(verticalAngle - (Math.PI / 2-pitch)));
+
+
+                    directionsLocal[i * heightRes + j] = new Vector3(cosver * sinhor, sinver, cosver * coshor); // y is up; y angle is (90 - theta) in spherical 
+                }
+            }
+            return directionsLocal;
+        }
+
     }
 
-
-    public class RaycastJobHelper<T> : RaycastJobHelper where T: struct
+    public class RaycastJobHelper<T> : RaycastJobHelper where T : struct
     {
         NativeArray<Vector3> _directionsLocal;
         NativeArray<Vector3> _directionsGlobal;
@@ -63,16 +114,16 @@ namespace Labust.Sensors
         bool _hasData;
         GameObject _obj;
         private float _maxDistance;
-        
+
         Action<NativeArray<Vector3>, NativeArray<T>> _onFinishCallback;
         static Dictionary<int, Func<RaycastHit, Vector3, int, T>> _getResultFromHit;
-        
 
-        public RaycastJobHelper(GameObject obj, NativeArray<Vector3> directions, 
+
+        public RaycastJobHelper(GameObject obj, NativeArray<Vector3> directions,
                 Func<RaycastHit, Vector3, int, T> getResultFromHit,
                 Action<NativeArray<Vector3>, NativeArray<T>> onFinish,
-                float maxDistance=float.MaxValue)
-                
+                float maxDistance = float.MaxValue)
+
         {
             var totalRays = directions.Length;
             _obj = obj;
@@ -131,7 +182,7 @@ namespace Labust.Sensors
                 if (_readbackHandle.IsCompleted)
                 {
                     _readbackHandle.Complete();
-                    
+
                     _readbackInProgress = false;
                     _onFinishCallback(_points, _results);
                     _hasData = true;
@@ -170,7 +221,7 @@ namespace Labust.Sensors
             var transform = _obj.transform;
             // var inverseRotation = Matrix4x4.TRS(Vector3.zero, transform.rotation, Vector3.one).inverse;
 
-            for (int i=0; i<_directionsLocal.Length; i++)
+            for (int i = 0; i < _directionsLocal.Length; i++)
             {
                 _directionsGlobal[i] = transform.TransformDirection(_directionsLocal[i]);
             }
