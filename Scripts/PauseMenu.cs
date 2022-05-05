@@ -105,10 +105,12 @@ namespace Marus.Core
         /// </summary>
         public void Exit()
         {
+#if UNITY_EDITOR
             if (Application.isEditor)
             {
                 UnityEditor.EditorApplication.isPlaying = false;
             }
+#endif
             Application.Quit();
         }
 

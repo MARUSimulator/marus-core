@@ -14,7 +14,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace Marus.Communications.Acoustics
@@ -70,9 +72,11 @@ namespace Marus.Communications.Acoustics
                 (var frame, var list) = tuple;
                 if (frame == currentFrame)
                 {
+#if UNITY_EDITOR
                     var devices = list
                         .Select(x => (AcousticDevice)EditorUtility.InstanceIDToObject(x));
                     return devices.ToArray();
+#endif
                 }
             }
 

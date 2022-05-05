@@ -16,8 +16,9 @@ using System;
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
-
+#endif
 namespace Marus.Utils
 {
     public static class Helpers
@@ -174,6 +175,7 @@ namespace Marus.Utils
         }
     }
 
+#if UNITY_EDITOR
     public static class EditorExtensions
     {
         /// <summary>
@@ -209,4 +211,5 @@ namespace Marus.Utils
             serializedObject.ApplyModifiedProperties();
         }
     }
+#endif
 }
