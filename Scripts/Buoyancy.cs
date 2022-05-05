@@ -21,6 +21,9 @@
 // Terms of use: do whatever you like
 
 using System.Collections.Generic;
+#if CREST_OCEAN
+    using Crest;
+#endif
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
@@ -47,7 +50,7 @@ public class Buoyancy : MonoBehaviour
     private new Collider collider;
     private new Rigidbody rigidbody;
 	
-#if CREST_AVAILABLE
+#if CREST_OCEAN
 	Crest.SampleHeightHelper _sampleHeightHelper;
 #endif
     /// <summary>
@@ -89,7 +92,7 @@ public class Buoyancy : MonoBehaviour
 
         Debug.Log(string.Format("[Buoyancy.cs] Name=\"{0}\" volume={1:0.0}, mass={2:0.0}, density={3:0.0}", name, volume, rigidbody.mass, density));
 		
-#if CREST_AVAILABLE
+#if CREST_OCEAN
 		_sampleHeightHelper = new Crest.SampleHeightHelper();
 #endif
     }
@@ -248,7 +251,7 @@ public class Buoyancy : MonoBehaviour
     /// <returns>Water level</returns>
     private float GetWaterLevel(float x, float z)
     {
-#if CREST_AVAILABLE
+#if CREST_OCEAN
         //return ocean == null ? 0.0f : ocean.GetWaterHeightAtLocation(x, z);
 		_sampleHeightHelper.Init(new Vector3(x,0.0f,z), 0.5f, true);
                     
@@ -260,21 +263,58 @@ public class Buoyancy : MonoBehaviour
         return 0.0f;
     }
 
+    private float[] GetWaterLevel(List<Vector3> points)
+    {
+        float[] heights = new float[points.Count];
+#if CREST_OCEAN
+        Vector3[] _queryPos = points.ToArray();
+        Vector3[] _queryResult = new Vector3[points.Count];
+
+        var collProvider = OceanRenderer.Instance?.CollisionProvider;
+        if (collProvider == null)
+        {
+            return heights;
+        }
+
+        var status = collProvider.Query(GetHashCode(), 0.5f, _queryPos, _queryResult, null, null);
+
+        if (!collProvider.RetrieveSucceeded(status))
+        {
+            for (int i = 0; i < points.Count; i++)
+            {
+                heights[i] = OceanRenderer.Instance.SeaLevel;
+            }
+            return heights;
+        }
+
+        for (int i = 0; i < points.Count; i++)
+        {
+            heights[i] = _queryResult[i].y + OceanRenderer.Instance.SeaLevel;
+        }
+#endif
+        return heights;
+    }
+
     /// <summary>
     /// Calculates physics.
     /// </summary>
-    private void FixedUpdate()
+    private void Update()
     {
+        List<Vector3> globalPoints = new List<Vector3>();
         forces.Clear(); // For drawing force gizmos
 
         foreach (var point in voxels)
         {
-            var wp = transform.TransformPoint(point + deltaCBG*Vector3.up);
-            float waterLevel = GetWaterLevel(wp.x, wp.z);
+            globalPoints.Add(transform.TransformPoint(point + deltaCBG*Vector3.up));
+        }
 
-            if (wp.y - voxelHalfHeight < waterLevel)
+        float[] waterLevel = GetWaterLevel(globalPoints);
+
+        for (int i = 0; i < voxels.Count; i++)
+        {
+            if (globalPoints[i].y - voxelHalfHeight < waterLevel[i])
             {
-                float k = (waterLevel - wp.y) / (2 * voxelHalfHeight) + 0.5f;
+                float k = (waterLevel[i] - globalPoints[i].y) / (2 * voxelHalfHeight) + 0.5f;
                 if (k > 1)
                 {
                     k = 1f;
@@ -284,12 +324,12 @@ public class Buoyancy : MonoBehaviour
                     k = 0f;
                 }
 
-                var velocity = rigidbody.GetPointVelocity(wp);
+                var velocity = rigidbody.GetPointVelocity(globalPoints[i]);
                 var localDampingForce = -velocity * drag * rigidbody.mass;
                 var force = localDampingForce + Mathf.Sqrt(k) * localArchimedesForce;
-                rigidbody.AddForceAtPosition(force, wp);
+                rigidbody.AddForceAtPosition(force, globalPoints[i]);
 
-                forces.Add(new[] { wp, force }); // For drawing force gizmos
+                forces.Add(new[] { globalPoints[i], force }); // For drawing force gizmos
             }
         }
     }
