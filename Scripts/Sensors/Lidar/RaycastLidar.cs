@@ -150,7 +150,14 @@ namespace Marus.Sensors
             }
             else if (cfg.Type == RayDefinitionType.Intervals)
             {
-                HeightRes = cfg.RayIntervals.Sum(x => x.NumberOfRays);
+                if (_rayIntervals is null)
+                {
+                    _rayIntervals = new List<RayInterval>();
+                }
+                else
+                {
+                    HeightRes = cfg.RayIntervals.Sum(x => x.NumberOfRays);
+                }
             }
         }
 
@@ -227,7 +234,7 @@ namespace Marus.Sensors
     /// <summary>
     /// Ray interval definition
     /// </summary>
-    [System.Serializable]
+    [Serializable]
 	public class RayInterval
 	{
 		public float StartingAngle;
