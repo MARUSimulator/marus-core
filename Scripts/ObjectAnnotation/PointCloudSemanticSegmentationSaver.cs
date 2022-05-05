@@ -122,13 +122,18 @@ namespace Marus.ObjectAnnotation
 
             _lastPosition = lidar.transform.position;
             var c = counter.ToString("d6");
-            var fileName = Namespace + $"_{c}";
+            var fileName = $"{c}";
+            if (!string.IsNullOrWhiteSpace(Namespace))
+                fileName = $"{Namespace}_{fileName}";
+
             var pcdFile = Path.Combine(_savePath, "lidar", fileName + ".pcd");
             Task t1 = Task.Run(() =>
             {
-                //takes around 25ms
-                PCDSaver.WriteToPcdFile(pcdFile, points, "binary");
-                WriteLabels(fileName, readings);
+                var _filteredIndices = readings.Select((v, i) => new { v, i }).Where(x => x.v.IsValid).Select(x => x.i);
+                var _filteredPoints = _filteredIndices.Select(m => points[m]).ToList();
+                var _filteredReadings = _filteredIndices.Select(m => readings[m]).ToList();
+                PCDSaver.WriteToPcdFileWithIntensity(pcdFile, _filteredPoints, _filteredReadings);
+                WriteLabels(fileName, _filteredReadings);
                 WritePose(orientationMatrix, translation);
             });
             counter++;
@@ -143,7 +148,7 @@ namespace Marus.ObjectAnnotation
             }
         }
 
-        void WriteLabels(string fileName, NativeArray<LidarReading> readings)
+        void WriteLabels(string fileName, List<LidarReading> readings)
         {
             var filePath = Path.Combine(_savePath, "labels", fileName + ".label");
             using (var stream = new FileStream(filePath, FileMode.Append))

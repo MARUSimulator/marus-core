@@ -128,7 +128,6 @@ namespace Marus.Sensors
         double cumulativeTime = 0;
         protected void Update()
         {
-            
             cumulativeTime += Time.deltaTime;
             if (cumulativeTime > (1 / UpdateFrequency))
             {

@@ -121,6 +121,11 @@ namespace Marus.Sensors
                     reading.InstanceId = value.Item2;
                 }
             }
+            if (hit.colliderInstanceID is not 0)
+            {
+                reading.IsValid = true;
+            }
+            reading.Intensity = 255;
             return reading;
         }
 
@@ -229,6 +234,8 @@ namespace Marus.Sensors
     {
         public int ClassId;
         public int InstanceId;
+        public ushort Intensity;
+        public bool IsValid;
     }
 
     /// <summary>
