@@ -21,7 +21,7 @@ namespace Marus.Utils
     /// <summary>
     /// This is generic singleton implementation.
     /// This is the best way to implement singleton in Unity, see <see cref="!:http://www.unitygeek.com/unity_c_singleton/">here.</see> 
-    /// </summary> 
+    /// </summary>
     public class Singleton<T> : MonoBehaviour where T : Component
     {
         protected static T instance;
@@ -37,14 +37,13 @@ namespace Marus.Utils
                         GameObject obj = new GameObject();
                         obj.name = typeof(T).Name;
                         instance = obj.AddComponent<T>();
-						if (Application.isPlaying) // DontDestroyOnLoad does not work outside PlayMode
-						{
-							DontDestroyOnLoad(instance.gameObject);
-						}
-						// call initialize
-						var init = typeof(T).GetMethod("Initialize", BindingFlags.NonPublic | BindingFlags.Instance);
-						init?.Invoke(instance, null);
+                        if (Application.isPlaying) // DontDestroyOnLoad does not work outside PlayMode
+                        {
+                            DontDestroyOnLoad(instance.gameObject);
+                        }
                     }
+                    var init = typeof(T).GetMethod("Initialize", BindingFlags.NonPublic | BindingFlags.Instance);
+                    init.Invoke(instance, null);
                 }
                 return instance;
             }

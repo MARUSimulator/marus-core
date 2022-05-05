@@ -15,15 +15,15 @@
 using UnityEngine;
 using System;
 
-//Original version of the ConditionalHideAttribute created by Brecht Lecluyse (www.brechtos.com)
-//Modified by: -
-
-[AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
-public class HideInRuntimeInspectorAttribute : PropertyAttribute
+namespace Marus.CustomInspector
 {
-
-    // Use this for initialization
-    public HideInRuntimeInspectorAttribute()
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
+    public class HideInRuntimeInspectorAttribute : PropertyAttribute
     {
+
+        // Use this for initialization
+        public HideInRuntimeInspectorAttribute()
+        {
+        }
     }
 }

@@ -19,6 +19,7 @@ using UnityEditor;
 using UnityEngine;
 using System.IO;
 using Marus.Utils;
+using System.Linq;
 
 namespace Labust.Sensors
 {
@@ -56,6 +57,7 @@ namespace Labust.Sensors
                 lidarObj.ConfigIndex = 0;
             }
             currentConfig = Configs[lidarObj.ConfigIndex];
+            lidarObj.ApplyLidarConfig();
         }
 
         public override void OnInspectorGUI()
@@ -112,10 +114,13 @@ namespace Labust.Sensors
                 showConfig = EditorGUILayout.Foldout(showConfig, "Custom Ray Intervals");
                 if (showConfig)
                 {
+                    serializedObject.Update();
                     CheckIntervals();
                     EditorGUI.indentLevel += 2;
                     EditorGUILayout.LabelField("Custom Ray Configuration", EditorStyles.boldLabel);
                     EditorGUILayout.PropertyField(list, true);
+                    EditorUtility.SetDirty(lidarObj);
+                    serializedObject.ApplyModifiedProperties();
                 }
             }
 
@@ -126,7 +131,6 @@ namespace Labust.Sensors
                 {
                     EditorGUI.indentLevel += 2;
                     EditorGUILayout.LabelField("Custom Ray Angles", EditorStyles.boldLabel);
-                    //EditorGUILayout.PropertyField(currentConfig.ChannelAngles);
                     var i = 1;
                     foreach (var angle in currentConfig.ChannelAngles)
                     {
@@ -176,7 +180,8 @@ namespace Labust.Sensors
         {
             lidarObj = target as RaycastLidar;
             var list = lidarObj._rayIntervals;
-            if (list.Count == 0 || list.Count == 1) return;
+            if (list.Count == 0) return;
+            lidarObj.HeightRes = lidarObj._rayIntervals.Sum(x => x.NumberOfRays);
             for (int i = 0; i < list.Count; i++)
             {
 
@@ -190,7 +195,7 @@ namespace Labust.Sensors
                     EditorGUILayout.HelpBox("Number of rays must be at least 1!", MessageType.Error);
                     return;
                 }
-                if(list[i].StartingAngle >= list[i].EndingAngle)
+                if (list[i].StartingAngle >= list[i].EndingAngle)
                 {
                     EditorGUILayout.HelpBox("Ending angle must be greater than starting angle!", MessageType.Error);
                     return;

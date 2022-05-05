@@ -18,12 +18,13 @@ using static Parameterserver.ParameterServer;
 
 using Parameterserver;
 using Marus.Utils;
+using UnityEngine;
 
 namespace Marus.Networking
 {
 
     /// <summary>
-    /// Singleton class for configuring and connecting to 
+    /// Singleton class for configuring and connecting to
     /// ROS server
     /// </summary>
     public class ParamServerHandler : Singleton<ParamServerHandler>

@@ -1,26 +1,30 @@
 # MARUS - MArine Robotic Unity Simulator
 
+![test status](https://github.com/labust/LabustSim/actions/workflows/run_tests.yml/badge.svg?branch=dev)
+
+
 ## Introduction
 
-gRPC ROS adapter implemented in our [ros package](https://github.com/labust/grpc_ros_adapter)
+gRPC ROS adapter implemented in our [ros package](https://github.com/MARUSimulator/grpc_ros_adapter)
 
 ## Dependencies
 
-* Unity 2020.3.x LTS
+* Unity 2021.3 LTS
 
 
 ## Setup & Usage
 
-For usage information, visit our [MarusExample project repository.](https://github.com/labust/MarusExample)
+For usage information, visit our [MarusExample project repository.](https://github.com/MARUSimulator/marus-example)
 
 ## Documentation
 * [API Documentation]()
 
 ## Credits & Acknowledgements
 
-* [Gemini Unity simulator](https://github.com/Gemini-team/Gemini)
+
 * [gRPC](https://github.com/grpc/grpc)
 * [protobuf](https://github.com/protocolbuffers/protobuf)
+* [Gemini Unity simulator](https://github.com/Gemini-team/Gemini)
 
 
 ## Contact
@@ -30,4 +34,4 @@ Please feel free to provide feedback or ask questions by creating a Github issue
 * [University of Zagreb, Faculty of Electrical Engineering and Computing](https://www.fer.unizg.hr/en)
 
 ## License
-This project is released under the Apache 2.0 License. Please review the [License](https://github.com/labust/LabustSim/blob/add-license/LICENSE) file for more details.
+This project is released under the Apache 2.0 License. Please review the [License](https://github.com/MARUSimulator/marus-core/blob/dev/LICENSE) file for more details.

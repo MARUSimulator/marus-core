@@ -57,7 +57,7 @@ public class LidarTest
             yield return null;
         }
         var points = new List<Vector3>();
-        points.AddRange(_RaycastLidar.pointsCopy);
+        points.AddRange(_RaycastLidar.Points);
         List<Vector3> filtered = points.FindAll(e => e != Vector3.zero);
         Assert.Greater(filtered.Count, 0);
         for (int i = 0; i < filtered.Count - 1; i++)

@@ -70,7 +70,7 @@ namespace Marus.Sensors
 
         protected async override void SendMessage()
         {
-            PointCloud _pointCloud = GeneratePointCloud(sensor.pointsCopy);
+            PointCloud _pointCloud = GeneratePointCloud(sensor.Points);
             var msg = new PointCloudStreamingRequest()
             {
                 Data = _pointCloud,

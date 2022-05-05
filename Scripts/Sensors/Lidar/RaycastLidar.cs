@@ -17,6 +17,8 @@ using Unity.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using Marus.ObjectAnnotation;
 
 namespace Marus.Sensors
 {
@@ -61,10 +63,9 @@ namespace Marus.Sensors
         /// </summary>
         public ComputeShader pointCloudShader;
 
-        /// <summary>
-        /// NativeArray that holds points
-        /// </summary>
-        public NativeArray<Vector3> pointsCopy;
+        public NativeArray<Vector3> Points;
+        public NativeArray<LidarReading> Readings;
+
 
         PointCloudManager _pointCloudManager;
         RaycastJobHelper<LidarReading> _raycastHelper;
@@ -75,11 +76,17 @@ namespace Marus.Sensors
         public List<RayInterval> _rayIntervals;
         public RayDefinitionType _rayType;
 
+        private PointCloudSemanticSegmentationSaver _saver;
+        private bool saverExists;
+
         void Start()
         {
             int totalRays = WidthRes * HeightRes;
+            _saver = GetComponent<PointCloudSemanticSegmentationSaver>();
+            saverExists = _saver is not null;
             InitializeRayArray();
-            pointsCopy = new NativeArray<Vector3>(WidthRes * HeightRes, Allocator.Persistent);
+            Points = new NativeArray<Vector3>(totalRays, Allocator.Persistent);
+            Readings = new NativeArray<LidarReading>(totalRays, Allocator.Persistent);
 
             var directionsLocal = RaycastJobHelper.CalculateRayDirections(_rayAngles);
             _raycastHelper = new RaycastJobHelper<LidarReading>(gameObject, directionsLocal, OnLidarHit, OnFinish);
@@ -91,19 +98,30 @@ namespace Marus.Sensors
 
         protected override void SampleSensor()
         {
-            _pointCloudManager.UpdatePointCloud(pointsCopy);
+            _pointCloudManager.UpdatePointCloud(Points);
         }
 
         private void OnFinish(NativeArray<Vector3> points, NativeArray<LidarReading> readings)
         {
-            points.CopyTo(pointsCopy);
+            points.CopyTo(this.Points);
+            readings.CopyTo(this.Readings);
             Log(new {points});
             hasData = true;
         }
 
         private LidarReading OnLidarHit(RaycastHit hit, Vector3 direction, int index)
         {
-            return new LidarReading();
+            var reading = new LidarReading();
+            (int, int) value;
+            if (saverExists)
+            {
+                if (_saver.objectClassesAndInstances.TryGetValue(hit.colliderInstanceID, out value))
+                {
+                    reading.ClassId = value.Item1;
+                    reading.InstanceId = value.Item2;
+                }
+            }
+            return reading;
         }
 
         /// <summary>
@@ -132,7 +150,14 @@ namespace Marus.Sensors
             }
             else if (cfg.Type == RayDefinitionType.Intervals)
             {
-                HeightRes = cfg.RayIntervals.Sum(x => x.NumberOfRays);
+                if (_rayIntervals is null)
+                {
+                    _rayIntervals = new List<RayInterval>();
+                }
+                else
+                {
+                    HeightRes = cfg.RayIntervals.Sum(x => x.NumberOfRays);
+                }
             }
         }
 
@@ -162,17 +187,10 @@ namespace Marus.Sensors
         void OnDestroy()
         {
             _raycastHelper?.Dispose();
-            pointsCopy.Dispose();
+            Points.Dispose();
+            Readings.Dispose();
             _rayAngles.Dispose();
         }
-    }
-
-    /// <summary>
-    /// Struct containing any relevant information about point reading and raycast hit
-    /// </summary>
-    internal struct LidarReading
-    {
-        public int Class;
     }
 
     /// <summary>
@@ -207,10 +225,16 @@ namespace Marus.Sensors
         Angles
     }
 
+    public struct LidarReading
+    {
+        public int ClassId;
+        public int InstanceId;
+    }
+
     /// <summary>
     /// Ray interval definition
     /// </summary>
-    [System.Serializable]
+    [Serializable]
 	public class RayInterval
 	{
 		public float StartingAngle;

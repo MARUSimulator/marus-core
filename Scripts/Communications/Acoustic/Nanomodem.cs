@@ -1,4 +1,4 @@
-﻿// Copyright 2022 Laboratory for Underwater Systems and Technologies (LABUST)
+// Copyright 2022 Laboratory for Underwater Systems and Technologies (LABUST)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,13 +13,7 @@
 // limitations under the License.
 
 using System;
-using System.Text;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using Unity;
-using Marus.Utils;
-using Marus.Logger;
 
 namespace Marus.Communications.Acoustics
 {
