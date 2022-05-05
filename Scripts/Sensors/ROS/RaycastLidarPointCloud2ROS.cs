@@ -39,17 +39,17 @@ namespace Marus.Sensors
             sensor = GetComponent<RaycastLidar>();
             UpdateFrequency = Mathf.Min(UpdateFrequency, sensor.SampleFrequency);
             if (string.IsNullOrEmpty(address))
-                address = transform.name + "/lidar2";
+                address = $"{sensor.vehicle?.name}/lidar";
             StreamSensor(sensor, 
                 streamingClient.StreamPointCloud2);
         }
 
-        private static PointCloud2 GeneratePointCloud2(NativeArray<Vector3> points)
+        private PointCloud2 GeneratePointCloud2(NativeArray<Vector3> points)
         {
             PointCloud2 pointCloud = new PointCloud2();
             pointCloud.Header = new Std.Header()
             {
-                FrameId = RosConnection.Instance.OriginFrameName,
+                FrameId = sensor.frameId,
                 Timestamp = TimeHandler.Instance.TimeDouble
             };
             pointCloud.Height = 1;
