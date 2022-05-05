@@ -263,11 +263,15 @@ namespace Marus.Sensors
 
         private JobHandle ReadbackData()
         {
+            var transform = _obj.transform;
+
             var readback = new ReadbackDataJob();
             readback.hits = _hits;
             readback.results = _results;
             readback.points = _points;
             readback.directions = _directionsLocal;
+            readback.position = transform.position;
+            readback.rotation = transform.rotation;
             readback.objectId = _obj.GetInstanceID();
             return readback.Schedule(_hits.Length, 10, _raycastHandle);
         }
@@ -276,17 +280,13 @@ namespace Marus.Sensors
         {
             var transform = _obj.transform;
 
-            for (int i=0; i<_directionsLocal.Length; i++)
-            {
-                _directionsGlobal[i] = transform.TransformDirection(_directionsLocal[i]);
-            }
             var commandsJob = new CreateRaycastCommandsJob();
             commandsJob.commands = _commands;
             commandsJob.maxDistance = _maxDistance;
-            commandsJob.directions = _directionsGlobal;
+            commandsJob.directions = _directionsLocal;
             commandsJob.position = transform.position;
+            commandsJob.rotation = transform.rotation;
             var commandsJobHandle = commandsJob.Schedule(_directionsLocal.Length, 10);
-
 
             return RaycastCommand.ScheduleBatch(_commands, _hits, 10, commandsJobHandle);
         }
@@ -302,6 +302,7 @@ namespace Marus.Sensors
         {
             [ReadOnly]
             public Vector3 position;
+            public Quaternion rotation;
 
             [ReadOnly]
             public NativeArray<Vector3> directions;
@@ -313,7 +314,7 @@ namespace Marus.Sensors
 
             public void Execute(int i)
             {
-                commands[i] = new RaycastCommand(position, directions[i], maxDistance);
+                commands[i] = new RaycastCommand(position, rotation*directions[i], maxDistance);
             }
         }
 
@@ -326,10 +327,12 @@ namespace Marus.Sensors
             public NativeArray<T> results;
             public NativeArray<Vector3> points;
             public int objectId;
+            public Vector3 position;
+            public Quaternion rotation;
 
             public void Execute(int i)
             {
-                points[i] = hits[i].point;
+                points[i] = Quaternion.Inverse(rotation)*(hits[i].point - position);
                 results[i] = GetResultFromHit(objectId, hits[i], directions[i], i);
             }
         }
