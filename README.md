@@ -5,7 +5,7 @@
 
 ## Introduction
 
-gRPC ROS adapter implemented in our [ros package](https://github.com/labust/grpc_ros_adapter)
+gRPC ROS adapter implemented in our [ros package](https://github.com/MARUSimulator/grpc_ros_adapter)
 
 ## Dependencies
 
@@ -14,7 +14,7 @@ gRPC ROS adapter implemented in our [ros package](https://github.com/labust/grpc
 
 ## Setup & Usage
 
-For usage information, visit our [MarusExample project repository.](https://github.com/labust/MarusExample)
+For usage information, visit our [MarusExample project repository.](https://github.com/MARUSimulator/marus-example)
 
 ## Documentation
 * [API Documentation]()
@@ -34,4 +34,4 @@ Please feel free to provide feedback or ask questions by creating a Github issue
 * [University of Zagreb, Faculty of Electrical Engineering and Computing](https://www.fer.unizg.hr/en)
 
 ## License
-This project is released under the Apache 2.0 License. Please review the [License](https://github.com/labust/LabustSim/blob/dev/LICENSE) file for more details.
+This project is released under the Apache 2.0 License. Please review the [License](https://github.com/MARUSimulator/marus-core/blob/dev/LICENSE) file for more details.
