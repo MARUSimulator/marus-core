@@ -76,13 +76,13 @@ namespace Marus.Sensors
         public List<RayInterval> _rayIntervals;
         public RayDefinitionType _rayType;
 
-        private PointCloudSemanticSegmentationSaver _saver;
+        private PointCloudSegmentationSaver _saver;
         private bool saverExists;
 
         void Start()
         {
             int totalRays = WidthRes * HeightRes;
-            _saver = GetComponent<PointCloudSemanticSegmentationSaver>();
+            _saver = GetComponent<PointCloudSegmentationSaver>();
             saverExists = _saver is not null;
             InitializeRayArray();
             Points = new NativeArray<Vector3>(totalRays, Allocator.Persistent);
@@ -121,6 +121,11 @@ namespace Marus.Sensors
                     reading.InstanceId = value.Item2;
                 }
             }
+            if (hit.colliderInstanceID is not 0)
+            {
+                reading.IsValid = true;
+            }
+            reading.Intensity = 255;
             return reading;
         }
 
@@ -229,6 +234,8 @@ namespace Marus.Sensors
     {
         public int ClassId;
         public int InstanceId;
+        public ushort Intensity;
+        public bool IsValid;
     }
 
     /// <summary>
