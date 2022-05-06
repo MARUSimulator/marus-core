@@ -17,8 +17,10 @@ using UnityEngine;
 using System.IO;
 using System.Text;
 using System;
+using System.Buffers;
 using System.Linq;
 using System.Collections.Generic;
+using Marus.Sensors;
 
 namespace Marus.Utils
 {
@@ -107,6 +109,42 @@ namespace Marus.Utils
                         writer.WriteLine(p);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Write pointcloud with intensity field
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="pointcloud"></param>
+        /// <param name="lidarReadings"></param>
+        public static void WriteToPcdFileWithIntensity(string filePath, List<Vector3> pointcloud, List<LidarReading> lidarReadings)
+        {
+            string metadata = "VERSION .7\n" +
+                "FIELDS x y z intensity\n" +
+                "SIZE 4 4 4 2\n" +
+                "TYPE F F F U\n" +
+                "COUNT 1 1 1 1\n" +
+                "WIDTH " + pointcloud.Count.ToString() + "\n" +
+                "HEIGHT 1\n" +
+                "VIEWPOINT 0 0 0 1 0 0 0\n" +
+                "POINTS " + pointcloud.Count.ToString() + "\n" +
+                "DATA binary\n";
+
+            var pointSize = 14;
+            File.WriteAllText(filePath, metadata);
+            using (var fileStream = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.None))
+            using (var bw = new BinaryWriter(fileStream))
+            {
+                byte[] bytes = new byte[pointcloud.Count * pointSize];
+                for(int i = 0; i < pointcloud.Count; i++)
+                {
+                    Buffer.BlockCopy( BitConverter.GetBytes( pointcloud[i].x ), 0, bytes, i*pointSize, 4 );
+                    Buffer.BlockCopy( BitConverter.GetBytes( pointcloud[i].y ), 0, bytes, i*pointSize + 4, 4 );
+                    Buffer.BlockCopy( BitConverter.GetBytes( pointcloud[i].z ), 0, bytes, i*pointSize + 8, 4 );
+                    Buffer.BlockCopy( BitConverter.GetBytes( lidarReadings[i].Intensity ), 0, bytes, i*pointSize + 12, 2 );
+                }
+                bw.Write(bytes);
             }
         }
 
@@ -572,17 +610,15 @@ namespace Marus.Utils
         /// Holds point data (x, y, z)
         /// </summary>
         public Vector3[] Points;
-        #nullable enable
         /// <summary>
         /// Holds normals data (x, y, z)
         /// </summary>
-        public Vector3[]? Normals = null;
+        public Vector3[] Normals = null;
 
         /// <summary>
         /// Holds color data
         /// </summary>
-        public Color[]? Colors = null;
-        #nullable disable
+        public Color[] Colors = null;
 
         /// <summary>
         /// Number of points
