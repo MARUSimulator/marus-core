@@ -29,7 +29,7 @@ namespace Marus.ObjectAnnotation
     /// Holds properties like directory, save frequency.
     /// </summary>
     [RequireComponent(typeof(RaycastLidar))]
-    public class PointCloudSemanticSegmentationSaver : MonoBehaviour
+    public class PointCloudSegmentationSaver : MonoBehaviour
     {
 
         /// <summary>

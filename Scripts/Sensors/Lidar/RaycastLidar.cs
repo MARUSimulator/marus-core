@@ -76,13 +76,13 @@ namespace Marus.Sensors
         public List<RayInterval> _rayIntervals;
         public RayDefinitionType _rayType;
 
-        private PointCloudSemanticSegmentationSaver _saver;
+        private PointCloudSegmentationSaver _saver;
         private bool saverExists;
 
         void Start()
         {
             int totalRays = WidthRes * HeightRes;
-            _saver = GetComponent<PointCloudSemanticSegmentationSaver>();
+            _saver = GetComponent<PointCloudSegmentationSaver>();
             saverExists = _saver is not null;
             InitializeRayArray();
             Points = new NativeArray<Vector3>(totalRays, Allocator.Persistent);
