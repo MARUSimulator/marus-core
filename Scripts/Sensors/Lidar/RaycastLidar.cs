@@ -91,7 +91,7 @@ namespace Marus.Sensors
             var directionsLocal = RaycastJobHelper.CalculateRayDirections(_rayAngles);
             _raycastHelper = new RaycastJobHelper<LidarReading>(gameObject, directionsLocal, OnLidarHit, OnFinish);
 
-            _pointCloudManager = PointCloudManager.CreatePointCloud(name + "_PointCloud", totalRays, ParticleMaterial, pointCloudShader);
+            _pointCloudManager = PointCloudManager.CreatePointCloud(gameObject, name + "_PointCloud", totalRays, ParticleMaterial, pointCloudShader);
             _coroutine = StartCoroutine(_raycastHelper.RaycastInLoop());
 
         }

@@ -52,6 +52,7 @@ namespace Marus.Visualization
                 mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
             }
             mesh.SetIndices(indices, MeshTopology.Points, 0);
+            mesh.MarkDynamic();
 
             return mesh;
         }
@@ -103,6 +104,19 @@ namespace Marus.Visualization
             GameObject pointCloud = new GameObject(name + "_PointCloud");
             pointCloud.transform.position = Vector3.zero;
             pointCloud.transform.rotation = Quaternion.identity;
+            var pointCloudManager = pointCloud.AddComponent<PointCloudManager>();
+            pointCloudManager.particleMaterial = particleMaterial;
+            pointCloudManager.computeParticle = computeShader ?? FindComputeShader("PointCloudCS");
+            pointCloudManager.SetupPointCloud(numPoints);
+            return pointCloudManager;
+        }
+
+        public static PointCloudManager CreatePointCloud(GameObject parentObj, string name, int numPoints, Material particleMaterial, ComputeShader computeShader)
+        {
+            GameObject pointCloud = new GameObject(name + "_PointCloud");
+            pointCloud.transform.parent = parentObj.transform;
+            pointCloud.transform.localPosition = Vector3.zero;
+            pointCloud.transform.localRotation = Quaternion.identity;
             var pointCloudManager = pointCloud.AddComponent<PointCloudManager>();
             pointCloudManager.particleMaterial = particleMaterial;
             pointCloudManager.computeParticle = computeShader ?? FindComputeShader("PointCloudCS");

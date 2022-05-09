@@ -29,7 +29,7 @@ namespace Marus.Sensors.ROS
         GnssSensor sensor;
         void Start()
         {
-            var sensor = GetComponent<GnssSensor>();
+            sensor = GetComponent<GnssSensor>();
             if (string.IsNullOrEmpty(address))
             {
                 address = $"{sensor.vehicle?.name}/gps";

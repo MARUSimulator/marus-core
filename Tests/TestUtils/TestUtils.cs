@@ -153,7 +153,9 @@ namespace TestUtils
 
         public static void CreateEmptyScene()
         {
+#if UNITY_EDITOR
             UnityEditor.SceneManagement.EditorSceneManager.NewScene(UnityEditor.SceneManagement.NewSceneSetup.EmptyScene, UnityEditor.SceneManagement.NewSceneMode.Single);
+#endif
         }
 
         public static void CallPhysicsUpdate()
