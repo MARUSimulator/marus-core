@@ -79,7 +79,7 @@ namespace Marus.Sensors.AIS
             this.ManeuverIndicator = ManeuverIndicator.NotAvailable;
         }
 
-        public PositionReportClassA(int MMSI)
+        public PositionReportClassA(string MMSI)
         {
             this.MMSI = MMSI;
             this.PositionAccuracy = PositionAccuracy.Low;
