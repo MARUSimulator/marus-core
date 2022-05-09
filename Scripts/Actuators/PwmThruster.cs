@@ -27,9 +27,7 @@ namespace Marus.Actuators
             V10 = 10,
             V12 = 12,
             V14 = 14,
-            V16 = 16,
-            V18 = 18,
-            V20 = 20
+            V16 = 16
         };
 
         int _voltage;
@@ -49,13 +47,13 @@ namespace Marus.Actuators
                 }
 
                 _vehicle = Helpers.GetVehicle(transform);
-                _vehicleBody = _vehicle.GetComponent<Rigidbody>();
                 if (_vehicle == null)
                 {
                     Debug.Log($@"Cannot get vehicle from sensor {transform.name}. 
                         Using sensor as the vehicle transform");
                     return transform;
                 }
+                _vehicleBody = _vehicle.GetComponent<Rigidbody>();
                 return _vehicleBody.transform;
             }
         }
@@ -79,7 +77,7 @@ namespace Marus.Actuators
                     sheetData = T200ThrusterDatasheet.V10;
                     break;
                 case AllowedVoltages.V16:
-                    sheetData = T200ThrusterDatasheet.V10;
+                    sheetData = T200ThrusterDatasheet.V16;
                     break;
 
             }

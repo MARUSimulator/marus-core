@@ -14,7 +14,9 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using System;
 
 public class EnumFlagsAttribute : PropertyAttribute
@@ -46,6 +48,7 @@ public class EnumFlagsAttribute : PropertyAttribute
     }
 }
 
+#if UNITY_EDITOR
 [CustomPropertyDrawer(typeof(EnumFlagsAttribute))]
 public class EnumFlagsAttributeDrawer : PropertyDrawer
 {
@@ -58,3 +61,4 @@ public class EnumFlagsAttributeDrawer : PropertyDrawer
         }
     }
 }
+#endif
