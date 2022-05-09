@@ -31,6 +31,6 @@ namespace Marus.Sensors.AIS
         /// Maritime Mobile Service Identity
         /// Unique 9 digit number assigned to radio or AIS unit.
         /// </summary>
-        public int MMSI { get; set; }
+        public string MMSI { get; set; }
     }
 }

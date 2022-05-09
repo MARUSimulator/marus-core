@@ -14,6 +14,7 @@
 
 using UnityEngine;
 using Marus.Sensors.Primitive;
+using System;
 
 namespace Marus.Sensors.AIS
 {
@@ -46,6 +47,8 @@ namespace Marus.Sensors.AIS
         /// </summary>
         public bool ActiveTransmission = true;
         public float Range;
+        public event Action<AisMessage> OnReceiveEvent;
+
         private float period = 0;
         private float delta = 0;
         private PositionReportClassA message;
@@ -96,7 +99,7 @@ namespace Marus.Sensors.AIS
 
         public void Receive(AisMessage msg)
         {
-            //Debug.Log(msg);
+            OnReceiveEvent?.Invoke(msg);
         }
 
         private void SetRange()
