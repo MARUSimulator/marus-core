@@ -82,8 +82,8 @@ namespace Labust.Sensors
                     var verticalAngle = (heightRes == 1) ? 0
                         : (float) Math.Atan((distanceMin + j * x)/ altitude);
 
-                    if(j==0) Debug.Log("vert angle 0 = " + ((Math.PI / 2 - verticalAngle)/Mathf.Deg2Rad));
-                    if(j==(heightRes-1)) Debug.Log("alpha n = " + ((Math.PI / 2 - verticalAngle)/Mathf.Deg2Rad));
+                    //if(j==0) Debug.Log("vert angle 0 = " + ((Math.PI / 2 - verticalAngle)/Mathf.Deg2Rad));
+                    //if(j==(heightRes-1)) Debug.Log("alpha n = " + ((Math.PI / 2 - verticalAngle)/Mathf.Deg2Rad));
 
                     var sinhor = Mathf.Sin(horizontalAngle);
                     var coshor = Mathf.Cos(horizontalAngle);
