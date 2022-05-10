@@ -105,8 +105,15 @@ namespace Marus.Visualization
             pointCloud.transform.position = Vector3.zero;
             pointCloud.transform.rotation = Quaternion.identity;
             var pointCloudManager = pointCloud.AddComponent<PointCloudManager>();
-            pointCloudManager.particleMaterial = particleMaterial ?? FindMaterial("PointMaterial");
-            pointCloudManager.computeParticle = computeShader ?? FindComputeShader("PointCloudCS");
+
+            pointCloudManager.particleMaterial = particleMaterial;
+            if (pointCloudManager.particleMaterial == null)
+                FindMaterial("PointMaterial");
+
+            pointCloudManager.computeParticle = computeShader;
+            if (pointCloudManager.computeParticle == null)
+                FindComputeShader("PointCloudCS");
+
             pointCloudManager.SetupPointCloud(numPoints);
             return pointCloudManager;
         }

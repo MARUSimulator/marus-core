@@ -61,10 +61,12 @@ namespace Marus.ROS
             }
         }
 
+        #if UNITY_EDITOR
         protected void Reset()
         {
             FrameId = $"{vehicle.name}/{gameObject.name}";
         }
+        #endif
 
         Quaternion _rotation;
         Vector3 _translation;

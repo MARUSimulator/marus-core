@@ -97,7 +97,7 @@ namespace Marus.Visualization
         /// </summary>
         /// <param name="pointcloud"></param>
         /// <returns></returns>
-        public async void PointCloud2ToPointCloud(Sensor.PointCloud2 pointcloud)
+        public void PointCloud2ToPointCloud(Sensor.PointCloud2 pointcloud)
         {
             List<(int, int, int)> fields = new List<(int, int, int)>();
             var fieldKeys = new Dictionary<string, int>()
