@@ -51,18 +51,19 @@ namespace Marus.Sensors
         public void Reset()
         {
             InitAvailableLidarConfigs();
-            lidarObj = target as RaycastLidar;
-            if (lidarObj.ConfigIndex >= Configs.Count)
+            if (lidarObj.ConfigIndex >= Configs.Count || lidarObj.ConfigIndex < 0)
             {
                 lidarObj.ConfigIndex = 0;
+                EditorUtility.SetDirty(lidarObj);
+                serializedObject.ApplyModifiedProperties();
             }
             currentConfig = Configs[lidarObj.ConfigIndex];
-            lidarObj.ApplyLidarConfig();
+            RefreshLidar();
         }
 
         public override void OnInspectorGUI()
         {
-            if (Configs == null || _configsChanged)
+            if (Configs?.Any() != true || _configsChanged)
             {
                 InitAvailableLidarConfigs();
                 _configsChanged = false;
@@ -165,6 +166,7 @@ namespace Marus.Sensors
             {
                 _choices[i++] = cfg.Name;
             }
+            _configName = _choices[lidarObj.ConfigIndex];
         }
 
         public void RefreshLidar()

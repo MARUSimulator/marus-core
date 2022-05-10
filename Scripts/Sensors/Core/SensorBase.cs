@@ -56,10 +56,12 @@ namespace Marus.Sensors
             }
         }
 
+        #if UNITY_EDITOR
         protected void Reset()
         {
             frameId = $"{vehicle.name}/{gameObject.name}";
         }
+        #endif
 
         protected abstract void SampleSensor();
 
@@ -131,10 +133,12 @@ namespace Marus.Sensors
             }
         }
 
+        #if UNITY_EDITOR
         protected void Reset()
         {
             gameObject.AddComponent<TfStreamerROS>();
         }
+        #endif
 
         double cumulativeTime = 0;
         protected void Update()
