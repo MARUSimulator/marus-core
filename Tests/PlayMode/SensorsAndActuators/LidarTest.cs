@@ -22,6 +22,7 @@ using UnityEngine.TestTools;
 using System.IO;
 using Newtonsoft.Json;
 using UnityEditor;
+using System.Linq;
 
 public class LidarTest
 {
@@ -52,17 +53,17 @@ public class LidarTest
     public IEnumerator TestLidarSample()
     {
         // skip a few frames
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 20; i++)
         {
             yield return null;
         }
-        var points = new List<Vector3>();
-        points.AddRange(_RaycastLidar.Points);
-        List<Vector3> filtered = points.FindAll(e => e != Vector3.zero);
-        Assert.Greater(filtered.Count, 0);
-        for (int i = 0; i < filtered.Count - 1; i++)
+        var _filteredIndices = _RaycastLidar.Readings.Select((v, i) => new { v, i }).Where(x => x.v.IsValid).Select(x => x.i);
+        var _filteredPoints = _filteredIndices.Select(m => _RaycastLidar.Points[m]).ToList();
+        Assert.Greater(_filteredPoints.Count, 0);
+        for (int i = 0; i < _filteredPoints.Count - 1; i++)
         {
-            Assert.AreEqual(_target.GetComponent<Collider>().ClosestPoint(filtered[i]), filtered[i]);
+            var transformedPoint = _RaycastLidar.transform.TransformPoint(_filteredPoints[i]);
+            Assert.AreEqual(_target.GetComponent<Collider>().ClosestPoint(transformedPoint), transformedPoint);
         }
         UnityEngine.Object.Destroy(_RaycastLidar);
         UnityEngine.Object.Destroy(_target);

@@ -20,6 +20,7 @@ using System;
 using Marus.Networking;
 using Marus.Logger;
 using Marus.Utils;
+using Marus.ROS;
 
 namespace Marus.Sensors
 {
@@ -53,6 +54,11 @@ namespace Marus.Sensors
                 }
                 return _vehicle;
             }
+        }
+
+        protected void Reset()
+        {
+            frameId = $"{vehicle.name}/{gameObject.name}";
         }
 
         protected abstract void SampleSensor();
@@ -123,6 +129,11 @@ namespace Marus.Sensors
                     return streamHandle.RequestStream;
                 return null;
             }
+        }
+
+        protected void Reset()
+        {
+            gameObject.AddComponent<TfStreamerROS>();
         }
 
         double cumulativeTime = 0;

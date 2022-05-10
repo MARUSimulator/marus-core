@@ -18,6 +18,7 @@ using Marus.Core;
 using Std;
 using Grpc.Core;
 using static Tf.Tf;
+using Marus.Utils;
 
 namespace Marus.ROS
 {
@@ -43,6 +44,27 @@ namespace Marus.ROS
         /// </summary>
         public string FrameId;
         string address;
+
+        protected Transform _vehicle;
+        public Transform vehicle
+        {
+            get
+            {
+                _vehicle = Helpers.GetVehicle(transform);
+                if (_vehicle == null)
+                {
+                    Debug.Log($@"Cannot get vehicle from sensor {transform.name}. 
+                        Using sensor as the vehicle transform");
+                    return transform;
+                }
+                return _vehicle;
+            }
+        }
+
+        protected void Reset()
+        {
+            FrameId = $"{vehicle.name}/{gameObject.name}";
+        }
 
         Quaternion _rotation;
         Vector3 _translation;

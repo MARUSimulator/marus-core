@@ -14,7 +14,6 @@
 #if UNITY_EDITOR
 
 using System.Collections.Generic;
-using Marus.Sensors;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
@@ -22,7 +21,7 @@ using System.IO;
 using Marus.Utils;
 using System.Linq;
 
-namespace Labust.Sensors
+namespace Marus.Sensors
 {
     /// <summary>
     /// Custom editor for RaycastLidar component.
@@ -49,7 +48,7 @@ namespace Labust.Sensors
         LidarConfig currentConfig;
         bool _configsChanged = false;
 
-        public void OnEnable()
+        public void Reset()
         {
             InitAvailableLidarConfigs();
             lidarObj = target as RaycastLidar;
@@ -158,6 +157,8 @@ namespace Labust.Sensors
         {
             var jsonText = File.ReadAllText(JsonConfigPath());
             Configs = JsonConvert.DeserializeObject<List<LidarConfig>>(jsonText);
+            lidarObj = target as RaycastLidar;
+            lidarObj.Configs = Configs;
             _choices = new string[Configs.Count];
             var i = 0;
             foreach(var cfg in Configs)
@@ -214,7 +215,7 @@ namespace Labust.Sensors
         /// <returns>True if saved, false if not saved.</returns>
         public bool SaveConfig(string oldName, string newName, bool saveAsNew)
         {
-            if (newName ==  "")
+            if (string.IsNullOrEmpty(newName))
             {
                 //Reject empty name
                 _errorMsg = $"You must enter a name for configuration!";

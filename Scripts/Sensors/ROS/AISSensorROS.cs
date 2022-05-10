@@ -32,7 +32,7 @@ namespace Marus.Sensors.AIS
             device = GetComponent<AisDevice>();
             if (string.IsNullOrEmpty(address))
                 address = transform.name + "/ais";
-            StreamSensor(sensor, 
+            StreamSensor(sensor,
                 streamingClient.StreamAisSensor);
             UpdateFrequency = 1 / TimeIntervals.getInterval(device.ClassType, sensor.SOG);
         }

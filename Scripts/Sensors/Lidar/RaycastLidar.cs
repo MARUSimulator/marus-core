@@ -31,11 +31,6 @@ namespace Marus.Sensors
     public class RaycastLidar : SensorBase
     {
         /// <summary>
-        /// Material set for point cloud display
-        /// </summary>
-        public Material ParticleMaterial;
-
-        /// <summary>
         /// Number of horizontal rays
         /// </summary>
         public int WidthRes = 1024;
@@ -62,6 +57,11 @@ namespace Marus.Sensors
         /// PointCloud compute shader
         /// </summary>
         public ComputeShader pointCloudShader;
+
+        /// <summary>
+        /// Material set for point cloud display
+        /// </summary>
+        public Material ParticleMaterial;
 
         public NativeArray<Vector3> Points;
         public NativeArray<LidarReading> Readings;
@@ -142,7 +142,6 @@ namespace Marus.Sensors
             var cfg = Configs[ConfigIndex];
             MaxDistance = cfg.MaxRange;
             MinDistance = cfg.MinRange;
-            frameId = cfg.FrameId;
             WidthRes = cfg.HorizontalResolution;
             HeightRes = cfg.VerticalResolution;
             HorizontalFieldOfView = cfg.HorizontalFieldOfView;
