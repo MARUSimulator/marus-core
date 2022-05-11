@@ -127,7 +127,7 @@ namespace Marus.ROS
         void Update()
         {
             cumulativeTime += Time.deltaTime;
-            if (cumulativeTime > (1 / UpdateFrequency) && RosConnection.Instance.IsConnected))
+            if (cumulativeTime > (1 / UpdateFrequency) && RosConnection.Instance.IsConnected)
             {
                 cumulativeTime = 0;
                 UpdateTransform();
