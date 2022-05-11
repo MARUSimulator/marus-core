@@ -80,9 +80,6 @@ namespace Marus.ROS
 
         Quaternion _rotation;
         Vector3 _translation;
-        Quaternion _lastRotation;
-        Vector3 _lastTranslation;
-        bool _changed;
 
         /// <summary>
         /// A client instance used for streaming tf messages
@@ -124,23 +121,17 @@ namespace Marus.ROS
             }
 
             streamHandle = streamingClient?.PublishFrame(cancellationToken:RosConnection.Instance.CancellationToken);
-            _changed = true;
-            _lastRotation = _rotation;
-            _lastTranslation = _translation;
         }
 
         double cumulativeTime = 0;
         void Update()
         {
             cumulativeTime += Time.deltaTime;
-            if (cumulativeTime > (1 / UpdateFrequency))
+            if (cumulativeTime > (1 / UpdateFrequency) && RosConnection.Instance.IsConnected))
             {
+                cumulativeTime = 0;
                 UpdateTransform();
-                if (RosConnection.Instance.IsConnected && _changed)
-                {
-                    cumulativeTime = 0;
-                    SendMessage();
-                }
+                SendMessage();
             }
         }
 
@@ -161,13 +152,6 @@ namespace Marus.ROS
                 _translation = transform.position;
                 _rotation = transform.rotation;
             }
-            if (_lastRotation != _rotation || _lastTranslation != _translation)
-            {
-                _changed = true;
-                _lastRotation = _rotation;
-                _lastTranslation = _translation;
-            }
-            else _changed = false;
         }
 
         protected async void SendMessage()
