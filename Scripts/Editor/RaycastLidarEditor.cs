@@ -63,7 +63,7 @@ namespace Marus.Sensors
 
         public override void OnInspectorGUI()
         {
-            if (Configs?.Any() != true || _configsChanged)
+            if (Configs == null || Configs.Any() != true || _configsChanged)
             {
                 InitAvailableLidarConfigs();
                 _configsChanged = false;
