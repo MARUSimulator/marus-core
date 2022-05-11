@@ -463,7 +463,7 @@ namespace Marus.ObjectAnnotation
                 tw.WriteLine($"nc: {_classList.Count}");
                 _classList.Sort(Comparer<(int, string)>.Default);
                 string _classListRepr = string.Join(",", _classList.Select(x => $"'{x.Item2}'"));
-                tw.WriteLine($"classes: [{_classListRepr}]");
+                tw.WriteLine($"names: [{_classListRepr}]");
             }
         }
     }

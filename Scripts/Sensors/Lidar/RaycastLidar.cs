@@ -31,11 +31,6 @@ namespace Marus.Sensors
     public class RaycastLidar : SensorBase
     {
         /// <summary>
-        /// Material set for point cloud display
-        /// </summary>
-        public Material ParticleMaterial;
-
-        /// <summary>
         /// Number of horizontal rays
         /// </summary>
         public int WidthRes = 1024;
@@ -62,6 +57,11 @@ namespace Marus.Sensors
         /// PointCloud compute shader
         /// </summary>
         public ComputeShader pointCloudShader;
+
+        /// <summary>
+        /// Material set for point cloud display
+        /// </summary>
+        public Material ParticleMaterial;
 
         public NativeArray<Vector3> Points;
         public NativeArray<LidarReading> Readings;
@@ -90,6 +90,11 @@ namespace Marus.Sensors
 
             var directionsLocal = RaycastJobHelper.CalculateRayDirections(_rayAngles);
             _raycastHelper = new RaycastJobHelper<LidarReading>(gameObject, directionsLocal, OnLidarHit, OnFinish);
+
+            if (ParticleMaterial == null)
+                ParticleMaterial = PointCloudManager.FindMaterial("PointMaterial");
+            if (pointCloudShader == null)
+                pointCloudShader = PointCloudManager.FindComputeShader("PointCloudCS");
 
             _pointCloudManager = PointCloudManager.CreatePointCloud(gameObject, name + "_PointCloud", totalRays, ParticleMaterial, pointCloudShader);
             _coroutine = StartCoroutine(_raycastHelper.RaycastInLoop());
@@ -142,7 +147,6 @@ namespace Marus.Sensors
             var cfg = Configs[ConfigIndex];
             MaxDistance = cfg.MaxRange;
             MinDistance = cfg.MinRange;
-            frameId = cfg.FrameId;
             WidthRes = cfg.HorizontalResolution;
             HeightRes = cfg.VerticalResolution;
             HorizontalFieldOfView = cfg.HorizontalFieldOfView;

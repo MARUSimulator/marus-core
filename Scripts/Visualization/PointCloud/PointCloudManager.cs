@@ -105,8 +105,15 @@ namespace Marus.Visualization
             pointCloud.transform.position = Vector3.zero;
             pointCloud.transform.rotation = Quaternion.identity;
             var pointCloudManager = pointCloud.AddComponent<PointCloudManager>();
+
             pointCloudManager.particleMaterial = particleMaterial;
-            pointCloudManager.computeParticle = computeShader ?? FindComputeShader("PointCloudCS");
+            if (pointCloudManager.particleMaterial == null)
+                FindMaterial("PointMaterial");
+
+            pointCloudManager.computeParticle = computeShader;
+            if (pointCloudManager.computeParticle == null)
+                FindComputeShader("PointCloudCS");
+
             pointCloudManager.SetupPointCloud(numPoints);
             return pointCloudManager;
         }
@@ -118,20 +125,37 @@ namespace Marus.Visualization
             pointCloud.transform.localPosition = Vector3.zero;
             pointCloud.transform.localRotation = Quaternion.identity;
             var pointCloudManager = pointCloud.AddComponent<PointCloudManager>();
+
             pointCloudManager.particleMaterial = particleMaterial;
-            pointCloudManager.computeParticle = computeShader ?? FindComputeShader("PointCloudCS");
+            if (pointCloudManager.particleMaterial == null)
+                FindMaterial("PointMaterial");
+
+            pointCloudManager.computeParticle = computeShader;
+            if (pointCloudManager.computeParticle == null)
+                FindComputeShader("PointCloudCS");
+
             pointCloudManager.SetupPointCloud(numPoints);
             return pointCloudManager;
         }
 
-        private static ComputeShader FindComputeShader(string shaderName)
+        public static ComputeShader FindComputeShader(string shaderName)
         {
-            ComputeShader cs = (ComputeShader)Resources.Load(shaderName);
+            ComputeShader cs = (ComputeShader)Resources.Load($"Shaders/{shaderName}");
             if (cs != null)
             {
                 return cs;
             }
             throw new UnityException($"Shader {shaderName} not found in the project");
+        }
+
+        public static Material FindMaterial(string materialName)
+        {
+            Material cs = (Material)Resources.Load($"Material/{materialName}");
+            if (cs != null)
+            {
+                return cs;
+            }
+            throw new UnityException($"Material {materialName} not found in the project");
         }
     }
 }

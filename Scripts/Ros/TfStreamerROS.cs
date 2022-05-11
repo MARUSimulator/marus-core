@@ -18,6 +18,8 @@ using Marus.Core;
 using Std;
 using Grpc.Core;
 using static Tf.Tf;
+using Marus.Utils;
+using Marus.CustomInspector;
 
 namespace Marus.ROS
 {
@@ -42,12 +44,42 @@ namespace Marus.ROS
         /// Frame ID
         /// </summary>
         public string FrameId;
+
+        public bool AddOffset = false;
+
+        [ConditionalHideInInspector("AddOffset", false)]
+        public Vector3 TranslationOffset;
+
+        [ConditionalHideInInspector("AddOffset", false)]
+        public Vector3 RotationOffset;
+
         string address;
+
+        protected Transform _vehicle;
+        public Transform vehicle
+        {
+            get
+            {
+                _vehicle = Helpers.GetVehicle(transform);
+                if (_vehicle == null)
+                {
+                    Debug.Log($@"Cannot get vehicle from sensor {transform.name}. 
+                        Using sensor as the vehicle transform");
+                    return transform;
+                }
+                return _vehicle;
+            }
+        }
+
+        #if UNITY_EDITOR
+        protected void Reset()
+        {
+            FrameId = $"{vehicle.name}/{gameObject.name}";
+        }
+        #endif
 
         Quaternion _rotation;
         Vector3 _translation;
-        Quaternion _lastRotation;
-        Vector3 _lastTranslation;
 
         /// <summary>
         /// A client instance used for streaming tf messages
@@ -89,7 +121,6 @@ namespace Marus.ROS
             }
 
             streamHandle = streamingClient?.PublishFrame(cancellationToken:RosConnection.Instance.CancellationToken);
-
         }
 
         double cumulativeTime = 0;
@@ -110,6 +141,11 @@ namespace Marus.ROS
             {
                 _translation = ParentTransform.InverseTransformPoint(transform.position);
                 _rotation = (Quaternion.Inverse(ParentTransform.transform.rotation) * transform.rotation);
+                if (AddOffset)
+                {
+                    _translation += TranslationOffset;
+                    _rotation *= Quaternion.Euler(RotationOffset);
+                }
             }
             else
             {
