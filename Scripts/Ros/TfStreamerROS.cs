@@ -19,6 +19,7 @@ using Std;
 using Grpc.Core;
 using static Tf.Tf;
 using Marus.Utils;
+using Marus.CustomInspector;
 
 namespace Marus.ROS
 {
@@ -43,6 +44,15 @@ namespace Marus.ROS
         /// Frame ID
         /// </summary>
         public string FrameId;
+
+        public bool AddOffset = false;
+
+        [ConditionalHideInInspector("AddOffset", false)]
+        public Vector3 TranslationOffset;
+
+        [ConditionalHideInInspector("AddOffset", false)]
+        public Vector3 RotationOffset;
+
         string address;
 
         protected Transform _vehicle;
@@ -134,6 +144,11 @@ namespace Marus.ROS
             {
                 _translation = ParentTransform.InverseTransformPoint(transform.position);
                 _rotation = (Quaternion.Inverse(ParentTransform.transform.rotation) * transform.rotation);
+                if (AddOffset)
+                {
+                    _translation += TranslationOffset;
+                    _rotation *= Quaternion.Euler(RotationOffset);
+                }
             }
             else
             {
