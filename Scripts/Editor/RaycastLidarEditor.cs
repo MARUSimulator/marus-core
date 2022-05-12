@@ -38,13 +38,13 @@ namespace Marus.Sensors
         bool showConfig = false;
         string _configName;
 
-        float _infoMsgStamp = float.MinValue;
+        double _infoMsgStamp = float.MinValue;
         string _infoMsg = "";
-        float _infoMsgTimeout = 10f;
+        float _infoMsgTimeout = 10;
 
-        float _errorMsgStamp = float.MinValue;
+        double _errorMsgStamp = float.MinValue;
         string _errorMsg = "";
-        float _errorMsgTimeout = 10f;
+        float _errorMsgTimeout = 10;
         LidarConfig currentConfig;
         bool _configsChanged = false;
 
@@ -86,12 +86,12 @@ namespace Marus.Sensors
 
             _configName = EditorGUILayout.TextField("Config name: ", _configName);
 
-            if ((Time.time - _infoMsgStamp) < _infoMsgTimeout)
+            if ((EditorApplication.timeSinceStartup - _infoMsgStamp) < _infoMsgTimeout)
             {
                 EditorGUILayout.HelpBox(_infoMsg, MessageType.Info);
             }
 
-            if ((Time.time - _errorMsgStamp) < _errorMsgTimeout)
+            if ((EditorApplication.timeSinceStartup - _errorMsgStamp) < _errorMsgTimeout)
             {
                 EditorGUILayout.HelpBox(_errorMsg, MessageType.Error);
             }
@@ -186,6 +186,7 @@ namespace Marus.Sensors
             var list = lidarObj._rayIntervals;
             if (list.Count == 0) return;
             lidarObj.HeightRes = lidarObj._rayIntervals.Sum(x => x.NumberOfRays);
+            lidarObj.VerticalFieldOfView = lidarObj._rayIntervals.Last().EndingAngle - lidarObj._rayIntervals.First().StartingAngle;
             for (int i = 0; i < list.Count; i++)
             {
 
@@ -221,7 +222,7 @@ namespace Marus.Sensors
             {
                 //Reject empty name
                 _errorMsg = $"You must enter a name for configuration!";
-                _errorMsgStamp = Time.time;
+                _errorMsgStamp = EditorApplication.timeSinceStartup;
                 return false;
             }
 
@@ -229,7 +230,7 @@ namespace Marus.Sensors
             {
                 //Reject overwriting custom and uniform templates
                 _errorMsg = $"Can only save {oldName} as new configuration!";
-                _errorMsgStamp = Time.time;
+                _errorMsgStamp = EditorApplication.timeSinceStartup;
                 return false;
             }
 
@@ -243,12 +244,13 @@ namespace Marus.Sensors
             {
                 //Reject saving new config with same name
                 _errorMsg = $"Config with name {newName} already exists!";
-                _errorMsgStamp = Time.time;
+                _errorMsgStamp = EditorApplication.timeSinceStartup;
                 return false;
             }
 
             var newCfg = new LidarConfig();
             newCfg.Name = newName;
+            newCfg.Type = oldConfig.Type;
             if (lidarObj._rayIntervals.Count != 0)
             {
                 newCfg.RayIntervals = lidarObj._rayIntervals;
@@ -280,7 +282,7 @@ namespace Marus.Sensors
                 file.Write(s);
             }
             _infoMsg = $"Config with name {newName} saved!";
-            _infoMsgStamp = Time.time;
+            _infoMsgStamp = EditorApplication.timeSinceStartup;
             InitAvailableLidarConfigs();
             RefreshLidar();
             lidarObj.ApplyLidarConfig();
@@ -299,7 +301,7 @@ namespace Marus.Sensors
             if ((configName == "Custom" || configName == "Uniform"))
             {
                 _errorMsg = $"Cannot delete {configName}!";
-                _errorMsgStamp = Time.time;
+                _errorMsgStamp = EditorApplication.timeSinceStartup;
                 return false;
             }
 
@@ -307,7 +309,7 @@ namespace Marus.Sensors
             if (index == -1)
             {
                 _errorMsg = $"Cannot delete {configName}, error occured!";
-                _errorMsgStamp = Time.time;
+                _errorMsgStamp = EditorApplication.timeSinceStartup;
                 return false;
             }
             Configs.RemoveAt(index);
@@ -317,7 +319,7 @@ namespace Marus.Sensors
                 file.Write(s);
             }
             _infoMsg = $"Config with name {configName} removed!";
-            _infoMsgStamp = Time.time;
+            _infoMsgStamp = EditorApplication.timeSinceStartup;
             _configsChanged = true;
             lidarObj.ConfigIndex--;
             return true;

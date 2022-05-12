@@ -82,6 +82,7 @@ namespace Marus.Sensors
         void Start()
         {
             int totalRays = WidthRes * HeightRes;
+
             _saver = GetComponent<PointCloudSegmentationSaver>();
             saverExists = _saver is not null;
             InitializeRayArray();
@@ -89,7 +90,7 @@ namespace Marus.Sensors
             Readings = new NativeArray<LidarReading>(totalRays, Allocator.Persistent);
 
             var directionsLocal = RaycastJobHelper.CalculateRayDirections(_rayAngles);
-            _raycastHelper = new RaycastJobHelper<LidarReading>(gameObject, directionsLocal, OnLidarHit, OnFinish);
+            _raycastHelper = new RaycastJobHelper<LidarReading>(gameObject, directionsLocal, OnLidarHit, OnFinish, maxDistance:MaxDistance, minDistance:MinDistance);
 
             if (ParticleMaterial == null)
                 ParticleMaterial = PointCloudManager.FindMaterial("PointMaterial");
@@ -153,6 +154,7 @@ namespace Marus.Sensors
             VerticalFieldOfView = cfg.VerticalFieldOfView;
             SampleFrequency = cfg.Frequency;
             _rayType = cfg.Type;
+            _rayIntervals = cfg.RayIntervals;
             if (cfg.Type == RayDefinitionType.Angles)
             {
                 HeightRes = cfg.ChannelAngles.Count;
@@ -165,7 +167,11 @@ namespace Marus.Sensors
                 }
                 else
                 {
-                    HeightRes = cfg.RayIntervals.Sum(x => x.NumberOfRays);
+                    if (_rayIntervals.Count > 0)
+                    {
+                        HeightRes = _rayIntervals.Sum(x => x.NumberOfRays);
+                        VerticalFieldOfView = _rayIntervals.Last().EndingAngle - _rayIntervals.First().StartingAngle;
+                    }
                 }
             }
         }
@@ -180,7 +186,7 @@ namespace Marus.Sensors
             if (cfg.Type == RayDefinitionType.Intervals)
             {
                 var angles = RaycastJobHelper.InitVerticalAnglesFromIntervals(_rayIntervals, WidthRes, HorizontalFieldOfView);
-                _rayAngles = RaycastJobHelper.InitCustomRays(cfg.ChannelAngles, cfg.HorizontalResolution, HorizontalFieldOfView);
+                _rayAngles = RaycastJobHelper.InitCustomRays(angles, cfg.HorizontalResolution, HorizontalFieldOfView);
             }
             else if (cfg.Type == RayDefinitionType.Uniform)
             {
