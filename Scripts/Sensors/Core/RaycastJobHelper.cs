@@ -170,6 +170,7 @@ namespace Marus.Sensors
         bool _hasData;
         GameObject _obj;
         private float _maxDistance;
+        private float _minDistance;
 
         Action<NativeArray<Vector3>, NativeArray<T>> _onFinishCallback;
         static Dictionary<int, Func<RaycastHit, Vector3, int, T>> _getResultFromHit;
@@ -178,7 +179,7 @@ namespace Marus.Sensors
         public RaycastJobHelper(GameObject obj, NativeArray<Vector3> directions, 
                 Func<RaycastHit, Vector3, int, T> getResultFromHit,
                 Action<NativeArray<Vector3>, NativeArray<T>> onFinish,
-                float maxDistance=float.MaxValue)
+                float maxDistance=float.MaxValue, float minDistance=0)
 
         {
             var totalRays = directions.Length;
@@ -191,6 +192,7 @@ namespace Marus.Sensors
             _results = new NativeArray<T>(totalRays, Allocator.Persistent);
             _points = new NativeArray<Vector3>(totalRays, Allocator.Persistent);
             _maxDistance = maxDistance;
+            _minDistance = minDistance;
             InitializeGetResultFromHit(getResultFromHit);
             _onFinishCallback = onFinish;
 
@@ -273,6 +275,7 @@ namespace Marus.Sensors
             readback.position = transform.position;
             readback.rotation = transform.rotation;
             readback.objectId = _obj.GetInstanceID();
+            readback.minDistance = _minDistance;
             return readback.Schedule(_hits.Length, 10, _raycastHandle);
         }
 
@@ -329,11 +332,22 @@ namespace Marus.Sensors
             public int objectId;
             public Vector3 position;
             public Quaternion rotation;
+            public float minDistance;
 
             public void Execute(int i)
             {
-                points[i] = Quaternion.Inverse(rotation)*(hits[i].point - position);
-                results[i] = GetResultFromHit(objectId, hits[i], directions[i], i);
+                if (hits[i].distance < minDistance)
+                {
+                    points[i] = Vector3.zero;
+                    var h = new RaycastHit();
+                    h.point = Quaternion.Inverse(rotation)*(Vector3.zero - position);
+                    results[i] = GetResultFromHit(objectId, h, directions[i], i);
+                }
+                else
+                {
+                    points[i] = Quaternion.Inverse(rotation)*(hits[i].point - position);
+                    results[i] = GetResultFromHit(objectId, hits[i], directions[i], i);
+                }
             }
         }
     }
