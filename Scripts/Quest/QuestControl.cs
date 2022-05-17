@@ -17,18 +17,18 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-namespace Marus.Mission 
+namespace Marus.Quest 
 {
-    public class MissionControl : MonoBehaviour
+    public class QuestControl : MonoBehaviour
     {
         /// <summary>
-        /// Class for mission control.
+        /// Class for quest control.
         /// Enable waypoint object one-by-one as the game progresses.
         /// Show text for every waypoint.
         /// </summary>
 
         public GameObject agent;
-        public List<MissionWaypoint> waypointObjects;
+        public List<QuestWaypoint> waypointObjects;
 
         // Messeges are publicly set and displayed in Text object.
         public Text textElement;
@@ -38,9 +38,9 @@ namespace Marus.Mission
         public bool displayWaypoints = true;
 
         [System.NonSerialized]
-        public bool MissionComplete = false;
+        public bool QuestComplete = false;
 
-        public event Action<MissionWaypoint> OnWaypointChange;
+        public event Action<QuestWaypoint> OnWaypointChange;
 
         // Count how many events have been triggered.
         // Counts until eventCount == waypointsObjects.Count
@@ -48,16 +48,16 @@ namespace Marus.Mission
         void Start() 
         {
             eventCount = -1;
-            //Set mission parameter for every waypoint
+            //Set quest parameter for every waypoint
             foreach (var wp in waypointObjects)
             {
-                wp.mission = this;
+                wp.quest = this;
             }     
         }
 
         void Update()
         {
-            if (MissionComplete)
+            if (QuestComplete)
             {
                 return;
             }
@@ -68,10 +68,10 @@ namespace Marus.Mission
                 if (i == waypointObjects.Count && TextBoxAndMessageExist(i))
                 {
                     textElement.text = messages[i];
-                    MissionComplete = true;
+                    QuestComplete = true;
                     return;
                 }
-                MissionWaypoint waypoint = waypointObjects[i].GetComponent<MissionWaypoint>();
+                QuestWaypoint waypoint = waypointObjects[i].GetComponent<QuestWaypoint>();
                 // Skip every waypoint that has already been visited.
                 // Initially, "visited" property for all the waypoints is set to false.
                 if(waypoint.Visited == true){

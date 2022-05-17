@@ -20,7 +20,7 @@ using UnityEngine.UI;
 using Marus.Visualization;
 using Marus.Visualization.Primitives;
 using Marus.Logger;
-using Marus.Mission;
+using Marus.Quest;
 using UnityEngine.SceneManagement;
 
 namespace Marus.StatisticsUI
@@ -38,7 +38,7 @@ namespace Marus.StatisticsUI
 
         private List<string> _pathRecordings;
 
-        private MissionControl missionControl;
+        private QuestControl questControl;
 
         /// <summary>
         /// Content child object of relevant ScrollView object
@@ -66,7 +66,7 @@ namespace Marus.StatisticsUI
             _scrollView = GetComponentInChildren<ScrollRect>();
 
             SceneManager.activeSceneChanged += OnSceneChange;
-            missionControl = GameObject.Find("Mission").GetComponent<MissionControl>();
+            questControl = GameObject.Find("Quest").GetComponent<QuestControl>();
 
             ColorPresets = new List<Tuple<Color, Color>>()
             {

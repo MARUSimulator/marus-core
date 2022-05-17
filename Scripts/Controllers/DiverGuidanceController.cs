@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Marus.Mission;
+using Marus.Quest;
 using UnityEngine;
 
 namespace Marus.Controllers
@@ -28,7 +28,7 @@ namespace Marus.Controllers
     {
         public GameObject Diver;
         public GameObject Target;
-        public MissionControl MissionControl;
+        public QuestControl QuestControl ;
         public float Distance = 2f;
         public float AngSpeed = 150f;
         public float LinSpeed = 2f;
@@ -37,10 +37,10 @@ namespace Marus.Controllers
 
         void Start()
         {
-            MissionControl.OnWaypointChange += OnWaypointChange;
+            QuestControl.OnWaypointChange += OnWaypointChange;
         }
 
-        private void OnWaypointChange(MissionWaypoint obj)
+        private void OnWaypointChange(QuestWaypoint obj)
         {
             Target = obj.gameObject;
         }
