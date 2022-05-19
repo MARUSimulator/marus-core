@@ -14,6 +14,7 @@
 
 using Marus.Core;
 using Marus.Networking;
+using Marus.NoiseDistributions;
 using Std;
 using UnityEngine;
 
@@ -23,22 +24,22 @@ namespace Marus.Sensors.Primitive
     {
         [Header("Position")]
         public GeographicFrame origin;
-        public GeoPoint point;
+        public NoiseParameters measurementNoise;
 
         [Header("Precision")]
-        public double[] covariance;
         public bool isRTK = true;
         public float maximumOperatingDepth = 0.5f;
-
-        void Start()
-        {
-            covariance = new double[] { 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1 };
-        }
+        [ReadOnly]public GeoPoint point;
 
         protected override void SampleSensor()
         {
             var world = TfHandler.Instance.OriginGeoFrame;
             point = world.Unity2Geo(transform.position);
+
+            point.latitude += Noise.Sample(measurementNoise);
+            point.longitude += Noise.Sample(measurementNoise);
+            point.altitude += Noise.Sample(measurementNoise);
+
             Log(new { point.latitude, point.longitude, point.altitude });
             hasData = true;
         }
