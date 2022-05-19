@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Marus.NoiseDistributions;
 using Marus.Utils;
 using Std;
 using UnityEngine;
@@ -40,13 +41,16 @@ namespace Marus.Sensors.Primitive
 
 
         [Header("Accelerometer")]
+        public NoiseParameters AccelerometerNoise;
         [ReadOnly] public Vector3 LinearAcceleration;
         [ReadOnly] public Vector3 LocalVelocity;
 
         [Header("Gyro")]
+        public NoiseParameters GyroNoise;
         [ReadOnly] public Vector3 AngularVelocity;
 
         [Header("Orientation")]
+        public NoiseParameters OrientationNoise;
         [ReadOnly] public Vector3 EulerAngles;
         [ReadOnly] public Quaternion Orientation;
         private Rigidbody rb;
@@ -60,9 +64,21 @@ namespace Marus.Sensors.Primitive
         protected override void SampleSensor()
         {
             localVelocity = rb.transform.InverseTransformVector(rb.velocity);
-            linearAcceleration = (localVelocity - lastVelocity) / Time.fixedDeltaTime;
+            localVelocity[0]+=Noise.Sample(AccelerometerNoise);
+            localVelocity[1]+=Noise.Sample(AccelerometerNoise);
+            localVelocity[2]+=Noise.Sample(AccelerometerNoise);
+
+            linearAcceleration = ((localVelocity - lastVelocity) / Time.fixedDeltaTime);
             angularVelocity = rb.angularVelocity;
+            angularVelocity[0]+=Noise.Sample(GyroNoise);
+            angularVelocity[1]+=Noise.Sample(GyroNoise);
+            angularVelocity[2]+=Noise.Sample(GyroNoise);
+
             orientation = rb.rotation;
+            orientation[0]+=Noise.Sample(OrientationNoise);
+            orientation[1]+=Noise.Sample(OrientationNoise);
+            orientation[2]+=Noise.Sample(OrientationNoise);
+
             eulerAngles = orientation.eulerAngles;
             lastVelocity = localVelocity;
 
