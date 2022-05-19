@@ -54,19 +54,20 @@ namespace Marus.Utils
 
         public static Transform GetVehicle(Transform tf)
         {
-            var component = tf.GetComponent<Rigidbody>();
-            if (component != null && IsVehicle(component))
+            //var component = tf.GetComponent<Rigidbody>();
+            if (tf == null || IsVehicle(tf))
             {
-                return component.transform;
+                return tf;
             }
             else
             {
-                var b = Utils.Helpers.GetParentRigidBody(tf, IsVehicle);
-                if (b != null)
-                {
-                    return b.transform;
-                }
-                return null;
+                return GetVehicle(tf.parent);
+                // var b = Utils.Helpers.GetParentRigidBody(tf, IsVehicle);
+                // if (b != null)
+                // {
+                //     return b.transform;
+                // }
+                // return null;
             }
         }
 
