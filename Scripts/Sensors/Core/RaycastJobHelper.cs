@@ -365,8 +365,16 @@ namespace Marus.Sensors
                 }
                 else
                 {
-                    points[i] = Quaternion.Inverse(rotation)*(hits[i].point - position);
                     results[i] = GetResultFromHit(objectId, hits[i], directions[i], i);
+                    if(results[i] is LidarReading r && !r.IsValid)
+                    {
+                        points[i] = Vector3.zero;
+                    }
+                    else
+                    {
+                        points[i] = Quaternion.Inverse(rotation)*(hits[i].point - position);
+                    }
+                    
                 }
             }
         }

@@ -77,6 +77,24 @@ namespace Marus.Utils
             return (obj != null) ? obj.gameObject : null;
         }
 
+        public static GameObject[] FindGameObjectsInLayerMask(LayerMask layers)
+        {
+            var goArray = UnityEngine.Object.FindObjectsOfType(typeof(GameObject)) as GameObject[];
+            var goList = new System.Collections.Generic.List<GameObject>();
+            for (int i = 0; i < goArray.Length; i++)
+            {
+                if ( ((1 << goArray[i].layer) & layers.value) > 0 )
+                {
+                    goList.Add(goArray[i]);
+                }
+            }
+            if (goList.Count == 0)
+            {
+                return new GameObject[0];
+            }
+            return goList.ToArray();
+        }
+
         public static Vector3 GetObjectScale(Transform t, bool includeSelf=true)
         {
             Vector3 currScale = (includeSelf) ? t.localScale

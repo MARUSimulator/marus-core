@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using Marus.ObjectAnnotation;
+using Marus.Utils;
 
 namespace Marus.Sensors
 {
@@ -79,9 +80,29 @@ namespace Marus.Sensors
         private PointCloudSegmentationSaver _saver;
         private bool saverExists;
 
+        [HideInInspector]
+        private Dictionary<int, int> colliderLayer;
+
+        public LayerMask blackHoleLayers;
+
         void Start()
         {
             int totalRays = WidthRes * HeightRes;
+            colliderLayer = new Dictionary<int, int>();
+
+            if(blackHoleLayers != 0)
+            {
+                GameObject[] objects = Helpers.FindGameObjectsInLayerMask(blackHoleLayers);
+
+                foreach (var obj in objects)
+                {
+                    Collider instId = obj.GetComponent<Collider>();
+                    if(instId)
+                    {
+                        colliderLayer.Add(instId.GetInstanceID(),instId.gameObject.layer);
+                    }
+                }
+            }
 
             _saver = GetComponent<PointCloudSegmentationSaver>();
             saverExists = _saver is not null;
@@ -137,6 +158,14 @@ namespace Marus.Sensors
             if (hit.colliderInstanceID is not 0)
             {
                 reading.IsValid = true;
+            }
+            if(colliderLayer.Count > 0)
+            {
+                int layer;
+                if(colliderLayer.TryGetValue(hit.colliderInstanceID, out layer))
+                {
+                    reading.IsValid = false;
+                }
             }
             reading.Intensity = 255;
             return reading;
