@@ -35,6 +35,7 @@ namespace Labust.Sensors
 
     /// <summary>
     /// Sonar that cast N rays evenly distributed in configured field of view.
+    /// Generates polar and cartesian 2D sonar images. 
     /// Implemented using IJobParallelFor on CPU
     /// Can drop performance
     /// </summary>
@@ -45,39 +46,105 @@ namespace Labust.Sensors
         /// Material set for point cloud display
         /// </summary>
         public Material ParticleMaterial;
+
+        /// <summary>
+        /// Number of horizontal acoustic rays
+        /// </summary>
         public int WidthRes = 256;
+
+        /// <summary>
+        /// Number of vertical acoustic rays
+        /// </summary>
         public int HeightRes = 256;
+
+        /// <summary>
+        /// Maximum sonar range in meters
+        /// </summary>
         public float MaxDistance = 30;
+
+        /// <summary>
+        /// Starting sonar range in meters
+        /// </summary>
         public float MinDistance = 0.6F;
+
+        /// <summary>
+        /// Horizontal sonar field of view in degrees
+        /// </summary>
         public float HorizontalFieldOfView = 60;
+
+        /// <summary>
+        /// Vertical sonar field of view in degrees
+        /// </summary>
         public float VerticalFieldOfView = 30;
 
+        /// <summary>
+        /// Vertical resolution of the polar sonar image.
+        /// Can be set independently of the vertical number of rays or max sonar range.
+        /// </summary>
         public int imageHeight = 256;
+
+        /// <summary>
+        /// Horizontal resolution of the cartesian sonar image.
+        /// Can be set independently of the number of rays or polar image resolution.
+        /// </summary>
         public int CartesianXRes = 256;
+
+        /// <summary>
+        /// Vertical resolution of the cartesian sonar image.
+        /// Can be set independently of the number of rays or polar image resolution.
+        /// </summary>
         public int CartesianYRes = 256;
-        double thetha;
-        double r;
+
+        /// <summary>
+        /// Equiangular - rays are distributed uniformly
+        /// Equidistant - rays are distributed equidistantly on a horizontal plane
+        /// </summary>
         public enum RayDistribution { Equiangular, Equidistant }
         public RayDistribution sonarRayDistribution;
+
+        /// <summary>
+        /// Optional saving of generated polar and cartesian images. 
+        /// If enabled, images saved in project_folder/SaveImages/
+        /// </summary>
         public bool SaveImages = false;
-        public float RayIntensity = 0.1F;
-        int NumRaysPerAccusticRay = 1; // 1, 5, 9 TODO
-                                        // float rayWidth = 0.001f; // in radians
-        int imageCount = 1;
-        public ComputeShader pointCloudShader;
+
+        /// <summary>
+        /// Sonar output gain
+        /// </summary>
+        public float RayIntensity = 10;
+
+        /// <summary>
+        /// Number of raycast rays simulating a single acoustic rays
+        /// </summary>
+        int NumRaysPerAccusticRay = 1; 
+
+        /// <summary>
+        /// Pointcloud copy created on every update
+        /// </summary>
         public NativeArray<Vector3> pointsCopy;
+
+        /// <summary>
+        /// Cartesian and polar raw image arrays for canvas display
+        /// </summary>
+        public RawImage sonarDisplay, sonarPhotoDisplay, sonarCartesianDisplay;
+
+        /// <summary>
+        /// Cartesian and polar texture2D arrays
+        /// </summary>
+        public Texture2D sonarImage, sonarPhotoImage, sonarCartesianImage;
+
         public NativeArray<SonarReading> sonarData;
+        int imageCount = 1;
+        double thetha;
+        double r;
+        public ComputeShader pointCloudShader;
         const float WATER_LEVEL = 0;
         float altitude, pitch;
-        public RawImage sonarDisplay;
-        public RawImage sonarPhotoDisplay;
-        public RawImage sonarCartesianDisplay;
         PointCloudManager _pointCloudManager;
         RaycastJobHelper<SonarReading> _raycastHelper;
         Coroutine _coroutine;
         Vector3 sonarPosition;
         NativeArray<Vector3> directionsLocal;
-        public Texture2D sonarImage, sonarPhotoImage, sonarCartesianImage;
 
         void Start()
         {
@@ -116,7 +183,9 @@ namespace Labust.Sensors
 
             hasData = true;
         }
-
+        /// <summary>
+        /// Function for converting hit distance to Y coordinate of the cartesian projection. 
+        /// </summary>
         private int DistanceToImageY(float distance)
         {
             if (distance < MaxDistance && distance >= MinDistance)
@@ -129,7 +198,12 @@ namespace Labust.Sensors
                 return 0;
             }
         }
-
+        /// <summary>
+        /// Initializes raycast ray directions based on the selection. 
+        /// Equidistant distribution projects equidistant points on a horizontal plane (useful for bathymetric or down looking sonar).
+        /// Depends on sonar pitch angle and altitude from the bottom plane.
+        /// Equiangular distribution sets vertical angles equally.
+        /// </summary>
         public void InitializeRayArray()
         {
             if (sonarRayDistribution == RayDistribution.Equidistant)
@@ -178,11 +252,15 @@ namespace Labust.Sensors
                 sonarReading.Valid = true;
                 sonarReading.Distance = hit.distance;
 
-                sonarReading.Intensity = RayIntensity * (float)(Math.Acos(Math.Abs(Vector3.Dot(direction, hit.normal))));
+                sonarReading.Intensity = (RayIntensity/100) * (float)(Math.Acos(Math.Abs(Vector3.Dot(direction, hit.normal))));
             }
             return sonarReading;
         }
 
+        /// <summary>
+        /// Function for composing a X-Y "photographic" image from the raycast pointcloud, as seen from the sonar. 
+        /// Used optionally. 
+        /// </summary>
         private void ComposePhotoImage(NativeArray<SonarReading> reading)
         {
             Color pixel;
@@ -205,6 +283,10 @@ namespace Labust.Sensors
             sonarPhotoImage.Apply();
             sonarPhotoDisplay.texture = sonarPhotoImage;
         }
+        /// <summary>
+        /// Creates a polar sonar image - 2D projection with bearing on X axis and range on Y axis. 
+        /// Width and height can be set independently, .png image saving optional.
+        /// </summary>
         private void ComposePolarImage(NativeArray<SonarReading> reading)
         {
             Color pixel;
@@ -242,6 +324,12 @@ namespace Labust.Sensors
             }
 
         }
+        
+        /// <summary>
+        /// Creates a cartesian sonar image - 2D projection with bearing in cartesian coordinates on X axis and range on Y axis. 
+        /// Beamformed based on the angle distribution, removes object distortion.
+        /// Width and height can be set independently, .png image saving optional.
+        /// </summary>
         private void ComposeCartesianImage(NativeArray<SonarReading> reading)
         {
             Color pixel;
