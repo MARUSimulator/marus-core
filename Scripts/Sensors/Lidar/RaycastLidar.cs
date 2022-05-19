@@ -90,7 +90,13 @@ namespace Marus.Sensors
             Readings = new NativeArray<LidarReading>(totalRays, Allocator.Persistent);
 
             var directionsLocal = RaycastJobHelper.CalculateRayDirections(_rayAngles);
-            _raycastHelper = new RaycastJobHelper<LidarReading>(gameObject, directionsLocal, OnLidarHit, OnFinish, maxDistance:MaxDistance, minDistance:MinDistance);
+            _raycastHelper = new RaycastJobHelper<LidarReading>(gameObject, 
+                directionsLocal, 
+                OnLidarHit, 
+                OnFinish, 
+                maxDistance:MaxDistance, 
+                minDistance:MinDistance,
+                sampleFrequency:SampleFrequency);
 
             if (ParticleMaterial == null)
                 ParticleMaterial = PointCloudManager.FindMaterial("PointMaterial");
@@ -105,6 +111,7 @@ namespace Marus.Sensors
         protected override void SampleSensor()
         {
             _pointCloudManager.UpdatePointCloud(Points);
+            _raycastHelper.SampleFrequency = SampleFrequency;
         }
 
         private void OnFinish(NativeArray<Vector3> points, NativeArray<LidarReading> readings)
