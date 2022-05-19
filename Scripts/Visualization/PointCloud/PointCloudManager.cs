@@ -34,7 +34,13 @@ namespace Labust.Visualization
             indices = ArrayAllocator(_nrOfParticles, computeParticle);
 
             Mesh mesh = new Mesh { vertices = new Vector3[_nrOfParticles] };
+            mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt16;
+            if (_nrOfParticles > 65535)
+            {
+                mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+            }
             mesh.SetIndices(indices, MeshTopology.Points, 0);
+            mesh.MarkDynamic();
 
             return mesh;
         }
