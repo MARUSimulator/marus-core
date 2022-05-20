@@ -16,22 +16,35 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using Marus.ObjectAnnotation;
+using Marus.NoiseDistributions;
+using UnityEditor;
 
 namespace Marus.Visualization
 {
-	public class ObjectBoundingBoxVisualizer : MonoBehaviour
+
+    [DefaultExecutionOrder(100)]
+    public class ObjectBoundingBoxVisualizer : MonoBehaviour
     {
 
-        public List<Camera> Cameras;
-        public List<GameObject> Objects;
-        public GameObject VisualIndicator;
+        public CameraObjectDetectionSaver Annotator;
+        public NoiseParameters boundingBoxNoise;
         public int VertexStep = 20;
 
         private Dictionary<int, GameObject> canvasMap;
         private List<GameObject> boundingBoxList;
 
-        void Start()
+        private List<Camera> Cameras;
+        private List<ObjectRecord> Objects;
+        private List<(int, string)> _classes;
+
+        void Setup()
         {
+            if (Annotator is null) return;
+
+            Cameras = Annotator.CameraViews;
+            Objects = Annotator.ObjectsToTrack;
+            _classes = Annotator._classList;
+            Debug.Log(Annotator);
             boundingBoxList = new List<GameObject>();
             canvasMap = new Dictionary<int, GameObject>();
             foreach (var c in Cameras)
@@ -51,40 +64,137 @@ namespace Marus.Visualization
             }
         }
 
-        void Update()
+        void Start()
         {
+            Setup();
+        }
+
+        void OnDrawGizmos()
+        {
+            if (!Application.isPlaying) return;
+
+            if (Annotator is null || boundingBoxList is null)
+            {
+                return;
+            }
+
+            if (Objects is null)
+            {
+                Setup();
+            }
+
             foreach (GameObject go in boundingBoxList)
             {
                 Destroy(go);
             }
             boundingBoxList.Clear();
-            foreach (GameObject go in Objects)
+            foreach (ObjectRecord go in Objects)
             {
                 foreach (Camera c in Cameras)
                 {
                     Rect boundingBox = new Rect();
                     try
                     {
-                        boundingBox = CameraObjectDetectionSaver.GetBoundingBoxFromMesh(go, c);
+                        boundingBox = CameraObjectDetectionSaver.GetBoundingBoxFromMesh(go.Object, c);
                     }
                     catch
                     {
                         continue;
                     }
-                    GameObject parent = canvasMap[c.targetDisplay];
-                    boundingBoxList.Add(VisualizeObjectBounds(go, boundingBox, c, parent));
+                    VisualizeObjectBounds(go.Object, boundingBox, c, _classes[go.ClassIndex].Item2);
                 }
             }
         }
 
 
-        private GameObject VisualizeObjectBounds(GameObject obj, Rect bounds, Camera CameraView, GameObject parent)
+        private void VisualizeObjectBounds(GameObject obj, Rect bounds, Camera CameraView, string className="")
         {
-            GameObject rect = Instantiate(VisualIndicator, Vector3.zero, Quaternion.identity, parent.transform);
-            RectTransform rt = rect.transform.Find("SelectionImage").GetComponent<RectTransform>();
-            rt.position = new Vector2(bounds.center.x, bounds.center.y);
-            rt.sizeDelta = new Vector2(bounds.width * 1.1f, bounds.height * 1.1f);
-            return rect;
+            if ((bounds.width * bounds.height) < 8000) return;
+            var ld = new Vector3(bounds.center.x - bounds.width/2f + Noise.Sample(boundingBoxNoise), bounds.center.y - bounds.height/2f + Noise.Sample(boundingBoxNoise), 0);
+            var dd = new Vector3(bounds.center.x + bounds.width/2f + Noise.Sample(boundingBoxNoise), bounds.center.y - bounds.height/2f + Noise.Sample(boundingBoxNoise), 0);
+            var lg = new Vector3(bounds.center.x - bounds.width/2f + Noise.Sample(boundingBoxNoise), bounds.center.y + bounds.height/2f + Noise.Sample(boundingBoxNoise), 0);
+            var dg = new Vector3(bounds.center.x + bounds.width/2f + Noise.Sample(boundingBoxNoise), bounds.center.y + bounds.height/2f + Noise.Sample(boundingBoxNoise), 0);
+            Gizmos.color = Color.red;
+            var pixelRatio = UnityEditor.HandleUtility.GUIPointToScreenPixelCoordinate(Vector2.right).x - UnityEditor.HandleUtility.GUIPointToScreenPixelCoordinate(Vector2.zero).x;
+            UnityEditor.Handles.BeginGUI();
+            UnityEditor.Handles.color = Color.red;
+            var style = new GUIStyle(GUI.skin.label)
+            {
+                fontSize = (int)15,
+                normal = new GUIStyleState() { textColor = Color.white }
+            };
+            Vector2 size = style.CalcSize(new GUIContent(name));
+            var pos = UnityEditor.HandleUtility.WorldToGUIPoint(obj.transform.position) + new Vector2(100, -50);
+            var scr = bounds.center;
+            Vector2 convertedGUIPos = GUIUtility.ScreenToGUIPoint(scr);
+
+            if (className == "")
+            {
+                className = obj.name;
+            }
+
+            GUI.Label(new Rect(lg.x, Screen.height - lg.y - 50, bounds.width, 50), className, style);
+
+            var canvas = canvasMap[CameraView.targetDisplay].GetComponent<Canvas>();
+            ScreenGizmos.DrawLine(canvas, CameraView, ld, dd);
+            ScreenGizmos.DrawLine(canvas, CameraView, ld, lg);
+            ScreenGizmos.DrawLine(canvas, CameraView, dd, dg);
+            ScreenGizmos.DrawLine(canvas, CameraView, lg, dg);
+
+            UnityEditor.Handles.EndGUI();
         }
+    }
+}
+
+public static class ScreenGizmos
+{
+    private const float offset = 0.001f;
+
+    /// <summary>
+    /// Draws a line in screen space between the
+    /// <paramref name="startPixelPos"/> and the
+    /// <paramref name="endPixelPos"/>.
+    /// </summary>
+    public static void DrawLine(
+        Canvas canvas,
+        Camera camera,
+        Vector3 startPixelPos,
+        Vector3 endPixelPos)
+    {
+        if (camera == null || canvas == null)
+            return;
+
+        Vector3 startWorld = PixelToCameraClipPlane(
+            camera,
+            canvas,
+            startPixelPos);
+
+        Vector3 endWorld = PixelToCameraClipPlane(
+            camera,
+            canvas,
+            endPixelPos);
+
+        Gizmos.DrawLine(startWorld, endWorld);
+    }
+
+    /// <summary>
+    /// Converts the <paramref name="screenPos"/> to world space
+    /// near the <paramref name="camera"/> near clip plane. The
+    /// z component of the <paramref name="screenPos"/>
+    /// will be overriden.
+    /// </summary>
+    private static Vector3 PixelToCameraClipPlane(
+        Camera camera,
+        Canvas canvas,
+        Vector3 screenPos)
+    {
+        // The canvas scale factor affects the
+        // screen position of all UI elements.
+        screenPos *= canvas.scaleFactor;
+
+        // The z-position defines the distance to the camera
+        // when using Camera.ScreenToWorldPoint.
+        screenPos.z = camera.nearClipPlane + offset;
+        return camera.ScreenToWorldPoint(screenPos);
     }
 }
