@@ -24,16 +24,16 @@ namespace Marus.Sensors
     /// <summary>
     /// Camera sensor implementation
     /// </summary>
-    [RequireComponent(typeof(CameraSensor))]
-    public class CameraSensorROS : SensorStreamer<SensorStreamingClient, CameraStreamingRequest>
+    [RequireComponent(typeof(CameraSensorFix))]
+    public class CameraSensorROSFix : SensorStreamer<SensorStreamingClient, CameraStreamingRequest>
     {
-        CameraSensor sensor;
+        CameraSensorFix sensor;
         void Start()
         {
-            sensor = GetComponent<CameraSensor>();
+            sensor = GetComponent<CameraSensorFix>();
             if (string.IsNullOrEmpty(address))
-                address = sensor.vehicle.name + "/" + sensor.gameObject.name;
-            StreamSensor(sensor, 
+                address = sensor.vehicle.name + "/camera";
+            StreamSensor(sensor,
                 streamingClient.StreamCameraSensor);
         }
 

@@ -46,12 +46,18 @@ namespace Marus.ObjectAnnotation
     /// Main component for object annotation in camera images.
     /// Manages objects and cameras, dataset properties etc.
     /// </summary>
+    [DefaultExecutionOrder(50)]
     public class CameraObjectDetectionSaver : MonoBehaviour
     {
         /// <summary>
         /// Enable/Disable switch. Usefull for starting annotation during runtime.
         /// </summary>
         public bool Enable = true;
+
+        /// <summary>
+        /// If true, new images will be saved to last directory (last run)
+        /// </summary>
+        public bool ResumeFromLastTime = true;
 
         [Header("Objects and Cameras Setup", order=0)]
         /// <summary>
@@ -123,6 +129,9 @@ namespace Marus.ObjectAnnotation
         /// </summary>
         public bool GenerateTestSubset = true;
 
+        [Range(0, 1)]
+        public float BackgroundImageSaveProbability = 0.05f;
+
         [Range(0, 100)]
         public int TrainSize = 75;
         [Range(0, 100)]
@@ -132,9 +141,12 @@ namespace Marus.ObjectAnnotation
         public int TestSize = 15;
         private GameObject _parent;
         private List<GameObject> _objList;
-        private List<(int, string)> _classList;
 
-        private List<ObjectRecord> ObjectsToTrack;
+        [HideInInspector]
+        public List<(int, string)> _classList;
+
+        [HideInInspector]
+        public List<ObjectRecord> ObjectsToTrack;
 
         private string _imagesPath;
         private string _labelsPath;
@@ -146,6 +158,7 @@ namespace Marus.ObjectAnnotation
 
         void Start()
         {
+
             ObjectsToTrack = new List<ObjectRecord>();
             _objectsInScene = new List<Tuple<ObjectRecord, Rect>>();
             _timer = 0f;
@@ -171,7 +184,6 @@ namespace Marus.ObjectAnnotation
             }
 
             CreateDatasetFolderStructure();
-
             _ratios = new List<Tuple<int, string>>()
             {
                 new Tuple<int, string>(TrainSize, "train"),
@@ -184,6 +196,11 @@ namespace Marus.ObjectAnnotation
 
         void Update()
         {
+            if(!Enable)
+            {
+                return;
+            }
+
 #if UNITY_EDITOR
             string[] res = UnityStats.screenRes.Split('x');
             ImageWidth =  int.Parse(res[0]);
@@ -198,7 +215,7 @@ namespace Marus.ObjectAnnotation
             }
             _objList.Clear();
 
-            if (Enable && _timer >= (1 / SaveFrequencyHz))
+            if (_timer >= (1 / SaveFrequencyHz))
             {
                 StartCoroutine("CaptureAndSaveImage");
                 _timer = 0f;
@@ -230,7 +247,11 @@ namespace Marus.ObjectAnnotation
                         _objectsInScene.Add(new Tuple<ObjectRecord, Rect>(o, boundingBox));
                     }
                 }
-                if (_objectsInScene.Count > 0)
+
+                float rand = UnityEngine.Random.Range(0f, 1f);
+
+
+                if (_objectsInScene.Count > 0 || rand < BackgroundImageSaveProbability)
                 {
                     CameraView.targetTexture = RenderTexture.GetTemporary(ImageWidth, ImageHeight, 16);
                     RenderTexture r = CameraView.targetTexture;
@@ -272,6 +293,10 @@ namespace Marus.ObjectAnnotation
         private void SaveLabel(List<Tuple<ObjectRecord, Rect>> objects, string folder, string index)
         {
             var path = Path.Combine(_labelsPath, folder, index + ".txt");
+            if (objects.Count == 0)
+            {
+                File.Create(path);
+            }
             foreach(var o in objects)
             {
                 float x_center = o.Item2.center.x / (float) ImageWidth;
@@ -344,10 +369,20 @@ namespace Marus.ObjectAnnotation
 
             bool visible = false;
             var meshes = gameObject.GetComponentsInChildren<MeshFilter>();
+
+
             foreach(MeshFilter mesh in meshes)
             {
+
+                var r = mesh.gameObject.GetComponent<Renderer>();
+                Plane[] planes = GeometryUtility.CalculateFrustumPlanes(CameraView);
+                if(!GeometryUtility.TestPlanesAABB(planes, r.bounds))
+                {
+                    continue;
+                }
+
                 vertices = new List<Vector3>();
-                vertices.AddRange(mesh.mesh.vertices);
+                vertices.AddRange(mesh.sharedMesh.vertices);
                 for (int i = 0; i < vertices.Count; i = i + VertexStep) {
                     Vector3 vertWorld = mesh.gameObject.transform.TransformPoint(vertices[i]);
                     // hide underwater parts
@@ -414,7 +449,6 @@ namespace Marus.ObjectAnnotation
             {
                 DatasetFolder = Path.Join(Application.dataPath, "camera_detection");
             }
-            Debug.Log($"D\"{DatasetFolder}\"");
             Directory.CreateDirectory(DatasetFolder);
             int idx = 0;
             string[] runs = Directory.GetDirectories(DatasetFolder);
@@ -430,7 +464,10 @@ namespace Marus.ObjectAnnotation
                     }
                 }
             }
-            idx++;
+            if (!ResumeFromLastTime)
+            {
+                idx++;
+            }
             _datasetPath = Path.Combine(DatasetFolder, $"run{idx}");
 
             _imagesPath = Path.Combine(_datasetPath, "images");
