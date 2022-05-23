@@ -28,7 +28,6 @@ namespace Marus.Sensors.ROS
     public class DepthSensorROS : SensorStreamer<SensorStreamingClient, DepthStreamingRequest>
     {
         double depth;
-        public double covariance;
         DepthSensor sensor;
 
         public void Start()
@@ -68,9 +67,7 @@ namespace Marus.Sensors.ROS
                     }
                 }
             };
-            var covOut = new double[36];
-            covOut[15] = covariance;
-            depthOut.Data.Pose.Covariance.AddRange(covOut);
+
             await _streamWriter.WriteAsync(depthOut);
         }
     }
