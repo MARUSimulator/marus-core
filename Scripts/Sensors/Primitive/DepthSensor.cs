@@ -31,7 +31,7 @@ namespace Marus.Sensors.Primitive
 
         protected override void SampleSensor()
         {
-            depth = -transform.position.y;
+            depth = -transform.position.y + Noise.Sample(NoiseParameters);
             if (debug)
             {
                 Depth = depth;

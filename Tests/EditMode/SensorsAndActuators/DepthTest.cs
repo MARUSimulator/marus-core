@@ -17,6 +17,7 @@ using UnityEngine;
 using Marus.Sensors;
 using Marus.Sensors.Primitive;
 using TestUtils;
+using System.Collections.Generic;
 
 public class DepthTest
 {
@@ -29,6 +30,9 @@ public class DepthTest
         _depthSensor = Utils.CreateAndInitializeObject<DepthSensor>("Depth", PrimitiveType.Cube);
         _depthSensor.SampleFrequency = 100;
         _depthSensor.transform.position = Vector3.zero;
+        _depthSensor.NoiseParameters.NoiseTypeFullName = "Marus.NoiseDistributions.Noise+NoNoise";
+        _depthSensor.NoiseParameters.ParameterKeys = new List<string>();
+        _depthSensor.NoiseParameters.ParameterValues = new List<string>();
     }
 
     [Test]
