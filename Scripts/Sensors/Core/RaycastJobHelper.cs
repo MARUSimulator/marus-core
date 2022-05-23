@@ -15,6 +15,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Marus.Core;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
@@ -172,6 +173,9 @@ namespace Marus.Sensors
         private float _maxDistance;
         private float _minDistance;
 
+        private float _timeSinceLastSample;
+        public float SampleFrequency;
+
         Action<NativeArray<Vector3>, NativeArray<T>> _onFinishCallback;
         static Dictionary<int, Func<RaycastHit, Vector3, int, T>> _getResultFromHit;
 
@@ -179,7 +183,7 @@ namespace Marus.Sensors
         public RaycastJobHelper(GameObject obj, NativeArray<Vector3> directions, 
                 Func<RaycastHit, Vector3, int, T> getResultFromHit,
                 Action<NativeArray<Vector3>, NativeArray<T>> onFinish,
-                float maxDistance=float.MaxValue, float minDistance=0)
+                float maxDistance=float.MaxValue, float minDistance=0, float sampleFrequency = 10)
 
         {
             var totalRays = directions.Length;
@@ -193,6 +197,8 @@ namespace Marus.Sensors
             _points = new NativeArray<Vector3>(totalRays, Allocator.Persistent);
             _maxDistance = maxDistance;
             _minDistance = minDistance;
+            SampleFrequency = sampleFrequency;
+            _timeSinceLastSample = float.PositiveInfinity;
             InitializeGetResultFromHit(getResultFromHit);
             _onFinishCallback = onFinish;
 
@@ -229,15 +235,24 @@ namespace Marus.Sensors
         {
             while (true)
             {
+                _timeSinceLastSample += Time.deltaTime;
                 if (_raycastHandle.IsCompleted && !_readbackInProgress)
                 {
-                    _raycastHandle = ScheduleNewRaycastJob();
-                    _readbackHandle = ReadbackData();
-                    _readbackInProgress = true;
+                    if(enoughTimePassed())
+                    {
+                        _raycastHandle = ScheduleNewRaycastJob();
+                        _readbackHandle = ReadbackData();
+                        _readbackInProgress = true;
+                        _timeSinceLastSample = 0;
+                    }
+                    else
+                    {
+                        _readbackInProgress = false;
+                    }
                 }
                 yield return new WaitForEndOfFrame();
 
-                if (_readbackHandle.IsCompleted)
+                if (_readbackInProgress && _readbackHandle.IsCompleted)
                 {
                     _readbackHandle.Complete();
 
@@ -247,6 +262,11 @@ namespace Marus.Sensors
                 }
                 yield return null;
             }
+        }
+
+        private bool enoughTimePassed()
+        {
+            return _timeSinceLastSample >= 1/SampleFrequency;
         }
 
         public void Dispose()
@@ -345,8 +365,16 @@ namespace Marus.Sensors
                 }
                 else
                 {
-                    points[i] = Quaternion.Inverse(rotation)*(hits[i].point - position);
                     results[i] = GetResultFromHit(objectId, hits[i], directions[i], i);
+                    if(results[i] is LidarReading r && !r.IsValid)
+                    {
+                        points[i] = Vector3.zero;
+                    }
+                    else
+                    {
+                        points[i] = Quaternion.Inverse(rotation)*(hits[i].point - position);
+                    }
+                    
                 }
             }
         }

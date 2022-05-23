@@ -54,19 +54,20 @@ namespace Marus.Utils
 
         public static Transform GetVehicle(Transform tf)
         {
-            var component = tf.GetComponent<Rigidbody>();
-            if (component != null && IsVehicle(component))
+            //var component = tf.GetComponent<Rigidbody>();
+            if (tf == null || IsVehicle(tf))
             {
-                return component.transform;
+                return tf;
             }
             else
             {
-                var b = Utils.Helpers.GetParentRigidBody(tf, IsVehicle);
-                if (b != null)
-                {
-                    return b.transform;
-                }
-                return null;
+                return GetVehicle(tf.parent);
+                // var b = Utils.Helpers.GetParentRigidBody(tf, IsVehicle);
+                // if (b != null)
+                // {
+                //     return b.transform;
+                // }
+                // return null;
             }
         }
 
@@ -75,6 +76,24 @@ namespace Marus.Utils
             Transform[] allChildren = parent.GetComponentsInChildren<Transform>(includeInactive);
             var obj = allChildren.FirstOrDefault(x => x.name == name);
             return (obj != null) ? obj.gameObject : null;
+        }
+
+        public static GameObject[] FindGameObjectsInLayerMask(LayerMask layers)
+        {
+            var goArray = UnityEngine.Object.FindObjectsOfType(typeof(GameObject)) as GameObject[];
+            var goList = new System.Collections.Generic.List<GameObject>();
+            for (int i = 0; i < goArray.Length; i++)
+            {
+                if ( ((1 << goArray[i].layer) & layers.value) > 0 )
+                {
+                    goList.Add(goArray[i]);
+                }
+            }
+            if (goList.Count == 0)
+            {
+                return new GameObject[0];
+            }
+            return goList.ToArray();
         }
 
         public static Vector3 GetObjectScale(Transform t, bool includeSelf=true)

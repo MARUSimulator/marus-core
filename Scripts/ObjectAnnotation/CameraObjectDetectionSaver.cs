@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -182,10 +184,14 @@ namespace Marus.ObjectAnnotation
 
         void Update()
         {
+#if UNITY_EDITOR
             string[] res = UnityStats.screenRes.Split('x');
             ImageWidth =  int.Parse(res[0]);
             ImageHeight = int.Parse(res[1]);
-
+#else
+            ImageWidth =  Screen.width;
+            ImageHeight = Screen.height;
+#endif
             foreach(GameObject o in _objList)
             {
                 Destroy(o);

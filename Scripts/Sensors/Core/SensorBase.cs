@@ -59,9 +59,20 @@ namespace Marus.Sensors
         #if UNITY_EDITOR
         protected void Reset()
         {
-            frameId = $"{vehicle.name}/{gameObject.name}";
+            UpdateVehicle();
         }
         #endif
+
+        public void UpdateVehicle()
+        {
+            var veh = vehicle;
+            // reset frameId to empty if UpdateVehicle is not called from reset
+            frameId = "";
+            // if not same object, add vehicle name prefix to frame id
+            if(veh != transform) frameId = $"{veh.name}/";
+
+            frameId = frameId + gameObject.name + "_frame";
+        }
 
         protected abstract void SampleSensor();
 
@@ -102,6 +113,8 @@ namespace Marus.Sensors
         public float UpdateFrequency = 1;
         public string address;
 
+        protected Transform _vehicle;
+
         SensorBase _sensor;
 
         /// <summary>
@@ -133,12 +146,42 @@ namespace Marus.Sensors
             }
         }
 
+        public Transform vehicle
+        {
+            get
+            {
+                _vehicle = Helpers.GetVehicle(transform);
+                if (_vehicle == null)
+                {
+                    Debug.Log($@"Cannot get vehicle from sensor {transform.name}. 
+                        Using sensor as the vehicle transform");
+                    return transform;
+                }
+                return _vehicle;
+            }
+        }
+
         #if UNITY_EDITOR
         protected void Reset()
         {
-            gameObject.AddComponent<TfStreamerROS>();
+            if(gameObject.GetComponent<TfStreamerROS>() == null)
+            {
+                gameObject.AddComponent<TfStreamerROS>();
+            }
+            UpdateVehicle();
         }
         #endif
+
+        public void UpdateVehicle()
+        {
+            var veh = vehicle;
+            // reset address to empty if UpdateVehicle is not called from reset
+            address = "";
+            // if not same object, add vehicle name prefix to address
+            if(veh != transform) address = $"{veh.name}/";
+
+            address = address + gameObject.name;
+        }
 
         double cumulativeTime = 0;
         protected void Update()

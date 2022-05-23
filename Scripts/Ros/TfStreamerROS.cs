@@ -28,7 +28,7 @@ namespace Marus.ROS
     /// </summary>
     public class TfStreamerROS : MonoBehaviour
     {
-        public float UpdateFrequency = 20;
+        public float UpdateFrequency = 1;
         /// <summary>
         /// Transform of the parent object.
         /// Orientation and translation are calculated in relationship to this object.
@@ -74,9 +74,27 @@ namespace Marus.ROS
         #if UNITY_EDITOR
         protected void Reset()
         {
-            FrameId = $"{vehicle.name}/{gameObject.name}";
+            UpdateVehicle();
         }
         #endif
+
+        public void UpdateVehicle()
+        {
+            var veh = vehicle;
+            // reset frame ids to empty if UpdateVehicle is not called from reset
+            FrameId = "";
+            ParentFrameId = "";
+            // if not same object, add name prefix to frame ids and assign vehicle transform
+            if(veh != transform)
+            {
+                FrameId = $"{veh.name}/";
+                ParentFrameId = $"{veh.name}/";
+                ParentTransform = veh.transform;
+            }
+
+            FrameId = FrameId + gameObject.name + "_frame";
+            ParentFrameId = ParentFrameId + "base_link";
+        }
 
         Quaternion _rotation;
         Vector3 _translation;
