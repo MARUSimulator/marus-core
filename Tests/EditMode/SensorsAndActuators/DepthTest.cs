@@ -33,6 +33,10 @@ public class DepthTest
         _depthSensor.NoiseParameters.NoiseTypeFullName = "Marus.NoiseDistributions.Noise+NoNoise";
         _depthSensor.NoiseParameters.ParameterKeys = new List<string>();
         _depthSensor.NoiseParameters.ParameterValues = new List<string>();
+
+         GameObject _ocean = new GameObject("ocean");
+         _ocean.transform.position = new Vector3(0, 0, 0);
+        _depthSensor.oceanElement = _ocean.transform;
     }
 
     [Test]
