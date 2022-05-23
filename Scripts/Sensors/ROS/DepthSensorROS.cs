@@ -61,7 +61,7 @@ namespace Marus.Sensors.ROS
                             {
                                 X = 0,
                                 Y = 0,
-                                Z = depth
+                                Z = sensor.depth
                             },
                             Orientation = new Quaternion() { }
                         }
