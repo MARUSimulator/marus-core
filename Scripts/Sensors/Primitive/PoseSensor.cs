@@ -16,6 +16,7 @@ using System;
 using UnityEngine;
 using Marus.Utils;
 using Std;
+using Marus.NoiseDistributions;
 
 namespace Marus.Sensors.Primitive
 {
@@ -39,8 +40,14 @@ namespace Marus.Sensors.Primitive
         [ReadOnly] public Vector3 LinearVelocity;
         [ReadOnly] public Vector3 AngularVelocity;
 
+        [Header("Noise")]
+        public NoiseParameters PositionNoise;
+        public NoiseParameters OrientationNoise;
+        public NoiseParameters LinearVelocityNoise;
+        public NoiseParameters AngularVelocityNoise;
+
         public Rigidbody measuredObject;
-      
+
         void Start()
         {
             measuredObject = Helpers.GetParentRigidBody(transform);
@@ -52,6 +59,16 @@ namespace Marus.Sensors.Primitive
             orientation = measuredObject.rotation;
             linearVelocity = measuredObject.transform.InverseTransformVector(measuredObject.velocity);
             angularVelocity = measuredObject.angularVelocity;
+
+            for (int i = 0; i < 3; i++)
+            {
+                position[i] += Noise.Sample(PositionNoise);
+                orientation[i] += Noise.Sample(OrientationNoise);
+                linearVelocity[i] +=Noise.Sample(LinearVelocityNoise);
+                angularVelocity[i] +=Noise.Sample(AngularVelocityNoise);
+            }
+            orientation[3] += Noise.Sample(OrientationNoise);
+
             if (debug)
             {
                 Position = position.Round(2);

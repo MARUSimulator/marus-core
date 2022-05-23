@@ -17,6 +17,7 @@ using UnityEngine;
 using Marus.Sensors;
 using Marus.Sensors.Primitive;
 using TestUtils;
+using System.Collections.Generic;
 
 public class PoseTest
 {
@@ -32,6 +33,22 @@ public class PoseTest
         _poseSensor.SampleFrequency = 100;
         _rigidBody = _poseSensor.gameObject.AddComponent<Rigidbody>();
         _rigidBody.useGravity = false;
+        _poseSensor.PositionNoise.NoiseTypeFullName =
+            "Marus.NoiseDistributions.Noise+NoNoise";
+        _poseSensor.PositionNoise.ParameterKeys = new List<string>();
+        _poseSensor.PositionNoise.ParameterValues = new List<string>();
+        _poseSensor.OrientationNoise.NoiseTypeFullName =
+            "Marus.NoiseDistributions.Noise+NoNoise";
+        _poseSensor.OrientationNoise.ParameterKeys = new List<string>();
+        _poseSensor.OrientationNoise.ParameterValues = new List<string>();
+        _poseSensor.LinearVelocityNoise.NoiseTypeFullName =
+            "Marus.NoiseDistributions.Noise+NoNoise";
+        _poseSensor.LinearVelocityNoise.ParameterKeys = new List<string>();
+        _poseSensor.LinearVelocityNoise.ParameterValues = new List<string>();
+        _poseSensor.AngularVelocityNoise.NoiseTypeFullName =
+            "Marus.NoiseDistributions.Noise+NoNoise";
+        _poseSensor.AngularVelocityNoise.ParameterKeys = new List<string>();
+        _poseSensor.AngularVelocityNoise.ParameterValues = new List<string>();
 
         Utils.CallStart<PoseSensor>(_poseSensor);
     }
