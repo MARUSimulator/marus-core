@@ -14,9 +14,9 @@
 
 using NUnit.Framework;
 using UnityEngine;
-using Marus.Sensors;
 using Marus.Sensors.Primitive;
 using TestUtils;
+using System.Collections.Generic;
 
 public class ImuTest
 {
@@ -32,6 +32,18 @@ public class ImuTest
         _imu.transform.position = new Vector3(1, 0, 0);
         _rigidBody = _imu.gameObject.GetComponent<Rigidbody>();
         _rigidBody.useGravity = false;
+
+        _imu.AccelerometerNoise.NoiseTypeFullName = "Marus.NoiseDistributions.Noise+NoNoise";
+        _imu.AccelerometerNoise.ParameterKeys = new List<string>();
+        _imu.AccelerometerNoise.ParameterValues = new List<string>();
+
+        _imu.GyroNoise.NoiseTypeFullName = "Marus.NoiseDistributions.Noise+NoNoise";
+        _imu.GyroNoise.ParameterKeys = new List<string>();
+        _imu.GyroNoise.ParameterValues = new List<string>();
+
+        _imu.OrientationNoise.NoiseTypeFullName = "Marus.NoiseDistributions.Noise+NoNoise";
+        _imu.OrientationNoise.ParameterKeys = new List<string>();
+        _imu.OrientationNoise.ParameterValues = new List<string>();
     }
 
     [Test]
