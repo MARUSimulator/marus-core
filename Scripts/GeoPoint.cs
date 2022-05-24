@@ -21,8 +21,6 @@ namespace Marus.Core
     [System.Serializable]
     public struct GeoPoint
     {
-        [Header("Tangent plane origin")] 
-
         public double latitude;
         public double longitude;
         public double altitude;

@@ -22,19 +22,25 @@ namespace Marus.Sensors.Primitive
 {
     public class GnssSensor : SensorBase
     {
-        [Header("Position")]
-        public GeographicFrame origin;
+        
         public NoiseParameters measurementNoise;
 
         [Header("Precision")]
         public bool isRTK = true;
         public float maximumOperatingDepth = 0.5f;
-        [ReadOnly]public GeoPoint point;
+
+        [Header("Position info")]
+        
+        [ReadOnly]
+        public GeoPoint point;
+        [ReadOnly]
+        public GeoPoint origin;
 
         protected override void SampleSensor()
         {
             var world = TfHandler.Instance.OriginGeoFrame;
             point = world.Unity2Geo(transform.position);
+            origin = world.origin;
 
             point.latitude += Noise.Sample(measurementNoise);
             point.longitude += Noise.Sample(measurementNoise);
