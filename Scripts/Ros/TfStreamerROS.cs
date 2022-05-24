@@ -164,11 +164,16 @@ namespace Marus.ROS
                     _translation += TranslationOffset;
                     _rotation *= Quaternion.Euler(RotationOffset);
                 }
+                // if parent is assigned, assume it is local position (body frame) and transform to (forward-left-up) FLU
+                _translation = _translation.Unity2Body();
+                _rotation = _rotation.Unity2Body();
             }
             else
             {
-                _translation = transform.position;
-                _rotation = transform.rotation;
+                // if no parent is assigned, assume it is global position and transform to ENU frame
+                _rotation =  transform.rotation.Unity2Map() * new Quaternion(0,0,0.707f,0.707f);
+                _translation = transform.position.Unity2Map();
+                
             }
         }
 
@@ -183,8 +188,8 @@ namespace Marus.ROS
                 },
                 FrameId = ParentFrameId,
                 ChildFrameId = FrameId,
-                Translation = _translation.Unity2Map().AsMsg(),
-                Rotation = _rotation.Unity2Map().AsMsg(),
+                Translation = _translation.AsMsg(),
+                Rotation = _rotation.AsMsg(),
                 Address = address
             };
             await _streamWriter.WriteAsync(tfOut);
