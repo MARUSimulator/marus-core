@@ -14,9 +14,9 @@
 
 using NUnit.Framework;
 using UnityEngine;
-using Marus.Sensors;
 using Marus.Sensors.Primitive;
 using TestUtils;
+using System.Collections.Generic;
 
 public class GnssTest
 {
@@ -29,6 +29,9 @@ public class GnssTest
         _gnss = Utils.CreateAndInitializeObject<GnssSensor>("Gnss", PrimitiveType.Cube);
         _gnss.SampleFrequency = 100;
         _gnss.transform.position = new Vector3(200, 5, 100);
+        _gnss.measurementNoise.NoiseTypeFullName = "Marus.NoiseDistributions.Noise+NoNoise";
+        _gnss.measurementNoise.ParameterKeys = new List<string>();
+        _gnss.measurementNoise.ParameterValues = new List<string>();
     }
 
     [Test]

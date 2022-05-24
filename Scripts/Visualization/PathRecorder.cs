@@ -15,7 +15,7 @@
 using UnityEngine;
 using System.IO;
 using Marus.Logger;
-using Marus.Mission;
+using Marus.Quest;
 using UnityEngine.SceneManagement;
 
 namespace Marus.Visualization
@@ -43,11 +43,11 @@ namespace Marus.Visualization
         private GameObjectLogger<Vector3> logger;
         private string topic;
         private string savePath;
-        private MissionControl missionControl;
+        private QuestControl questControl;
 
         void Start()
         {
-            missionControl = GameObject.Find("Mission").GetComponent<MissionControl>();
+            questControl = GameObject.Find("Quest").GetComponent<QuestControl>();
             savePath = Path.Combine(Application.dataPath, "PathRecordings");
             Scene scene = SceneManager.GetActiveScene();
             RefreshTopic();
@@ -101,7 +101,7 @@ namespace Marus.Visualization
             {
                 return;
             }
-            if (missionControl.MissionComplete)
+            if (questControl.QuestComplete)
             {
                 Disable();
             }

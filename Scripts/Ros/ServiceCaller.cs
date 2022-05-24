@@ -14,7 +14,7 @@
 
 using Grpc.Core;
 using Marus.Core;
-using Marus.Mission;
+using Marus.Quest;
 using UnityEngine;
 using static Service.Commander;
 using Labust;
@@ -41,18 +41,18 @@ namespace Marus.Networking
         public Vector3 GuidanceTarget;
         public double Radius;
         public double VerticalOffset;
-        public MissionControl MissionControl;
+        public QuestControl QuestControl;
 
 
 
         void Start()
         {
             RosConnection.Instance.OnConnected += OnConnected;
-            if (MissionControl != null)
-                MissionControl.OnWaypointChange += OnWaypointChange;
+            if (QuestControl != null)
+                QuestControl.OnWaypointChange += OnWaypointChange;
         }
 
-        private void OnWaypointChange(MissionWaypoint obj)
+        private void OnWaypointChange(QuestWaypoint obj)
         {
             GuidanceTarget = obj.transform.position;
             GuidanceEnable = true;

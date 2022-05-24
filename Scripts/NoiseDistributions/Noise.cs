@@ -141,7 +141,8 @@ namespace Marus.NoiseDistributions
             {
                 return noise;
             }
-            var typ = _noiseTypes.FirstOrDefault(x => 
+            
+            var typ = NoiseTypes.FirstOrDefault(x => 
                     x.FullName == typeFullName);
 
             if (typ == null)

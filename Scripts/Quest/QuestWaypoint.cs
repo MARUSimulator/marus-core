@@ -14,9 +14,9 @@
 
 using UnityEngine;
 
-namespace Marus.Mission
+namespace Marus.Quest
 {
-    public class MissionWaypoint : MonoBehaviour
+    public class QuestWaypoint : MonoBehaviour
     {
         /// <summary>
         /// Class that represents waypoint in the simulator.
@@ -26,7 +26,7 @@ namespace Marus.Mission
         public bool Visited => _visited;
 
         [System.NonSerialized]
-        public MissionControl mission;
+        public QuestControl quest;
 
         void Start() 
         {
@@ -46,7 +46,7 @@ namespace Marus.Mission
             /// </summary>
             // Make sure other movable objects in the scene don't trigger a waypoint.
 
-            if(collider.gameObject.GetInstanceID() == mission.agent.GetInstanceID()){
+            if(collider.gameObject.GetInstanceID() == quest.agent.GetInstanceID()){
                 _visited = true;
                 DisableWaypoint();
             }
