@@ -57,7 +57,7 @@ public class ControllerTest
         Assert.AreEqual(1, agent1.transform.position.z, "AUV primitive controller translation doesn't work as expected");
 
         //Test rotation.
-        agent1Controller.rotSpeed = 1000f;
+        agent1Controller.rotSpeed = 100f;
         Utils.CallNonpublicMethod<AUVPrimitiveController>(agent1Controller, "UpdateMovement", new object[]{1, KeyCode.X, 1});
 
         Assert.IsTrue(Mathf.Abs(100 - agent1.transform.eulerAngles.y) < 0.01, "AUV primitive controller rotation doesn't work as expected");
