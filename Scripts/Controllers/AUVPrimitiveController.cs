@@ -75,7 +75,7 @@ public class AUVPrimitiveController : MonoBehaviour
             rotate += (key == KeyCode.X ? 1 : 0);
             rotate -= (key == KeyCode.Y ? 1 : 0);
             Vector3 ea = _targetTransform.eulerAngles;
-            ea.y += 0.1f * rotSpeed * rotate * dt;
+            ea.y += rotSpeed * rotate * dt;
             _targetTransform.eulerAngles = ea;
         }
     }

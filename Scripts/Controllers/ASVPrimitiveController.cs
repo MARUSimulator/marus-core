@@ -71,7 +71,7 @@ public class ASVPrimitiveController : MonoBehaviour
             rotate += (key == KeyCode.D ? 1 : 0);
             rotate -= (key == KeyCode.A ? 1 : 0);
             Vector3 ea = _targetTransform.eulerAngles;
-            ea.y += 0.1f * rotSpeed * rotate * dt;
+            ea.y += rotSpeed * rotate * dt;
             _targetTransform.eulerAngles = ea;
         }
     }

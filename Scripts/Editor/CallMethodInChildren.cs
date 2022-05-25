@@ -9,7 +9,7 @@ using System;
 #if UNITY_EDITOR
 public class CallMethodInChildren : MonoBehaviour
 {
-    public String callbackName = "UpdateVehicle";
+    public String callbackName;
 }
 
 [CustomEditor(typeof(CallMethodInChildren))]
