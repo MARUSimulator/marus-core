@@ -168,6 +168,7 @@ namespace Marus.Sensors
                 }
             }
             reading.Ring = index % HeightRes;
+            reading.Time = (uint) (DateTime.Now.Millisecond);
             reading.Intensity = 255;
             return reading;
         }
@@ -283,6 +284,7 @@ namespace Marus.Sensors
         public int InstanceId;
         public ushort Intensity;
         public int Ring;
+        public uint Time;
         public bool IsValid;
     }
 
