@@ -138,11 +138,18 @@ namespace Marus.Sensors
                         Offset = 16,
                         Datatype = PointField.Types.DataType.Int32 + 1,
                         Count = 1
+                    },
+                    new PointField()
+                    {
+                        Name = "time",
+                        Offset = 20,
+                        Datatype = PointField.Types.DataType.Uint32 + 1,
+                        Count = 1
                     }
                 }
             );
             var numOfPoints = readings.Count(r => r.IsValid);
-            var pointSize = sizeof(float) * 3 + sizeof(int)*2;
+            var pointSize = sizeof(float) * 3 + sizeof(int)*3;
             var byteLength = numOfPoints * pointSize;
             pointCloud.Height = 1;
             pointCloud.Width = (uint) numOfPoints;
@@ -160,6 +167,7 @@ namespace Marus.Sensors
                 Buffer.BlockCopy( BitConverter.GetBytes( points[i].z ), 0, bytes, j*pointSize + 8, 4 );
                 Buffer.BlockCopy( BitConverter.GetBytes( (int) readings[i].Intensity ), 0, bytes, j*pointSize + 12, 4);
                 Buffer.BlockCopy( BitConverter.GetBytes( (int) readings[i].Ring ), 0, bytes, j*pointSize + 16, 4);
+                Buffer.BlockCopy( BitConverter.GetBytes( (int) readings[i].Time ), 0, bytes, j*pointSize + 20, 4);
                 j++;
             }
             pointCloud.RowStep = (uint) byteLength;
