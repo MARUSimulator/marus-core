@@ -27,7 +27,11 @@ namespace Marus.Actuators
             V10 = 10,
             V12 = 12,
             V14 = 14,
-            V16 = 16
+            V16 = 16,
+            V20 = 20,
+            V20x10 = 21,
+            V20x50 = 22,
+            V20x100 = 23
         };
 
         int _voltage;
@@ -35,6 +39,12 @@ namespace Marus.Actuators
         float[] sheetData;
         float sheetStep;
 
+#if UNITY_EDITOR
+        [ReadOnly]
+        public float lastAppliedForce;
+        [ReadOnly]
+        public string lastAppliedTime;
+#endif
         Rigidbody _vehicleBody;
         Transform _vehicle;
         Transform vehicle
@@ -79,7 +89,18 @@ namespace Marus.Actuators
                 case AllowedVoltages.V16:
                     sheetData = T200ThrusterDatasheet.V16;
                     break;
-
+                case AllowedVoltages.V20:
+                    sheetData = T200ThrusterDatasheet.V20;
+                    break;
+                case AllowedVoltages.V20x10:
+                    sheetData = T200ThrusterDatasheet.V20x10;
+                    break;
+                case AllowedVoltages.V20x50:
+                    sheetData = T200ThrusterDatasheet.V20x50;
+                    break;
+                case AllowedVoltages.V20x100:
+                    sheetData = T200ThrusterDatasheet.V20x100;
+                    break;
             }
             _logger = DataLogger.Instance.GetLogger<PwmLogRecord>($"{vehicle.transform.name}/{name}");
         }
@@ -95,7 +116,10 @@ namespace Marus.Actuators
 
             // from kgf to N       
             float value = sheetData[step] * 9.80665f;
-
+#if UNITY_EDITOR
+            lastAppliedForce = value;
+            lastAppliedTime = System.DateTime.UtcNow.ToString("HH:mm:ss.f");
+#endif
             Vector3 force = transform.forward * value;
             _vehicleBody.AddForceAtPosition(force, transform.position, ForceMode.Force);
             _logger.Log(new PwmLogRecord { PwmIn = pwmIn, Force = force});
