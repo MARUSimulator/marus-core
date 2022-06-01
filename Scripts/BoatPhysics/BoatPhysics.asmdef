@@ -1,0 +1,26 @@
+{
+    "name": "BoatPhysics",
+    "rootNamespace": "",
+    "references": [
+        "GUID:c47c588af94a289439184f626352a939",
+        "GUID:77ccaf49895b0d64e87cd4b4faf83c49",
+        "GUID:5b35af79ebbe89647a157055d52c59d3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [
+        ""
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.whinarn.unitymeshsimplifier",
+            "expression": "3.1.0",
+            "define": "UNITY_MESH_SIMPLIFIER"
+        }
+    ],
+    "noEngineReferences": false
+}
