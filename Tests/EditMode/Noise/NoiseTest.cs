@@ -68,7 +68,7 @@ public class NoiseTest
         {
             NoiseTypeFullName = typeof(TestNoise).FullName,
             ParameterKeys = new List<string> {"A", "B", "C"},
-            ParameterValues = new List<string> {"0,01", "5", "str"}
+            ParameterValues = new List<string> {"0.01", "5", "str"}
         };
         var s = Noise.Sample(in noiseParams);
         Assert.AreEqual(8.01, s, .000001f, "Value should be 8.01");
