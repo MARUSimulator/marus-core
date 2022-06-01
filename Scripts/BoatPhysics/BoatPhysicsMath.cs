@@ -152,6 +152,7 @@ namespace Marus
 
             //A reference speed used when modifying the parameters
             float velocityReference = DebugPhysics.current.velocityReference;
+            //float velocityReference = velocity;
 
             velocity = velocity / velocityReference;
 
@@ -232,8 +233,8 @@ namespace Marus
 
             float p = DebugPhysics.current.p;
 
-            float acc_max = acc;
-            //float acc_max = DebugPhysics.current.acc_max;
+            //float acc_max = acc;
+            float acc_max = DebugPhysics.current.acc_max;
 
             float slammingCheat = DebugPhysics.current.slammingCheat;
 
