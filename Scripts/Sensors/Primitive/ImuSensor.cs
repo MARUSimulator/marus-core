@@ -55,7 +55,7 @@ namespace Marus.Sensors.Primitive
         [ReadOnly] public Quaternion Orientation;
         private Rigidbody rb;
         private Vector3 lastVelocity;
-        private double _lastSampleTime = -1.0;
+        private double _lastSampleTime;
 
 
         new void Reset()
@@ -101,9 +101,10 @@ namespace Marus.Sensors.Primitive
 
         protected override void SampleSensor()
         {
-            double timeElapsed = Time.fixedTimeAsDouble - _lastSampleTime;
-            _lastSampleTime = Time.fixedTimeAsDouble;
             
+            double timeElapsed = Time.timeAsDouble - _lastSampleTime;
+            _lastSampleTime = Time.timeAsDouble;
+
             localVelocity = rb.transform.InverseTransformVector(rb.velocity);
             localVelocity[0]+=Noise.Sample(AccelerometerNoise);
             localVelocity[1]+=Noise.Sample(AccelerometerNoise);

@@ -17,6 +17,8 @@ using UnityEngine;
 using Marus.Sensors.Primitive;
 using TestUtils;
 using System.Collections.Generic;
+using System.Collections;
+using UnityEngine.TestTools;
 
 public class ImuTest
 {
@@ -46,17 +48,26 @@ public class ImuTest
         _imu.OrientationNoise.ParameterValues = new List<string>();
     }
 
-    [Test]
-    public void TestImuSample()
+    [UnityTest]
+    public IEnumerator TestImuSample()
     {
-        _rigidBody.velocity = new Vector3(0.2f, 0, 0);
+        float vel_first = 1.0f, vel_later = 1.5f;
+        
+        _rigidBody.velocity = new Vector3(vel_first, 0, 0);
         _rigidBody.rotation = new Quaternion(0.6f, 0, 0, 0.8f).normalized;
         _rigidBody.angularVelocity = new Vector3(0.3f, 0, 0);
         Utils.CallNonpublicMethod(_imu, "SampleSensor");
-        _rigidBody.velocity = new Vector3(0.25f, 0, 0);
+
+        // skip one frame (deltaTime)
+        yield return null;
+
+        _rigidBody.velocity = new Vector3(vel_later, 0, 0);
         _rigidBody.angularVelocity = new Vector3(0.35f, 0, 0);
         Utils.CallNonpublicMethod(_imu, "SampleSensor");
-        Assert.AreEqual(2.5f, _imu.linearAcceleration.x, "Linear acceleration in z should be 2.5f");
+
+        float expectedLAx = (vel_later - vel_first) / Time.deltaTime;
+        
+        Assert.AreEqual(_imu.linearAcceleration.x, expectedLAx, $"Linear acceleration in x should be {expectedLAx}");
         Assert.AreEqual(_imu.orientation.x, 0.6f, "Orientation in x should be 0.6f");
         Assert.AreEqual(_imu.angularVelocity.x, 0.35f, "Angular velocity in x should be 0.35f");
     }
