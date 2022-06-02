@@ -38,6 +38,8 @@ namespace Marus.Sensors
 
         public float SampleFrequency = 20;
 
+        public bool streamInFixedUpdate = false;
+
         protected Transform _vehicle;
         [NonSerialized] public bool hasData;
 
@@ -103,6 +105,7 @@ namespace Marus.Sensors
     /// Sensor streams readings to the server defined in RosConnection singleton instance
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [DefaultExecutionOrder(20)]
     public abstract class SensorStreamer<TClient, TMsg> : MonoBehaviour 
         where TClient : ClientBase
         where TMsg : IMessage
@@ -186,8 +189,20 @@ namespace Marus.Sensors
         double cumulativeTime = 0;
         protected void Update()
         {
-            cumulativeTime += Time.deltaTime;
-            if (cumulativeTime > (1 / UpdateFrequency))
+            if(!_sensor.streamInFixedUpdate)
+                TrySendMessage();
+        }
+        protected void FixedUpdate()
+        {
+            if(_sensor.streamInFixedUpdate)
+                TrySendMessage();
+        }
+
+        protected void TrySendMessage()
+        {
+            
+            cumulativeTime += (Time.inFixedTimeStep ? Time.fixedDeltaTime : Time.deltaTime);
+            if (cumulativeTime >= (1.0f / _sensor.SampleFrequency - 0.0001f))
             {
                 cumulativeTime = 0;
                 if (_sensor.hasData)

@@ -51,7 +51,7 @@ namespace Marus.Sensors
         {
             if (sensor.SampleFrequency <= 0)
                 return true;
-            return time > 1 / sensor.SampleFrequency;
+            return time >= 1 / sensor.SampleFrequency - 0.0001f;
         }
 
         public void AddSensorCallback(SensorBase sensor, Action callback)
