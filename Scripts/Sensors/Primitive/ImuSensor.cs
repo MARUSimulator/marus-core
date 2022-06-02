@@ -116,12 +116,12 @@ namespace Marus.Sensors.Primitive
             angularVelocity[1]+=Noise.Sample(GyroNoise);
             angularVelocity[2]+=Noise.Sample(GyroNoise);
 
-            orientation = rb.rotation;
-            orientation[0]+=Noise.Sample(OrientationNoise);
-            orientation[1]+=Noise.Sample(OrientationNoise);
-            orientation[2]+=Noise.Sample(OrientationNoise);
+            eulerAngles = rb.rotation.eulerAngles;
+            eulerAngles.x += Noise.Sample(OrientationNoise);
+            eulerAngles.y += Noise.Sample(OrientationNoise);
+            eulerAngles.z += Noise.Sample(OrientationNoise);
+            orientation = Quaternion.Euler(eulerAngles);
 
-            eulerAngles = orientation.eulerAngles;
             lastVelocity = localVelocity;
 
             if (withGravity)
