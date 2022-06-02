@@ -21,9 +21,7 @@
 // Terms of use: do whatever you like
 
 using System.Collections.Generic;
-#if CREST_OCEAN
-    using Crest;
-#endif
+using Marus.Ocean;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
@@ -49,10 +47,7 @@ public class Buoyancy : MonoBehaviour
 
     private new Collider collider;
     private new Rigidbody rigidbody;
-	
-#if CREST_OCEAN
-	Crest.SampleHeightHelper _sampleHeightHelper;
-#endif
+
     /// <summary>
     /// Provides initialization.
     /// </summary>
@@ -91,10 +86,6 @@ public class Buoyancy : MonoBehaviour
         localArchimedesForce = new Vector3(0, totalBuoyancyForce, 0) / voxels.Count;
 
         Debug.Log(string.Format("[Buoyancy.cs] Name=\"{0}\" volume={1:0.0}, mass={2:0.0}, density={3:0.0}", name, volume, rigidbody.mass, density));
-		
-#if CREST_OCEAN
-		_sampleHeightHelper = new Crest.SampleHeightHelper();
-#endif
     }
 
     /// <summary>
@@ -244,58 +235,6 @@ public class Buoyancy : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns the water level at given location.
-    /// </summary>
-    /// <param name="x">x-coordinate</param>
-    /// <param name="z">z-coordinate</param>
-    /// <returns>Water level</returns>
-    private float GetWaterLevel(float x, float z)
-    {
-#if CREST_OCEAN
-        //return ocean == null ? 0.0f : ocean.GetWaterHeightAtLocation(x, z);
-		_sampleHeightHelper.Init(new Vector3(x,0.0f,z), 0.5f, true);
-                    
-		if (_sampleHeightHelper.Sample(out var height))
-		{
-			return height;
-		}
-#endif
-        return 0.0f;
-    }
-
-    private float[] GetWaterLevel(List<Vector3> points)
-    {
-        float[] heights = new float[points.Count];
-#if CREST_OCEAN
-        Vector3[] _queryPos = points.ToArray();
-        Vector3[] _queryResult = new Vector3[points.Count];
-
-        var collProvider = OceanRenderer.Instance?.CollisionProvider;
-        if (collProvider == null)
-        {
-            return heights;
-        }
-
-        var status = collProvider.Query(GetHashCode(), 0.5f, _queryPos, _queryResult, null, null);
-
-        if (!collProvider.RetrieveSucceeded(status))
-        {
-            for (int i = 0; i < points.Count; i++)
-            {
-                heights[i] = OceanRenderer.Instance.SeaLevel;
-            }
-            return heights;
-        }
-
-        for (int i = 0; i < points.Count; i++)
-        {
-            heights[i] = _queryResult[i].y + OceanRenderer.Instance.SeaLevel;
-        }
-#endif
-        return heights;
-    }
-
-    /// <summary>
     /// Calculates physics.
     /// </summary>
     private void Update()
@@ -308,7 +247,7 @@ public class Buoyancy : MonoBehaviour
             globalPoints.Add(transform.TransformPoint(point + deltaCBG*Vector3.up));
         }
 
-        float[] waterLevel = GetWaterLevel(globalPoints);
+        float[] waterLevel = WaterHeightSampler.Instance.GetWaterLevel(globalPoints);
 
         for (int i = 0; i < voxels.Count; i++)
         {

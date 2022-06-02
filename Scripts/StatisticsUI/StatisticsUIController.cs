@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using UnityEngine;
-#if CREST_AVAILABLE
+#if CREST_OCEAN
 using Crest;
 #endif
 
@@ -53,7 +53,7 @@ namespace Marus.StatisticsUI
                     _canvas.enabled = false;
                     Cursor.lockState = CursorLockMode.Locked;
 
-#if CREST_AVAILABLE
+#if CREST_OCEAN
                     _ocean.GetComponent<OceanRenderer>().ViewCamera = null;
 #endif
                 }
@@ -63,7 +63,7 @@ namespace Marus.StatisticsUI
                     _canvas.enabled = true;
                     _controller.RefreshPaths();
                     Cursor.lockState = CursorLockMode.Confined;
-#if CREST_AVAILABLE
+#if CREST_OCEAN
                     _ocean.GetComponent<OceanRenderer>().ViewCamera = _camera;
 #endif
                 }

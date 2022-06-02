@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Marus.Ocean;
 
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
@@ -49,9 +50,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         bool m_Crouching;
 
         float startingBuoyHeight;
-#if CREST_AVAILABLE
-        Crest.SampleHeightHelper _sampleHeightHelper;
-#endif
 
         void Start()
         {
@@ -66,9 +64,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
             m_OrigGroundCheckDistance = m_GroundCheckDistance;
 
-#if CREST_AVAILABLE
-            _sampleHeightHelper = new Crest.SampleHeightHelper();
-#endif
         }
 
 
@@ -264,14 +259,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 }
                 else if (jump)
                 {
-#if CREST_AVAILABLE
-                    _sampleHeightHelper.Init(m_Rigidbody.transform.position, 0.5f, true);
-                    
-                    if (_sampleHeightHelper.Sample(out var height))
-                    {
-                        floaterBuoy.waterLevel = height;
-                    }
-#endif
+
+                    floaterBuoy.waterLevel = WaterHeightSampler.Instance.GetWaterLevel(m_Rigidbody.transform.position);
+
                     if (m_Rigidbody.transform.position.y < floaterBuoy.waterLevel - floaterBuoy.buoyancyCentreOffset.y)
                     {
                         m_Rigidbody.AddForceAtPosition(m_Rigidbody.transform.up * m_VerticalForce, forcePosition, ForceMode.Acceleration);
@@ -294,14 +284,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 }
                 else if (jump)
                 {
-#if CREST_AVAILABLE
-                    _sampleHeightHelper.Init(m_Rigidbody.transform.position, 0.5f, true);
-                    
-                    if (_sampleHeightHelper.Sample(out var height))
-                    {
-                        floaterBuoy.waterLevel = height;
-                    }
-#endif
+                    floaterBuoy.waterLevel = WaterHeightSampler.Instance.GetWaterLevel(m_Rigidbody.transform.position);
 
                     if (m_Rigidbody.transform.position.y < floaterBuoy.waterLevel - floaterBuoy.buoyancyCentreOffset.y)
                     {

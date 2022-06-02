@@ -16,9 +16,7 @@
 
 using UnityEngine;
 using System.Collections.Generic;
-#if CREST_OCEAN
-using Crest;
-#endif
+using Marus.Ocean;
 
 namespace Marus
 {
@@ -117,7 +115,7 @@ namespace Marus
                 boatVerticesGlobal[j] = _boatTrans.TransformPoint(boatVertices[j]);
             }
             // get water level at positions
-            GetWaterLevel(boatVerticesGlobal, allHeightAboveWater, boatVertices.Length);
+            WaterHeightSampler.Instance.GetWaterLevel(boatVerticesGlobal, allHeightAboveWater, boatVertices.Length);
 
             for (int j = 0; j < boatVertices.Length; j++)
             {
@@ -134,36 +132,6 @@ namespace Marus
             PopulateMesh(_underwaterMesh, "UnderWater Mesh", underWaterTriangleData);
         }
 
-        private void GetWaterLevel(Vector3[] points, float[] heights, int array_size)
-        {
-            //float[] heights = new float[points.Count];
-#if CREST_OCEAN
-            var collProvider = OceanRenderer.Instance?.CollisionProvider;
-            if (collProvider == null)
-            {
-                for (int i = 0; i < array_size; i++)
-                {
-                    heights[i] = 0.0f;
-                }
-            }
-
-            var status = collProvider.Query(GetHashCode(), _boatWidth, points, heights, null, null);
-
-            if (!collProvider.RetrieveSucceeded(status))
-            {
-                for (int i = 0; i < array_size; i++)
-                {
-                    heights[i] = OceanRenderer.Instance.SeaLevel;
-                }
-            }
-#else
-            for (int i = 0; i < array_size; i++)
-            {
-                heights[i] = 0.0f;
-            }
-#endif
-        }
-
         private void UpdateUnderwaterTriangleDepth()
         {
             Vector3[] globalTrianglePos = new Vector3[underWaterTriangleData.Count];
@@ -173,7 +141,7 @@ namespace Marus
                 globalTrianglePos[j] = underWaterTriangleData[j].center;
             }
             // get water level
-            GetWaterLevel(globalTrianglePos, triangleHeightAboveWater, underWaterTriangleData.Count);
+            WaterHeightSampler.Instance.GetWaterLevel(globalTrianglePos, triangleHeightAboveWater, underWaterTriangleData.Count);
 
             for (int j = 0; j < underWaterTriangleData.Count; j++)
             {

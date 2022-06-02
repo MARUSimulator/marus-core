@@ -15,7 +15,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-#if CREST_AVAILABLE
+#if CREST_OCEAN
 using Crest;
 #endif
 
@@ -104,7 +104,7 @@ public class FPVController : MonoBehaviour
             eul.y = Input.GetAxis("Mouse X") * lookSpeed * dt;
             // rotate global yaw
             _targetTransform.Rotate(eul, Space.World);
-#if CREST_AVAILABLE
+#if CREST_OCEAN
             if(OceanRenderer.Instance)
             {
                 _targetTransform.position += OceanRenderer.Instance.ViewerHeightAboveWater > 0 ? new Vector3(0,-OceanRenderer.Instance.ViewerHeightAboveWater,0) : new Vector3(0,0,0);
@@ -117,7 +117,7 @@ public class FPVController : MonoBehaviour
                 {
                     _targetTransform.position += new Vector3(0,surfaceLevel-_targetTransform.position.y,0);
                 }
-#if CREST_AVAILABLE
+#if CREST_OCEAN
             }
 #endif
         }
