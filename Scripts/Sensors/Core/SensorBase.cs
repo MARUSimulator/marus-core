@@ -105,7 +105,6 @@ namespace Marus.Sensors
     /// Sensor streams readings to the server defined in RosConnection singleton instance
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    [DefaultExecutionOrder(20)]
     public abstract class SensorStreamer<TClient, TMsg> : MonoBehaviour 
         where TClient : ClientBase
         where TMsg : IMessage
@@ -202,7 +201,7 @@ namespace Marus.Sensors
         {
             
             cumulativeTime += (Time.inFixedTimeStep ? Time.fixedDeltaTime : Time.deltaTime);
-            if (cumulativeTime >= (1.0f / _sensor.SampleFrequency - 0.0001f))
+            if (cumulativeTime >= (1.0f / UpdateFrequency - 0.0001f))
             {
                 cumulativeTime = 0;
                 if (_sensor.hasData)
