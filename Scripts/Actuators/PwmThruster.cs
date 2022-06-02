@@ -27,13 +27,25 @@ namespace Marus.Actuators
             V10 = 10,
             V12 = 12,
             V14 = 14,
-            V16 = 16
+            V16 = 16,
+            V20 = 20,
+            V20x10 = 21,
+            V20x50 = 22,
+            V20x100 = 23
         };
 
         int _voltage;
         public AllowedVoltages voltage = AllowedVoltages.V10;
         float[] sheetData;
         float sheetStep;
+
+        [SerializeField, Range(0f, 1f), Tooltip("Time to latch last pwm request. To avoid losing thrust.")]
+        public float forceLatchTime = 0.2f;
+
+        [ReadOnly, SerializeField]
+        private float lastForceRequest;
+        [ReadOnly, SerializeField]
+        private float timeSinceForceRequest = 0.0f;
 
         Rigidbody _vehicleBody;
         Transform _vehicle;
@@ -79,7 +91,18 @@ namespace Marus.Actuators
                 case AllowedVoltages.V16:
                     sheetData = T200ThrusterDatasheet.V16;
                     break;
-
+                case AllowedVoltages.V20:
+                    sheetData = T200ThrusterDatasheet.V20;
+                    break;
+                case AllowedVoltages.V20x10:
+                    sheetData = T200ThrusterDatasheet.V20x10;
+                    break;
+                case AllowedVoltages.V20x50:
+                    sheetData = T200ThrusterDatasheet.V20x50;
+                    break;
+                case AllowedVoltages.V20x100:
+                    sheetData = T200ThrusterDatasheet.V20x100;
+                    break;
             }
             _logger = DataLogger.Instance.GetLogger<PwmLogRecord>($"{vehicle.transform.name}/{name}");
         }
@@ -94,12 +117,11 @@ namespace Marus.Actuators
             int step = (int)((pwmIn+1) / sheetStep); // push it to the range 0-2
 
             // from kgf to N       
-            float value = sheetData[step] * 9.80665f;
+            lastForceRequest = sheetData[step] * 9.80665f;
+            timeSinceForceRequest = 0.0f;
 
-            Vector3 force = transform.forward * value;
-            _vehicleBody.AddForceAtPosition(force, transform.position, ForceMode.Force);
-            _logger.Log(new PwmLogRecord { PwmIn = pwmIn, Force = force});
-            return force;
+            _logger.Log(new PwmLogRecord { PwmIn = pwmIn, Force = transform.forward * lastForceRequest});
+            return transform.forward * lastForceRequest;
         }
 
         public float GetPwmForForce(float force)
@@ -127,6 +149,16 @@ namespace Marus.Actuators
                     return mid;
             } while (first <= last);
             return mid;
+        }
+
+        void FixedUpdate()
+        {
+            if(timeSinceForceRequest <= 0.2f)
+            {
+                Vector3 force = transform.forward * lastForceRequest;
+                _vehicleBody.AddForceAtPosition(force, transform.position, ForceMode.Force);
+            }
+            timeSinceForceRequest += Time.fixedDeltaTime;
         }
 
         private class PwmLogRecord

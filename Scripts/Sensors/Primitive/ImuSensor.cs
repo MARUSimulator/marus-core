@@ -55,6 +55,44 @@ namespace Marus.Sensors.Primitive
         [ReadOnly] public Quaternion Orientation;
         private Rigidbody rb;
         private Vector3 lastVelocity;
+        private double _lastSampleTime;
+
+
+        new void Reset()
+        {
+            rb = GetComponent<Rigidbody>();
+
+            base.Reset();
+            UpdateVehicle();
+        }
+
+        new void UpdateVehicle()
+        {
+            base.UpdateVehicle();
+
+            var veh = vehicle;
+
+            // get vehicle rigidbody (either this gameObject or vehicle tag)
+            // This is needed for IMU to work as expected
+            Rigidbody veh_rb = veh.GetComponent<Rigidbody>();
+
+            // if vehicle tag not found or no rigidbody found on tagged vehicle
+            // find top parent with rigidbody
+            if(veh == transform || (veh_rb is null))
+            {
+                veh_rb = Helpers.GetComponentInParents<Rigidbody>(veh.parent?.gameObject);
+            }
+
+            // if parent rigidbody found, attach fixed joint to it
+            if(veh_rb)
+            {
+                // attach fixed joint to it
+                // This is needed for IMU to work as expected
+                FixedJoint fj = gameObject.GetComponent<FixedJoint>();
+                if(!fj) fj = gameObject.AddComponent<FixedJoint>();
+                fj.connectedBody = veh_rb;
+            }
+        }
 
         void Start()
         {
@@ -63,12 +101,16 @@ namespace Marus.Sensors.Primitive
 
         protected override void SampleSensor()
         {
+            
+            double timeElapsed = Time.timeAsDouble - _lastSampleTime;
+            _lastSampleTime = Time.timeAsDouble;
+
             localVelocity = rb.transform.InverseTransformVector(rb.velocity);
             localVelocity[0]+=Noise.Sample(AccelerometerNoise);
             localVelocity[1]+=Noise.Sample(AccelerometerNoise);
             localVelocity[2]+=Noise.Sample(AccelerometerNoise);
+            linearAcceleration = ((localVelocity - lastVelocity) / (float) timeElapsed);
 
-            linearAcceleration = ((localVelocity - lastVelocity) / Time.fixedDeltaTime);
             angularVelocity = rb.angularVelocity;
             angularVelocity[0]+=Noise.Sample(GyroNoise);
             angularVelocity[1]+=Noise.Sample(GyroNoise);

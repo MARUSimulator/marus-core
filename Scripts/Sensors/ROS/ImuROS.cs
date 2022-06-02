@@ -48,8 +48,8 @@ namespace Marus.Sensors.Primitive
                     Timestamp = TimeHandler.Instance.TimeDouble
                 },
                 Orientation = sensor.orientation.Unity2Map().AsMsg(),
-                AngularVelocity = (-sensor.angularVelocity).Unity2Map().AsMsg(),
-                LinearAcceleration = sensor.linearAcceleration.Unity2Map().AsMsg(),
+                AngularVelocity = (-sensor.angularVelocity).Unity2Body().AsMsg(),
+                LinearAcceleration = sensor.linearAcceleration.Unity2Body().AsMsg(),
             };
             imuOut.OrientationCovariance.AddRange(sensor.orientationCovariance);
             imuOut.LinearAccelerationCovariance.AddRange(sensor.linearAccelerationCovariance);

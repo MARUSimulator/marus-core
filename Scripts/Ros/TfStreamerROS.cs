@@ -81,19 +81,24 @@ namespace Marus.ROS
         public void UpdateVehicle()
         {
             var veh = vehicle;
-            // reset frame ids to empty if UpdateVehicle is not called from reset
-            FrameId = "";
-            ParentFrameId = "";
-            // if not same object, add name prefix to frame ids and assign vehicle transform
+            // set frame prefixes if UpdateVehicle is not called from reset
+            FrameId = veh.name;
+            ParentFrameId = veh.name;
+            // if not same object, assume sensor is attached to vehicle
             if(veh != transform)
             {
-                FrameId = $"{veh.name}/";
-                ParentFrameId = $"{veh.name}/";
+                FrameId = FrameId + $"/{gameObject.name}_frame";
+                ParentFrameId = ParentFrameId + "/base_link";
                 ParentTransform = veh.transform;
             }
+            else
+            {
+                // if same object assume it's vehicle, and assign base_link and map parent
+                FrameId = FrameId + "/base_link";
+                ParentFrameId = "map";
+            }
 
-            FrameId = FrameId + gameObject.name + "_frame";
-            ParentFrameId = ParentFrameId + "base_link";
+            
         }
 
         Quaternion _rotation;
@@ -171,7 +176,7 @@ namespace Marus.ROS
             else
             {
                 // if no parent is assigned, assume it is global position and transform to ENU frame
-                _rotation =  transform.rotation.Unity2Map() * new Quaternion(0,0,0.707f,0.707f);
+                _rotation =  transform.rotation.Unity2Map() * new Quaternion(0,0, 1/Mathf.Sqrt(2), 1/Mathf.Sqrt(2));
                 _translation = transform.position.Unity2Map();
                 
             }

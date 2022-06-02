@@ -71,6 +71,19 @@ namespace Marus.Utils
             }
         }
 
+        public static T GetComponentInParents <T>(GameObject startObject) where T : Component
+        {
+            T returnObject = null;
+            T next_parent = null;
+            GameObject currentObject = startObject;
+            while(next_parent = currentObject?.GetComponentInParent<T>())
+            {
+                returnObject = next_parent;
+                currentObject = next_parent.transform.parent?.gameObject;
+            }
+            return returnObject;
+        }
+
         public static GameObject FindGameObjectInChildren(string name, GameObject parent, bool includeInactive=true)
         {
             Transform[] allChildren = parent.GetComponentsInChildren<Transform>(includeInactive);
