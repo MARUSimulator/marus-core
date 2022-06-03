@@ -38,13 +38,14 @@ namespace Marus.Sensors.Primitive
 
         protected override void SampleSensor()
         {
-            var world = TfHandler.Instance.OriginGeoFrame;
-            point = world.Unity2Geo(transform.position);
-            origin = world.origin;
+            Vector3 pos = transform.position;
+            pos.x += Noise.Sample(measurementNoise);
+            pos.y += Noise.Sample(measurementNoise);
+            pos.z += Noise.Sample(measurementNoise);
 
-            point.latitude += Noise.Sample(measurementNoise);
-            point.longitude += Noise.Sample(measurementNoise);
-            point.altitude += Noise.Sample(measurementNoise);
+            var world = TfHandler.Instance.OriginGeoFrame;
+            point = world.Unity2Geo(pos);
+            origin = world.origin;
 
             Log(new { point.latitude, point.longitude, point.altitude });
             hasData = true;
