@@ -204,7 +204,7 @@ namespace Marus.Sensors
             if (cumulativeTime >= (1.0f / UpdateFrequency - 0.0001f))
             {
                 cumulativeTime = 0;
-                if (_sensor.hasData)
+                if (_sensor.hasData && RosConnection.Instance.IsConnected)
                 {
                     SendMessage();
                     _sensor.hasData = false;

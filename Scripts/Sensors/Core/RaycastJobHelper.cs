@@ -374,7 +374,6 @@ namespace Marus.Sensors
                     {
                         points[i] = Quaternion.Inverse(rotation)*(hits[i].point - position);
                     }
-                    
                 }
             }
         }
