@@ -16,7 +16,7 @@ public sealed class FogEffect : CustomPostProcessVolumeComponent, IPostProcessCo
 
     Material m_Material;
 
-    float waterLevelHeight = 1f;
+    float waterLevelHeight = 0f;
 
     public bool IsActive()
     {
