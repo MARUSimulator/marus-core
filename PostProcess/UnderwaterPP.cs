@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 using System;
-using Crest;
 using Marus.Ocean;
 
 [Serializable, VolumeComponentMenu("Post-processing/Custom/UnderwaterPP")]
@@ -16,7 +15,18 @@ public sealed class UnderwaterPP : CustomPostProcessVolumeComponent, IPostProces
 
     Material m_Material;
 
-    public bool IsActive() => m_Material != null && OceanRenderer.Instance.ViewerHeightAboveWater < 0f;
+    float waterLevelHeight = 1f;
+
+    public bool IsActive()
+    {
+        waterLevelHeight = WaterHeightSampler.Instance.GetWaterLevel(Camera.current.transform.position);
+        if (m_Material != null && waterLevelHeight < 0f)
+        {
+            return true;
+        }
+        return false;
+    }
+    
 
     // Do not forget to add this post process in the Custom Post Process Orders list (Project Settings > Graphics > HDRP Settings).
     public override CustomPostProcessInjectionPoint injectionPoint => CustomPostProcessInjectionPoint.AfterPostProcess;

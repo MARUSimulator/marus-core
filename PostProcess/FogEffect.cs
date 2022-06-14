@@ -2,7 +2,10 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 using System;
-using Crest;
+// #if CREST_OCEAN
+//     using Crest;
+// #endif
+using Marus.Ocean;
 
 [Serializable, VolumeComponentMenu("Post-processing/Custom/FogEffect")]
 public sealed class FogEffect : CustomPostProcessVolumeComponent, IPostProcessComponent
@@ -13,7 +16,17 @@ public sealed class FogEffect : CustomPostProcessVolumeComponent, IPostProcessCo
 
     Material m_Material;
 
-    public bool IsActive() => m_Material != null && intensity.value > 0f && OceanRenderer.Instance.ViewerHeightAboveWater < 0f; 
+    float waterLevelHeight = 1f;
+
+    public bool IsActive()
+    {
+        waterLevelHeight = WaterHeightSampler.Instance.GetWaterLevel(Camera.current.transform.position);
+        if (m_Material != null && waterLevelHeight < 0f)
+        {
+            return true;
+        }
+        return false;
+    }
 
     // Do not forget to add this post process in the Custom Post Process Orders list (Project Settings > Graphics > HDRP Settings).
     public override CustomPostProcessInjectionPoint injectionPoint => CustomPostProcessInjectionPoint.AfterPostProcess;
