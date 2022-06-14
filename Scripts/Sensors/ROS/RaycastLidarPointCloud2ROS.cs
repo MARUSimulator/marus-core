@@ -149,7 +149,7 @@ namespace Marus.Sensors
                 }
             );
             var numOfPoints = readings.Count(r => r.IsValid);
-            var pointSize = sizeof(float) * 3 + sizeof(int)*3;
+            var pointSize = sizeof(float) * 3 + sizeof(int)*2 + sizeof(uint);
             var byteLength = numOfPoints * pointSize;
             pointCloud.Height = 1;
             pointCloud.Width = (uint) numOfPoints;
@@ -167,7 +167,7 @@ namespace Marus.Sensors
                 Buffer.BlockCopy( BitConverter.GetBytes( points[i].z ), 0, bytes, j*pointSize + 8, 4 );
                 Buffer.BlockCopy( BitConverter.GetBytes( (int) readings[i].Intensity ), 0, bytes, j*pointSize + 12, 4);
                 Buffer.BlockCopy( BitConverter.GetBytes( (int) readings[i].Ring ), 0, bytes, j*pointSize + 16, 4);
-                Buffer.BlockCopy( BitConverter.GetBytes( (int) readings[i].Time ), 0, bytes, j*pointSize + 20, 4);
+                Buffer.BlockCopy( BitConverter.GetBytes( (long) readings[i].Time ), 0, bytes, j*pointSize + 20, 4);
                 j++;
             }
             pointCloud.RowStep = (uint) byteLength;

@@ -168,7 +168,7 @@ namespace Marus.Sensors
                 }
             }
             reading.Ring = index % HeightRes;
-            reading.Time = (uint) (DateTime.Now.Millisecond);
+            reading.Time = (uint) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
             reading.Intensity = 255;
             return reading;
         }
