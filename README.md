@@ -16,11 +16,6 @@ gRPC ROS adapter implemented in our [ros package](https://github.com/MARUSimulat
 
 For usage information, visit our [MarusExample project repository.](https://github.com/MARUSimulator/marus-example)
 
-## Underwater render
-* Create new Global Volume
-* Create new volume profile
-* Add override -> add FogEffect and Underwater PP
-* In project settings -> hdrp global settings -> custom post process orders -> after post process -> add FogEffect and Underwater PP
 
 ## Documentation
 * [API Documentation]()
