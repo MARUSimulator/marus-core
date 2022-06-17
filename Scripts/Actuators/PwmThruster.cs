@@ -14,6 +14,7 @@
 
 using Marus.Actuators.Datasheets;
 using Marus.Logger;
+using Marus.Ocean;
 using Marus.Utils;
 using UnityEngine;
 
@@ -114,9 +115,17 @@ namespace Marus.Actuators
         /// <returns></returns>
         public Vector3 ApplyPwm(float pwmIn)
         {
+            var level = WaterHeightSampler.Instance.GetWaterLevel(transform.position);
+            Debug.Log($"POS {transform.position.y}, LEVEL: {level}");
+            if (transform.position.y > level)
+            {
+                lastForceRequest = 0f;
+                return Vector3.zero;
+            }
+
             int step = (int)((pwmIn+1) / sheetStep); // push it to the range 0-2
 
-            // from kgf to N       
+            // from kgf to N
             lastForceRequest = sheetData[step] * 9.80665f;
             timeSinceForceRequest = 0.0f;
 
@@ -129,7 +138,7 @@ namespace Marus.Actuators
             // from N to kgf
             force /= 9.80665f;
             var closestIndex = BinarySearch(sheetData, force);
-            
+
             return closestIndex * sheetStep - 1;
         }
 

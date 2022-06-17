@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Marus.Core;
 using Marus.NoiseDistributions;
 using Marus.Utils;
 using Std;
@@ -99,9 +100,20 @@ namespace Marus.Sensors.Primitive
             rb = GetComponent<Rigidbody>();
         }
 
+
+        // // DEBUG TEST
+        // void FixedUpdate()
+        // {
+        //     var veh_rb = Helpers.GetComponentInParents<Rigidbody>(transform.parent.gameObject);
+        //     veh_rb.AddRelativeTorque(new Vector3(0f, 0f, 0.2f), ForceMode.Acceleration);
+        //     var orientation = Quaternion.Euler(eulerAngles);
+        //     orientation = orientation.Unity2Map();
+        //     Debug.Log(orientation.eulerAngles);
+        // }
+
         protected override void SampleSensor()
         {
-            
+
             double timeElapsed = Time.timeAsDouble - _lastSampleTime;
             _lastSampleTime = Time.timeAsDouble;
 

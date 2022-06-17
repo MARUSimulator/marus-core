@@ -38,8 +38,6 @@ namespace Marus.Sensors
 
         public float SampleFrequency = 20;
 
-        public bool streamInFixedUpdate = false;
-
         protected Transform _vehicle;
         [NonSerialized] public bool hasData;
 
@@ -50,7 +48,7 @@ namespace Marus.Sensors
                 _vehicle = Helpers.GetVehicle(transform);
                 if (_vehicle == null)
                 {
-                    Debug.Log($@"Cannot get vehicle from sensor {transform.name}. 
+                    Debug.Log($@"Cannot get vehicle from sensor {transform.name}.
                         Using sensor as the vehicle transform");
                     return transform;
                 }
@@ -105,7 +103,7 @@ namespace Marus.Sensors
     /// Sensor streams readings to the server defined in RosConnection singleton instance
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class SensorStreamer<TClient, TMsg> : MonoBehaviour 
+    public abstract class SensorStreamer<TClient, TMsg> : MonoBehaviour
         where TClient : ClientBase
         where TMsg : IMessage
     {
@@ -155,7 +153,7 @@ namespace Marus.Sensors
                 _vehicle = Helpers.GetVehicle(transform);
                 if (_vehicle == null)
                 {
-                    Debug.Log($@"Cannot get vehicle from sensor {transform.name}. 
+                    Debug.Log($@"Cannot get vehicle from sensor {transform.name}.
                         Using sensor as the vehicle transform");
                     return transform;
                 }
@@ -186,25 +184,19 @@ namespace Marus.Sensors
         }
 
         double cumulativeTime = 0;
-        protected void Update()
-        {
-            if(!_sensor.streamInFixedUpdate)
-                TrySendMessage();
-        }
         protected void FixedUpdate()
         {
-            if(_sensor.streamInFixedUpdate)
-                TrySendMessage();
+            TrySendMessage();
         }
 
         protected void TrySendMessage()
         {
-            
+
             cumulativeTime += (Time.inFixedTimeStep ? Time.fixedDeltaTime : Time.deltaTime);
             if (cumulativeTime >= (1.0f / UpdateFrequency - 0.0001f))
             {
                 cumulativeTime = 0;
-                if (_sensor.hasData)
+                if (_sensor.hasData && RosConnection.Instance.IsConnected)
                 {
                     SendMessage();
                     _sensor.hasData = false;

@@ -16,6 +16,7 @@ using System;
 using UnityEngine;
 using Marus.Utils;
 using Std;
+using Marus.Core;
 
 namespace Marus.Sensors.Primitive
 {
@@ -39,11 +40,17 @@ namespace Marus.Sensors.Primitive
         [ReadOnly] public Vector3 LinearVelocity;
         [ReadOnly] public Vector3 AngularVelocity;
 
-        public Rigidbody measuredObject;
-      
+        Rigidbody measuredObject;
+
         void Start()
         {
             measuredObject = Helpers.GetParentRigidBody(transform);
+            if (measuredObject == null)
+            {
+                enabled = false;
+                Debug.Log("No rigid body attached to the parent. ");
+                return;
+            }
         }
 
         protected override void SampleSensor()

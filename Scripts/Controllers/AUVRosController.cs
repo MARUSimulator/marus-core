@@ -31,9 +31,7 @@ namespace Marus.Actuators
     public class AUVRosController : MonoBehaviour
     {
 
-        public float linSpeed = 2f;
-        public float rotSpeed = 700f;
-        public string vehId = "veh";
+        public string address;
         public ThrusterController thrusterController;
 
         Transform _targetTransform;
@@ -41,14 +39,17 @@ namespace Marus.Actuators
         ServerStreamer<ForceResponse> _streamer;
 
         // Start is called before the first frame update
-        void Awake()
+        void Start()
         {
             _targetTransform = transform;
             _streamer = new ServerStreamer<ForceResponse>(UpdateMovement);
             var client = RosConnection.Instance.GetClient<RemoteControlClient>();
-            var address = Helpers.GetVehicle(transform)?.name ?? name;
+            if (string.IsNullOrEmpty(address))
+            {
+                address = $"{Helpers.GetVehicle(transform)?.name ?? name}/pwm_out";
+            }
             _streamer.StartStream(client.ApplyForce(
-                new ForceRequest { Address = $"{address}/pwm_out" },
+                new ForceRequest { Address = address },
                 cancellationToken: RosConnection.Instance.CancellationToken)
             );
         }

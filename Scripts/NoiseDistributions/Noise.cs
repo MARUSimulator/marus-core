@@ -58,16 +58,18 @@ namespace Marus.NoiseDistributions
             typeof(string), typeof(int), typeof(float)
         };
 
+        readonly static Type _noNoiseType = typeof(NoNoise);
+
         /// <summary>
         /// Exclude assemblies where noise types are searched
         /// </summary>
         /// <value></value>
         readonly static List<string> _excludeAssemblies = new List<string>
-        { 
+        {
             "EditMode", "PlayMode", "TestUtils"
         };
 
-        static BindingFlags _fieldFlags = 
+        static BindingFlags _fieldFlags =
             BindingFlags.Instance | BindingFlags.Public;
 
 
@@ -76,7 +78,7 @@ namespace Marus.NoiseDistributions
         /// </summary>
         public static IReadOnlyList<Type> NoiseTypes
         {
-            get 
+            get
             {
                 if (_noiseTypes == null)
                 {
@@ -93,6 +95,10 @@ namespace Marus.NoiseDistributions
         /// <returns></returns>
         public static float Sample(in NoiseParameters parameters)
         {
+            var name = parameters.NoiseTypeFullName;
+            if (string.IsNullOrEmpty(name) || name == _noNoiseType.Name)
+                return 0;
+
             var instance = GetNoiseInstance(parameters.NoiseTypeFullName);
             if (instance == null)
             {
@@ -137,12 +143,14 @@ namespace Marus.NoiseDistributions
         private static INoise GetNoiseInstance(string typeFullName)
         {
             INoise noise;
+
+
             if (_noiseInstances.TryGetValue(typeFullName, out noise))
             {
                 return noise;
             }
-            
-            var typ = NoiseTypes.FirstOrDefault(x => 
+
+            var typ = NoiseTypes.FirstOrDefault(x =>
                     x.FullName == typeFullName);
 
             if (typ == null)

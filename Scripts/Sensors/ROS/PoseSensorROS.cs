@@ -20,6 +20,7 @@ using UnityEngine;
 using Marus.Core;
 using Std;
 using static Sensorstreaming.SensorStreaming;
+using Geometry;
 
 namespace Marus.Sensors.Primitive
 {
@@ -36,31 +37,46 @@ namespace Marus.Sensors.Primitive
             sensor = GetComponent<PoseSensor>();
             if (string.IsNullOrEmpty(address))
                 address = sensor.vehicle.name + "/pose";
-            StreamSensor(sensor, 
+            StreamSensor(sensor,
                 streamingClient.StreamPoseSensor);
         }
 
         protected async override void SendMessage()
         {
-            var toRad = sensor.orientation.eulerAngles * Mathf.Deg2Rad;
+            var orientation = sensor.orientation.Unity2Map();
             var toEnu = sensor.position.Unity2Map();
+            var linVel = sensor.linearVelocity.Unity2Body();
+            var angVel = sensor.angularVelocity.Unity2Body();
             await _streamWriter.WriteAsync(new PoseStreamingRequest
             {
                 Address = address,
-                Data = new NavigationStatus
+                Data = new PoseWithCovarianceStamped
                 {
                     Header = new Header
                     {
                         FrameId = sensor.frameId,
                         Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
                     },
-                    Position = new NED
+                    Pose = new PoseWithCovariance
                     {
-                        North = toEnu.y,
-                        East = toEnu.x,
-                        Depth = - toEnu.z
-                    },
-                    Orientation = toRad.Unity2Map().AsMsg()
+                        Pose = new Geometry.Pose()
+                        {
+                            Position = new Point
+                            {
+                                X = toEnu.x,
+                                Y = toEnu.y,
+                                Z = toEnu.z
+
+                            },
+                            Orientation = new Geometry.Quaternion
+                            {
+                                W = orientation.w,
+                                X = orientation.x,
+                                Y = orientation.y,
+                                Z = orientation.z
+                            }
+                        }
+                    }
                 }
             });
         }

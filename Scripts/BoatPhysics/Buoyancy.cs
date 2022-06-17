@@ -30,14 +30,15 @@ public class Buoyancy : MonoBehaviour
 {
     //	public Ocean ocean;
 
-    public float density = 200;
     public int slicesPerAxis = 5;
     public bool isConcave = false;
     public float deltaCBG = 0.0f;
     private const int voxelsLimit = 10000;
 
     public float drag = 0.05f;
+    public float volume = 0.05f;
     public float fluidDensity = 1000;
+    public float forceMultiplier = 1f;
 
     private float voxelHalfHeight;
     private Vector3 localArchimedesForce;
@@ -78,14 +79,12 @@ public class Buoyancy : MonoBehaviour
         rigidbody.centerOfMass = transform.InverseTransformPoint(bounds.center);
         voxels = SliceIntoVoxels(isConcave);
 
-        float volume = rigidbody.mass / density;
-
         WeldPoints(voxels, voxelsLimit);
 
         float totalBuoyancyForce = fluidDensity * Mathf.Abs(Physics.gravity.y) * volume;
         localArchimedesForce = new Vector3(0, totalBuoyancyForce, 0) / voxels.Count;
 
-        Debug.Log(string.Format("[Buoyancy.cs] Name=\"{0}\" volume={1:0.0}, mass={2:0.0}, density={3:0.0}", name, volume, rigidbody.mass, density));
+        Debug.Log(string.Format("[Buoyancy.cs] Name=\"{0}\", mass={1:0.0}, density={2:0.0}", name, volume, rigidbody.mass));
     }
 
     /// <summary>
@@ -264,8 +263,8 @@ public class Buoyancy : MonoBehaviour
                 }
 
                 var velocity = rigidbody.GetPointVelocity(globalPoints[i]);
-                var localDampingForce = -velocity * drag * rigidbody.mass;
-                var force = localDampingForce + Mathf.Sqrt(k) * localArchimedesForce;
+                var localDampingForce = -velocity * drag * rigidbody.mass / voxels.Count;
+                var force = localDampingForce + Mathf.Sqrt(k) * localArchimedesForce * forceMultiplier;
                 rigidbody.AddForceAtPosition(force, globalPoints[i]);
 
                 forces.Add(new[] { globalPoints[i], force }); // For drawing force gizmos

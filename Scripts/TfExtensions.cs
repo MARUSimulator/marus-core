@@ -24,30 +24,34 @@ namespace Marus.Core
         {
             return new Vector3(vector3.x, vector3.z, vector3.y);
         }
-        
+
         /// Use this conversion when translating global coordinates from Unity to ROS Map (ENU) frame.
         public static Vector3 Unity2Map(this Vector3 vector3)
         {
             return new Vector3(vector3.x, vector3.z, vector3.y);
         }
-        
+
         public static Quaternion Map2Unity(this Quaternion quaternion)
         {
-            return new Quaternion(-quaternion.x, -quaternion.z, -quaternion.y, quaternion.w);
-        } 
+            var quat = new Quaternion(-quaternion.x, -quaternion.z, -quaternion.y, quaternion.w);
+            // angle from front vector (z) to standardized east (x)
+            return quat * Quaternion.Euler(0, 90, 0);
+        }
 
         /// Use this conversion when translating global rotation from Unity to ROS Map (ENU) frame.
         public static Quaternion Unity2Map(this Quaternion quaternion)
         {
-            return new Quaternion(-quaternion.x, -quaternion.z, -quaternion.y, quaternion.w);
+            // angle from standardized east (x) to front vector (z)
+            var quat = quaternion * Quaternion.Euler(0, -90, 0);
+            return new Quaternion(-quat.x, -quat.z, -quat.y, quat.w);
         }
-        
+
         /// Use this conversion when translating local coordinates from Unity to ROS Forward-Left-Up body frames.
         public static Vector3 Unity2Body(this Vector3 vector3)
         {
             return new Vector3(vector3.z, -vector3.x, vector3.y);
         }
-        
+
         /// Use this conversion when translating local rotations from Unity to ROS Forward-Left-Up body frames.
         public static Quaternion Unity2Body(this Quaternion quaternion)
         {

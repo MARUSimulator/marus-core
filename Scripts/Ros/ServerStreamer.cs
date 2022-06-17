@@ -98,7 +98,7 @@ namespace Marus.Networking
 
         /// <summary>
         /// Handle newly received messages from stream
-        /// Call given callback method with received message 
+        /// Call given callback method with received message
         /// </summary>
         /// <param name="onResponseMsg"></param>
         public void HandleNewMessages()

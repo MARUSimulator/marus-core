@@ -37,8 +37,8 @@ namespace Marus.Sensors
 
         [Space]
         [Header("Camera Parameters")]
-        public int PixelWidth = 2448;
-        public int PixelHeight = 2048;
+        public int PixelWidth = 1920;
+        public int PixelHeight = 1024;
         public float FarPlane = 10000f;
         public float NearPlane = 0.08f;
         public float focalLengthMilliMeters = 5.5f;

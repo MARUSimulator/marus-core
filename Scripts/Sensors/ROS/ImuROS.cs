@@ -34,7 +34,7 @@ namespace Marus.Sensors.Primitive
             sensor = GetComponent<ImuSensor>();
             if (string.IsNullOrEmpty(address))
                 address = $"{sensor.vehicle.name}/imu";
-            StreamSensor(sensor, 
+            StreamSensor(sensor,
                 streamingClient.StreamImuSensor);
         }
 
@@ -48,9 +48,10 @@ namespace Marus.Sensors.Primitive
                     Timestamp = TimeHandler.Instance.TimeDouble
                 },
                 Orientation = sensor.orientation.Unity2Map().AsMsg(),
-                AngularVelocity = (-sensor.angularVelocity).Unity2Body().AsMsg(),
+                AngularVelocity = (-sensor.angularVelocity).Unity2Body().AsMsg(), // left hand to right hand systems
                 LinearAcceleration = sensor.linearAcceleration.Unity2Body().AsMsg(),
             };
+            // Debug.Log(sensor.orientation.Unity2Map().eulerAngles);
             imuOut.OrientationCovariance.AddRange(sensor.orientationCovariance);
             imuOut.LinearAccelerationCovariance.AddRange(sensor.linearAccelerationCovariance);
             imuOut.AngularVelocityCovariance.AddRange(sensor.angularVelocityCovariance);

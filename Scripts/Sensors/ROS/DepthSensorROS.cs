@@ -27,7 +27,6 @@ namespace Marus.Sensors.ROS
     [RequireComponent(typeof(DepthSensor))]
     public class DepthSensorROS : SensorStreamer<SensorStreamingClient, DepthStreamingRequest>
     {
-        double depth;
         public double covariance;
         DepthSensor sensor;
 
@@ -61,7 +60,7 @@ namespace Marus.Sensors.ROS
                             {
                                 X = 0,
                                 Y = 0,
-                                Z = depth
+                                Z = sensor.depth
                             },
                             Orientation = new Quaternion() { }
                         }
