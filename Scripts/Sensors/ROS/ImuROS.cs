@@ -51,7 +51,6 @@ namespace Marus.Sensors.Primitive
                 AngularVelocity = (-sensor.angularVelocity).Unity2Body().AsMsg(), // left hand to right hand systems
                 LinearAcceleration = sensor.linearAcceleration.Unity2Body().AsMsg(),
             };
-            // Debug.Log(sensor.orientation.Unity2Map().eulerAngles);
             imuOut.OrientationCovariance.AddRange(sensor.orientationCovariance);
             imuOut.LinearAccelerationCovariance.AddRange(sensor.linearAccelerationCovariance);
             imuOut.AngularVelocityCovariance.AddRange(sensor.angularVelocityCovariance);

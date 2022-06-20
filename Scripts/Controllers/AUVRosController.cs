@@ -54,7 +54,7 @@ namespace Marus.Actuators
             );
         }
 
-        void Update()
+        void FixedUpdate()
         {
             _streamer.HandleNewMessages();
         }

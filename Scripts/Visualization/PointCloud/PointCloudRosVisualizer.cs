@@ -50,7 +50,7 @@ namespace Marus.Visualization
             int MAX_POINTS = 1000000;
 
             _serverStreamer = new ServerStreamer<PointCloud2StreamingRequest>(UpdatePointCloud);
-            _serverStreamer.mode = ServerStreamer<PointCloud2StreamingRequest>.MessageHandleMode.Sequential;
+            _serverStreamer.mode = MessageHandleMode.Sequential;
             transform.parent = RosConnection.Instance.transform;
             RosConnection.Instance.OnConnected += OnConnected;
             points = new Vector3[MAX_POINTS];

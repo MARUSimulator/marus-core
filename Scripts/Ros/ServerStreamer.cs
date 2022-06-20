@@ -18,9 +18,17 @@ using System.Linq;
 using System.Threading;
 using Google.Protobuf;
 using Grpc.Core;
+using Marus.Core;
+using Marus.CustomInspector;
 
 namespace Marus.Networking
 {
+    public enum MessageHandleMode
+    {
+        DropAndTakeLast = 1,
+        Sequential,
+        Latch
+    }
     public class ServerStreamer<T> where T : IMessage
     {
         private Action<T> _onMessage;
@@ -29,14 +37,11 @@ namespace Marus.Networking
             _onMessage = onMessage;
         }
 
-        public enum MessageHandleMode
-        {
-            DropAndTakeLast = 1,
-            Sequential,
-        }
 
         public MessageHandleMode mode = MessageHandleMode.DropAndTakeLast;
         public bool IsStreaming { get; private set; }
+
+        public float LatchTimeout = 0.2f;
 
         /// <summary>
         /// Set this in the Awake() method of the sensor script.
@@ -52,9 +57,12 @@ namespace Marus.Networking
 
         Thread _handleStreamThread;
 
+        T _lastMsg;
+        double _timeSinceLastMsg;
+
         /// <summary>
         /// Start streaming given stream
-        /// 
+        ///
         /// On every message, call given callback method
         /// </summary>
         /// <param name="streamHandle"></param>
@@ -112,12 +120,14 @@ namespace Marus.Networking
                         _onMessage(result);
                     }
                 }
-                else if (mode == MessageHandleMode.DropAndTakeLast)
+                else if (mode == MessageHandleMode.DropAndTakeLast
+                    || mode == MessageHandleMode.Latch)
                 {
-                    var last = _responseBuffer.LastOrDefault();
-                    if (last != null)
+                    _timeSinceLastMsg = TimeHandler.Instance.TimeDouble;
+                    _lastMsg = _responseBuffer.LastOrDefault();
+                    if (_lastMsg != null)
                     {
-                        _onMessage(last);
+                        _onMessage(_lastMsg);
                         // clear queue, leave last element
                         while (_responseBuffer.Count > 0 && _responseBuffer.TryDequeue(out var item))
                         {
@@ -125,6 +135,12 @@ namespace Marus.Networking
                         }
                     }
                 }
+            }
+            else if (mode == MessageHandleMode.Latch)
+            {
+                var delta = TimeHandler.Instance.TimeDouble - _timeSinceLastMsg;
+                if (_lastMsg != null && LatchTimeout < delta)
+                    _onMessage(_lastMsg);
             }
         }
     }

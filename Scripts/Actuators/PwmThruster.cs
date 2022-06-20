@@ -23,6 +23,8 @@ namespace Marus.Actuators
     public class PwmThruster : MonoBehaviour
     {
 
+        const float G = 9.80665f;
+
         public enum AllowedVoltages
         {
             V10 = 10,
@@ -40,13 +42,9 @@ namespace Marus.Actuators
         float[] sheetData;
         float sheetStep;
 
-        [SerializeField, Range(0f, 1f), Tooltip("Time to latch last pwm request. To avoid losing thrust.")]
-        public float forceLatchTime = 0.2f;
-
         [ReadOnly, SerializeField]
-        private float lastForceRequest;
+        private float force;
         [ReadOnly, SerializeField]
-        private float timeSinceForceRequest = 0.0f;
 
         Rigidbody _vehicleBody;
         Transform _vehicle;
@@ -62,7 +60,7 @@ namespace Marus.Actuators
                 _vehicle = Helpers.GetVehicle(transform);
                 if (_vehicle == null)
                 {
-                    Debug.Log($@"Cannot get vehicle from sensor {transform.name}. 
+                    Debug.Log($@"Cannot get vehicle from sensor {transform.name}.
                         Using sensor as the vehicle transform");
                     return transform;
                 }
@@ -116,27 +114,29 @@ namespace Marus.Actuators
         public Vector3 ApplyPwm(float pwmIn)
         {
             var level = WaterHeightSampler.Instance.GetWaterLevel(transform.position);
-            Debug.Log($"POS {transform.position.y}, LEVEL: {level}");
             if (transform.position.y > level)
             {
-                lastForceRequest = 0f;
+                force = 0f;
                 return Vector3.zero;
             }
 
+            Debug.Log(pwmIn);
             int step = (int)((pwmIn+1) / sheetStep); // push it to the range 0-2
 
             // from kgf to N
-            lastForceRequest = sheetData[step] * 9.80665f;
-            timeSinceForceRequest = 0.0f;
+            force = sheetData[step] * G;
 
-            _logger.Log(new PwmLogRecord { PwmIn = pwmIn, Force = transform.forward * lastForceRequest});
-            return transform.forward * lastForceRequest;
+            Vector3 forceVec = transform.forward * force;
+            _vehicleBody.AddForceAtPosition(forceVec, transform.position, ForceMode.Force);
+
+            _logger.Log(new PwmLogRecord { PwmIn = pwmIn, Force = forceVec});
+            return forceVec;
         }
 
         public float GetPwmForForce(float force)
         {
             // from N to kgf
-            force /= 9.80665f;
+            force /= G;
             var closestIndex = BinarySearch(sheetData, force);
 
             return closestIndex * sheetStep - 1;
@@ -158,16 +158,6 @@ namespace Marus.Actuators
                     return mid;
             } while (first <= last);
             return mid;
-        }
-
-        void FixedUpdate()
-        {
-            if(timeSinceForceRequest <= 0.2f)
-            {
-                Vector3 force = transform.forward * lastForceRequest;
-                _vehicleBody.AddForceAtPosition(force, transform.position, ForceMode.Force);
-            }
-            timeSinceForceRequest += Time.fixedDeltaTime;
         }
 
         private class PwmLogRecord
