@@ -43,6 +43,8 @@ namespace Marus.Actuators
         {
             _targetTransform = transform;
             _streamer = new ServerStreamer<ForceResponse>(UpdateMovement);
+            _streamer.mode = MessageHandleMode.Latch;
+            
             var client = RosConnection.Instance.GetClient<RemoteControlClient>();
             if (string.IsNullOrEmpty(address))
             {

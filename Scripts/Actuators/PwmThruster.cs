@@ -44,7 +44,8 @@ namespace Marus.Actuators
 
         [ReadOnly, SerializeField]
         private float force;
-        [ReadOnly, SerializeField]
+
+        public bool debug = false;
 
         Rigidbody _vehicleBody;
         Transform _vehicle;
@@ -120,7 +121,6 @@ namespace Marus.Actuators
                 return Vector3.zero;
             }
 
-            Debug.Log(pwmIn);
             int step = (int)((pwmIn+1) / sheetStep); // push it to the range 0-2
 
             // from kgf to N
@@ -128,6 +128,12 @@ namespace Marus.Actuators
 
             Vector3 forceVec = transform.forward * force;
             _vehicleBody.AddForceAtPosition(forceVec, transform.position, ForceMode.Force);
+
+            if(debug)
+            {
+                float max_force = sheetData[(int) (2.0 / sheetStep)] * 9.80665f;
+                Debug.DrawRay(transform.position, forceVec / max_force / 2.0f, Color.yellow);
+            }
 
             _logger.Log(new PwmLogRecord { PwmIn = pwmIn, Force = forceVec});
             return forceVec;

@@ -178,8 +178,11 @@ namespace Marus.ROS
                 // if no parent is assigned, assume it is global position and transform to ENU frame
                 _rotation =  transform.rotation.Unity2Map() * new Quaternion(0,0, 1/Mathf.Sqrt(2), 1/Mathf.Sqrt(2));
                 _translation = transform.position.Unity2Map();
-                
             }
+            // round to 4 decimal places as the resolution is sufficiently precise for tf offset
+            // but sensors with rigidbodies won't oscillate around small values
+            _rotation = _rotation.Round(4);
+            _translation = _translation.Round(4);
         }
 
         protected async void SendMessage()

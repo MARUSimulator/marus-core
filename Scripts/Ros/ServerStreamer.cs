@@ -58,7 +58,7 @@ namespace Marus.Networking
         Thread _handleStreamThread;
 
         T _lastMsg;
-        double _timeSinceLastMsg;
+        double _timeOfLastMsg;
 
         /// <summary>
         /// Start streaming given stream
@@ -123,7 +123,7 @@ namespace Marus.Networking
                 else if (mode == MessageHandleMode.DropAndTakeLast
                     || mode == MessageHandleMode.Latch)
                 {
-                    _timeSinceLastMsg = TimeHandler.Instance.TimeDouble;
+                    _timeOfLastMsg = TimeHandler.Instance.TimeDouble;
                     _lastMsg = _responseBuffer.LastOrDefault();
                     if (_lastMsg != null)
                     {
@@ -138,8 +138,8 @@ namespace Marus.Networking
             }
             else if (mode == MessageHandleMode.Latch)
             {
-                var delta = TimeHandler.Instance.TimeDouble - _timeSinceLastMsg;
-                if (_lastMsg != null && LatchTimeout < delta)
+                var delta = TimeHandler.Instance.TimeDouble - _timeOfLastMsg;
+                if (_lastMsg != null && LatchTimeout >= delta)
                     _onMessage(_lastMsg);
             }
         }
