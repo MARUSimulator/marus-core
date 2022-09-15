@@ -17,6 +17,7 @@ using Google.Protobuf;
 using Sensorstreaming;
 using System;
 using Marus.Networking;
+using Marus.Core;
 using static Sensorstreaming.SensorStreaming;
 
 namespace Marus.Sensors
@@ -32,8 +33,8 @@ namespace Marus.Sensors
         {
             sensor = GetComponent<CameraSensor>();
             if (string.IsNullOrEmpty(address))
-                address = sensor.vehicle.name + "/" + sensor.gameObject.name;
-            StreamSensor(sensor, 
+                address = sensor.vehicle.name + "/camera";
+            StreamSensor(sensor,
                 streamingClient.StreamCameraSensor);
         }
 
@@ -43,11 +44,18 @@ namespace Marus.Sensors
             {
                 await _streamWriter.WriteAsync(new CameraStreamingRequest
                 {
-                    Data = ByteString.CopyFrom(sensor.Data),
-                    TimeStamp = Time.time,
-                    Address = address,
-                    Height = (uint)(sensor.ImageHeight),
-                    Width = (uint)(sensor.ImageWidth)
+                    Image = new Sensor.Image
+                    {
+                        Header = new Std.Header
+                        {
+                            FrameId = sensor.frameId,
+                            Timestamp = TimeHandler.Instance.TimeDouble
+                        },
+                        Data = ByteString.CopyFrom(sensor.Data),
+                        Height = (uint)(sensor.ImageHeight),
+                        Width = (uint)(sensor.ImageWidth)
+                    },
+                    Address = address
                 });
             }
             catch (Exception e)
