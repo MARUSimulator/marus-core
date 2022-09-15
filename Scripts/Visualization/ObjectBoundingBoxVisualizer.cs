@@ -23,11 +23,10 @@ namespace Marus.Visualization
 {
 
     [DefaultExecutionOrder(100)]
-	public class ObjectBoundingBoxVisualizer : MonoBehaviour
+    public class ObjectBoundingBoxVisualizer : MonoBehaviour
     {
 
         public CameraObjectDetectionSaver Annotator;
-        public GameObject VisualIndicator;
         public NoiseParameters boundingBoxNoise;
         public int VertexStep = 20;
 
@@ -133,15 +132,7 @@ namespace Marus.Visualization
             {
                 className = obj.name;
             }
-            // var r = Random.Range(0f, 1f);
 
-            // string[] names = new string[] {"Vessel A", "Vessel B", "Vessel C", "Vessel D","Vessel E","Vessel F", "Vessel G"};
-
-            // if (r > 0.9)
-            // {
-            //     var r2 = (int) Random.Range(0, 6);
-            //     className = names[r2];
-            // }
             GUI.Label(new Rect(lg.x, Screen.height - lg.y - 50, bounds.width, 50), className, style);
 
             var canvas = canvasMap[CameraView.targetDisplay].GetComponent<Canvas>();
@@ -157,53 +148,53 @@ namespace Marus.Visualization
 
 public static class ScreenGizmos
 {
-	private const float offset = 0.001f;
+    private const float offset = 0.001f;
 
-	/// <summary>
-	/// Draws a line in screen space between the 
-	/// <paramref name="startPixelPos"/> and the 
-	/// <paramref name="endPixelPos"/>. 
-	/// </summary>
-	public static void DrawLine(
-		Canvas canvas, 
-		Camera camera, 
-		Vector3 startPixelPos, 
-		Vector3 endPixelPos)
-	{
-		if (camera == null || canvas == null)
-			return;
+    /// <summary>
+    /// Draws a line in screen space between the
+    /// <paramref name="startPixelPos"/> and the
+    /// <paramref name="endPixelPos"/>.
+    /// </summary>
+    public static void DrawLine(
+        Canvas canvas,
+        Camera camera,
+        Vector3 startPixelPos,
+        Vector3 endPixelPos)
+    {
+        if (camera == null || canvas == null)
+            return;
 
-		Vector3 startWorld = PixelToCameraClipPlane(
-			camera, 
-			canvas, 
-			startPixelPos);
+        Vector3 startWorld = PixelToCameraClipPlane(
+            camera,
+            canvas,
+            startPixelPos);
 
-		Vector3 endWorld = PixelToCameraClipPlane(
-			camera, 
-			canvas, 
-			endPixelPos);
+        Vector3 endWorld = PixelToCameraClipPlane(
+            camera,
+            canvas,
+            endPixelPos);
 
-		Gizmos.DrawLine(startWorld, endWorld);
-	}
+        Gizmos.DrawLine(startWorld, endWorld);
+    }
 
-	/// <summary>
-	/// Converts the <paramref name="screenPos"/> to world space 
-	/// near the <paramref name="camera"/> near clip plane. The 
-	/// z component of the <paramref name="screenPos"/> 
-	/// will be overriden.
-	/// </summary>
-	private static Vector3 PixelToCameraClipPlane(
-		Camera camera, 
-		Canvas canvas,
-		Vector3 screenPos)
-	{
-		// The canvas scale factor affects the
-		// screen position of all UI elements.
-		screenPos *= canvas.scaleFactor;
+    /// <summary>
+    /// Converts the <paramref name="screenPos"/> to world space
+    /// near the <paramref name="camera"/> near clip plane. The
+    /// z component of the <paramref name="screenPos"/>
+    /// will be overriden.
+    /// </summary>
+    private static Vector3 PixelToCameraClipPlane(
+        Camera camera,
+        Canvas canvas,
+        Vector3 screenPos)
+    {
+        // The canvas scale factor affects the
+        // screen position of all UI elements.
+        screenPos *= canvas.scaleFactor;
 
-		// The z-position defines the distance to the camera
-		// when using Camera.ScreenToWorldPoint.
-		screenPos.z = camera.nearClipPlane + offset;
-		return camera.ScreenToWorldPoint(screenPos);
-	}
+        // The z-position defines the distance to the camera
+        // when using Camera.ScreenToWorldPoint.
+        screenPos.z = camera.nearClipPlane + offset;
+        return camera.ScreenToWorldPoint(screenPos);
+    }
 }
