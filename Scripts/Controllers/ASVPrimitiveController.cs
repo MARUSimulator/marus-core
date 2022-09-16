@@ -63,8 +63,8 @@ public class ASVPrimitiveController : MonoBehaviour
 
     void UpdateMovement(float dt, KeyCode key, float speed)
     {
-        _targetTransform.position += speed * _targetTransform.forward * (key == KeyCode.W ? 1 : 0) * dt;
-        _targetTransform.position -= speed * _targetTransform.forward * (key == KeyCode.S ? 1 : 0) * dt;
+        _targetTransform.position += speed * new Vector3(0, 0, _targetTransform.forward.z) * (key == KeyCode.W ? 1 : 0) * dt;
+        _targetTransform.position -= speed * new Vector3(0, 0, _targetTransform.forward.z) * (key == KeyCode.S ? 1 : 0) * dt;
 
         { // rotation
             float rotate = 0f;
