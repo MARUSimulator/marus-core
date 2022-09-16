@@ -470,5 +470,19 @@
       11.0
     ],
     "RayIntervals": null
+  },
+  {
+    "Name": "marus_lidar",
+    "Type": 0,
+    "Frequency": 20.0,
+    "FrameId": "Lidar_frame",
+    "MaxRange": 230.0,
+    "MinRange": 3.0,
+    "HorizontalResolution": 1024,
+    "VerticalResolution": 64,
+    "HorizontalFieldOfView": 360.0,
+    "VerticalFieldOfView": 40.0,
+    "ChannelAngles": null,
+    "RayIntervals": null
   }
 ]
