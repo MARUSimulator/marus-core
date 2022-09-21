@@ -140,8 +140,8 @@ namespace Marus.Utils
                 for(int i = 0; i < pointcloud.Count; i++)
                 {
                     Buffer.BlockCopy( BitConverter.GetBytes( pointcloud[i].x ), 0, bytes, i*pointSize, 4 );
-                    Buffer.BlockCopy( BitConverter.GetBytes( pointcloud[i].y ), 0, bytes, i*pointSize + 4, 4 );
-                    Buffer.BlockCopy( BitConverter.GetBytes( pointcloud[i].z ), 0, bytes, i*pointSize + 8, 4 );
+                    Buffer.BlockCopy( BitConverter.GetBytes( pointcloud[i].z ), 0, bytes, i*pointSize + 4, 4 );
+                    Buffer.BlockCopy( BitConverter.GetBytes( pointcloud[i].y ), 0, bytes, i*pointSize + 8, 4 );
                     Buffer.BlockCopy( BitConverter.GetBytes( lidarReadings[i].Intensity ), 0, bytes, i*pointSize + 12, 2 );
                 }
                 bw.Write(bytes);
