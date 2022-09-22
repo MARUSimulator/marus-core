@@ -19,6 +19,7 @@ namespace Marus.Sensors
         public bool Valid;
         public float Intensity;
         public float Distance;
-        //public NativeArray<Vector3> Debug;
+        public int ClassId;
+        public int InstanceId;
     }
 }

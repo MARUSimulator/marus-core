@@ -72,7 +72,7 @@ namespace Marus.Sensors
 
             // calculate the "lowest" angle
             var alpha0 = Math.PI / 2 - pitch - vfovOverTwo;
-    
+
             // calculate the "highest" angle
             var alphaN = Math.PI / 2 - pitch + vfovOverTwo;
 
@@ -92,9 +92,6 @@ namespace Marus.Sensors
                 {
                     var verticalAngle = (heightRes == 1) ? 0
                         : (float) Math.Atan((distanceMin + j * x)/ altitude);
-
-                    if(j==0) Debug.Log("vert angle 0 = " + ((Math.PI / 2 - verticalAngle)/Mathf.Deg2Rad));
-                    if(j==(heightRes-1)) Debug.Log("alpha n = " + ((Math.PI / 2 - verticalAngle)/Mathf.Deg2Rad));
 
                     var sinhor = Mathf.Sin(horizontalAngle);
                     var coshor = Mathf.Cos(horizontalAngle);
@@ -354,7 +351,7 @@ namespace Marus.Sensors
         {
             var transform = _obj.transform;
 
-            
+
             var commandsJob = new CreateRaycastCommandsJob();
             commandsJob.commands = _commands;
             commandsJob.maxDistance = _maxDistance;

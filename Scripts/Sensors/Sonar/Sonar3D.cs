@@ -25,6 +25,7 @@ using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using Marus.CustomInspector;
+using Marus.ObjectAnnotation;
 
 namespace Marus.Sensors
 {
@@ -124,7 +125,7 @@ namespace Marus.Sensors
         /// Cartesian and polar texture2D arrays
         /// </summary>
         [HideInInspector]
-        public Texture2D sonarImage, sonarPhotoImage, sonarCartesianImage;
+        public Texture2D sonarImage, sonarPhotoImage, sonarCartesianImage, ClassInstancePolarImage, ClassInstanceImage;
 
         public NativeArray<SonarReading> sonarData;
         int imageCount = 1;
@@ -137,6 +138,8 @@ namespace Marus.Sensors
         Coroutine _coroutine;
         Vector3 sonarPosition;
         NativeArray<Vector3> directionsLocal;
+        private SonarObjectDetectionSaver _saver;
+        private bool saverExists;
 
         void Start()
         {
@@ -147,10 +150,14 @@ namespace Marus.Sensors
             Directory.CreateDirectory(ImageSavePath);
             int totalRays = WidthRes * HeightRes * NumRaysPerAccusticRay;
 
+            _saver = GetComponent<SonarObjectDetectionSaver>();
+            saverExists = _saver is not null && _saver.isActiveAndEnabled == true;
+
             sonarImage = new Texture2D(WidthRes, imageHeight, TextureFormat.RGB24, false);
+            ClassInstancePolarImage = new Texture2D(CartesianXRes, CartesianYRes, TextureFormat.RGB24, false);
             sonarPhotoImage = new Texture2D(WidthRes, HeightRes,TextureFormat.RGB24, false);
             sonarCartesianImage = new Texture2D(CartesianXRes, CartesianYRes, TextureFormat.RGB24, false);
-
+            ClassInstanceImage = new Texture2D(CartesianXRes, CartesianYRes, TextureFormat.RGB24, false);
             sonarData = new NativeArray<SonarReading>(totalRays, Allocator.Persistent);
 
             InitializeRayArray();
@@ -227,9 +234,13 @@ namespace Marus.Sensors
         }
         void OnDestroy()
         {
-            _raycastHelper.Dispose();
-            sonarData.Dispose();
-            directionsLocal.Dispose();
+            try
+            {
+                _raycastHelper.Dispose();
+                sonarData.Dispose();
+                directionsLocal.Dispose();
+            }
+            catch {}
 
         }
 
@@ -237,6 +248,16 @@ namespace Marus.Sensors
         {
             var distance = hit.distance;
             var sonarReading = new SonarReading();
+            (int, int) value;
+            if (saverExists)
+            {
+                if (_saver.objectClassesAndInstances.TryGetValue(hit.colliderInstanceID, out value))
+                {
+                    sonarReading.ClassId = value.Item1;
+                    sonarReading.InstanceId = value.Item2;
+                }
+            }
+
             if (distance < MinDistance || hit.point.y > WATER_LEVEL || hit.point == Vector3.zero) // if above water, it is not hit!
             {
                 sonarReading.Valid = false;
@@ -253,7 +274,7 @@ namespace Marus.Sensors
 
         /// <summary>
         /// Function for composing a X-Y "photographic" image from the raycast pointcloud, as seen from the sonar. 
-        /// Used optionally. 
+        /// Used optionally.
         /// </summary>
         private void ComposePhotoImage(NativeArray<SonarReading> reading)
         {
@@ -284,6 +305,7 @@ namespace Marus.Sensors
         private void ComposePolarImage(NativeArray<SonarReading> reading)
         {
             Color pixel;
+            Color annPixel;
             int xCoordinate, yCoordinate;
             float[] yIntensity = new float[imageHeight];
             for (var x = 0; x < WidthRes; x++)
@@ -291,8 +313,11 @@ namespace Marus.Sensors
                 //squashing all spatial columns into 2D and adding the intensities
                 for (var y = 0; y < HeightRes; y++)
                 {
-                    yCoordinate = DistanceToImageY(reading[x * HeightRes + y].Distance);
-                    yIntensity[yCoordinate] += reading[x * HeightRes + y].Intensity;
+                    var r = reading[x * HeightRes + y];
+                    yCoordinate = DistanceToImageY(r.Distance);
+                    yIntensity[yCoordinate] += r.Intensity;
+                    annPixel = new Color(r.ClassId/255f, r.InstanceId/255f, yIntensity[yCoordinate], 0);
+                    ClassInstancePolarImage.SetPixel(x, yCoordinate, annPixel);
                 }
 
                 //stacking the intensities into corresponding 2D image columns
@@ -305,6 +330,7 @@ namespace Marus.Sensors
             }
 
             sonarImage.Apply();
+            ClassInstancePolarImage.Apply();
             if (sonarPhotoDisplay is not null)
             {
                 sonarDisplay.texture = sonarImage;
@@ -322,9 +348,10 @@ namespace Marus.Sensors
         /// Beamformed based on the angle distribution, removes object distortion.
         /// Width and height can be set independently, .png image saving optional.
         /// </summary>
-        private void ComposeCartesianImage(NativeArray<SonarReading> reading)
+        private void ComposeCartesianImage(NativeArray<SonarReading> readings)
         {
             Color pixel;
+            Color annPixel;
             int xCoordinate, yCoordinate;
 
             //populate left side of the swath
@@ -341,12 +368,16 @@ namespace Marus.Sensors
                         xCoordinate = (int)Math.Round(((HorizontalFieldOfView / 2) - thetha) / HorizontalFieldOfView * WidthRes);
                         yCoordinate = (int)Math.Round(r / (MaxDistance - MinDistance) * imageHeight);
                         pixel = sonarImage.GetPixel(xCoordinate, yCoordinate);
+                        annPixel = ClassInstancePolarImage.GetPixel(xCoordinate, yCoordinate);
+
                         sonarCartesianImage.SetPixel(CartesianXRes / 2 - x, y, pixel);
+                        ClassInstanceImage.SetPixel(CartesianXRes / 2 - x, y, annPixel);
                     }
                     else
                     {
                         pixel = new Color(1, 1, 1, 1);
                         sonarCartesianImage.SetPixel(CartesianXRes / 2 - x, y, pixel);
+                        ClassInstanceImage.SetPixel(CartesianXRes / 2 - x, y, pixel);
                     }
                 }
 
@@ -366,17 +397,21 @@ namespace Marus.Sensors
                         xCoordinate = (int)Math.Round((thetha + (HorizontalFieldOfView / 2)) / HorizontalFieldOfView * WidthRes);
                         yCoordinate = (int)Math.Round(r / (MaxDistance - MinDistance) * imageHeight);
                         pixel = sonarImage.GetPixel(xCoordinate, yCoordinate);
+                        annPixel = ClassInstancePolarImage.GetPixel(xCoordinate, yCoordinate);
                         sonarCartesianImage.SetPixel(x + CartesianXRes / 2, y, pixel);
+                        ClassInstanceImage.SetPixel(x +CartesianXRes / 2, y, annPixel);
                     }
                     else
                     {
                         pixel = new Color(1, 1, 1, 1);
                         sonarCartesianImage.SetPixel(x + CartesianXRes / 2, y, pixel);
+                        ClassInstanceImage.SetPixel(x + CartesianXRes / 2, y, pixel);
                     }
                 }
             }
 
             sonarCartesianImage.Apply();
+            ClassInstanceImage.Apply();
             if (sonarCartesianDisplay is not null)
             {
                 sonarCartesianDisplay.texture = sonarCartesianImage;
@@ -389,6 +424,5 @@ namespace Marus.Sensors
                 imageCount += 1;
             }
         }
-
     }
 }

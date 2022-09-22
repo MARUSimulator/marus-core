@@ -105,7 +105,7 @@ namespace Marus.Sensors
             }
 
             _saver = GetComponent<PointCloudSegmentationSaver>();
-            saverExists = _saver is not null;
+            saverExists = _saver is not null && _saver.isActiveAndEnabled == true;
             InitializeRayArray();
             Points = new NativeArray<Vector3>(totalRays, Allocator.Persistent);
             Readings = new NativeArray<LidarReading>(totalRays, Allocator.Persistent);
