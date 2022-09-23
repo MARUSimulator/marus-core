@@ -53,6 +53,7 @@ namespace Marus.Sensors
 
         public float VerticalFieldOfView = 30;
         public float HorizontalFieldOfView = 360;
+        public bool VisualizePointcloud = false;
 
         /// <summary>
         /// PointCloud compute shader
@@ -131,7 +132,10 @@ namespace Marus.Sensors
 
         protected override void SampleSensor()
         {
-            _pointCloudManager.UpdatePointCloud(Points);
+            if (VisualizePointcloud)
+            {
+                _pointCloudManager.UpdatePointCloud(Points);
+            }
             _raycastHelper.SampleFrequency = SampleFrequency;
         }
 

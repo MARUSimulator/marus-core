@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -109,21 +109,20 @@ namespace Marus.Visualization
 
         private void VisualizeObjectBounds(GameObject obj, Rect bounds, Camera CameraView, string className="")
         {
-            if ((bounds.width * bounds.height) < 8000) return;
             var ld = new Vector3(bounds.center.x - bounds.width/2f + Noise.Sample(boundingBoxNoise), bounds.center.y - bounds.height/2f + Noise.Sample(boundingBoxNoise), 0);
             var dd = new Vector3(bounds.center.x + bounds.width/2f + Noise.Sample(boundingBoxNoise), bounds.center.y - bounds.height/2f + Noise.Sample(boundingBoxNoise), 0);
             var lg = new Vector3(bounds.center.x - bounds.width/2f + Noise.Sample(boundingBoxNoise), bounds.center.y + bounds.height/2f + Noise.Sample(boundingBoxNoise), 0);
             var dg = new Vector3(bounds.center.x + bounds.width/2f + Noise.Sample(boundingBoxNoise), bounds.center.y + bounds.height/2f + Noise.Sample(boundingBoxNoise), 0);
-            Gizmos.color = Color.red;
+            Gizmos.color = Color.white;
             var pixelRatio = UnityEditor.HandleUtility.GUIPointToScreenPixelCoordinate(Vector2.right).x - UnityEditor.HandleUtility.GUIPointToScreenPixelCoordinate(Vector2.zero).x;
             UnityEditor.Handles.BeginGUI();
-            UnityEditor.Handles.color = Color.red;
+            UnityEditor.Handles.color = Color.white;
             var style = new GUIStyle(GUI.skin.label)
             {
                 fontSize = (int)15,
                 normal = new GUIStyleState() { textColor = Color.white }
             };
-            Vector2 size = style.CalcSize(new GUIContent(name));
+            Vector2 size = style.CalcSize(new GUIContent(className));
             var pos = UnityEditor.HandleUtility.WorldToGUIPoint(obj.transform.position) + new Vector2(100, -50);
             var scr = bounds.center;
             Vector2 convertedGUIPos = GUIUtility.ScreenToGUIPoint(scr);
@@ -133,7 +132,7 @@ namespace Marus.Visualization
                 className = obj.name;
             }
 
-            GUI.Label(new Rect(lg.x, Screen.height - lg.y - 50, bounds.width, 50), className, style);
+            //GUI.Label(new Rect(lg.x, Screen.height - lg.y - 50, bounds.width, 50), className, style);
 
             var canvas = canvasMap[CameraView.targetDisplay].GetComponent<Canvas>();
             ScreenGizmos.DrawLine(canvas, CameraView, ld, dd);
@@ -198,3 +197,4 @@ public static class ScreenGizmos
         return camera.ScreenToWorldPoint(screenPos);
     }
 }
+#endif

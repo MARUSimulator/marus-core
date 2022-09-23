@@ -99,6 +99,11 @@ namespace Marus.Visualization
             _particleMesh.RecalculateBounds();
         }
 
+        public void ClearMesh()
+        {
+            _particleMesh.Clear();
+        }
+
         public static PointCloudManager CreatePointCloud(string name, int numPoints, Material particleMaterial, ComputeShader computeShader)
         {
             GameObject pointCloud = new GameObject(name + "_PointCloud");

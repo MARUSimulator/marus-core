@@ -44,7 +44,7 @@ namespace Marus.Sensors
             UpdateFrequency = Mathf.Min(UpdateFrequency, sensor.SampleFrequency);
             if (string.IsNullOrEmpty(address))
                 address = $"{sensor.vehicle?.name}/lidar";
-            StreamSensor(sensor, 
+            StreamSensor(sensor,
                 streamingClient.StreamPointCloud2);
         }
 
@@ -145,11 +145,18 @@ namespace Marus.Sensors
                         Offset = 20,
                         Datatype = PointField.Types.DataType.Uint32 + 1,
                         Count = 1
+                    },
+                    new PointField()
+                    {
+                        Name = "rgb",
+                        Offset = 24,
+                        Datatype = PointField.Types.DataType.Uint32 + 1,
+                        Count = 1
                     }
                 }
             );
             var numOfPoints = readings.Count(r => r.IsValid);
-            var pointSize = sizeof(float) * 3 + sizeof(int)*2 + sizeof(uint);
+            var pointSize = sizeof(float) * 3 + sizeof(int)*2 + sizeof(uint) + sizeof(byte)*4;
             var byteLength = numOfPoints * pointSize;
             pointCloud.Height = 1;
             pointCloud.Width = (uint) numOfPoints;
@@ -158,16 +165,40 @@ namespace Marus.Sensors
             pointCloud.IsDense = true;
             byte[] bytes = new byte[byteLength];
             int j = 0;
+
+            byte[] color = new byte[4];
             for(int i = 0; i < points.Length; i++)
             {
                 if (!readings[i].IsValid) continue;
+                if (readings[i].ClassId == 2)
+                {
+                    color[0] = (byte) 0;
+                    color[1] = (byte) 0;
+                    color[2] = (byte) 255;
+                    color[3] = (byte) 0;
+                }
+                else if (readings[i].ClassId == 3)
+                {
+                    color[0] = (byte) 0;
+                    color[1] = (byte) 255;
+                    color[2] = (byte) 0;
+                    color[3] =  (byte) 0;
+                }
+                else
+                {
+                    color[0] = (byte) 255;
+                    color[1] = (byte) 255;
+                    color[2] = (byte) 255;
+                    color[3] =  (byte) 0;
+                }
 
                 Buffer.BlockCopy( BitConverter.GetBytes( points[i].x ), 0, bytes, j*pointSize, 4 );
                 Buffer.BlockCopy( BitConverter.GetBytes( points[i].y ), 0, bytes, j*pointSize + 4, 4 );
                 Buffer.BlockCopy( BitConverter.GetBytes( points[i].z ), 0, bytes, j*pointSize + 8, 4 );
                 Buffer.BlockCopy( BitConverter.GetBytes( (int) readings[i].Intensity ), 0, bytes, j*pointSize + 12, 4);
                 Buffer.BlockCopy( BitConverter.GetBytes( (int) readings[i].Ring ), 0, bytes, j*pointSize + 16, 4);
-                Buffer.BlockCopy( BitConverter.GetBytes( (long) readings[i].Time ), 0, bytes, j*pointSize + 20, 4);
+                Buffer.BlockCopy( BitConverter.GetBytes( (uint) readings[i].Time ), 0, bytes, j*pointSize + 20, 4);
+                Buffer.BlockCopy( color, 0, bytes, j*pointSize + 24, 4);
                 j++;
             }
             pointCloud.RowStep = (uint) byteLength;
