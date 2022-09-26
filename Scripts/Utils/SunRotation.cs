@@ -56,7 +56,7 @@
             //180,-30,0 = sunset
             //-90,-30,0 = Midnight
      
-            //sun.transform.localRotation = Quaternion.Euler((timeOfDay / 24) * 360 - 0, -30, 0);
-            sun.transform.eulerAngles = new Vector3(-5 + Time.time * timeMultiplier, 2.2f);
+            sun.transform.rotation = Quaternion.Euler((timeOfDay - 6.3f / 24) * 360, -30, 0);
+            //sun.transform.eulerAngles = new Vector3(-3 + Time.time * timeMultiplier, 2.2f);
         }
     }

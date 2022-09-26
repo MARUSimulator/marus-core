@@ -14,6 +14,7 @@
 
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Marus.Controllers
 {
@@ -22,7 +23,8 @@ namespace Marus.Controllers
     /// </summary>
     public class VesselVelocityController : MonoBehaviour
     {
-        public Transform Target;
+        public List<GameObject> Targets;
+        Transform Target;
         public Boolean stop;
         public float Speed = 0.5f;
         public float RotationSpeed = 1.0f;
@@ -30,13 +32,17 @@ namespace Marus.Controllers
         public float RestartDistance = 5f;
         public bool Use3DTarget = false;
 
+        System.Random random;
+
         public void Awake()
         {
             stop = false;
         }
 
         public void FixedUpdate()
-        { 
+        {
+            random = new System.Random();
+            Target = Targets[random.Next(0, Targets.Count)].transform;
             if (Target == null)
             {
                 return;
@@ -52,13 +58,7 @@ namespace Marus.Controllers
             //Stop the vessel when close enough to target
             if (dist < StoppingDistance)
             {
-                stop = true;
-            }
-
-            //start the vessel when target changed
-            if (stop && dist > RestartDistance)
-            {
-                stop = false;
+                Target = Targets[random.Next(0, Targets.Count)].transform;
             }
 
             if (!stop)

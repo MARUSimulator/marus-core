@@ -305,7 +305,7 @@ namespace Marus.ObjectAnnotation
                 float height = o.Item2.height / (float) ImageHeight;
                 using (StreamWriter sw = File.AppendText(path))
                 {
-                    sw.WriteLine($"{o.Item1.ClassIndex} {x_center} {y_center} {width} {height}");
+                    sw.WriteLine($"{o.Item1.ClassIndex} {x_center} {y_center} {width} {height}".Replace(",", "."));
                 }
             }
         }
@@ -497,11 +497,12 @@ namespace Marus.ObjectAnnotation
 
             using(var tw = new StreamWriter(yamlPath, false))
             {
-                tw.WriteLine($"train: {Path.Combine(_imagesPath, "train")}");
-                tw.WriteLine($"val: {Path.Combine(_imagesPath, "val")}");
+                tw.WriteLine($"path: ./datasets/run{idx}");
+                tw.WriteLine($"train: images/train");
+                tw.WriteLine($"val: images/val");
                 if (GenerateTestSubset)
                 {
-                    tw.WriteLine($"test: {Path.Combine(_imagesPath, "test")}");
+                    tw.WriteLine($"test: images/test");
                 }
                 tw.WriteLine($"nc: {_classList.Count}");
                 _classList.Sort(Comparer<(int, string)>.Default);
