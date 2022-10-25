@@ -34,13 +34,14 @@ namespace Marus.Sensors
     {
         RaycastLidar sensor;
 
-        void Start()
+        new void Start()
         {
+            base.Start();
             sensor = GetComponent<RaycastLidar>();
             UpdateFrequency = Mathf.Min(UpdateFrequency, sensor.SampleFrequency);
             if (string.IsNullOrEmpty(address))
                 address = $"{sensor.vehicle?.name}/lidar";
-            StreamSensor(sensor, 
+            StreamSensor(sensor,
                 streamingClient.StreamPointCloud2);
         }
 
@@ -89,15 +90,14 @@ namespace Marus.Sensors
             return pointCloud;
         }
 
-        protected async override void SendMessage()
+        protected override PointCloud2StreamingRequest ComposeMessage()
         {
             PointCloud2 _pointCloud = GeneratePointCloud2(sensor.Points);
-            var msg = new PointCloud2StreamingRequest()
+            return new PointCloud2StreamingRequest()
             {
                 Data = _pointCloud,
                 Address = address
             };
-            await _streamWriter.WriteAsync(msg);
         }
     }
 }

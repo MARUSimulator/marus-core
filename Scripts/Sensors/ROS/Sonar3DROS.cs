@@ -25,8 +25,9 @@ namespace Marus.Sensors.Primitive
     public class Sonar3DROS : SensorStreamer<SensorStreamingClient, PointCloudStreamingRequest>
     {
         Sonar3D sensor;
-        void Start()
+        new void Start()
         {
+            base.Start();
             sensor = GetComponent<Sonar3D>();
             if (string.IsNullOrEmpty(address))
                 address = transform.name + "/sonar3d";
@@ -34,7 +35,7 @@ namespace Marus.Sensors.Primitive
                 streamingClient.StreamSonarSensor);
         }
 
-        protected async override void SendMessage()
+        protected override PointCloudStreamingRequest ComposeMessage()
         {
             Sensor.PointCloud _pointCloud = new Sensor.PointCloud();
             foreach (Vector3 point in sensor.pointsCopy)
@@ -55,12 +56,11 @@ namespace Marus.Sensors.Primitive
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
             };
 
-            var msg = new PointCloudStreamingRequest()
+            return new PointCloudStreamingRequest()
             {
                 Data = _pointCloud,
                 Address = address
             };
-            await _streamWriter.WriteAsync(msg);
         }
     }
 }

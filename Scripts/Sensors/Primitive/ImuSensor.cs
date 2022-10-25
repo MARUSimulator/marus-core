@@ -54,7 +54,7 @@ namespace Marus.Sensors.Primitive
         [ReadOnly] public Vector3 EulerAngles;
         [ReadOnly] public Quaternion Orientation;
         private Rigidbody rb;
-        private Vector3 lastVelocity;
+        private Vector3 lastVelocity = Vector3.zero;
         private double _lastSampleTime;
 
 
@@ -101,7 +101,7 @@ namespace Marus.Sensors.Primitive
 
         protected override void SampleSensor()
         {
-            
+
             double timeElapsed = Time.timeAsDouble - _lastSampleTime;
             _lastSampleTime = Time.timeAsDouble;
 
@@ -109,7 +109,8 @@ namespace Marus.Sensors.Primitive
             localVelocity[0]+=Noise.Sample(AccelerometerNoise);
             localVelocity[1]+=Noise.Sample(AccelerometerNoise);
             localVelocity[2]+=Noise.Sample(AccelerometerNoise);
-            linearAcceleration = ((localVelocity - lastVelocity) / (float) timeElapsed);
+            if (timeElapsed > 0)
+                linearAcceleration = (localVelocity - lastVelocity) / (float)timeElapsed;
 
             angularVelocity = rb.angularVelocity;
             angularVelocity[0]+=Noise.Sample(GyroNoise);

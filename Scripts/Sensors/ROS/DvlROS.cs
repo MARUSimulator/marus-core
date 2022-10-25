@@ -28,16 +28,17 @@ namespace Marus.Sensors.ROS
     public class DvlROS : SensorStreamer<SensorStreamingClient, DvlStreamingRequest>
     {
         DvlSensor sensor;
-        void Start()
+        new void Start()
         {
+            base.Start();
             sensor = GetComponent<DvlSensor>();
             if (string.IsNullOrEmpty(address))
                 address = sensor.vehicle.name + "/dvl";
-            StreamSensor(sensor, 
+            StreamSensor(sensor,
                 streamingClient.StreamDvlSensor);
         }
 
-        protected async override void SendMessage()
+        protected override DvlStreamingRequest ComposeMessage()
         {
             var dvlOut = new TwistWithCovarianceStamped
             {
@@ -46,7 +47,7 @@ namespace Marus.Sensors.ROS
                     FrameId = sensor.frameId,
                     Timestamp = TimeHandler.Instance.TimeDouble
                 },
-                Twist = new TwistWithCovariance 
+                Twist = new TwistWithCovariance
                 {
                     Twist = new Twist
                     {
@@ -55,13 +56,13 @@ namespace Marus.Sensors.ROS
                 }
             };
             dvlOut.Twist.Covariance.AddRange(sensor.velocityCovariance);
-            
-            var request = new DvlStreamingRequest
+
+            return new DvlStreamingRequest
             {
                 Address = address,
                 Data = dvlOut
             };
-            await _streamWriter.WriteAsync(request);
+            // await _streamWriter.WriteAsync(request);
         }
     }
 }

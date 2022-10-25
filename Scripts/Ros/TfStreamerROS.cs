@@ -20,6 +20,7 @@ using Grpc.Core;
 using static Tf.Tf;
 using Marus.Utils;
 using Marus.CustomInspector;
+using System.Threading.Tasks;
 
 namespace Marus.ROS
 {
@@ -54,6 +55,7 @@ namespace Marus.ROS
         public Vector3 RotationOffset;
 
         string address;
+        double _lastTime;
 
         protected Transform _vehicle;
         public Transform vehicle
@@ -98,7 +100,6 @@ namespace Marus.ROS
                 ParentFrameId = "map";
             }
 
-            
         }
 
         Quaternion _rotation;
@@ -146,13 +147,12 @@ namespace Marus.ROS
             streamHandle = streamingClient?.PublishFrame(cancellationToken:RosConnection.Instance.CancellationToken);
         }
 
-        double cumulativeTime = 0;
         void Update()
         {
-            cumulativeTime += Time.deltaTime;
-            if (cumulativeTime > (1 / UpdateFrequency) && RosConnection.Instance.IsConnected)
+            if (RosConnection.Instance.IsConnected
+                && Time.timeAsDouble > _lastTime + (1 / UpdateFrequency))
             {
-                cumulativeTime = 0;
+                _lastTime = Time.timeAsDouble;
                 UpdateTransform();
                 SendMessage();
             }
@@ -178,7 +178,7 @@ namespace Marus.ROS
                 // if no parent is assigned, assume it is global position and transform to ENU frame
                 _rotation =  transform.rotation.Unity2Map() * new Quaternion(0,0, 1/Mathf.Sqrt(2), 1/Mathf.Sqrt(2));
                 _translation = transform.position.Unity2Map();
-                
+
             }
         }
 

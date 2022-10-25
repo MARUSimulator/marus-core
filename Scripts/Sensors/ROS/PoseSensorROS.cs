@@ -32,19 +32,20 @@ namespace Marus.Sensors.Primitive
     {
         PoseSensor sensor;
 
-        void Start()
+        new void Start()
         {
+            base.Start();
             sensor = GetComponent<PoseSensor>();
             if (string.IsNullOrEmpty(address))
                 address = sensor.vehicle.name + "/pose";
-            StreamSensor(sensor, 
+            StreamSensor(sensor,
                 streamingClient.StreamPoseSensor);
         }
 
-        protected async override void SendMessage()
+        protected override PoseStreamingRequest ComposeMessage()
         {
             var toEnu = sensor.position.Unity2Map();
-            await _streamWriter.WriteAsync(new PoseStreamingRequest
+            return new PoseStreamingRequest
             {
                 Address = address,
                 Data = new PoseWithCovarianceStamped
@@ -68,7 +69,7 @@ namespace Marus.Sensors.Primitive
                         }
                     }
                 }
-            });
+            };
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Marus.Sensors
     {
 
         Dictionary<int, SensorCallback> _sensorCallbacks = new Dictionary<int, SensorCallback>();
-        Dictionary<int, float> _timeSinceLastCallback = new Dictionary<int, float>();
+        Dictionary<int, double> _timeOfLastCallback = new Dictionary<int, double>();
 
         void FixedUpdate()
         {
@@ -35,23 +35,22 @@ namespace Marus.Sensors
                 if (callback.active
                     && callback.sensor.isActiveAndEnabled)
                 {
-                    if (!_timeSinceLastCallback.TryGetValue(kvp.Key, out var time)
+                    if (!_timeOfLastCallback.TryGetValue(kvp.Key, out var time)
                         || EnoughTimePassed(time, callback.sensor))
                     {
                         callback.callback();
                         callback.sensor.hasData = true;
-                        _timeSinceLastCallback[kvp.Key] = 0;
+                        _timeOfLastCallback[kvp.Key] = Time.fixedTimeAsDouble;
                     }
-                    _timeSinceLastCallback[kvp.Key] += Time.fixedDeltaTime;
                 }
             }
         }
 
-        private bool EnoughTimePassed(float time, SensorBase sensor)
+        private bool EnoughTimePassed(double lastTime, SensorBase sensor)
         {
             if (sensor.SampleFrequency <= 0)
                 return true;
-            return time >= 1 / sensor.SampleFrequency - 0.0001f;
+            return Time.fixedTimeAsDouble >= lastTime + 1 / sensor.SampleFrequency;
         }
 
         public void AddSensorCallback(SensorBase sensor, Action callback)
@@ -59,7 +58,7 @@ namespace Marus.Sensors
             if (_sensorCallbacks.ContainsKey(sensor.GetInstanceID()))
                 return;
 
-            var sensorCallback = new SensorCallback 
+            var sensorCallback = new SensorCallback
             {
                 callback = callback,
                 sensor = sensor,

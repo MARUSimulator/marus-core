@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Sensorstreaming;
 using UnityEngine;
 using static Sensorstreaming.SensorStreaming;
@@ -21,8 +22,9 @@ namespace Marus.Sensors.Primitive
     [RequireComponent(typeof(SonarPrimitive))]
     public class SonarPrimitiveROS : SensorStreamer<SensorStreamingClient, SonarStreamingRequest>
     {
-        protected override void SendMessage()
+        protected override SonarStreamingRequest ComposeMessage()
         {
+            throw new NotImplementedException();
         }
     }
 }

@@ -37,7 +37,7 @@ using Ping;
 namespace Marus.Networking
 {
     /// <summary>
-    /// Singleton class for configuring and connecting to 
+    /// Singleton class for configuring and connecting to
     /// ROS server
     /// </summary>
     [DefaultExecutionOrder(-1)]
@@ -70,6 +70,8 @@ namespace Marus.Networking
         public double DefaultLongitude = 15;
 
         Channel _streamingChannel;
+
+        public Channel StreamingChannel => _streamingChannel;
         Dictionary<Type, ClientBase> _grpcClients;
         volatile bool _connected;
         public bool IsConnected => _connected;
@@ -116,10 +118,12 @@ namespace Marus.Networking
 
         private void Awake()
         {
+            ThreadPool.SetMinThreads(12, 100);
+            Grpc.Core.GrpcEnvironment.SetThreadPoolSize(10);
             var options = new List<ChannelOption>
             {
                 new ChannelOption(ChannelOptions.MaxSendMessageLength, 1024*1024*100),
-                new ChannelOption(ChannelOptions.MaxReceiveMessageLength, 1024*1024*100)
+                new ChannelOption(ChannelOptions.MaxReceiveMessageLength, 1024*1024*100),
             };
             _streamingChannel = new Channel(serverIP, serverPort, ChannelCredentials.Insecure, options);
 
@@ -143,7 +147,7 @@ namespace Marus.Networking
                     _connected = TryConnect();
                     _isConnecting = false;
                     // maybe add what to do after failed connection
-                    // maybe ping server repeatedly 
+                    // maybe ping server repeatedly
                 });
                 t.Start();
             }
@@ -214,6 +218,12 @@ namespace Marus.Networking
                     TimeNsecs = TimeHandler.Instance.StartTimeNsecs
                 }
             );
+        }
+
+
+        public SensorStreamingClient GetNewSensorStreamingClient()
+        {
+            return new SensorStreamingClient(_streamingChannel);
         }
 
         /// <summary>

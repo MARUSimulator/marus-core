@@ -21,6 +21,7 @@ using Marus.Networking;
 using Marus.Logger;
 using Marus.Utils;
 using Marus.ROS;
+using System.Threading.Tasks;
 
 namespace Marus.Sensors
 {
@@ -38,8 +39,6 @@ namespace Marus.Sensors
 
         public float SampleFrequency = 20;
 
-        public bool streamInFixedUpdate = false;
-
         protected Transform _vehicle;
         [NonSerialized] public bool hasData;
 
@@ -50,7 +49,7 @@ namespace Marus.Sensors
                 _vehicle = Helpers.GetVehicle(transform);
                 if (_vehicle == null)
                 {
-                    Debug.Log($@"Cannot get vehicle from sensor {transform.name}. 
+                    Debug.Log($@"Cannot get vehicle from sensor {transform.name}.
                         Using sensor as the vehicle transform");
                     return transform;
                 }
@@ -98,128 +97,5 @@ namespace Marus.Sensors
             SensorSampler.Instance.DisableCallback(this);
         }
 
-    }
-
-    /// <summary>
-    /// Base class that every sensor has to implement
-    /// Sensor streams readings to the server defined in RosConnection singleton instance
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public abstract class SensorStreamer<TClient, TMsg> : MonoBehaviour 
-        where TClient : ClientBase
-        where TMsg : IMessage
-    {
-
-        [Space]
-        [Header("Streaming Parameters")]
-        public float UpdateFrequency = 1;
-        public string address;
-
-        protected Transform _vehicle;
-
-        SensorBase _sensor;
-
-        /// <summary>
-        /// A client instance used for streaming sensor readings
-        /// </summary>
-        /// <value></value>
-        protected TClient streamingClient
-        {
-            get
-            {
-                return RosConnection.Instance.GetClient<TClient>();
-            }
-        }
-
-        AsyncClientStreamingCall<TMsg, Std.Empty> streamHandle;
-
-
-        /// <summary>
-        /// Used to write sensor reading messages
-        /// </summary>
-        /// <value></value>
-        protected IClientStreamWriter<TMsg> _streamWriter
-        {
-            get
-            {
-                if (streamHandle != null)
-                    return streamHandle.RequestStream;
-                return null;
-            }
-        }
-
-        public Transform vehicle
-        {
-            get
-            {
-                _vehicle = Helpers.GetVehicle(transform);
-                if (_vehicle == null)
-                {
-                    Debug.Log($@"Cannot get vehicle from sensor {transform.name}. 
-                        Using sensor as the vehicle transform");
-                    return transform;
-                }
-                return _vehicle;
-            }
-        }
-
-        #if UNITY_EDITOR
-        protected void Reset()
-        {
-            if(gameObject.GetComponent<TfStreamerROS>() == null)
-            {
-                gameObject.AddComponent<TfStreamerROS>();
-            }
-            UpdateVehicle();
-        }
-        #endif
-
-        public void UpdateVehicle()
-        {
-            var veh = vehicle;
-            // reset address to empty if UpdateVehicle is not called from reset
-            address = "";
-            // if not same object, add vehicle name prefix to address
-            if(veh != transform) address = $"{veh.name}/";
-
-            address = address + gameObject.name;
-        }
-
-        double cumulativeTime = 0;
-        protected void Update()
-        {
-            if(!_sensor.streamInFixedUpdate)
-                TrySendMessage();
-        }
-        protected void FixedUpdate()
-        {
-            if(_sensor.streamInFixedUpdate)
-                TrySendMessage();
-        }
-
-        protected void TrySendMessage()
-        {
-            
-            cumulativeTime += (Time.inFixedTimeStep ? Time.fixedDeltaTime : Time.deltaTime);
-            if (cumulativeTime >= (1.0f / UpdateFrequency - 0.0001f))
-            {
-                cumulativeTime = 0;
-                if (_sensor.hasData)
-                {
-                    SendMessage();
-                    _sensor.hasData = false;
-                }
-            }
-        }
-
-        protected void StreamSensor(SensorBase sensor, 
-            // AsyncClientStreamingCall<TMsg, Std.Empty> streamingCall
-            Func<Grpc.Core.Metadata, System.DateTime?, System.Threading.CancellationToken, AsyncClientStreamingCall<TMsg, Std.Empty>> streamingFn)
-        {
-            streamHandle = streamingFn(null, null, RosConnection.Instance.CancellationToken);
-            _sensor = sensor;
-        }
-
-        protected abstract void SendMessage();
     }
 }

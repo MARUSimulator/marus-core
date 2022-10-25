@@ -77,7 +77,7 @@ namespace Marus.Sensors.AIS
         {
             if (ActiveTransmission)
             {
-                period = TimeIntervals.getInterval(ClassType, aisSensor.SOG);
+                period = TimeIntervals.GetInterval(ClassType, aisSensor.SOG);
                 if (delta > period)
                 {
                     message = new PositionReportClassA();

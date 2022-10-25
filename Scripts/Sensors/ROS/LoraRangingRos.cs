@@ -27,7 +27,7 @@ namespace Marus.Communications.Rf
             );
         }
 
-        async protected override void SendMessage()
+        protected override RangeingMsg ComposeMessage()
         {
             var msg = new RangeingMsg
             {
@@ -44,7 +44,8 @@ namespace Marus.Communications.Rf
                     TargetId = (uint)x.TargetId,
                     Range_ = x.Range,
                 }));
-            await _streamWriter?.WriteAsync(msg);
+            return msg;
+            // await _streamWriter?.WriteAsync(msg);
         }
     }
 }

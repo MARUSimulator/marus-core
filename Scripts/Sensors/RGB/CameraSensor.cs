@@ -34,6 +34,7 @@ namespace Marus.Sensors
         public int ImageHeight = 1080;
 
         Camera _camera;
+        RenderTexture _tmpTexture;
         TextureFormat _textureFormat = TextureFormat.RGB24;
         Texture2D _texture;
 
@@ -53,6 +54,7 @@ namespace Marus.Sensors
 #endif
 
             _camera = GetComponent<Camera>();
+            _camera.enabled = false;
             Data = new byte[ImageHeight*ImageWidth*3];
             _texture = new Texture2D
             (
@@ -65,12 +67,14 @@ namespace Marus.Sensors
 
         protected override void SampleSensor()
         {
+            if (_camera.targetTexture != null)
+            {
+                RenderTexture.ReleaseTemporary(_camera.targetTexture);
+            }
             _camera.targetTexture = RenderTexture.GetTemporary(ImageWidth, ImageHeight, 16);
-            RenderTexture r = _camera.targetTexture;
-            RenderTexture.active = r;
+            RenderTexture.active = _camera.targetTexture;
             _camera.Render();
             AsyncGPUReadback.Request(_camera.targetTexture, 0, _textureFormat, ReadbackCompleted);
-            RenderTexture.ReleaseTemporary(r);
         }
 
         void ReadbackCompleted(AsyncGPUReadbackRequest request)

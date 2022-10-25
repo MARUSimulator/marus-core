@@ -41,7 +41,7 @@ namespace Marus.Communications.Acoustics
         {
             nanomodem = GetComponent<Nanomodem>();
             streamer = new ServerStreamer<AcousticRequest>(TransmitCommand);
-            
+
             if (string.IsNullOrEmpty(payloadAddress))
                 payloadAddress = $"nanomodem{nanomodem.DeviceId}/nanomodem_payload";
             if (string.IsNullOrEmpty(rangeAddress))
@@ -54,7 +54,7 @@ namespace Marus.Communications.Acoustics
             streamer.StartStream(client.StreamAcousticRequests(
                 new CommandRequest { Address = requestAddress},
                 cancellationToken: RosConnection.Instance.CancellationToken));
-            
+
         }
 
         void Update()

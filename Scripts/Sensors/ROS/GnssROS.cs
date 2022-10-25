@@ -27,18 +27,19 @@ namespace Marus.Sensors.ROS
     public class GnssROS : SensorStreamer<SensorStreamingClient, GnssStreamingRequest>
     {
         GnssSensor sensor;
-        void Start()
+        new void Start()
         {
+            base.Start();
             sensor = GetComponent<GnssSensor>();
             if (string.IsNullOrEmpty(address))
             {
                 address = $"{sensor.vehicle?.name}/gps";
             }
-            StreamSensor(sensor, 
+            StreamSensor(sensor,
                 streamingClient.StreamGnssSensor);
         }
 
-        protected override async void SendMessage()
+        protected override GnssStreamingRequest ComposeMessage()
         {
             var msg = new GnssStreamingRequest
             {
@@ -60,8 +61,10 @@ namespace Marus.Sensors.ROS
                     Altitude = sensor.point.altitude
                 }
             };
-            if (transform.position.y > -sensor.maximumOperatingDepth) 
-                await _streamWriter.WriteAsync(msg);
+            // if (transform.position.y > -sensor.maximumOperatingDepth)
+            // {
+                return msg;
+            // }
         }
     }
 }

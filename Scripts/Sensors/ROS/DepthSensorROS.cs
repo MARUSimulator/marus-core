@@ -31,8 +31,9 @@ namespace Marus.Sensors.ROS
         public double covariance;
         DepthSensor sensor;
 
-        public void Start()
+        new public void Start()
         {
+            base.Start();
             sensor = GetComponent<DepthSensor>();
             if (string.IsNullOrEmpty(address))
                 address = sensor.vehicle.name + "/depth";
@@ -41,7 +42,7 @@ namespace Marus.Sensors.ROS
         }
 
 
-        protected async override void SendMessage()
+        protected override DepthStreamingRequest ComposeMessage()
         {
             var depthOut = new DepthStreamingRequest
             {
@@ -71,7 +72,7 @@ namespace Marus.Sensors.ROS
             var covOut = new double[36];
             covOut[15] = covariance;
             depthOut.Data.Pose.Covariance.AddRange(covOut);
-            await _streamWriter.WriteAsync(depthOut);
+            return depthOut;
         }
     }
 }

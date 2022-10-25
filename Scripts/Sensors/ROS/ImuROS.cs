@@ -29,16 +29,17 @@ namespace Marus.Sensors.Primitive
     public class ImuROS : SensorStreamer<SensorStreamingClient, ImuStreamingRequest>
     {
         ImuSensor sensor;
-        void Start()
+        new void Start()
         {
+            base.Start();
             sensor = GetComponent<ImuSensor>();
             if (string.IsNullOrEmpty(address))
                 address = $"{sensor.vehicle.name}/imu";
-            StreamSensor(sensor, 
+            StreamSensor(sensor,
                 streamingClient.StreamImuSensor);
         }
 
-        protected override async void SendMessage()
+        protected override ImuStreamingRequest ComposeMessage()
         {
             var imuOut = new Imu()
             {
@@ -55,11 +56,11 @@ namespace Marus.Sensors.Primitive
             imuOut.LinearAccelerationCovariance.AddRange(sensor.linearAccelerationCovariance);
             imuOut.AngularVelocityCovariance.AddRange(sensor.angularVelocityCovariance);
 
-            await _streamWriter.WriteAsync(new ImuStreamingRequest
+            return new ImuStreamingRequest
             {
                 Data = imuOut,
                 Address = address
-            });
+            };
         }
     }
 }

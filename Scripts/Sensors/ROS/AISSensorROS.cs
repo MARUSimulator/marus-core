@@ -26,23 +26,24 @@ namespace Marus.Sensors.AIS
     {
         AisSensor sensor;
         AisDevice device;
-        void Start()
+        new void Start()
         {
+            base.Start();
             sensor = GetComponent<AisSensor>();
             device = GetComponent<AisDevice>();
             if (string.IsNullOrEmpty(address))
                 address = transform.name + "/ais";
             StreamSensor(sensor,
                 streamingClient.StreamAisSensor);
-            UpdateFrequency = 1 / TimeIntervals.getInterval(device.ClassType, sensor.SOG);
+            UpdateFrequency = 1 / TimeIntervals.GetInterval(device.ClassType, sensor.SOG);
         }
 
-        protected async override void SendMessage()
+        protected override AISStreamingRequest ComposeMessage()
         {
-            var msg = new AISStreamingRequest
+            return new AISStreamingRequest
             {
                 Address = address,
-                AisPositionReport = new Marine.AISPositionReport 
+                AisPositionReport = new Marine.AISPositionReport
                 {
                     Type = (uint) AISMessageType.PositionReportClassA,
                     Mmsi = (uint) Int32.Parse(device.MMSI),
@@ -57,7 +58,6 @@ namespace Marus.Sensors.AIS
                     CourseOverGround = sensor.COG
                 }
             };
-            await _streamWriter.WriteAsync(msg);
         }
     }
 }

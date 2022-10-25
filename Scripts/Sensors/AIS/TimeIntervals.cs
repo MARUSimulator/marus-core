@@ -22,7 +22,7 @@ namespace Marus.Sensors.AIS
     /// </summary>
     public static class TimeIntervals
     {
-        public static float getInterval(AISClassType type, float speed, Boolean changingCourse = false)
+        public static float GetInterval(AISClassType type, float speed, Boolean changingCourse = false)
         {
             if (type == AISClassType.ClassA)
             {

@@ -29,40 +29,33 @@ namespace Marus.Sensors
     public class CameraSensorROS : SensorStreamer<SensorStreamingClient, CameraStreamingRequest>
     {
         CameraSensor sensor;
-        void Start()
+        new void Start()
         {
+            base.Start();
             sensor = GetComponent<CameraSensor>();
             if (string.IsNullOrEmpty(address))
-                address = sensor.vehicle.name + "/camera";
+                address = sensor.vehicle.name + "/" + sensor.gameObject.name;
             StreamSensor(sensor,
                 streamingClient.StreamCameraSensor);
         }
 
-        protected async override void SendMessage()
+        protected override CameraStreamingRequest ComposeMessage()
         {
-            try
+            return new CameraStreamingRequest
             {
-                await _streamWriter.WriteAsync(new CameraStreamingRequest
+                Image = new Sensor.Image
                 {
-                    Image = new Sensor.Image
+                    Header = new Std.Header
                     {
-                        Header = new Std.Header
-                        {
-                            FrameId = sensor.frameId,
-                            Timestamp = TimeHandler.Instance.TimeDouble
-                        },
-                        Data = ByteString.CopyFrom(sensor.Data),
-                        Height = (uint)(sensor.ImageHeight),
-                        Width = (uint)(sensor.ImageWidth)
+                        Timestamp = Time.time,
+                        FrameId = sensor.frameId
                     },
-                    Address = address
-                });
-            }
-            catch (Exception e)
-            {
-                Debug.Log("Possible message overflow.");
-                Debug.LogError(e);
-            }
+                    Data = ByteString.CopyFrom(sensor.Data),
+                    Height = (uint)(sensor.ImageHeight),
+                    Width = (uint)(sensor.ImageWidth)
+                },
+                Address = address,
+            };
         }
 
     }
