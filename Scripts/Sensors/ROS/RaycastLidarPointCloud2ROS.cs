@@ -19,6 +19,8 @@ using Marus.Core;
 using Sensor;
 using System.Collections.Generic;
 using Unity.Collections;
+using System;
+using System.Linq;
 using static Sensorstreaming.SensorStreaming;
 
 namespace Marus.Sensors
@@ -32,6 +34,8 @@ namespace Marus.Sensors
     [RequireComponent(typeof(RaycastLidar))]
     public class RaycastLidarPointCloud2ROS : SensorStreamer<SensorStreamingClient, PointCloud2StreamingRequest>
     {
+
+        public bool PublishIntensityAndRing = false;
         RaycastLidar sensor;
 
         void Start()
@@ -44,7 +48,7 @@ namespace Marus.Sensors
                 streamingClient.StreamPointCloud2);
         }
 
-        private PointCloud2 GeneratePointCloud2(NativeArray<Vector3> points)
+        private PointCloud2 GeneratePointCloud2Raw(NativeArray<Vector3> points)
         {
             PointCloud2 pointCloud = new PointCloud2();
             pointCloud.Header = new Std.Header()
@@ -61,21 +65,21 @@ namespace Marus.Sensors
                     {
                         Name = "x",
                         Offset = 0,
-                        Datatype = PointField.Types.DataType.Float64,
+                        Datatype = PointField.Types.DataType.Float32 + 1,
                         Count = 1
                     },
                     new PointField()
                     {
                         Name = "z",
                         Offset = 4,
-                        Datatype = PointField.Types.DataType.Float64,
+                        Datatype = PointField.Types.DataType.Float32 + 1,
                         Count = 1
                     },
                     new PointField()
                     {
                         Name = "y",
                         Offset = 8,
-                        Datatype = PointField.Types.DataType.Float64,
+                        Datatype = PointField.Types.DataType.Float32 + 1,
                         Count = 1
                     }
                 }
@@ -89,9 +93,98 @@ namespace Marus.Sensors
             return pointCloud;
         }
 
+        private PointCloud2 GeneratePointCloud2(NativeArray<Vector3> points, NativeArray<LidarReading> readings)
+        {
+            PointCloud2 pointCloud = new PointCloud2();
+            pointCloud.Header = new Std.Header()
+            {
+                FrameId = sensor.frameId,
+                Timestamp = TimeHandler.Instance.TimeDouble
+            };
+            pointCloud.Fields.AddRange(
+                new List<PointField>()
+                {
+                    new PointField()
+                    {
+                        Name = "x",
+                        Offset = 0,
+                        Datatype = PointField.Types.DataType.Float32 + 1,
+                        Count = 1
+                    },
+                    new PointField()
+                    {
+                        Name = "z",
+                        Offset = 4,
+                        Datatype = PointField.Types.DataType.Float32 + 1,
+                        Count = 1
+                    },
+                    new PointField()
+                    {
+                        Name = "y",
+                        Offset = 8,
+                        Datatype = PointField.Types.DataType.Float32 + 1,
+                        Count = 1
+                    },
+                    new PointField()
+                    {
+                        Name = "intensity",
+                        Offset = 12,
+                        Datatype = PointField.Types.DataType.Int32 + 1,
+                        Count = 1
+                    },
+                    new PointField()
+                    {
+                        Name = "ring",
+                        Offset = 16,
+                        Datatype = PointField.Types.DataType.Int32 + 1,
+                        Count = 1
+                    },
+                    new PointField()
+                    {
+                        Name = "time",
+                        Offset = 20,
+                        Datatype = PointField.Types.DataType.Uint32 + 1,
+                        Count = 1
+                    }
+                }
+            );
+            var numOfPoints = readings.Count(r => r.IsValid);
+            var pointSize = sizeof(float) * 3 + sizeof(int)*2 + sizeof(uint);
+            var byteLength = numOfPoints * pointSize;
+            pointCloud.Height = 1;
+            pointCloud.Width = (uint) numOfPoints;
+            pointCloud.IsBigEndian = false;
+            pointCloud.PointStep = (uint) pointSize;
+            pointCloud.IsDense = true;
+            byte[] bytes = new byte[byteLength];
+            int j = 0;
+            for(int i = 0; i < points.Length; i++)
+            {
+                if (!readings[i].IsValid) continue;
+
+                Buffer.BlockCopy( BitConverter.GetBytes( points[i].x ), 0, bytes, j*pointSize, 4 );
+                Buffer.BlockCopy( BitConverter.GetBytes( points[i].y ), 0, bytes, j*pointSize + 4, 4 );
+                Buffer.BlockCopy( BitConverter.GetBytes( points[i].z ), 0, bytes, j*pointSize + 8, 4 );
+                Buffer.BlockCopy( BitConverter.GetBytes( (int) readings[i].Intensity ), 0, bytes, j*pointSize + 12, 4);
+                Buffer.BlockCopy( BitConverter.GetBytes( (int) readings[i].Ring ), 0, bytes, j*pointSize + 16, 4);
+                Buffer.BlockCopy( BitConverter.GetBytes( (long) readings[i].Time ), 0, bytes, j*pointSize + 20, 4);
+                j++;
+            }
+            pointCloud.RowStep = (uint) byteLength;
+            pointCloud.Data = Google.Protobuf.ByteString.CopyFrom(bytes);
+            return pointCloud;
+        }
         protected async override void SendMessage()
         {
-            PointCloud2 _pointCloud = GeneratePointCloud2(sensor.Points);
+            PointCloud2 _pointCloud;
+            if (PublishIntensityAndRing)
+            {
+                _pointCloud = GeneratePointCloud2(sensor.Points, sensor.Readings);
+            }
+            else
+            {
+                _pointCloud = GeneratePointCloud2Raw(sensor.Points);
+            }
             var msg = new PointCloud2StreamingRequest()
             {
                 Data = _pointCloud,

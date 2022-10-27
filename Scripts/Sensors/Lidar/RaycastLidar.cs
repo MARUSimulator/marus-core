@@ -167,6 +167,8 @@ namespace Marus.Sensors
                     reading.IsValid = false;
                 }
             }
+            reading.Ring = index % HeightRes;
+            reading.Time = (uint) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
             reading.Intensity = 255;
             return reading;
         }
@@ -281,6 +283,8 @@ namespace Marus.Sensors
         public int ClassId;
         public int InstanceId;
         public ushort Intensity;
+        public int Ring;
+        public uint Time;
         public bool IsValid;
     }
 
