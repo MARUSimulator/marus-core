@@ -21,6 +21,12 @@ using Grpc.Core;
 
 namespace Marus.Networking
 {
+    /// <summary>
+    /// Class that implements wrapper for streaming generic <T> messages from the server
+    /// Instantiate it with callback action and call StartSteram method
+    /// to begin streming
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class ServerStreamer<T> where T : IMessage
     {
         private Action<T> _onMessage;

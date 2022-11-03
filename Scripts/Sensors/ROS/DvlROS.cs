@@ -30,12 +30,10 @@ namespace Marus.Sensors.ROS
         DvlSensor sensor;
         new void Start()
         {
-            base.Start();
             sensor = GetComponent<DvlSensor>();
-            if (string.IsNullOrEmpty(address))
-                address = sensor.vehicle.name + "/dvl";
             StreamSensor(sensor,
                 streamingClient.StreamDvlSensor);
+            base.Start();
         }
 
         protected override DvlStreamingRequest ComposeMessage()

@@ -28,14 +28,12 @@ namespace Marus.Sensors.AIS
         AisDevice device;
         new void Start()
         {
-            base.Start();
             sensor = GetComponent<AisSensor>();
             device = GetComponent<AisDevice>();
-            if (string.IsNullOrEmpty(address))
-                address = transform.name + "/ais";
             StreamSensor(sensor,
                 streamingClient.StreamAisSensor);
             UpdateFrequency = 1 / TimeIntervals.GetInterval(device.ClassType, sensor.SOG);
+            base.Start();
         }
 
         protected override AISStreamingRequest ComposeMessage()

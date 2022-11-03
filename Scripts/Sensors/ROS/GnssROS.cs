@@ -29,14 +29,10 @@ namespace Marus.Sensors.ROS
         GnssSensor sensor;
         new void Start()
         {
-            base.Start();
             sensor = GetComponent<GnssSensor>();
-            if (string.IsNullOrEmpty(address))
-            {
-                address = $"{sensor.vehicle?.name}/gps";
-            }
             StreamSensor(sensor,
                 streamingClient.StreamGnssSensor);
+            base.Start();
         }
 
         protected override GnssStreamingRequest ComposeMessage()

@@ -48,7 +48,7 @@ namespace Marus.Sensors
 
         protected Transform _vehicle;
 
-        SensorBase _sensor;
+        protected SensorBase _sensor;
 
         Task _awaitable;
         double _prevMsgTime;
@@ -118,13 +118,20 @@ namespace Marus.Sensors
             // reset address to empty if UpdateVehicle is not called from reset
             address = "";
             // if not same object, add vehicle name prefix to address
-            if(veh != transform) address = $"{veh.name}/";
+            if(veh != transform) 
+                address = $"{veh.name}/";
 
-            address = address + gameObject.name;
+            address = $"{address}{gameObject.name}";
         }
 
+        /// <summary>
+        /// Call this from derived class after calling StreamSensor method
+        /// Best to be called last in the derived Start method
+        /// </summary>
         public void Start()
         {
+            SetUpdateFrequency(UpdateFrequency);
+            SetAddresSufix(_sensor.name);
             if (_sendMsgThread == null)
             {
                 _msgQueue = new ConcurrentQueue<TMsg>();
@@ -140,6 +147,37 @@ namespace Marus.Sensors
             SendMessage();
         }
 
+        /// <summary>
+        /// Must be called after StreamSensor is called
+        /// </summary>
+        void SetUpdateFrequency(float frequency)
+        {
+            // set to lesser freq
+            var newFrequency = Mathf.Min(frequency, _sensor.SampleFrequency);
+            // avoid 0 frequency
+            newFrequency = newFrequency == 0 ? _sensor.SampleFrequency : newFrequency;
+            if (newFrequency != UpdateFrequency)
+            {
+                Debug.Log(@$"{_sensor.name} send frequency is less then sample frequency.
+                    Send frequency will be set to sample frequency.");
+                UpdateFrequency = newFrequency;
+            }
+        }
+
+        /// <summary>
+        /// Set the address of the receiver to the ${sensor.vehicle.name}/{sufix}
+        /// </summary>
+        /// <param name="sufix"></param>
+        protected void SetAddresSufix(string sufix)
+        {
+            if (string.IsNullOrEmpty(address))
+                address = $"{_sensor.vehicle?.name}/{sufix}";
+        }
+
+
+        /// <summary>
+        /// Must be called after StreamSensor is called
+        /// </summary>
         void SendMessage()
         {
             // if not connected, do not send
@@ -199,6 +237,11 @@ namespace Marus.Sensors
             }
         }
 
+
+        /// <summary>
+        /// Main method to be called for streaming the sensor
+        /// It must be called before any other function from this base class
+        /// </summary>
         protected void StreamSensor(SensorBase sensor,
             // AsyncClientStreamingCall<TMsg, Std.Empty> streamingCall
             Func<Grpc.Core.Metadata, System.DateTime?, System.Threading.CancellationToken, AsyncClientStreamingCall<TMsg, Std.Empty>> streamingFn)

@@ -31,12 +31,10 @@ namespace Marus.Sensors
         CameraSensor sensor;
         new void Start()
         {
-            base.Start();
             sensor = GetComponent<CameraSensor>();
-            if (string.IsNullOrEmpty(address))
-                address = sensor.vehicle.name + "/" + sensor.gameObject.name;
             StreamSensor(sensor,
                 streamingClient.StreamCameraSensor);
+            base.Start();
         }
 
         protected override CameraStreamingRequest ComposeMessage()

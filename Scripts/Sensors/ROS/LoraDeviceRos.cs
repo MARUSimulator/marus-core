@@ -18,7 +18,7 @@ namespace Marus.Communications.Rf
     [RequireComponent(typeof(LoraDevice))]
     public class LoraDeviceRos : MonoBehaviour
     {
-        
+
         public bool IsTransmiter = true;
         public bool IsReceiver = true;
 
@@ -91,7 +91,7 @@ namespace Marus.Communications.Rf
             else
             {
                 var template = "Cannot transfer message. {} does not exist.";
-                Debug.Log($@"{(sender == null ? string.Format(template, "Sender") : "")} 
+                Debug.Log($@"{(sender == null ? string.Format(template, "Sender") : "")}
                         {(receiver == null ? string.Format(template, "Receiver") : "")}");
             }
         }

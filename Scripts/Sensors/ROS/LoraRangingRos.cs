@@ -13,18 +13,19 @@ namespace Marus.Communications.Rf
     [RequireComponent(typeof(LoraRanging))]
     public class LoraRangingRos : SensorStreamer<LoraTransmissionClient, RangeingMsg>
     {
-        LoraRanging Ranging;
+        LoraRanging sensor;
 
-        void Awake()
+        new void Start()
         {
-            Ranging = GetComponent<LoraRanging>();
-            if (string.IsNullOrEmpty(address))
-            {
-                address = $"loradevice_{Ranging.Master.DeviceId}_ranging";
-            }
-            StreamSensor(Ranging,
+            sensor = GetComponent<LoraRanging>();
+            StreamSensor(sensor,
                 streamingClient.StreamRangeingMsgs
             );
+            if (string.IsNullOrEmpty(address))
+            {
+                address = $"loradevice_{sensor.Master.DeviceId}_ranging";
+            }
+            base.Start();
         }
 
         protected override RangeingMsg ComposeMessage()
@@ -33,9 +34,9 @@ namespace Marus.Communications.Rf
             {
                 Address = address,
                 Header = new Std.Header { Timestamp = TimeHandler.Instance.TimeDouble},
-                MasterId = (uint)Ranging.Master.DeviceId
+                MasterId = (uint)sensor.Master.DeviceId
             };
-            msg.Ranges.AddRange(Ranging.Ranges
+            msg.Ranges.AddRange(sensor.Ranges
                 .Where(x => !x.IsDropped)
                 .Select(x =>
                 new Range

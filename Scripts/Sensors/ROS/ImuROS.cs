@@ -31,12 +31,10 @@ namespace Marus.Sensors.Primitive
         ImuSensor sensor;
         new void Start()
         {
-            base.Start();
             sensor = GetComponent<ImuSensor>();
-            if (string.IsNullOrEmpty(address))
-                address = $"{sensor.vehicle.name}/imu";
             StreamSensor(sensor,
                 streamingClient.StreamImuSensor);
+            base.Start();
         }
 
         protected override ImuStreamingRequest ComposeMessage()

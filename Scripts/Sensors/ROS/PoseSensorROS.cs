@@ -34,12 +34,10 @@ namespace Marus.Sensors.Primitive
 
         new void Start()
         {
-            base.Start();
             sensor = GetComponent<PoseSensor>();
-            if (string.IsNullOrEmpty(address))
-                address = sensor.vehicle.name + "/pose";
             StreamSensor(sensor,
                 streamingClient.StreamPoseSensor);
+            base.Start();
         }
 
         protected override PoseStreamingRequest ComposeMessage()

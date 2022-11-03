@@ -27,12 +27,10 @@ namespace Marus.Sensors.Primitive
         Sonar3D sensor;
         new void Start()
         {
-            base.Start();
             sensor = GetComponent<Sonar3D>();
-            if (string.IsNullOrEmpty(address))
-                address = transform.name + "/sonar3d";
             StreamSensor(sensor,
                 streamingClient.StreamSonarSensor);
+            base.Start();
         }
 
         protected override PointCloudStreamingRequest ComposeMessage()

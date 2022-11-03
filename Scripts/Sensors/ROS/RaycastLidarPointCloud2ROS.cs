@@ -36,13 +36,10 @@ namespace Marus.Sensors
 
         new void Start()
         {
-            base.Start();
             sensor = GetComponent<RaycastLidar>();
-            UpdateFrequency = Mathf.Min(UpdateFrequency, sensor.SampleFrequency);
-            if (string.IsNullOrEmpty(address))
-                address = $"{sensor.vehicle?.name}/lidar";
             StreamSensor(sensor,
                 streamingClient.StreamPointCloud2);
+            base.Start();
         }
 
         private PointCloud2 GeneratePointCloud2(NativeArray<Vector3> points)
