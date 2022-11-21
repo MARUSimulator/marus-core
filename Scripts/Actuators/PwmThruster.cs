@@ -12,40 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Marus.Actuators.Datasheets;
+using System;
+using System.Collections.Generic;
 using Marus.Logger;
 using Marus.Utils;
 using UnityEngine;
-
 namespace Marus.Actuators
 {
+
     public class PwmThruster : MonoBehaviour
     {
+        //Sould be derived from file name
+        public List<string> thrusterType;
 
-        public enum AllowedVoltages
-        {
-            V10 = 10,
-            V12 = 12,
-            V14 = 14,
-            V16 = 16,
-            V20 = 20,
-            V20x10 = 21,
-            V20x50 = 22,
-            V20x100 = 23
-        };
+        public int selectedThruster = 0;
+        //[ReadOnly] public string[] AllowedVoltage = getVoltages();
 
-        int _voltage;
-        public AllowedVoltages voltage = AllowedVoltages.V10;
-        float[] sheetData;
-        float sheetStep;
-
-        [SerializeField, Range(0f, 1f), Tooltip("Time to latch last pwm request. To avoid losing thrust.")]
-        public float forceLatchTime = 0.2f;
-
-        [ReadOnly, SerializeField]
-        private float lastForceRequest;
-        [ReadOnly, SerializeField]
-        private float timeSinceForceRequest = 0.0f;
+        public List<string> allowedVoltages;
+        public int selectedVoltage = 0;
+        
+        //Calback for change in voltage
+        public float[] sheetData;
+        public float sheetStep;
+        public float lastForceRequest;
+        public float timeSinceForceRequest = 0.0f;
 
         Rigidbody _vehicleBody;
         Transform _vehicle;
@@ -71,39 +61,10 @@ namespace Marus.Actuators
         }
 
         GameObjectLogger<PwmLogRecord> _logger;
+        public AnimationCurve curve = new AnimationCurve();
 
         void Start()
         {
-            // set voltage and thruster sheet
-            _voltage = (int)voltage;
-            sheetStep = T200ThrusterDatasheet.step;
-            switch (voltage)
-            {
-                case AllowedVoltages.V10:
-                    sheetData = T200ThrusterDatasheet.V10;
-                    break;
-                case AllowedVoltages.V12:
-                    sheetData = T200ThrusterDatasheet.V10;
-                    break;
-                case AllowedVoltages.V14:
-                    sheetData = T200ThrusterDatasheet.V10;
-                    break;
-                case AllowedVoltages.V16:
-                    sheetData = T200ThrusterDatasheet.V16;
-                    break;
-                case AllowedVoltages.V20:
-                    sheetData = T200ThrusterDatasheet.V20;
-                    break;
-                case AllowedVoltages.V20x10:
-                    sheetData = T200ThrusterDatasheet.V20x10;
-                    break;
-                case AllowedVoltages.V20x50:
-                    sheetData = T200ThrusterDatasheet.V20x50;
-                    break;
-                case AllowedVoltages.V20x100:
-                    sheetData = T200ThrusterDatasheet.V20x100;
-                    break;
-            }
             _logger = DataLogger.Instance.GetLogger<PwmLogRecord>($"{vehicle.transform.name}/{name}");
         }
 
@@ -151,6 +112,7 @@ namespace Marus.Actuators
             return mid;
         }
 
+
         void FixedUpdate()
         {
             if(timeSinceForceRequest <= 0.2f)
@@ -161,11 +123,13 @@ namespace Marus.Actuators
             timeSinceForceRequest += Time.fixedDeltaTime;
         }
 
+
         private class PwmLogRecord
         {
             public float PwmIn { get; set; }
             public Vector3 Force { get; set; }
         }
+
     }
 
 }
