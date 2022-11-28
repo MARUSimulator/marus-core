@@ -16,12 +16,9 @@
 using UnityEditor;
 using UnityEngine;
 using Marus.Actuators;
-using Marus.Actuators.Datasheets;
-using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
 using System;
-using System.IO;
 
 namespace Marus.Sensors
 {
@@ -41,25 +38,23 @@ namespace Marus.Sensors
 
         List<string> thursterNames;
         string newThrusterName;
+        string thrusterFolderPath = "Assets/marus-core/Scripts/Actuators/Datasheets/";
 
-        
         void OnEnable()
         {
             ThrusterSO = new SerializedObject(target);
             myThruster = (Thruster)target;
             myThruster.thrusters = GetAllInstances<ThrusterAsset>();
-            
         }
 
         public override void OnInspectorGUI()
         {
             ThrusterSO.Update();
-            //Add thruster classes
             thursterNames = getThursterNames();
-            
-            myThruster.selectedThrusterIndex = EditorGUILayout.Popup("Thruster", myThruster.selectedThrusterIndex, thursterNames.ToArray()); 
 
-            ///If thruster changes            
+            myThruster.selectedThrusterIndex = EditorGUILayout.Popup("Thruster", myThruster.selectedThrusterIndex, thursterNames.ToArray());
+
+            ///If thruster changes
             if(myThruster.selectedThrusterIndex != myThruster.previousThrusterIndex )
             {
                 myThruster.thrusters = GetAllInstances<ThrusterAsset>();
@@ -68,9 +63,9 @@ namespace Marus.Sensors
                 myThruster.previousThrusterIndex = myThruster.selectedThrusterIndex;
                 newThrusterName = getInitialSavingName(myThruster.selectedThruster.name);
 
-            }    
+            }
 
-            ///If curve is edited           
+            ///If curve is edited
             if (AreCurvesDifferent(myThruster.currentCurve, myThruster.selectedThruster.curve))
             {
                 disableSaving = false;
@@ -80,12 +75,11 @@ namespace Marus.Sensors
                 disableSaving = true;
             }
 
-
             Rect bounds = new Rect();
             EditorGUILayout.CurveField("Curve", myThruster.currentCurve, new Color(1,1,1,1), bounds, GUILayout.Height(50));
             EditorGUI.BeginDisabledGroup(disableSaving);
             GUILayout.Space(2);
-            var undoChanges = GUILayout.Button("Undo changes", EditorStyles.miniButtonRight); 
+            var undoChanges = GUILayout.Button("Undo changes", EditorStyles.miniButtonRight);
             EditorGUI.EndDisabledGroup();
 
             if(undoChanges) myThruster.currentCurve.keys = myThruster.selectedThruster.curve.keys;
@@ -93,26 +87,26 @@ namespace Marus.Sensors
             EditorGUI.BeginDisabledGroup(disableSaving);
             GUILayout.Space(5);
             EditorGUILayout.LabelField("Save/Edit");
-            
+
             newThrusterName = EditorGUILayout.TextField("Thruster name", newThrusterName);
             GUILayout.Space(2);
             var saveButton = GUILayout.Button("Save", EditorStyles.miniButtonRight);
             if(saveButton)
             {
                 SaveNewThruster(newThrusterName, myThruster.currentCurve);
-            } 
+            }
             EditorGUI.EndDisabledGroup();
 
             GUILayout.Space(5);
-            EditorGUI.BeginDisabledGroup(true);        
+            EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.LabelField("Info");
             EditorGUILayout.FloatField("Last force requested", myThruster.lastForceRequest);
             EditorGUILayout.FloatField("Time since force request", myThruster.timeSinceForceRequest);
             EditorGUI.EndDisabledGroup();
 
             ThrusterSO.ApplyModifiedProperties();
-
         }
+
         private List<string> getThursterNames()
         {
             List<string> nameList = new List<string>();
@@ -120,16 +114,17 @@ namespace Marus.Sensors
             {
                 nameList.Add(element.name);
             }
-
             return nameList;
         }
-        
 
+        /// <summary>
+        /// Getting all instances of ThrusterAsset in the project
+        /// </summary>
         public static T[] GetAllInstances<T>() where T : ScriptableObject
         {
-            string[] guids = AssetDatabase.FindAssets("t:"+ typeof(T).Name);  //FindAssets uses tags check documentation for more info
+            string[] guids = AssetDatabase.FindAssets("t:"+ typeof(T).Name);
             T[] a = new T[guids.Length];
-            for(int i =0;i<guids.Length;i++)         //probably could get optimized 
+            for(int i =0;i<guids.Length;i++)
             {
                 string path = AssetDatabase.GUIDToAssetPath(guids[i]);
                 a[i] = AssetDatabase.LoadAssetAtPath<T>(path);
@@ -137,16 +132,19 @@ namespace Marus.Sensors
             return a;
         }
 
+        /// <summary>
+        /// Saving new thruster if current by new name. Adding (n)
+        /// to the name of the thruster if current name allready exists
+        /// </summary>
         public void SaveNewThruster(string name, AnimationCurve curve)
         {
             ThrusterAsset newThruster = new ThrusterAsset();
             newThruster.name = name;
             CopyCurve(newThruster.curve, curve);
-            string path = ThrusterFolderPath() + name + ".asset";
+            string path = thrusterFolderPath + name + ".asset";
             AssetDatabase.CreateAsset(newThruster, path);
             myThruster.thrusters = GetAllInstances<ThrusterAsset>();
             myThruster.selectedThrusterIndex =  myThruster.thrusters.ToList().FindIndex((x)=>x.name == name);
-            //myThruster.selectedThruster = myThruster.thrusters[myThruster.selectedThrusterIndex];
             myThruster.previousThrusterIndex =-1;
         }
 
@@ -162,26 +160,22 @@ namespace Marus.Sensors
             }
             return false;
         }
-        string ThrusterFolderPath()
-        {
-            return "Assets/marus-core/Scripts/Actuators/Datasheets/";
-        }
 
         public string getInitialSavingName(string thrusterName)
         {
             int i = 1;
             while (true)
             {
-                if(!myThruster.thrusters.Where(x => x.name.Contains(thrusterName + "(" + i + ")")).Any()) 
+                if(!myThruster.thrusters.Where(x => x.name.Contains(thrusterName + "(" + i + ")")).Any())
                 {
                     break;
                 }
-                else 
+                else
                 {
                     i++;
                 }
             }
-            string returnName = thrusterName + "(" + i + ")"; 
+            string returnName = thrusterName + "(" + i + ")";
             return returnName;
         }
 
@@ -191,8 +185,7 @@ namespace Marus.Sensors
             a1.preWrapMode = a2.preWrapMode;
             a1.postWrapMode = a2.postWrapMode;
         }
-        
-}
+    }
 }
 
 #endif

@@ -23,7 +23,6 @@ namespace Marus.Actuators
 
     public class Thruster : MonoBehaviour
     {
-      
         //Calback for change in voltage
         public float lastForceRequest;
         public float timeSinceForceRequest = 0.0f;
@@ -72,7 +71,7 @@ namespace Marus.Actuators
         public Vector3 ApplyPwm(float pwmIn)
         {
             float value = selectedThruster.curve.Evaluate(pwmIn);
-            // from kgf to N       
+            // from kgf to N
             lastForceRequest = value * 9.80665f;
             timeSinceForceRequest = 0.0f;
 
@@ -85,7 +84,7 @@ namespace Marus.Actuators
             // from N to kgf
             force /= 9.80665f;
             var pwm_value = selectedThruster.inversedCurve.Evaluate(force);
-        
+
             return pwm_value + 1.0f;
         }
 
@@ -99,13 +98,10 @@ namespace Marus.Actuators
             timeSinceForceRequest += Time.fixedDeltaTime;
         }
 
-
         private class PwmLogRecord
         {
             public float PwmIn { get; set; }
             public Vector3 Force { get; set; }
         }
-
     }
-
 }
