@@ -21,7 +21,7 @@ namespace Marus.Actuators
     public class ThrusterController : MonoBehaviour
     {
 
-        public List<PwmThruster> thrusters = new List<PwmThruster>();
+        public List<Thruster> thrusters = new List<Thruster>();
 
         public void ApplyPwm(float[] array)
         {

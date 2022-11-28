@@ -16,29 +16,27 @@ using System;
 using System.Collections.Generic;
 using Marus.Logger;
 using Marus.Utils;
+using UnityEditor;
 using UnityEngine;
 namespace Marus.Actuators
 {
 
-    public class PwmThruster : MonoBehaviour
+    public class Thruster : MonoBehaviour
     {
-        //Sould be derived from file name
-        public List<string> thrusterType;
-
-        public int selectedThruster = 0;
-        //[ReadOnly] public string[] AllowedVoltage = getVoltages();
-
-        public List<string> allowedVoltages;
-        public int selectedVoltage = 0;
-        
+      
         //Calback for change in voltage
-        public float[] sheetData;
-        public float sheetStep;
         public float lastForceRequest;
         public float timeSinceForceRequest = 0.0f;
 
         Rigidbody _vehicleBody;
         Transform _vehicle;
+        GameObjectLogger<PwmLogRecord> _logger;
+        public ThrusterAsset[] thrusters;
+        public ThrusterAsset selectedThruster;
+        public AnimationCurve currentCurve = new AnimationCurve();
+        public int previousThrusterIndex = -1;
+        public int selectedThrusterIndex = 0;
+
         Transform vehicle
         {
             get
@@ -60,12 +58,10 @@ namespace Marus.Actuators
             }
         }
 
-        GameObjectLogger<PwmLogRecord> _logger;
-        public AnimationCurve curve = new AnimationCurve();
-
         void Start()
         {
             _logger = DataLogger.Instance.GetLogger<PwmLogRecord>($"{vehicle.transform.name}/{name}");
+
         }
 
         /// <summary>
@@ -75,10 +71,9 @@ namespace Marus.Actuators
         /// <returns></returns>
         public Vector3 ApplyPwm(float pwmIn)
         {
-            int step = (int)((pwmIn+1) / sheetStep); // push it to the range 0-2
-
+            float value = selectedThruster.curve.Evaluate(pwmIn);
             // from kgf to N       
-            lastForceRequest = sheetData[step] * 9.80665f;
+            lastForceRequest = value * 9.80665f;
             timeSinceForceRequest = 0.0f;
 
             _logger.Log(new PwmLogRecord { PwmIn = pwmIn, Force = transform.forward * lastForceRequest});
@@ -89,29 +84,10 @@ namespace Marus.Actuators
         {
             // from N to kgf
             force /= 9.80665f;
-            var closestIndex = BinarySearch(sheetData, force);
-            
-            return closestIndex * sheetStep - 1;
+            var pwm_value = selectedThruster.inversedCurve.Evaluate(force);
+        
+            return pwm_value + 1.0f;
         }
-
-        public static int BinarySearch(float[] a, float item)
-        {
-            int first = 0;
-            int last = a.Length - 1;
-            int mid = 0;
-            do
-            {
-                mid = first + (last - first) / 2;
-                if (item > a[mid])
-                    first = mid + 1;
-                else
-                    last = mid - 1;
-                if (a[mid] == item)
-                    return mid;
-            } while (first <= last);
-            return mid;
-        }
-
 
         void FixedUpdate()
         {
