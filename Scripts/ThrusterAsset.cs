@@ -9,7 +9,6 @@ public class ThrusterAsset : ScriptableObject
  
     public static implicit operator AnimationCurve(ThrusterAsset me)
     {
-        me.inversedCurve = inverseCurve(me.curve);
         return me.curve;
     }
     public static implicit operator ThrusterAsset(AnimationCurve curve)
@@ -20,7 +19,7 @@ public class ThrusterAsset : ScriptableObject
         return asset;
     }
 
-    public static AnimationCurve inverseCurve(AnimationCurve curve)
+    private static AnimationCurve inverseCurve(AnimationCurve curve)
     {
         //create inverse speedcurve
         var inverseCurve = new AnimationCurve();
@@ -31,5 +30,5 @@ public class ThrusterAsset : ScriptableObject
         }
         return inverseCurve;
 
-    } 
+    }
 }

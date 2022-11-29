@@ -24,65 +24,65 @@ namespace Marus.Sensors
 {
     /// <summary>
     /// Custom editor for Thruster component.
-    /// Enables pwm thruster configuration loading, saving and modifying.
+    /// Enables thruster configuration loading, saving and modifying.
     /// </summary>
     [CustomEditor(typeof(Thruster))]
     public class ThrusterEditor : Editor
     {
-        SerializedProperty voltage;
         SerializedObject ThrusterSO;
         Thruster myThruster;
-        List<Type> thursterClasses;
-        AnimationCurve previousCurve = new AnimationCurve();
         bool disableSaving = true;
-
         List<string> thursterNames;
         string newThrusterName;
-        string thrusterFolderPath = "Assets/marus-core/Scripts/Actuators/Datasheets/";
+        string thrusterFolderPath = "Assets/marus-core/Datasheets/";
+        List<ThrusterAsset> thrusters;
+        int previousThrusterIndex = -1;
+        int selectedThrusterIndex = 0;
+        AnimationCurve currentCurve = new AnimationCurve();
 
         void OnEnable()
         {
             ThrusterSO = new SerializedObject(target);
             myThruster = (Thruster)target;
-            myThruster.thrusters = GetAllInstances<ThrusterAsset>();
+            thrusters = GetAllInstances<ThrusterAsset>().ToList();
+            thursterNames = thrusters.Select(x => x.name).ToList();
         }
 
         public override void OnInspectorGUI()
         {
             ThrusterSO.Update();
-            thursterNames = getThursterNames();
 
-            myThruster.selectedThrusterIndex = EditorGUILayout.Popup("Thruster", myThruster.selectedThrusterIndex, thursterNames.ToArray());
+            selectedThrusterIndex = GetThrusterIndex(myThruster);
 
-            ///If thruster changes
-            if(myThruster.selectedThrusterIndex != myThruster.previousThrusterIndex )
+            selectedThrusterIndex = EditorGUILayout.Popup("Thruster", selectedThrusterIndex, thursterNames.ToArray());
+
+            ///If thruster changes or thruster selected thruster in not yet
+            if(selectedThrusterIndex != previousThrusterIndex || myThruster.selectedThruster == default(ThrusterAsset) )
             {
-                myThruster.thrusters = GetAllInstances<ThrusterAsset>();
-                myThruster.selectedThruster = myThruster.thrusters[myThruster.selectedThrusterIndex];
-                CopyCurve(myThruster.currentCurve, myThruster.selectedThruster.curve);
-                myThruster.previousThrusterIndex = myThruster.selectedThrusterIndex;
-                newThrusterName = getInitialSavingName(myThruster.selectedThruster.name);
-
+                myThruster.selectedThruster = thrusters[selectedThrusterIndex];
+                currentCurve = CopyCurve(myThruster.selectedThruster.curve);
+                previousThrusterIndex = selectedThrusterIndex;
+                newThrusterName = GetInitialSavingName(myThruster.selectedThruster.name);
             }
 
             ///If curve is edited
-            if (AreCurvesDifferent(myThruster.currentCurve, myThruster.selectedThruster.curve))
-            {
-                disableSaving = false;
-            }
-            else
+            if (currentCurve.Equals(myThruster.selectedThruster.curve))
             {
                 disableSaving = true;
             }
-
+            else
+            {
+                disableSaving = false;
+            }
             Rect bounds = new Rect();
-            EditorGUILayout.CurveField("Curve", myThruster.currentCurve, new Color(1,1,1,1), bounds, GUILayout.Height(50));
+            EditorGUILayout.CurveField("Curve", currentCurve, new Color(1,1,1,1), bounds, GUILayout.Height(50));
+
             EditorGUI.BeginDisabledGroup(disableSaving);
             GUILayout.Space(2);
             var undoChanges = GUILayout.Button("Undo changes", EditorStyles.miniButtonRight);
             EditorGUI.EndDisabledGroup();
 
-            if(undoChanges) myThruster.currentCurve.keys = myThruster.selectedThruster.curve.keys;
+            if(undoChanges) currentCurve = CopyCurve(myThruster.selectedThruster.curve);
 
             EditorGUI.BeginDisabledGroup(disableSaving);
             GUILayout.Space(5);
@@ -93,7 +93,7 @@ namespace Marus.Sensors
             var saveButton = GUILayout.Button("Save", EditorStyles.miniButtonRight);
             if(saveButton)
             {
-                SaveNewThruster(newThrusterName, myThruster.currentCurve);
+                SaveNewThruster(newThrusterName, currentCurve);
             }
             EditorGUI.EndDisabledGroup();
 
@@ -107,20 +107,10 @@ namespace Marus.Sensors
             ThrusterSO.ApplyModifiedProperties();
         }
 
-        private List<string> getThursterNames()
-        {
-            List<string> nameList = new List<string>();
-            foreach(var element in myThruster.thrusters)
-            {
-                nameList.Add(element.name);
-            }
-            return nameList;
-        }
-
         /// <summary>
         /// Getting all instances of ThrusterAsset in the project
         /// </summary>
-        public static T[] GetAllInstances<T>() where T : ScriptableObject
+        private static T[] GetAllInstances<T>() where T : ScriptableObject
         {
             string[] guids = AssetDatabase.FindAssets("t:"+ typeof(T).Name);
             T[] a = new T[guids.Length];
@@ -136,54 +126,49 @@ namespace Marus.Sensors
         /// Saving new thruster if current by new name. Adding (n)
         /// to the name of the thruster if current name allready exists
         /// </summary>
-        public void SaveNewThruster(string name, AnimationCurve curve)
+        private void SaveNewThruster(string name, AnimationCurve curve)
         {
             ThrusterAsset newThruster = new ThrusterAsset();
             newThruster.name = name;
-            CopyCurve(newThruster.curve, curve);
-            string path = thrusterFolderPath + name + ".asset";
+            newThruster.curve = CopyCurve(curve);
+            string path = String.Format("{0}{1}.asset", thrusterFolderPath, name);
             AssetDatabase.CreateAsset(newThruster, path);
-            myThruster.thrusters = GetAllInstances<ThrusterAsset>();
-            myThruster.selectedThrusterIndex =  myThruster.thrusters.ToList().FindIndex((x)=>x.name == name);
-            myThruster.previousThrusterIndex =-1;
+
+            thrusters = GetAllInstances<ThrusterAsset>().ToList();
+            selectedThrusterIndex =  thrusters.ToList().FindIndex((x)=>x.name == name);
+            myThruster.selectedThruster = thrusters[selectedThrusterIndex];
+            thursterNames = thrusters.Select(x => x.name).ToList();
+            previousThrusterIndex =-1;
         }
 
-        public bool AreCurvesDifferent(AnimationCurve a1, AnimationCurve a2)
-        {
-            if (a1.length != a2.length) return true;
-            for (int i = 0; i<a2.length; i++)
-            {
-                if(a1.keys[i].value != a2.keys[i].value || a1.keys[i].time != a2.keys[i].time)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public string getInitialSavingName(string thrusterName)
+        private string GetInitialSavingName(string thrusterName)
         {
             int i = 1;
             while (true)
             {
-                if(!myThruster.thrusters.Where(x => x.name.Contains(thrusterName + "(" + i + ")")).Any())
+                if(!thrusters.Where(x => x.name.Contains(thrusterName + "(" + i + ")")).Any())
                 {
                     break;
                 }
-                else
-                {
-                    i++;
-                }
+                i++;
             }
-            string returnName = thrusterName + "(" + i + ")";
+            string returnName = String.Format("{0}({1})", thrusterName, i);
             return returnName;
         }
 
-        public void CopyCurve(AnimationCurve a1, AnimationCurve a2)
+        private static AnimationCurve CopyCurve(AnimationCurve a)
         {
-            a1.keys = a2.keys;
-            a1.preWrapMode = a2.preWrapMode;
-            a1.postWrapMode = a2.postWrapMode;
+            AnimationCurve newCurve = new AnimationCurve(a.keys);
+            newCurve.preWrapMode = a.preWrapMode;
+            newCurve.postWrapMode = a.postWrapMode;
+            return newCurve;
+        }
+
+        private int GetThrusterIndex(Thruster thruster)
+        {
+            int index = thrusters.FindIndex(x => x.Equals(thruster.selectedThruster));
+            if(index == -1) index = 0;
+            return index;
         }
     }
 }

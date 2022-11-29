@@ -12,29 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
 using Marus.Logger;
 using Marus.Utils;
-using UnityEditor;
 using UnityEngine;
 namespace Marus.Actuators
 {
 
     public class Thruster : MonoBehaviour
     {
-        //Calback for change in voltage
         public float lastForceRequest;
         public float timeSinceForceRequest = 0.0f;
-
         Rigidbody _vehicleBody;
         Transform _vehicle;
-        GameObjectLogger<PwmLogRecord> _logger;
-        public ThrusterAsset[] thrusters;
+        GameObjectLogger<LogRecord> _logger;
         public ThrusterAsset selectedThruster;
-        public AnimationCurve currentCurve = new AnimationCurve();
-        public int previousThrusterIndex = -1;
-        public int selectedThrusterIndex = 0;
+
 
         Transform vehicle
         {
@@ -59,33 +51,32 @@ namespace Marus.Actuators
 
         void Start()
         {
-            _logger = DataLogger.Instance.GetLogger<PwmLogRecord>($"{vehicle.transform.name}/{name}");
-
+            _logger = DataLogger.Instance.GetLogger<LogRecord>($"{vehicle.transform.name}/{name}");
         }
 
         /// <summary>
-        /// Apply force to the thruster location from datasheet and standardized pwm input
+        /// Apply force to the thruster location from datasheet and standardized input
         /// </summary>
-        /// <param name="pwmIn"> -1 - 1 value</param>
+        /// <param name="normalizedInput"> -1 - 1 value</param>
         /// <returns></returns>
-        public Vector3 ApplyPwm(float pwmIn)
+        public Vector3 ApplyInput(float normalizedInput)
         {
-            float value = selectedThruster.curve.Evaluate(pwmIn);
+            float value = selectedThruster.curve.Evaluate(normalizedInput);
             // from kgf to N
             lastForceRequest = value * 9.80665f;
             timeSinceForceRequest = 0.0f;
 
-            _logger.Log(new PwmLogRecord { PwmIn = pwmIn, Force = transform.forward * lastForceRequest});
+            _logger.Log(new LogRecord { NormalizedInput = normalizedInput, Force = transform.forward * lastForceRequest});
             return transform.forward * lastForceRequest;
         }
 
-        public float GetPwmForForce(float force)
+        public float GetInputFromForce(float force)
         {
             // from N to kgf
             force /= 9.80665f;
-            var pwm_value = selectedThruster.inversedCurve.Evaluate(force);
+            var input_value = selectedThruster.inversedCurve.Evaluate(force);
 
-            return pwm_value + 1.0f;
+            return input_value + 1.0f;
         }
 
         void FixedUpdate()
@@ -98,9 +89,9 @@ namespace Marus.Actuators
             timeSinceForceRequest += Time.fixedDeltaTime;
         }
 
-        private class PwmLogRecord
+        private class LogRecord
         {
-            public float PwmIn { get; set; }
+            public float NormalizedInput { get; set; }
             public Vector3 Force { get; set; }
         }
     }
