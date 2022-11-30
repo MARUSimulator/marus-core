@@ -50,8 +50,8 @@ namespace Marus.Actuators
             {
                 if (i < forces.Count)
                 {
-                    var input_value = thrusters[i].GetInputFromForce((float)forces[i]);
-                    thrusters[i].ApplyInput(input_value);
+                    var inputValue = thrusters[i].GetInputFromForce((float)forces[i]);
+                    thrusters[i].ApplyInput(inputValue);
                 }
                 else
                 {

@@ -25,7 +25,7 @@ namespace Marus.Actuators
         Rigidbody _vehicleBody;
         Transform _vehicle;
         GameObjectLogger<LogRecord> _logger;
-        public ThrusterAsset selectedThruster;
+        public ThrusterAsset thrusterAsset;
 
 
         Transform vehicle
@@ -61,7 +61,7 @@ namespace Marus.Actuators
         /// <returns></returns>
         public Vector3 ApplyInput(float normalizedInput)
         {
-            float value = selectedThruster.curve.Evaluate(normalizedInput);
+            float value = thrusterAsset.curve.Evaluate(normalizedInput);
             // from kgf to N
             lastForceRequest = value * 9.80665f;
             timeSinceForceRequest = 0.0f;
@@ -74,7 +74,7 @@ namespace Marus.Actuators
         {
             // from N to kgf
             force /= 9.80665f;
-            var input_value = selectedThruster.inversedCurve.Evaluate(force);
+            var input_value = thrusterAsset.inversedCurve.Evaluate(force);
 
             return input_value + 1.0f;
         }
