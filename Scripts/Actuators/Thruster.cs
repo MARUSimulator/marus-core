@@ -20,13 +20,12 @@ namespace Marus.Actuators
 
     public class Thruster : MonoBehaviour
     {
-        public float lastForceRequest;
-        public float timeSinceForceRequest = 0.0f;
+        public float LastForceRequest;
+        public float TimeSinceForceRequest = 0.0f;
+        public ThrusterAsset ThrusterAsset;
         Rigidbody _vehicleBody;
         Transform _vehicle;
         GameObjectLogger<LogRecord> _logger;
-        public ThrusterAsset thrusterAsset;
-
 
         Transform vehicle
         {
@@ -61,32 +60,32 @@ namespace Marus.Actuators
         /// <returns></returns>
         public Vector3 ApplyInput(float normalizedInput)
         {
-            float value = thrusterAsset.curve.Evaluate(normalizedInput);
+            float value = ThrusterAsset.curve.Evaluate(normalizedInput);
             // from kgf to N
-            lastForceRequest = value * 9.80665f;
-            timeSinceForceRequest = 0.0f;
+            LastForceRequest = value * 9.80665f;
+            TimeSinceForceRequest = 0.0f;
 
-            _logger.Log(new LogRecord { NormalizedInput = normalizedInput, Force = transform.forward * lastForceRequest});
-            return transform.forward * lastForceRequest;
+            _logger.Log(new LogRecord { NormalizedInput = normalizedInput, Force = transform.forward * LastForceRequest});
+            return transform.forward * LastForceRequest;
         }
 
         public float GetInputFromForce(float force)
         {
             // from N to kgf
             force /= 9.80665f;
-            var input_value = thrusterAsset.inversedCurve.Evaluate(force);
+            var input_value = ThrusterAsset.inversedCurve.Evaluate(force);
 
             return input_value + 1.0f;
         }
 
         void FixedUpdate()
         {
-            if(timeSinceForceRequest <= 0.2f)
+            if(TimeSinceForceRequest <= 0.2f)
             {
-                Vector3 force = transform.forward * lastForceRequest;
+                Vector3 force = transform.forward * LastForceRequest;
                 _vehicleBody.AddForceAtPosition(force, transform.position, ForceMode.Force);
             }
-            timeSinceForceRequest += Time.fixedDeltaTime;
+            TimeSinceForceRequest += Time.fixedDeltaTime;
         }
 
         private class LogRecord
