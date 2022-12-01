@@ -60,7 +60,7 @@ namespace Marus.Actuators
 
         void UpdateMovement(ForceResponse result)
         {
-            thrusterController.ApplyPwm(result.Pwm.Data.ToArray());
+            thrusterController.ApplyInput(result.Pwm.Data.ToArray());
         }
     }
 

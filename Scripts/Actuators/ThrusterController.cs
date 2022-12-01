@@ -21,15 +21,15 @@ namespace Marus.Actuators
     public class ThrusterController : MonoBehaviour
     {
 
-        public List<PwmThruster> thrusters = new List<PwmThruster>();
+        public List<Thruster> thrusters = new List<Thruster>();
 
-        public void ApplyPwm(float[] array)
+        public void ApplyInput(float[] array)
         {
             for (int i = 0; i < thrusters.Count; i++)
             {
                 if (i < array.Length)
                 {
-                    thrusters[i].ApplyPwm(array[i]);
+                    thrusters[i].ApplyInput(array[i]);
                 }
                 else
                 {
@@ -38,7 +38,7 @@ namespace Marus.Actuators
             }
         }
 
-        public void ApplyPwm(Vector3 tau, Matrix<double> inverseAllocationMatrix)
+        public void ApplyInput(Vector3 tau, Matrix<double> inverseAllocationMatrix)
         {
             var vec = CreateVector.Dense<double>(3);
             vec[0] = tau.x;
@@ -50,8 +50,8 @@ namespace Marus.Actuators
             {
                 if (i < forces.Count)
                 {
-                    var pwm = thrusters[i].GetPwmForForce((float)forces[i]);
-                    thrusters[i].ApplyPwm(pwm);
+                    var inputValue = thrusters[i].GetInputFromForce((float)forces[i]);
+                    thrusters[i].ApplyInput(inputValue);
                 }
                 else
                 {
