@@ -31,10 +31,23 @@ namespace Marus.Sensors
             SensorSampler.Instance.AddSensorCallback(this, SampleSensor);
         }
 
-        //public bool RunRecording = false;
 
         [Header("Sensor parameters")]
-        public String frameId;
+        [SerializeField]
+        string frameId;
+
+        public String FrameId
+        {
+            get
+            {
+                var veh = vehicle;
+                if (string.IsNullOrEmpty(frameId))
+                {
+                    frameId = $"veh/{name}";
+                }
+                return TfHandler.ParseTfName(frameId, veh);
+            }
+        }
 
         public float SampleFrequency = 20;
 
@@ -54,24 +67,6 @@ namespace Marus.Sensors
                 }
                 return _vehicle;
             }
-        }
-
-        #if UNITY_EDITOR
-        protected void Reset()
-        {
-            UpdateVehicle();
-        }
-        #endif
-
-        public void UpdateVehicle()
-        {
-            var veh = vehicle;
-            // reset frameId to empty if UpdateVehicle is not called from reset
-            frameId = "";
-            // if not same object, add vehicle name prefix to frame id
-            if(veh != transform) frameId = $"{veh.name}/";
-
-            frameId = frameId + gameObject.name + "_frame";
         }
 
         protected abstract void SampleSensor();
@@ -114,6 +109,7 @@ namespace Marus.Sensors
         public string address;
 
         protected Transform _vehicle;
+        private bool _isMessageSending;
 
         SensorBase _sensor;
 
@@ -198,13 +194,18 @@ namespace Marus.Sensors
                 cumulativeTime = 0;
                 if (_sensor.hasData && RosConnection.Instance.IsConnected)
                 {
-                    SendMessage();
-                    _sensor.hasData = false;
+                    if (!_isMessageSending)
+                    {
+                        _isMessageSending = true;
+                        SendMessage();
+                        _sensor.hasData = false;
+                        _isMessageSending = false;
+                    }
                 }
             }
         }
 
-        protected void StreamSensor(SensorBase sensor, 
+        protected void StreamSensor(SensorBase sensor,
             // AsyncClientStreamingCall<TMsg, Std.Empty> streamingCall
             Func<Grpc.Core.Metadata, System.DateTime?, System.Threading.CancellationToken, AsyncClientStreamingCall<TMsg, Std.Empty>> streamingFn)
         {

@@ -21,6 +21,7 @@
 // Terms of use: do whatever you like
 
 using System.Collections.Generic;
+using System.Linq;
 using Marus.Ocean;
 using UnityEngine;
 
@@ -263,10 +264,9 @@ public class Buoyancy : MonoBehaviour
                 }
 
                 var velocity = rigidbody.GetPointVelocity(globalPoints[i]);
-                var localDampingForce = -velocity * drag * rigidbody.mass / voxels.Count;
+                var localDampingForce = -velocity * velocity.magnitude * drag * rigidbody.mass / voxels.Count;
                 var force = localDampingForce + Mathf.Sqrt(k) * localArchimedesForce * forceMultiplier;
                 rigidbody.AddForceAtPosition(force, globalPoints[i]);
-
                 forces.Add(new[] { globalPoints[i], force }); // For drawing force gizmos
             }
         }

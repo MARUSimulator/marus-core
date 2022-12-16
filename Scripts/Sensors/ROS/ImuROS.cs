@@ -44,7 +44,7 @@ namespace Marus.Sensors.Primitive
             {
                 Header = new Header
                 {
-                    FrameId = sensor.frameId,
+                    FrameId = sensor.FrameId,
                     Timestamp = TimeHandler.Instance.TimeDouble
                 },
                 Orientation = sensor.orientation.Unity2Map().AsMsg(),
@@ -54,7 +54,6 @@ namespace Marus.Sensors.Primitive
             imuOut.OrientationCovariance.AddRange(sensor.orientationCovariance);
             imuOut.LinearAccelerationCovariance.AddRange(sensor.linearAccelerationCovariance);
             imuOut.AngularVelocityCovariance.AddRange(sensor.angularVelocityCovariance);
-
             await _streamWriter.WriteAsync(new ImuStreamingRequest
             {
                 Data = imuOut,

@@ -42,13 +42,13 @@ namespace Marus.Core
         public uint StartTimeSecs => _startTimeSecs;
         public uint StartTimeNsecs => _startTimeNsecs;
 
-        // public double TimeDouble => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
-        public double TimeDouble => _totalTimeSecs + 1e-9 * _totalTimeNsecs;
+        public double TimeDouble => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
+        // public double TimeDouble => _totalTimeSecs + 1e-9 * _totalTimeNsecs;
 
         protected override void Initialize()
         {
             transform.parent = RosConnection.Instance.transform;
-            _isRealTime = RosConnection.Instance.RealtimeSimulation; 
+            _isRealTime = RosConnection.Instance.RealtimeSimulation;
             SimulationSpeed = RosConnection.Instance.SimulationSpeed;
             SetSimulationTime();
         }

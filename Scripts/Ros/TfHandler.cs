@@ -95,6 +95,11 @@ namespace Marus.Networking
         {
         }
 
+        public static string ParseTfName(string tfName, Transform vehicle)
+        {
+            return tfName.Replace("veh", vehicle.name);
+        }
+
         void Update()
         {
             var rosConn = RosConnection.Instance;
@@ -103,7 +108,7 @@ namespace Marus.Networking
                 if (!_serverStreamer.IsStreaming)
                 {
                     var frameClient = rosConn.GetClient<TfClient>();
-                    var frameStream = frameClient.StreamAllFrames(new Std.Empty(), 
+                    var frameStream = frameClient.StreamAllFrames(new Std.Empty(),
                             cancellationToken:rosConn.CancellationToken);
                     _serverStreamer.StartStream(frameStream);
                 }
@@ -116,13 +121,13 @@ namespace Marus.Networking
             var rosConn = RosConnection.Instance;
             foreach (var frame in frameList.Frames)
             {
-                if (frame.ChildFrameId == rosConn.OriginFrameName) 
+                if (frame.ChildFrameId == rosConn.OriginFrameName)
                     continue;
 
                 var frameObj = GetOrCreateGameObjectForFrame(frame);
 
                 // set parent if it is not already set
-                if (frameObj.transform.parent == null 
+                if (frameObj.transform.parent == null
                     || frameObj.transform.parent.name != frame.FrameId)
                 {
                     var parentFrame = frameList.Frames.FirstOrDefault(x => x.ChildFrameId == frame.FrameId);

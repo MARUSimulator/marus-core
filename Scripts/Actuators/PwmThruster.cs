@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Marus.Actuators.Datasheets;
 using Marus.Logger;
 using Marus.Ocean;
@@ -60,7 +61,7 @@ namespace Marus.Actuators
                 _vehicle = Helpers.GetVehicle(transform);
                 if (_vehicle == null)
                 {
-                    Debug.Log($@"Cannot get vehicle from sensor {transform.name}.
+                    Debug.Log($@"Cannot get vehicle from object {transform.name}.
                         Using sensor as the vehicle transform");
                     return transform;
                 }
@@ -120,9 +121,12 @@ namespace Marus.Actuators
                 return Vector3.zero;
             }
 
-            Debug.Log(pwmIn);
+            pwmIn = Math.Max(-1, Math.Min(1, pwmIn));
+
             int step = (int)((pwmIn+1) / sheetStep); // push it to the range 0-2
 
+
+            step = Math.Max(0, Math.Min(sheetData.Length - 1, step));
             // from kgf to N
             force = sheetData[step] * G;
 

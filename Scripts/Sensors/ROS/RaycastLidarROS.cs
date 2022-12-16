@@ -61,7 +61,7 @@ namespace Marus.Sensors
 
             _pointCloud.Header = new Std.Header()
             {
-                FrameId = sensor.frameId,
+                FrameId = sensor.FrameId,
                 Timestamp = TimeHandler.Instance.TimeDouble
             };
 

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
@@ -55,7 +56,7 @@ namespace Marus.Core
         /// Use this conversion when translating local rotations from Unity to ROS Forward-Left-Up body frames.
         public static Quaternion Unity2Body(this Quaternion quaternion)
         {
-            return new Quaternion(-quaternion.z, quaternion.x, -quaternion.y, quaternion.w);
+            return new Quaternion(-quaternion.x, -quaternion.z, -quaternion.y, quaternion.w);
         }
     }
 

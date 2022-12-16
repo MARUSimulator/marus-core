@@ -59,23 +59,20 @@ namespace Marus.Sensors.Primitive
         private double _lastSampleTime;
 
 
-        new void Reset()
+
+        void Start()
         {
             rb = GetComponent<Rigidbody>();
-
-            base.Reset();
-            UpdateVehicle();
+            FixImuRbToVehicle();
         }
 
-        new void UpdateVehicle()
+        void FixImuRbToVehicle()
         {
-            base.UpdateVehicle();
-
             var veh = vehicle;
 
             // get vehicle rigidbody (either this gameObject or vehicle tag)
             // This is needed for IMU to work as expected
-            Rigidbody veh_rb = veh.GetComponent<Rigidbody>();
+            var veh_rb = veh.GetComponent<Rigidbody>();
 
             // if vehicle tag not found or no rigidbody found on tagged vehicle
             // find top parent with rigidbody
@@ -94,12 +91,6 @@ namespace Marus.Sensors.Primitive
                 fj.connectedBody = veh_rb;
             }
         }
-
-        void Start()
-        {
-            rb = GetComponent<Rigidbody>();
-        }
-
 
         // // DEBUG TEST
         // void FixedUpdate()

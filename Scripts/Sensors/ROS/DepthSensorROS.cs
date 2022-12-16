@@ -49,7 +49,7 @@ namespace Marus.Sensors.ROS
                 {
                     Header = new Header
                     {
-                        FrameId = sensor.frameId,
+                        FrameId = sensor.FrameId,
                         Timestamp = TimeHandler.Instance.TimeDouble
                     },
                     Pose = new PoseWithCovariance

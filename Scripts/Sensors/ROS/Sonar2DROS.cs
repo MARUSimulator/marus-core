@@ -51,7 +51,7 @@ namespace Marus.Sensors.Primitive
 
             _pointCloud.Header = new Std.Header()
             {
-                FrameId = sensor.frameId,
+                FrameId = sensor.FrameId,
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
             };
 

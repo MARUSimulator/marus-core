@@ -54,7 +54,7 @@ namespace Marus.Sensors.Primitive
                 {
                     Header = new Header
                     {
-                        FrameId = sensor.frameId,
+                        FrameId = sensor.FrameId,
                         Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()/1000.0
                     },
                     Pose = new PoseWithCovariance

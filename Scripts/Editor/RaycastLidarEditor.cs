@@ -266,7 +266,7 @@ namespace Marus.Sensors
             newCfg.Frequency = lidarObj.SampleFrequency;
             newCfg.HorizontalFieldOfView = lidarObj.HorizontalFieldOfView;
             newCfg.VerticalFieldOfView = lidarObj.VerticalFieldOfView;
-            newCfg.FrameId = lidarObj.frameId;
+            newCfg.FrameId = lidarObj.FrameId;
             if (!saveAsNew)
             {
                 Configs[oldIdx] = newCfg;
