@@ -42,8 +42,8 @@ namespace Marus.Core
         public uint StartTimeSecs => _startTimeSecs;
         public uint StartTimeNsecs => _startTimeNsecs;
 
-        // public double TimeDouble => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0;
-        public double TimeDouble => _totalTimeSecs + 1e-9 * _totalTimeNsecs;
+        public double TimeDouble => _isRealTime ? DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() / 1000.0
+                : _totalTimeSecs + 1e-9 * _totalTimeNsecs;
 
         protected override void Initialize()
         {

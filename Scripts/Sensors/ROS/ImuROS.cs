@@ -39,6 +39,11 @@ namespace Marus.Sensors.Primitive
 
         protected override ImuStreamingRequest ComposeMessage()
         {
+            // add rotation around Unity y-axis to adjust for ENU
+            // orientation. Unity z axis is North which means that
+            // this angle is 90 in ENU
+            var tmp = new Quaternion(0, -1/Mathf.Sqrt(2), 0, 1/Mathf.Sqrt(2));
+            var rot = (tmp * sensor.orientation).Unity2Body();
             var imuOut = new Imu()
             {
                 Header = new Header
@@ -46,7 +51,7 @@ namespace Marus.Sensors.Primitive
                     FrameId = sensor.frameId,
                     Timestamp = TimeHandler.Instance.TimeDouble
                 },
-                Orientation = sensor.orientation.Unity2Map().AsMsg(),
+                Orientation = rot.AsMsg(),
                 AngularVelocity = (-sensor.angularVelocity).Unity2Body().AsMsg(),
                 LinearAcceleration = sensor.linearAcceleration.Unity2Body().AsMsg(),
             };
