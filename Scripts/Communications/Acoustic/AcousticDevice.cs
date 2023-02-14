@@ -22,11 +22,11 @@ namespace Marus.Communications.Acoustics
     public abstract class AcousticDevice<T> : AcousticDevice where T : AcousticMessage
     {
         public abstract void OnReceive(T message);
-        public abstract void Send(T message, 
+        public abstract void Send(T message,
                 Action<T> onAcknowledgeCallback=null,
                 Action<T> onTimeoutCallback=null);
 
-        public override void Send(AcousticMessage msg, 
+        public override void Send(AcousticMessage msg,
                 Action<AcousticMessage> onAcknowledgeCallback=null,
                 Action<AcousticMessage> onTimeoutCallback=null)
         {
@@ -48,7 +48,7 @@ namespace Marus.Communications.Acoustics
         /// <summary>
         /// Transmitting range, in meters (m).
         /// </summary>
-        public float Range;
+        public float Range; // RANGE <=0 means infinite range
 
         public abstract int DeviceId { get; }
         public abstract string Protocol { get; }

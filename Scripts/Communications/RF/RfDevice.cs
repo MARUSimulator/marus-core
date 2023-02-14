@@ -36,17 +36,17 @@ namespace Marus.Communications.Rf
         protected abstract void OnReceive(T message);
 
         /// <summary>
-        /// Implement this to send a message dependent on 
-        /// the message parameters 
+        /// Implement this to send a message dependent on
+        /// the message parameters
         /// </summary>
         /// <param name="message"></param>
         /// <param name="onAcknowledgeCallback"></param>
         /// <param name="onTimeoutCallback"></param>
-        protected abstract void Send(T message, 
+        protected abstract void Send(T message,
                 Action<T> onAcknowledgeCallback=null,
                 Action<T> onTimeoutCallback=null);
 
-        public override void Send(RfMessage msg, 
+        public override void Send(RfMessage msg,
                 Action<RfMessage> onAcknowledgeCallback=null,
                 Action<RfMessage> onTimeoutCallback=null)
         {

@@ -78,7 +78,7 @@ namespace Marus.Communications.Acoustics
         {
             if (_boxVolume.Type == BoxVolume.BoxType.World)
                 return true;
-            
+
             var pos = transform.position;
             if (_boxVolume.Type == BoxVolume.BoxType.HalfSpace)
             {

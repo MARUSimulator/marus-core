@@ -65,7 +65,7 @@ namespace Marus.Communications.Acoustics
 
         public void ChangeId(int id)
         {
-            Id = id;   
+            Id = id;
         }
         public override void OnReceive(NanomodemMessage msg)
         {
@@ -73,7 +73,7 @@ namespace Marus.Communications.Acoustics
             Debug.Log($"Nanomodem id: {Id}\nReceived message from nanomodem id: {msg.SenderId}:\n{msg.Message}");
         }
 
-        public override void Send(NanomodemMessage msg, 
+        public override void Send(NanomodemMessage msg,
                 Action<NanomodemMessage> onAcknowledgeCallback=null,
                 Action<NanomodemMessage> onTimeoutCallback=null)
         {
@@ -85,7 +85,7 @@ namespace Marus.Communications.Acoustics
 
             if (msg.TransmitionType == TransmitionType.Unicast)
             {
-                medium.Transmit(msg, 
+                medium.Transmit(msg,
                     AcousticMediumHelper.GetAcousticDeviceById(msg.ReceiverId));
             }
             else if (msg.TransmitionType == TransmitionType.Broadcast)

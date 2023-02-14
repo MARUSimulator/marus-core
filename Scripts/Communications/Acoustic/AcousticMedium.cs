@@ -67,7 +67,7 @@ namespace Marus.Communications.Acoustics
         IEnumerator SendMsg(AcousticMessage msg, AcousticReceiver receiver)
         {
             // Emulate delay time based on speed of sound in medium and distance
-            float delayTime = msg.CompositionDuration + 
+            float delayTime = msg.CompositionDuration +
                 (Vector3.Distance(msg.TransmiterParams.SourceLocation, receiver.Location) / C);
             yield return new WaitForSeconds(delayTime);
 

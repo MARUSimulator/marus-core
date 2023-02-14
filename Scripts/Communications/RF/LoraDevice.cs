@@ -44,12 +44,12 @@ namespace Marus.Communications.Rf
 
         public void ChangeId(int id)
         {
-            Id = id;   
+            Id = id;
         }
         protected override void OnReceive(LoraMessage msg)
         {
             OnReceiveEvent?.Invoke(this, msg);
-            // Debug.Log($"Lora id: {Id}\nReceived message from lora id: {msg.SenderId}:\n{msg.Message}");
+            Debug.Log($"Lora id: {Id}\nReceived message from lora id: {msg.SenderId}:\n{msg.Message}");
         }
 
         public override RfTransmitterParams GetTransmiterParams()
@@ -59,7 +59,7 @@ namespace Marus.Communications.Rf
                 MaxRange = Range
             };
 
-        protected override void Send(LoraMessage msg, 
+        protected override void Send(LoraMessage msg,
                 Action<LoraMessage> onAcknowledgeCallback=null,
                 Action<LoraMessage> onTimeoutCallback=null)
         {
@@ -69,7 +69,7 @@ namespace Marus.Communications.Rf
 
             if (msg.TransmitionType == TransmitionType.Unicast)
             {
-                RfMediumHelper.Transmit(msg, 
+                RfMediumHelper.Transmit(msg,
                     RfMediumHelper.GetRfDeviceById(msg.ReceiverId));
             }
             else if (msg.TransmitionType == TransmitionType.Broadcast)
