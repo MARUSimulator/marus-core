@@ -18,7 +18,7 @@ For usage information, visit our [MarusExample project repository.](https://gith
 
 
 ## Documentation
-* [API Documentation]()
+* [API Documentation](https://marusimulator.github.io/marus-api-documentation/api/index.html)
 
 ## Credits & Acknowledgements
 
