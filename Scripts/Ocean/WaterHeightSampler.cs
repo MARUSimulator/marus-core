@@ -24,6 +24,18 @@ namespace Marus.Ocean
 {
     public class WaterHeightSampler : Singleton<WaterHeightSampler>
     {
+        bool crestInScene = false;
+
+        void Awake()
+        {
+    #if CREST_OCEAN
+            if (Object.FindObjectOfType<OceanRenderer>() != null)
+            {
+                crestInScene = true;
+            }
+    #endif
+        }
+
 
         /// <summary>
         /// Returns the water level at given location.
@@ -48,22 +60,31 @@ namespace Marus.Ocean
         public void GetWaterLevel(Vector3[] i_points, float[] o_heights, int i_array_size, float i_minSpatialLength = 0.5f)
         {
 #if CREST_OCEAN
-            var collProvider = OceanRenderer.Instance?.CollisionProvider;
-            if (collProvider == null)
+            if (crestInScene)
+            {    var collProvider = OceanRenderer.Instance?.CollisionProvider;
+                if (collProvider == null)
+                {
+                    for (int i = 0; i < i_array_size; i++)
+                    {
+                        o_heights[i] = 0.0f;
+                    }
+                }
+
+                var status = collProvider.Query(GetHashCode(), i_minSpatialLength, i_points, o_heights, null, null);
+
+                if (!collProvider.RetrieveSucceeded(status))
+                {
+                    for (int i = 0; i < i_array_size; i++)
+                    {
+                        o_heights[i] = OceanRenderer.Instance.SeaLevel;
+                    }
+                }
+            }
+            else
             {
                 for (int i = 0; i < i_array_size; i++)
                 {
                     o_heights[i] = 0.0f;
-                }
-            }
-
-            var status = collProvider.Query(GetHashCode(), i_minSpatialLength, i_points, o_heights, null, null);
-
-            if (!collProvider.RetrieveSucceeded(status))
-            {
-                for (int i = 0; i < i_array_size; i++)
-                {
-                    o_heights[i] = OceanRenderer.Instance.SeaLevel;
                 }
             }
 #else

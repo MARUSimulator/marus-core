@@ -30,10 +30,6 @@ namespace Marus.Actuators
     /// </summary>
     public class AUVRosController : MonoBehaviour
     {
-
-        public float linSpeed = 2f;
-        public float rotSpeed = 700f;
-        public string vehId = "veh";
         public ThrusterController thrusterController;
 
         Transform _targetTransform;
