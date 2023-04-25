@@ -21,6 +21,7 @@ using System.Linq;
 using static Remotecontrol.RemoteControl;
 using Marus.Utils;
 
+
 namespace Marus.Actuators
 {
 
@@ -30,7 +31,7 @@ namespace Marus.Actuators
     /// </summary>
     public class AUVRosController : MonoBehaviour
     {
-        public ThrusterController thrusterController;
+        public float[] forceInput;
 
         Transform _targetTransform;
         Thread _handleStreamThread;
@@ -44,7 +45,7 @@ namespace Marus.Actuators
             var client = RosConnection.Instance.GetClient<RemoteControlClient>();
             var address = Helpers.GetVehicle(transform)?.name ?? name;
             _streamer.StartStream(client.ApplyForce(
-                new ForceRequest { Address = $"{address}/pwm_out" },
+                new ForceRequest { Address = $"{address}/volume_disp" },
                 cancellationToken: RosConnection.Instance.CancellationToken)
             );
         }
@@ -56,7 +57,8 @@ namespace Marus.Actuators
 
         void UpdateMovement(ForceResponse result)
         {
-            thrusterController.ApplyInput(result.Pwm.Data.ToArray());
+            forceInput = result.Pwm.Data.ToArray();
+            GetComponent<Buoyancy>().floatingPower = forceInput[0];
         }
     }
 
