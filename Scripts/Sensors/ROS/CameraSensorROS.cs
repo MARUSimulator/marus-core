@@ -20,6 +20,9 @@ using Marus.Networking;
 using Marus.Core;
 using static Sensorstreaming.SensorStreaming;
 
+using UnityEngine.UI;
+using System.IO;
+
 namespace Marus.Sensors
 {
     /// <summary>
@@ -28,9 +31,13 @@ namespace Marus.Sensors
     [RequireComponent(typeof(CameraSensor))]
     public class CameraSensorROS : SensorStreamer<SensorStreamingClient, CameraStreamingRequest>
     {
+        Texture2D imgFromFile;
+        public byte[] byteArray;
+
         CameraSensor sensor;
         new void Start()
         {
+            imgFromFile = new Texture2D(2, 2, TextureFormat.RGB24, false);
             sensor = GetComponent<CameraSensor>();
             StreamSensor(sensor,
                 streamingClient.StreamCameraSensor);
@@ -39,6 +46,15 @@ namespace Marus.Sensors
 
         protected override CameraStreamingRequest ComposeMessage()
         {
+            // example for path to image inside Unity
+            byteArray = File.ReadAllBytes("Assets/marus-core/Scripts/Hackathon/image_00.png"); 
+
+            // example for path to image on local disk
+            //byteArray = File.ReadAllBytes("/home/mbat/Pictures/image_00.png");   
+            imgFromFile.LoadImage(byteArray);
+            byteArray = GetAs24(imgFromFile);
+
+            //sensor.Data = byteArray;
             return new CameraStreamingRequest
             {
                 Image = new Sensor.Image
@@ -48,12 +64,32 @@ namespace Marus.Sensors
                         Timestamp = Time.time,
                         FrameId = sensor.frameId
                     },
-                    Data = ByteString.CopyFrom(sensor.Data),
-                    Height = (uint)(sensor.ImageHeight),
-                    Width = (uint)(sensor.ImageWidth)
+                    
+                    Data = ByteString.CopyFrom(byteArray), // old = sensor.Data
+                    Height = (uint)(imgFromFile.height), //sensor.ImageHeight
+                    Width = (uint)(imgFromFile.width) // sensor.ImageWidth
                 },
                 Address = address,
             };
+        }
+
+        private byte[] GetAs24(Texture2D imgFromFile)
+        {
+            byte[] newArray = new byte[imgFromFile.width * imgFromFile.height * 3];
+            var raw = imgFromFile.GetRawTextureData();
+            var w = imgFromFile.width;
+            var h = imgFromFile.height;
+            for (var i = 0; i < h; i++)
+            {
+                for (var j = 0; j < w; j++)
+                {
+                    newArray[i*w*3 + j*3 + 0] = raw[i*w*4 + j*4 +1];
+                    newArray[i*w*3 + j*3 + 1] = raw[i*w*4 + j*4 +2];
+                    newArray[i*w*3 + j*3 + 2] = raw[i*w*4 + j*4 +3];
+                }
+            }
+            
+            return newArray;
         }
     }
 }
