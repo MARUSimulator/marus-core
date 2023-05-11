@@ -68,7 +68,7 @@ namespace Marus.Visualization
         {
             Setup();
         }
-
+        #if UNITY_EDITOR
         void OnDrawGizmos()
         {
             if (!Application.isPlaying) return;
@@ -105,8 +105,9 @@ namespace Marus.Visualization
                 }
             }
         }
+        #endif
 
-
+        #if UNITY_EDITOR
         private void VisualizeObjectBounds(GameObject obj, Rect bounds, Camera CameraView, string className="")
         {
             if ((bounds.width * bounds.height) < 8000) return;
@@ -143,6 +144,7 @@ namespace Marus.Visualization
 
             UnityEditor.Handles.EndGUI();
         }
+        #endif
     }
 }
 
