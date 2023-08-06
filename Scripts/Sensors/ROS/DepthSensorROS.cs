@@ -31,6 +31,7 @@ namespace Marus.Sensors.ROS
         public double covariance;
         DepthSensor sensor;
 
+
         new public void Start()
         {
             sensor = GetComponent<DepthSensor>();
@@ -60,9 +61,9 @@ namespace Marus.Sensors.ROS
                             {
                                 X = 0,
                                 Y = 0,
-                                Z = depth
+                                Z = - (sensor.depth) //depth
                             },
-                            Orientation = new Quaternion() { }
+                            //Orientation = new Quaternion() { }
                         }
                     }
                 }
