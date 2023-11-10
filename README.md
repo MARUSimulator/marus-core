@@ -36,3 +36,9 @@ Please feel free to provide feedback or ask questions by creating a Github issue
 
 ## License
 This project is released under the Apache 2.0 License. Please review the [License](https://github.com/MARUSimulator/marus-core/blob/dev/LICENSE) file for more details.
+
+## Troubleshooting
+
+`ERROR: 2 runtime errors when openning Unity Editor on 2204`
+
+https://forum.unity.com/threads/how-to-fix-the-2-runtime-errors-when-opening-unity-editor-on-ubuntu-22-04.1272155/
