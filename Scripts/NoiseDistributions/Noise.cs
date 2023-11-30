@@ -96,7 +96,7 @@ namespace Marus.NoiseDistributions
             var instance = GetNoiseInstance(parameters.NoiseTypeFullName);
             if (instance == null)
             {
-                Debug.Log($"Noise instance with assembly name {parameters.NoiseTypeFullName} does not exist");
+                Debug.LogWarning($"Noise instance with assembly name {parameters.NoiseTypeFullName} does not exist");
                 return 0;
             }
             SetInstanceParams(instance, in parameters);

@@ -85,7 +85,6 @@ namespace Marus.Visualization
                 var f = System.IO.Path.GetFileName(fileName);
                 if (f.EndsWith(".json") && f.StartsWith(prefix))
                 {
-                    Debug.Log(f);
                     index++;
                 }
             }

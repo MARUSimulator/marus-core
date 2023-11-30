@@ -17,8 +17,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-namespace Marus.Quest 
+
+namespace Marus.Quest
 {
+    [DefaultExecutionOrder(10)]
     public class QuestControl : MonoBehaviour
     {
         /// <summary>

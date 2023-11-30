@@ -42,35 +42,40 @@ namespace Marus.Networking
         public double Radius;
         public double VerticalOffset;
         public QuestControl QuestControl;
+        public bool called = false;
 
+        void Awake()
+        {
 
+        }
 
         void Start()
         {
             RosConnection.Instance.OnConnected += OnConnected;
+
             if (QuestControl != null)
                 QuestControl.OnWaypointChange += OnWaypointChange;
+        }
+
+        void Update()
+        {
+            if (_client is not null && !called)
+            {
+                called = true;
+                CallPrimitivePointerService();
+            }
         }
 
         private void OnWaypointChange(QuestWaypoint obj)
         {
             GuidanceTarget = obj.transform.position;
             GuidanceEnable = true;
-            CallPrimitivePointerService();
+            called = false;
         }
 
         public void OnConnected(Channel channel)
         {
             _client = new CommanderClient(channel);
-        }
-
-
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                CallPrimitivePointerService();
-            }
         }
 
 
@@ -111,7 +116,12 @@ namespace Marus.Networking
             if (_client != null)
             {
                 var response = _client.PrimitivePointer(request);
+
                 Debug.Log($"PrimitivePointer: succes={response.Success}");
+            }
+            else
+            {
+                Debug.Log("FAILED calling the service");
             }
         }
     }
