@@ -5,3 +5,6 @@
 	path = Scripts/protobuf
 	url = git@github.com:MARUSimulator/marus-proto.git
 	branch = csharp
+[submodule "Scripts/Sensors/marus-sensors-grpc"]
+	path = Scripts/Sensors/marus-sensors-grpc
+	url = git@github.com:MARUSimulator/marus-sensors-grpc.git
