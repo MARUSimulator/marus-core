@@ -15,9 +15,9 @@
 [submodule "Scripts/marus-communications-grpc"]
 	path = Scripts/marus-communications-grpc
 	url = git@github.com:MARUSimulator/marus-communications-grpc.git
-[submodule "marus-data-generation"]
-	path = marus-data-generation
-	url = git@github.com:MARUSimulator/marus-data-generation.git
 [submodule "Scripts/marus-data-generation"]
 	path = Scripts/marus-data-generation
 	url = git@github.com:MARUSimulator/marus-data-generation.git
+[submodule "Scripts/marus-visualization-grpc"]
+	path = Scripts/marus-visualization-grpc
+	url = git@github.com:MARUSimulator/marus-visualization-grpc.git
