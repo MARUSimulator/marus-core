@@ -11,6 +11,7 @@
 [submodule "Scripts/Sensors/marus-sensors"]
 	path = Scripts/Sensors/marus-sensors
 	url = git@github.com:MARUSimulator/marus-sensors.git
-[submodule "Scripts/marus-communications"]
-	path = Scripts/marus-communications
-	url = git@github.com:MARUSimulator/marus-communications.git
+
+[submodule "Scripts/marus-communications-grpc"]
+	path = Scripts/marus-communications-grpc
+	url = git@github.com:MARUSimulator/marus-communications-grpc.git
