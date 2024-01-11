@@ -20,6 +20,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Collections;
+using System.Globalization;
 using System.Linq;
 using UnityEngine.Rendering;
 using Marus.CustomInspector;
@@ -303,9 +304,13 @@ namespace Marus.ObjectAnnotation
                 float y_center = 1 - (o.Item2.center.y / (float) ImageHeight);
                 float width = o.Item2.width / (float) ImageWidth;
                 float height = o.Item2.height / (float) ImageHeight;
+
+
+                NumberFormatInfo nfi = new NumberFormatInfo();
+                nfi.NumberDecimalSeparator = ".";
                 using (StreamWriter sw = File.AppendText(path))
                 {
-                    sw.WriteLine($"{o.Item1.ClassIndex} {x_center} {y_center} {width} {height}");
+                    sw.WriteLine($"{o.Item1.ClassIndex} {x_center.ToString(nfi)} {y_center.ToString(nfi)} {width.ToString(nfi)} {height.ToString(nfi)}");
                 }
             }
         }
