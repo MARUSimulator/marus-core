@@ -158,8 +158,8 @@ namespace Marus.Networking
             var paramServer = ParamServerHandler.Instance;
             var tfHandler = TfHandler.Instance;
             var timeHandler = TimeHandler.Instance;
-            var visualizationRos = VisualizationROS.Instance;
-            var pcHandler = PointCloudRosVisualizer.Instance;
+            var visualizationRos = VisualizationgRPC.Instance;
+            var pcHandler = PointCloudgRPCVisualizer.Instance;
         }
 
         IEnumerator WhileConnectionAwait()

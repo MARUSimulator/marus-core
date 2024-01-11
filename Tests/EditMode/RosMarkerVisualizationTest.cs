@@ -26,7 +26,7 @@ public class RosMarkerVisualizationTest
     public void TestAddDeleteMarker()
     {
         var m = CreateMockPathMarker();
-        VisualizationROS.Instance.UpdateMarker(m);
+        VisualizationgRPC.Instance.UpdateMarker(m);
         var f = (Dictionary<string, List<VisualElement>>) Utils.GetNonpublicField<Visualizer>(Visualizer.Instance, "_visualElements");
         Assert.AreEqual(true, f.ContainsKey("ros_markers"));
         Assert.AreEqual(1, f["ros_markers"].Count, "Number of added visual elements should be 1");
@@ -35,8 +35,8 @@ public class RosMarkerVisualizationTest
         Marker deleteMarker = new Marker();
         deleteMarker.Id = 123123;
         deleteMarker.Action = Marker.Types.Action.Delete;
-        VisualizationROS.Instance.UpdateMarker(deleteMarker);
-        Utils.CallUpdate(VisualizationROS.Instance);
+        VisualizationgRPC.Instance.UpdateMarker(deleteMarker);
+        Utils.CallUpdate(VisualizationgRPC.Instance);
         f = (Dictionary<string, List<VisualElement>>) Utils.GetNonpublicField<Visualizer>(Visualizer.Instance, "_visualElements");
         Assert.AreEqual(true, f.ContainsKey("ros_markers"), "ros_markers tag should exist in Visualizer");
         Assert.AreEqual(0, f["ros_markers"].Count, "Number of added visual elements should be 0");
@@ -53,7 +53,7 @@ public class RosMarkerVisualizationTest
 
         var markerArray = new MarkerArray();
         markerArray.Markers.AddRange(markerList);
-        VisualizationROS.Instance.UpdateMarkerArray(markerArray);
+        VisualizationgRPC.Instance.UpdateMarkerArray(markerArray);
         var f = (Dictionary<string, List<VisualElement>>) Utils.GetNonpublicField<Visualizer>(Visualizer.Instance, "_visualElements");
         Assert.AreEqual(true, f.ContainsKey("ros_markers"));
         Assert.AreEqual(4, f["ros_markers"].Count, "Number of added visual elements should be 4");
@@ -61,13 +61,13 @@ public class RosMarkerVisualizationTest
         Marker deleteMarker = new Marker();
         deleteMarker.Id = 1;
         deleteMarker.Action = Marker.Types.Action.Delete;
-        VisualizationROS.Instance.UpdateMarker(deleteMarker);
+        VisualizationgRPC.Instance.UpdateMarker(deleteMarker);
         f = (Dictionary<string, List<VisualElement>>) Utils.GetNonpublicField<Visualizer>(Visualizer.Instance, "_visualElements");
         Assert.AreEqual(3, f["ros_markers"].Count, "Number of added visual elements should be 3");
 
         deleteMarker = new Marker();
         deleteMarker.Action = Marker.Types.Action.Deleteall;
-        VisualizationROS.Instance.UpdateMarker(deleteMarker);
+        VisualizationgRPC.Instance.UpdateMarker(deleteMarker);
         f = (Dictionary<string, List<VisualElement>>) Utils.GetNonpublicField<Visualizer>(Visualizer.Instance, "_visualElements");
         Assert.AreEqual(false, f.ContainsKey("ros_markers"), "ros_markers tag should not exist in Visualizer");
     }
